@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>9ad8aab0-ba5c-4dad-b585-30465bb01e3a</ProjectGuid>
     <ProjectTypeGuids>{070BCB52-5A75-4F8C-A973-144AF0EAFCC9}</ProjectTypeGuids>
-    <AppIdentifier>com.telerik.KnowledgeLakeSearchMobile</AppIdentifier>
+    <AppIdentifier>com.knowledgelake.search</AppIdentifier>
     <ProjectName>KnowledgeLake Search Mobile</ProjectName>
     <IsRunnable>true</IsRunnable>
     <TemplateAppName>Cordova270</TemplateAppName>
@@ -11,8 +11,27 @@
     <DeviceOrientations>Portrait;Landscape</DeviceOrientations>
     <iOSStatusBarStyle>Default</iOSStatusBarStyle>
     <AndroidHardwareAcceleration>false</AndroidHardwareAcceleration>
+    <BundleVersion>1.0</BundleVersion>
+    <iOSDisplayName>KnowledgeLake Search Mobile</iOSDisplayName>
+    <iOSDeviceFamily>1;2</iOSDeviceFamily>
+    <iOSBackgroundMode />
+    <AndroidVersionCode>1</AndroidVersionCode>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="app\domain" />
+    <Folder Include="app\lib" />
+    <Folder Include="app\knockout" />
+    <Folder Include="app\framework" />
+    <Folder Include="app\unitTests" />
+    <Folder Include="app\nls" />
+    <Folder Include="app\nls\es" />
+    <Folder Include="app\nls\de" />
+    <Folder Include="app\nls\root" />
+    <Folder Include="app\services" />
+    <Folder Include="app\services\soapTemplates" />
+    <Folder Include="app\styles\kendo" />
+    <Folder Include="app\views" />
+    <Folder Include="app\viewmodels" />
     <Folder Include="App_Resources" />
     <Folder Include="App_Resources\iOS">
       <Platform>iOS</Platform>
@@ -57,17 +76,35 @@
     <Resource Include="App_Resources\Android\drawable-nodpi\splashscreen.9.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\i18n.js" />
+    <Content Include="app\knockout\partialView.js" />
+    <Content Include="app\lib\blanket.js" />
+    <Content Include="app\nls\de\strings.js" />
+    <Content Include="app\config.js" />
+    <Content Include="app\framework\logLevel.js" />
+    <Content Include="app\framework\system.js" />
+    <Content Include="app\lib\jquery.js" />
+    <Content Include="app\lib\knockout.js" />
+    <Content Include="app\lib\ntlm.js" />
+    <Content Include="app\lib\QUnit.js" />
+    <Content Include="app\lib\require.js" />
+    <Content Include="app\nls\es\strings.js" />
+    <Content Include="app\nls\root\strings.js" />
+    <Content Include="app\nls\strings.js" />
+    <Content Include="app\styles\QUnit.css" />
+    <Content Include="app\unitTests\simpleUnitTest.js" />
+    <Content Include="app\viewmodels\mainViewModel.js" />
+    <Content Include="app\viewmodels\unitTestViewModel.js" />
     <Content Include="index.html" />
-    <Content Include="kendo\js\jquery.min.js" />
-    <Content Include="kendo\js\kendo.mobile.min.js" />
-    <Content Include="kendo\styles\images\back.png" />
-    <Content Include="kendo\styles\images\KendoUI.ttf" />
-    <Content Include="kendo\styles\images\KendoUI.woff" />
-    <Content Include="kendo\styles\images\wp8_icons.png" />
-    <Content Include="kendo\styles\images\wp8_inverseicons.png" />
-    <Content Include="kendo\styles\kendo.mobile.all.min.css" />
-    <Content Include="scripts\hello-world.js" />
-    <Content Include="styles\main.css" />
+    <Content Include="app\lib\kendo.mobile.min.js" />
+    <Content Include="app\styles\kendo\images\back.png" />
+    <Content Include="app\styles\kendo\images\KendoUI.ttf" />
+    <Content Include="app\styles\kendo\images\KendoUI.woff" />
+    <Content Include="app\styles\kendo\images\wp8_icons.png" />
+    <Content Include="app\styles\kendo\images\wp8_inverseicons.png" />
+    <Content Include="app\styles\kendo\kendo.mobile.all.min.css" />
+    <Content Include="app\init.js" />
+    <Content Include="app\styles\app.css" />
     <Content Include="cordova.ios.js">
       <Platform>iOS</Platform>
       <TargetName>cordova.js</TargetName>
@@ -76,6 +113,17 @@
       <Platform>Android</Platform>
       <TargetName>cordova.js</TargetName>
     </Content>
+    <Content Include="app\init.test.js" />
+    <Content Include="test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <CordovaPlugin Include="com.phonegap.plugins.childbrowser">
+      <Version>4.1.0</Version>
+      <Name>Child Browser</Name>
+    </CordovaPlugin>
+  </ItemGroup>
+  <ItemGroup>
+    <CordovaPluginContent Include="com.phonegap.plugins.childbrowser\childbrowser.js" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Telerik\ICE\Tools\Mobile\MobileTools.targets" />
 </Project>
