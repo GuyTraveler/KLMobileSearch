@@ -14,7 +14,7 @@ require(["config"], function (config) {
              "framework/logLevel", 
              "viewmodels/mainViewModel"], 
     function($, ko, kendo, system, logLevel, mainViewModel) {
-        var testHref = "test.html";
+        var testHref = "test.html?coverage=true";
         
         window.rootViewModel = new mainViewModel();
         

@@ -5,28 +5,25 @@ var App,
     rootViewModel;
 
 require(["config"], function (config) {
+    var testRootPath = 'unitTests/';
+    
     require.config(config);
         
     require(["jquery", 
              "knockout", 
              "kendo", 
              "system", 
-             "framework/logLevel", 
-             "viewmodels/unitTestViewModel"], 
-    function($, ko, kendo, system, logLevel, unitTestViewModel) {
-        var model = new unitTestViewModel();
+             "framework/logLevel",
+             testRootPath + "simpleUnitTest",
+             testRootPath + "system_tests",
+             testRootPath + "mainViewModel_tests"
+             //ADDITIONAL TESTS GO HERE
+    ],
+    function($, ko, kendo, system, logLevel) {
         
-        system.setLogLevel(config.logLevel);
-        window.system = system;        
+        system.setLogLevel(logLevel.Verbose);
+        window.system = system;    
         
-        ko.applyBindings(model, document.body);
-               
-        $(document).ready(function () {
-            system.logVerbose("DOM is ready - waiting for device"); 
-          
-            document.addEventListener("deviceready", function () {
-                system.logVerbose("device ready!");
-            }, false);  
-        });
+        QUnit.start();
     });
 });

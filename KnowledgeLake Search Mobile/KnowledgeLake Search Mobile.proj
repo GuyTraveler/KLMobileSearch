@@ -92,9 +92,10 @@
     <Content Include="app\nls\root\strings.js" />
     <Content Include="app\nls\strings.js" />
     <Content Include="app\styles\QUnit.css" />
+    <Content Include="app\unitTests\system_tests.js" />
+    <Content Include="app\unitTests\mainViewModel_tests.js" />
     <Content Include="app\unitTests\simpleUnitTest.js" />
     <Content Include="app\viewmodels\mainViewModel.js" />
-    <Content Include="app\viewmodels\unitTestViewModel.js" />
     <Content Include="index.html" />
     <Content Include="app\lib\kendo.mobile.min.js" />
     <Content Include="app\styles\kendo\images\back.png" />

@@ -16,7 +16,7 @@ define([], function() {
                exports: 'ko'  
            },
            kendo: {
-               deps: ['jquery', 'cordova'],
+               deps: ['jquery'],
                exports: 'kendo'               
            },
            ntlm: {
@@ -26,9 +26,9 @@ define([], function() {
        /******custom configuration*******/
        /*config: {
            i18n: {
-               locale: 'de'
+               locale: 'es'
            }  
-       },*/   
+       },*/
        logLevel: 0, //verbose (see logLevel.js)    
        isQunit: true
    };
