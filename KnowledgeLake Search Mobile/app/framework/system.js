@@ -10,24 +10,39 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
         }
         
         self.logVerbose = function (msg) {
-            if (self.logLevel <= logLevel.Verbose)
-                console.log(msg);
+            var log = self.logLevel <= logLevel.Verbose;
+            
+            if (log) console.log(msg);
+            
+            return log;
         },
         self.logDebug = function (msg) {
-            if (self.logLevel <= logLevel.Debug)
-                console.log(msg);
+            var log = self.logLevel <= logLevel.Debug;
+            
+            if (log) console.log(msg);
+            
+            return log;
         },
         self.logWarning = function (msg) {
-            if (self.logLevel <= logLevel.Warn)
-                console.log(msg);    
+            var log = self.logLevel <= logLevel.Warn;
+            
+            if (log) console.log(msg);
+            
+            return log;  
         },
         self.logError = function (msg) {
-            if (self.logLevel <= logLevel.Error)
-                console.log(msg);    
+            var log = self.logLevel <= logLevel.Error;
+            
+            if (log) console.log(msg);
+            
+            return log;
         },
         self.logFatal = function (msg) {
-            if (self.logLevel <= logLevel.Fatal)
-                console.log(msg);    
+            var log = self.logLevel <= logLevel.Fatal;
+            
+            if (log) console.log(msg);
+            
+            return log;
         }
         
         return self;
