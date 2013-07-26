@@ -5,26 +5,20 @@
         <meta charset="utf-8" />
         
         <script src="cordova.js" type="text/javascript"></script>
+        <script data-main="app/init.js" src="app/lib/require.js"></script>     
         
         <link href="app/styles/kendo/kendo.mobile.all.min.css" rel="stylesheet" />
         <link href="app/styles/app.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-role="view" id="home" data-bind="attr: { 'data-title': system.strings.appTitle }">
-            Home
-        </div>
-        
-        <div data-role="view" id="credentials" data-title="Credentials">
-            Credentials
-        </div>
+        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }"></div>
+     
+        <div data-bind="kendoView: { id: 'site', title: 'Site' }"></div>
 
-        <div data-role="view" id="search" data-title="Search">
-            Search            
-        </div>
+        <div data-bind="kendoView: { id: 'searches', title: 'Searches' }"></div>
 
-        <div data-role="view" id="results" data-title="Results">
-            Results
-        </div>
+        <div data-bind="kendoView: { id: 'results', title: 'Results' }"></div>
+
 
         <div data-role="layout" data-id="default">
             <header data-role="header">
@@ -36,13 +30,11 @@
             <div data-role="footer">
                 <div data-role="tabstrip">
                     <a href="#home" data-icon="home">Home</a>
-                    <a href="#credentials" data-icon="contacts">Credentials</a>
-                    <a href="#search" data-icon="search">Search</a>
+                    <a href="#site" data-icon="globe">Site</a>
+                    <a href="#searches" data-icon="search">Searches</a>
                     <a href="#results" data-icon="organize">Results</a>
                 </div>
             </div>
-        </div>
-        
-        <script data-main="app/init.js" src="app/lib/require.js"></script>     
+        </div>               
     </body>
 </html>

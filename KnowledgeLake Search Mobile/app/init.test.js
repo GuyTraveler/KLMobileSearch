@@ -14,9 +14,9 @@ require(["config"], function (config) {
              "kendo", 
              "system", 
              "framework/logLevel",
-             testRootPath + "simpleUnitTest",
              testRootPath + "system_tests",
-             testRootPath + "mainViewModel_tests"
+             testRootPath + "mainViewModel_tests",
+             testRootPath + "localization_tests"
              //ADDITIONAL TESTS GO HERE
     ],
     function($, ko, kendo, system, logLevel) {

@@ -20,7 +20,7 @@
   <ItemGroup>
     <Folder Include="app\domain" />
     <Folder Include="app\lib" />
-    <Folder Include="app\knockout" />
+    <Folder Include="app\framework\knockout" />
     <Folder Include="app\framework" />
     <Folder Include="app\unitTests" />
     <Folder Include="app\nls" />
@@ -76,8 +76,9 @@
     <Resource Include="App_Resources\Android\drawable-nodpi\splashscreen.9.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\framework\knockout\kendoView.js" />
     <Content Include="app\i18n.js" />
-    <Content Include="app\knockout\partialView.js" />
+    <Content Include="app\framework\knockout\partialView.js" />
     <Content Include="app\lib\blanket.js" />
     <Content Include="app\nls\de\strings.js" />
     <Content Include="app\config.js" />
@@ -92,10 +93,17 @@
     <Content Include="app\nls\root\strings.js" />
     <Content Include="app\nls\strings.js" />
     <Content Include="app\styles\QUnit.css" />
+    <Content Include="app\unitTests\localization_tests.js" />
     <Content Include="app\unitTests\system_tests.js" />
     <Content Include="app\unitTests\mainViewModel_tests.js" />
-    <Content Include="app\unitTests\simpleUnitTest.js" />
-    <Content Include="app\viewmodels\mainViewModel.js" />
+    <Content Include="app\viewmodels\homeViewModel.js" />
+    <Content Include="app\viewmodels\resultsViewModel.js" />
+    <Content Include="app\viewmodels\searchesViewModel.js" />
+    <Content Include="app\viewmodels\siteViewModel.js" />
+    <Content Include="app\views\homeView.html" />
+    <Content Include="app\views\resultsView.html" />
+    <Content Include="app\views\searchesView.html" />
+    <Content Include="app\views\siteView.html" />
     <Content Include="index.html" />
     <Content Include="app\lib\kendo.mobile.min.js" />
     <Content Include="app\styles\kendo\images\back.png" />
