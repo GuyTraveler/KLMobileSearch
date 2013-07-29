@@ -13,7 +13,6 @@ require(["config"], function (config) {
              "system", 
              "framework/logLevel",              
              "viewmodels/homeViewModel",
-             "framework/knockout/partialView",
              "framework/knockout/kendoView"], 
     function($, ko, kendo, system, logLevel, homeViewModel) {
         var testHref = "test.html?coverage=true";                
@@ -40,8 +39,8 @@ require(["config"], function (config) {
 function onHomeLoaded() {
     if (!window.App) {
         window.App = new kendo.mobile.Application(document.body, {
-            transition: 'slide',
-            layout: 'default'
+            transition: 'slide'
         });
+        system.logVerbose("kendo application loaded");
     }
 }

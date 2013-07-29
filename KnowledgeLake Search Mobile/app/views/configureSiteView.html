@@ -1,0 +1,20 @@
+<header data-role="header">
+    <div data-role="navbar">
+ 
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: saveSiteSettings">
+            <span data-bind="text: system.strings.save"></span>
+        </button>
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: closeSiteSettings">
+            <span data-bind="text: system.strings.cancel"></span>
+        </button>
+    </div>
+</header>
+
+<ul data-role="listview" data-style="inset">
+    <li>
+        <label>
+            <span data-bind="text: system.strings.siteUrl" />
+            <input type="search" data-bind="value: url" />
+        </label>      
+    </li>
+</ul>          
