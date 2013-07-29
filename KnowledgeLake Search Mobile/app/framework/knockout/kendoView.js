@@ -61,7 +61,14 @@ define(['knockout',
                             
                             $(container).html(data);             
                             ko.applyBindingsToDescendants(model, element);                            
-                        });     
+                        });
+                        
+                        promiseView.always(function (data) {
+                            //check global namespace
+                           if (parameters.loaded && typeof window[parameters.loaded] === 'function') {
+                               window[parameters.loaded]();
+                           } 
+                        });
                     });                    
                 } else {
                     console.log('Invalid view binding format.\nFunction does not exist: ' + name + '\n' + element.outerHTML);

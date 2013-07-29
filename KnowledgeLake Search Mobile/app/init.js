@@ -26,14 +26,7 @@ require(["config"], function (config) {
         window.system = system;                              
           
         ko.applyBindings(null, document.body);
-        
-        setTimeout(function () {
-        window.App = new kendo.mobile.Application(document.body, {
-            transition: 'slide',
-            layout: 'default'
-        });
-            }, 800);
-        
+                
         $(document).ready(function () {
             system.logVerbose("DOM is ready - waiting for device"); 
        
@@ -43,3 +36,12 @@ require(["config"], function (config) {
         });
     });
 });
+
+function onHomeLoaded() {
+    if (!window.App) {
+        window.App = new kendo.mobile.Application(document.body, {
+            transition: 'slide',
+            layout: 'default'
+        });
+    }
+}

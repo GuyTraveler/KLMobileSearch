@@ -11,7 +11,7 @@
         <link href="app/styles/app.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }"></div>
+        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle, loaded: 'onHomeLoaded' }"></div>
      
         <div data-bind="kendoView: { id: 'site', title: 'Site' }"></div>
 
