@@ -15,7 +15,7 @@ require(["config"], function (config) {
              "system", 
              "framework/logLevel",
              testRootPath + "system_tests",
-             testRootPath + "mainViewModel_tests",
+             testRootPath + "homeViewModel_tests",
              testRootPath + "localization_tests"
              //ADDITIONAL TESTS GO HERE
     ],

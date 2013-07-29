@@ -30,6 +30,6 @@ define([], function() {
            }  
        },*/
        logLevel: 0, //verbose (see logLevel.js)    
-       isQunit: false
+       isQunit: true
    };
 });
