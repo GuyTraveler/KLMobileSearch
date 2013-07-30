@@ -76,6 +76,7 @@
     <Resource Include="App_Resources\Android\drawable-nodpi\splashscreen.9.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\framework\FileManagement.js" />
     <Content Include="app\framework\knockout\kendoView.js" />
     <Content Include="app\i18n.js" />
     <Content Include="app\framework\knockout\partialView.js" />
