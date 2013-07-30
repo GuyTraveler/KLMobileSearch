@@ -1,12 +1,8 @@
 <header data-role="header">
-    <div data-role="navbar">
- 
-        <button class="nav-button" data-align="right" data-role="button" data-bind="click: saveSiteSettings">
-            <span data-bind="text: system.strings.save"></span>
-        </button>
-        <button class="nav-button" data-align="right" data-role="button" data-bind="click: closeSiteSettings">
-            <span data-bind="text: system.strings.cancel"></span>
-        </button>
+    <div data-role="navbar"> 
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: saveSiteSettings, text: system.strings.save"></button>
+        
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: closeSiteSettings, text: system.strings.cancel"></button>
     </div>
 </header>
 
@@ -16,5 +12,8 @@
             <span data-bind="text: system.strings.siteUrl" />
             <input type="search" data-bind="value: url" />
         </label>      
+    </li>
+    <li>
+        <button data-role="button" data-align="right" class="button full-width" data-bind="click: validateSiteUrl, text: system.strings.validate"></button>
     </li>
 </ul>          

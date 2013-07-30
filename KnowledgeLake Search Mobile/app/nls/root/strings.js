@@ -6,5 +6,6 @@ define({
     resultsPageTitle: "Search Results",
     cancel: "Cancel",
     save: "Save",
-    siteUrl: "Url"
+    siteUrl: "Url",
+    validate: "Validate"
 });

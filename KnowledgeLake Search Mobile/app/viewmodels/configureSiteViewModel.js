@@ -1,10 +1,11 @@
 define(["knockout", "system"], 
     function (ko, system) {
         var configureSiteViewModel = function () {
-            var self = this;
+            var self = this,
+                defaultUrlText = "http://";
                  
             
-            self.url = ko.observable("http://");
+            self.url = ko.observable(defaultUrlText);
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
@@ -13,6 +14,10 @@ define(["knockout", "system"],
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
                 window.App.navigate("#home");
+            }
+            
+            self.validateSiteUrl = function () {
+                system.logVerbose("validateSiteUrl called");
             }
             
             
@@ -34,8 +39,8 @@ define(["knockout", "system"],
             
             self.hide = function (e) {
                 system.logVerbose("configureSiteViewModel hide");
-            }
-            
+            } 
+   
             return self;
         };
         

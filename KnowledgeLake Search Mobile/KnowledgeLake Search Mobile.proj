@@ -91,6 +91,7 @@
     <Content Include="app\nls\es\strings.js" />
     <Content Include="app\nls\root\strings.js" />
     <Content Include="app\nls\strings.js" />
+    <Content Include="app\services\siteDataService.js" />
     <Content Include="app\styles\QUnit.css" />
     <Content Include="app\unitTests\localization_tests.js" />
     <Content Include="app\unitTests\system_tests.js" />
