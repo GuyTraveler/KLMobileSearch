@@ -6,6 +6,7 @@ define([], function() {
            kendo: 'lib/kendo.mobile.min',
            knockout: 'lib/knockout',
            system: 'framework/system',
+           FileManagement: 'framework/FileManagement',
            ntlm: 'lib/ntlm'
        },
        shim: {
