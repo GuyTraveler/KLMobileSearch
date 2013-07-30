@@ -11,30 +11,35 @@
         <link href="app/styles/app.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle, loaded: 'onHomeLoaded' }"></div>
+        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle, loaded: 'onHomeLoaded' }" data-layout="default-layout">            
+        </div>
      
-        <div data-bind="kendoView: { id: 'site', title: 'Site' }"></div>
+        <div data-bind="kendoView: { id: 'configureSite', title: system.strings.configureSitePageTitle }" data-transition="overlay:up">
+        </div>
+        
+        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle }" data-layout="default-layout">            
+        </div>
 
-        <div data-bind="kendoView: { id: 'searches', title: 'Searches' }"></div>
-
-        <div data-bind="kendoView: { id: 'results', title: 'Results' }"></div>
-
-
-        <div data-role="layout" data-id="default">
+        
+        
+        <div data-role="layout" data-id="default-layout">
             <header data-role="header">
                 <div data-role="navbar">
                     <span data-role="view-title"></span>
                 </div>
             </header>
 
-            <div data-role="footer">
+            <footer data-role="footer">
                 <div data-role="tabstrip">
-                    <a href="#home" data-icon="home">Home</a>
-                    <a href="#site" data-icon="globe">Site</a>
-                    <a href="#searches" data-icon="search">Searches</a>
-                    <a href="#results" data-icon="organize">Results</a>
+                    <a href="#home" data-icon="home">
+                        <span data-bind="text: system.strings.homeLinkText"></span>
+                    </a>
+                    <a href="#configureSite" data-icon="add">
+                        <span data-bind="text: system.strings.addSiteLinkText"></span>
+                    </a>
                 </div>
-            </div>
-        </div>               
+            </footer>
+        </div> 
+        
     </body>
 </html>

@@ -79,7 +79,6 @@
     <Content Include="app\framework\FileManagement.js" />
     <Content Include="app\framework\knockout\kendoView.js" />
     <Content Include="app\i18n.js" />
-    <Content Include="app\framework\knockout\partialView.js" />
     <Content Include="app\lib\blanket.js" />
     <Content Include="app\nls\de\strings.js" />
     <Content Include="app\config.js" />
@@ -97,14 +96,12 @@
     <Content Include="app\unitTests\localization_tests.js" />
     <Content Include="app\unitTests\system_tests.js" />
     <Content Include="app\unitTests\homeViewModel_tests.js" />
+    <Content Include="app\viewmodels\configureSiteViewModel.js" />
     <Content Include="app\viewmodels\homeViewModel.js" />
     <Content Include="app\viewmodels\resultsViewModel.js" />
-    <Content Include="app\viewmodels\searchesViewModel.js" />
-    <Content Include="app\viewmodels\siteViewModel.js" />
+    <Content Include="app\views\configureSiteView.html" />
     <Content Include="app\views\homeView.html" />
     <Content Include="app\views\resultsView.html" />
-    <Content Include="app\views\searchesView.html" />
-    <Content Include="app\views\siteView.html" />
     <Content Include="index.html" />
     <Content Include="app\lib\kendo.mobile.min.js" />
     <Content Include="app\styles\kendo\images\back.png" />
