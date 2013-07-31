@@ -17,10 +17,7 @@ require(["config"], function (config) {
              testRootPath + "system_tests",
              testRootPath + "homeViewModel_tests",
              testRootPath + "localization_tests",
-             testRootPath + "soapParameter_tests",
-             testRootPath + "siteDataService_tests",
-             testRootPath + "websService_tests",
-             testRootPath + "authenticationService_tests"
+             testRootPath + "FileManagement_tests"
              //ADDITIONAL TESTS GO HERE
     ],
     function($, ko, kendo, system, logLevel) {
