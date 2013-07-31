@@ -2,121 +2,167 @@ define(["system", "jquery"], function (system, $) {
     var File = function () {
         var self = this; 
         
-        self.onFileSystemSuccess = function (fileSystem) {
-            self.defered.resolve(fileSystem);
+        self.fileSystem = null;
+        
+        var onFileSystemSuccess = function (fileSystem) {
+            self.deferred.resolve(fileSystem);
         }
         
-        self.onFileSystemFail = function (error) {
-            self.defered.fail(error);                 
+        var onFileSystemFail = function (error) {
+            self.deferred.fail(error);                 
         }
         
         self.loadFileSystem = function () {
-            var dfd = $.Deferred();
+            self.deferred = $.Deferred();
             
             if(!self.fileSystem)            
-                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, self.onFileSystemSuccess, self.onFileSystemFail);
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
             else
-                dfd.resolve(self.fileSystem);
+                onFileSystemSuccess(self.fileSystem);
             
-            return dfd.promise();
+            return self.deferred.promise();
         } 
         
-        self.defered = self.loadFileSystem();     
+        var fileSystemPromise = self.loadFileSystem();     
         
-        self.defered.done = function (fileSystem) {
+        fileSystemPromise.done(function (fileSystem) {
             self.fileSystem = fileSystem;
-        }
+        });
         
-        self.defered.fail = function(error) {
+        fileSystemPromise.fail(function(error) {
             system.fileSystem = null; 
             
             system.logFatal("Unable to connect to the file system: " + error.code); 
-        }
-        
-        self.fileSystem;
+        });
         
         self.Exists = function (path) {            
-            if(self.fileSystem != null)
+            var dfd = $.Deferred();
+            
+            if(self.fileSystem)
             {
                 self.fileSystem.root.getFile(path, { create: false },
-                // success callback
-                function () { 
-                    return true; 
+                function () {
+                    dfd.resolve(true); 
                 },
-                // failure callback
-                function () { 
-                    return false; 
+                function () {
+                    dfd.reject(false);
                 });                
             }
+            else
+            {
+                dfd.reject(false);
+            }
             
-            return false;
+            return dfd.promise();
         }
         
         self.Read = function (path) {
-            if(self.fileSystem != null)
+            var dfd = $.Deferred();
+            
+            if(self.fileSystem)
             {
-                self.fileSystem.root.getFile(path, null,
+                self.fileSystem.root.getFile(path, { create : false },
                 function (fileEntry) {
                     fileEntry.file(
                     function (file) {
                         var reader = new FileReader(); 
                         
                         reader.onload = function (evt) {
-                            return evt.target.result; 
+                            dfd.resolve(evt.target.result); 
                         }
                         
                         reader.onerror = function (error) {
                             system.logError("Failed to read data from file: " + error.code);
-                            return null; 
+                            dfd.reject(false);
                         }
                         
                         reader.readAsText(file);                        
                     }, 
                     function (error) {
                         system.logError("Failed to get file instance: " + error.code);
-                        return null;
+                        dfd.reject(false);
                     });
                 },
                 function (error) {
                     system.logError("File does not exist: " + error.code);
-                    return null; 
+                    dfd.reject(false); 
                 });                
-            }            
+            }
+            else
+            {         
+                system.logFatal("File system not initialized. (Read)");
+                dfd.reject(false);
+            }
             
-            system.logFatal("File system not initialized.");
-            return null;             
+            return dfd.promise();
         }
                 
         self.Write = function (path, data) {
-            if(self.fileSystem != null)
+            var dfd = $.Deferred();
+            
+            if(self.fileSystem)
             {
                 self.fileSystem.root.getFile(path, {create: true, exclusive: false},             
                 function (fileEntry) {
                     fileEntry.createWriter(
                     function (writer) {
                         writer.onwrite = function (evt) {
-                            return true;
+                            dfd.resolve(true);
                         }
                         writer.onerror = function (error) {
                             system.logError("Failed to write data to file: " + error.code);
-                            return false; 
+                            dfd.fail(false); 
                         }
                         
-                        writer.write(data); 
+                        writer.write(data);                        
                     }, 
                     function (error) {
                         system.logError("Failed to create file writer: " + error.code);
-                        return false;
+                        dfd.fail(false);
                     });
                 }, 
                 function (error) {
                     system.logError("Failed to get file entry: " + error.code); 
-                    return false;
+                    dfd.fail();
                 });                 
             }
+            else
+            {            
+                system.logFatal("File system not initialized. (Write)");
+                dfd.fail(false); 
+            }
             
-            system.logFatal("File system not initialized.");
-            return false;             
+            return dfd.promise();
+        }      
+        
+        self.Delete = function (path) {
+            var dfd = $.Deferred();
+            
+            if(self.fileSystem)
+            {
+                self.fileSystem.root.getFile(path, { create: false },
+                function (fileEntry) {
+                    fileEntry.remove(
+                    function () {                        
+                        dfd.resolve(true);                                            
+                    }, 
+                    function (error) {
+                        system.logError("Failed to delete file: " + error.code);
+                        dfd.reject(false);
+                    });
+                },
+                function (error) {
+                    // File does not exist (not a failure state)
+                    dfd.resolve(); 
+                });                
+            }
+            else
+            {            
+                system.logFatal("File system not initialized. (Delete)");
+                dfd.reject(false);
+            }
+            
+            return dfd.promise(); 
         }
     }
     

@@ -16,7 +16,8 @@ require(["config"], function (config) {
              "framework/logLevel",
              testRootPath + "system_tests",
              testRootPath + "homeViewModel_tests",
-             testRootPath + "localization_tests"
+             testRootPath + "localization_tests",
+             testRootPath + "FileManagement_tests"
              //ADDITIONAL TESTS GO HERE
     ],
     function($, ko, kendo, system, logLevel) {
