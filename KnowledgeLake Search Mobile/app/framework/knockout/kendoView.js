@@ -33,19 +33,19 @@ define(['knockout',
                         window[shortModelName] = model;
                                        
                         //try to attach kendo event handlers
-                        if (model.init) {
+                        if (typeof model.init === 'function') {
                             $(element).attr("data-init", shortModelName + ".init");
                         }                            
-                        if (model.beforeShow) {
+                        if (typeof model.beforeShow === 'function') {
                             $(element).attr("data-before-show", shortModelName + ".beforeShow");
                         }
-                        if (model.show) {
+                        if (typeof model.show === 'function') {
                             $(element).attr("data-show", shortModelName + ".show");
                         }
-                        if (model.afterShow) {
+                        if (typeof model.afterShow === 'function') {
                             $(element).attr("data-after-show", shortModelName + ".afterShow");
                         }
-                        if (model.hide) {
+                        if (typeof model.hide === 'function') {
                             $(element).attr("data-hide", shortModelName + ".hide");
                         }
                             

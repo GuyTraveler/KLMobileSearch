@@ -84,34 +84,36 @@ define(["jquery"], function ($) {
                 });
         }
         
+        //converts a SOAP packet to a JSON object
         self.soapToJson = function(methodName, soap) {
             var responseNodeName = methodName + "Response",
                 responseJson = {};
             
-            $(soap).find(responseNodeName).each(function () {
-                responseJson[jsonTextPropertyName] = $(this).contents().eq(0).text();
+            $(soap).find(responseNodeName).each(function (i, root) {
+                responseJson[jsonTextPropertyName] = $(root).clone().children().remove().end().text();
                 
-                $.each($(this).children(), function(i, elem) {
+                $.each($(this).children(), function(j, elem) {
                     self.parseXmlElementToJson(responseJson, elem);
                 });            
             });
             
-            system.logVerbose("FULLY PARSED JSON object: " + JSON.stringify(responseJson));
+            system.logVerbose("FULLY PARSED JSON OBJECT: " + JSON.stringify(responseJson));
             
             return soap;
         }
         
+        //recursive method to translate SOAP elements to a JSON object
         self.parseXmlElementToJson = function (parentObject, elem) {
             parentObject[elem.tagName] = {};
-            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).contents().eq(0).text();
+            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).clone().children().remove().end().text();
             
             $.each(elem.attributes, function(i, att) {
-                parentObject[elem.tagName][att.name] = att.value;
-                
-                $.each($(this).children(), function (j, childElem) {
-                    parseXmlElementToJson(parentObject[elem.tagName]);
-                });                    
+                parentObject[elem.tagName][att.name] = att.value;                                                 
             });
+            
+            $.each($(elem).children(), function (j, childElem) {
+                self.parseXmlElementToJson(parentObject[elem.tagName], childElem);
+            });  
         }
        
         return self;
