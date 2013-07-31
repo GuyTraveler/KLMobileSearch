@@ -1,6 +1,7 @@
 define(["jquery"], function ($) {
     var soapServiceBase = function (siteUrl, serviceName) {
-        var self = this;
+        var self = this,
+            jsonTextPropertyName = "value";
         
         self.serviceUrl = siteUrl;
         
@@ -43,10 +44,14 @@ define(["jquery"], function ($) {
                         dataType: "xml",
                         xhrFields: { withCredentials: true },
                         success: function (result) {
+                            var resultJson;
+                            
                             system.logVerbose("Successful ajax service call: " + serviceName + "." + methodName);
                             
+                            resultJson = self.soapToJson(methodName, result);
+                            
                             if (typeof successCallback === 'function')
-                                successCallback(result);
+                                successCallback(resultJson);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             system.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
@@ -77,6 +82,36 @@ define(["jquery"], function ($) {
                     if (typeof failCallback === 'function')
                         failCallback(XMLHttpRequest, textStatus + " " + message, errorThrown);
                 });
+        }
+        
+        self.soapToJson = function(methodName, soap) {
+            var responseNodeName = methodName + "Response",
+                responseJson = {};
+            
+            $(soap).find(responseNodeName).each(function () {
+                responseJson[jsonTextPropertyName] = $(this).text();
+                
+                $.each($(this).children(), function(i, elem) {
+                    self.parseXmlElementToJson(responseJson, elem);
+                });            
+            });
+            
+            console.log("FULLY PARSED JSON object: " + JSON.stringify(responseJson));
+            
+            return soap;
+        }
+        
+        self.parseXmlElementToJson = function (parentObject, elem) {
+            parentObject[elem.tagName] = {};
+            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).text();
+            
+            $.each(elem.attributes, function(i, att) {
+                parentObject[elem.tagName][att.name] = att.value;
+                
+                $.each($(this).children(), function (j, childElem) {
+                    parseXmlElementToJson(parentObject[elem.tagName]);
+                });                    
+            });
         }
        
         return self;

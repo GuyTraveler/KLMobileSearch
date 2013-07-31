@@ -2,7 +2,8 @@ define(["knockout", "system"],
     function (ko, system) {
         var configureSiteViewModel = function () {
             var self = this,
-                defaultUrlText = "http://";
+                defaultUrlText = "http://",
+                homeUrl = "#home";
                  
             
             self.url = ko.observable(defaultUrlText);
@@ -13,7 +14,7 @@ define(["knockout", "system"],
             
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
-                window.App.navigate("#home");
+                window.App.navigate(homeUrl);
             }
             
             self.validateSiteUrl = function () {
