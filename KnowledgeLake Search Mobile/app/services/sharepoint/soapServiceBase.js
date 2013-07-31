@@ -89,21 +89,21 @@ define(["jquery"], function ($) {
                 responseJson = {};
             
             $(soap).find(responseNodeName).each(function () {
-                responseJson[jsonTextPropertyName] = $(this).text();
+                responseJson[jsonTextPropertyName] = $(this).contents().eq(0).text();
                 
                 $.each($(this).children(), function(i, elem) {
                     self.parseXmlElementToJson(responseJson, elem);
                 });            
             });
             
-            console.log("FULLY PARSED JSON object: " + JSON.stringify(responseJson));
+            system.logVerbose("FULLY PARSED JSON object: " + JSON.stringify(responseJson));
             
             return soap;
         }
         
         self.parseXmlElementToJson = function (parentObject, elem) {
             parentObject[elem.tagName] = {};
-            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).text();
+            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).contents().eq(0).text();
             
             $.each(elem.attributes, function(i, att) {
                 parentObject[elem.tagName][att.name] = att.value;

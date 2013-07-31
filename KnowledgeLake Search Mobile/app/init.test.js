@@ -24,7 +24,6 @@ require(["config"], function (config) {
                           //ADDITIONAL TESTS GO HERE
                          ];
         
-        system.setLogLevel(logLevel.Verbose);
         window.system = system;  
         
         //add tests that CANNOT be run in the SIMULATOR here
@@ -32,7 +31,11 @@ require(["config"], function (config) {
             testsToRun.push(testRootPath + "FileManagement_tests");
         }
         
-        require(testsToRun, function() {
+        QUnit.moduleStart(function (details) {
+            window.system.setLogLevel(logLevel.Verbose); 
+        });
+        
+        require(testsToRun, function() {           
             QUnit.start(); 
         });
     });

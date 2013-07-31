@@ -2,8 +2,7 @@
 define(["services/sharepoint/siteDataService", "ntlm"],
     function (siteDataService, ntlm) {
         QUnit.module("Testing siteDataService");
-        
-        
+       
         QUnit.test("Test can instantiate siteDataService", function () {
             //arrange
             var service;
