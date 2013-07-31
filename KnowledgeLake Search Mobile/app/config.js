@@ -19,9 +19,6 @@ define([], function() {
            kendo: {
                deps: ['jquery'],
                exports: 'kendo'               
-           },
-           ntlm: {
-               exports: 'ntlm'
            }
        },
        /******custom configuration*******/
@@ -31,6 +28,6 @@ define([], function() {
            }  
        },*/
        logLevel: 0, //verbose (see logLevel.js)    
-       isQunit: false
+       isQunit: true
    };
 });

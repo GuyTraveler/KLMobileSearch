@@ -1,11 +1,8 @@
 /*global QUnit*/
-define(['require',
-        'jquery',
-        'knockout',
-        'system',
+define(['system',
         'framework/logLevel'
         ],
-    function (require, $, ko, system, logLevel) {
+    function (system, logLevel) {
         QUnit.module("Testing framework/system");
 
         //assert
