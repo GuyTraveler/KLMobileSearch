@@ -1,29 +1,6 @@
 define(["FileManagement","system", "jquery"], function (File, system, $) {
         QUnit.module("Testing framework/FileManagement");
 
-        var isRunningInSimulator = function () {
-            // device uuids for simulated devices
-            var iPhone = "e0101010d38bde8e6740011221af335301010333";
-            var iPhone5 = "e0101010d38bde8e6740011221af335301010333";
-            var iPad = "e0101010d38bde8e6740011221af335301010333";
-            var Android = "e0908060g38bde8e6740011221af335301010333";
-            var AndroidTablet = "e0101010d38bde8e6740011221af335301010333";
-                      
-            // current device uuid
-            var deviceUUID = device.uuid;
-            
-            if(deviceUUID == iPhone ||
-                deviceUUID == iPhone5 ||
-                deviceUUID == iPad ||
-                deviceUUID == Android ||
-                deviceUUID == AndroidTablet)
-            {
-                return true;
-            }
-            
-            return false;
-        }
-    
         QUnit.test("test fileSystem is up and running", function () {
             //arrange
             
@@ -32,11 +9,7 @@ define(["FileManagement","system", "jquery"], function (File, system, $) {
             //assert
             QUnit.ok(File);
             
-            // test running on a simulated device
-            if(isRunningInSimulator())
-                QUnit.equal(File.fileSystem, null);
-            else
-                QUnit.ok(File.fileSystem);
+            QUnit.ok(File.fileSystem);
         });
     
         QUnit.asyncTest("test file exists if file exists", function () {

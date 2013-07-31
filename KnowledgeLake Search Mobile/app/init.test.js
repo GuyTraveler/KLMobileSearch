@@ -13,21 +13,27 @@ require(["config"], function (config) {
              "knockout", 
              "kendo", 
              "system", 
-             "framework/logLevel",
-             testRootPath + "system_tests",
-             testRootPath + "homeViewModel_tests",
-             testRootPath + "localization_tests",
-             testRootPath + "FileManagement_tests",
-             testRootPath + "siteDataService_tests",
-             testRootPath + "websService_tests",
-             testRootPath + "authenticationService_tests"
-             //ADDITIONAL TESTS GO HERE
-    ],
+             "framework/logLevel"],
     function($, ko, kendo, system, logLevel) {
+        var testsToRun = [testRootPath + "system_tests",
+                          testRootPath + "homeViewModel_tests",
+                          testRootPath + "localization_tests",                          
+                          testRootPath + "siteDataService_tests",
+                          testRootPath + "websService_tests",
+                          testRootPath + "authenticationService_tests"
+                          //ADDITIONAL TESTS GO HERE
+                         ];
         
         system.setLogLevel(logLevel.Verbose);
-        window.system = system;    
+        window.system = system;  
         
-        QUnit.start();
+        //add tests that CANNOT be run in the SIMULATOR here
+        if (!system.isRunningInSimulator()) {
+            testsToRun.push(testRootPath + "FileManagement_tests");
+        }
+        
+        require(testsToRun, function() {
+            QUnit.start(); 
+        });
     });
 });
