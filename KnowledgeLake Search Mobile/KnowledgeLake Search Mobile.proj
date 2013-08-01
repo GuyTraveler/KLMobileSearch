@@ -83,6 +83,7 @@
     <Content Include="app\domain\authenticationMode.js" />
     <Content Include="app\domain\credential.js" />
     <Content Include="app\domain\credentialType.js" />
+    <Content Include="app\domain\site.js" />
     <Content Include="app\domain\soapParameter.js" />
     <Content Include="app\framework\FileManagement.js" />
     <Content Include="app\framework\knockout\kendoView.js" />
