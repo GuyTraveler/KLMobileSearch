@@ -23,7 +23,32 @@
             <p class="list-view-label">
                 <span data-bind="text: system.strings.credentialType" />
             </p>
-            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
+            <select id="credentialTypeDropDown" data-bind="options: credentialTypes, optionsText: 'key', optionsValue: 'value', value: siteCredentialType"></select>
+        </label>
+    </li>
+    
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.userName" />
+            </p>
+            <input type="search" data-bind="text: siteUserName" class="list-view-input" />            
+        </label>
+    </li>
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.password" />
+            </p>
+            <input type="search" data-bind="text: sitePassword" class="list-view-input" />            
+        </label>
+    </li>
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.domain" />
+            </p>
+            <input type="search" data-bind="text: siteDomain" class="list-view-input" />            
         </label>
     </li>
 </ul>          

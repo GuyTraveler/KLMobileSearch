@@ -1,17 +1,17 @@
 /*global QUnit*/
-define(["domain/soapParameter"],
-    function (soapParameter) {
-        QUnit.module("Testing soapParameter");
+define(["domain/keyValuePair"],
+    function (keyValuePair) {
+        QUnit.module("Testing keyValuePair");
         
         
-        QUnit.test("Test can instantiate soapParameter and properties are set", function () {
+        QUnit.test("Test can instantiate keyValuePair and properties are set", function () {
             //arrange
             var parameter,
                 testKey = "key1",
                 testValue = "value1";
             
             //act
-            parameter = new soapParameter(testKey, testValue);
+            parameter = new keyValuePair(testKey, testValue);
             
             //assert
             QUnit.ok(parameter);

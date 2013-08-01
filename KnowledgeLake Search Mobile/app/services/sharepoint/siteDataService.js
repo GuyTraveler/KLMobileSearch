@@ -1,4 +1,4 @@
-define(["jquery", "domain/soapParameter", "services/sharepoint/soapServiceBase"], function ($, soapParameter, soapServiceBase) {
+define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
     
     var siteDataService = function (siteUrl) {
         var self = this,
@@ -9,7 +9,7 @@ define(["jquery", "domain/soapParameter", "services/sharepoint/soapServiceBase"]
         
         self.GetSiteUrl = function (url, successCallback, failCallback) {
             var parameters = [
-                new soapParameter("Url", url)
+                new keyValuePair("Url", url)
             ];
             
             self.executeSoapMethod("GetSiteUrl", parameters, successCallback, failCallback);
