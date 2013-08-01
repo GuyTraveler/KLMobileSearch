@@ -15,7 +15,7 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
                 
-                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), new credential("type", "userName", "password", "domain")));
+                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", new credential("type", "userName", "password", "domain")));
                 
                 addSitePromise.done(function (result) {          
                     window.App.navigate(homeUrl);
