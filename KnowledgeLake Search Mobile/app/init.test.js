@@ -1,6 +1,7 @@
 //globals:
 //**require**//
 var App,
+    AppLoaded,
     system,
     rootViewModel;
 
@@ -25,6 +26,7 @@ require(["config"], function (config) {
                          ];
         
         window.system = system;  
+        window.AppLoaded = ko.observable(false);
         
         //add tests that CANNOT be run in the SIMULATOR here
         if (!system.isRunningInSimulator()) {
