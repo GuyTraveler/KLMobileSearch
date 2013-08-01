@@ -2,8 +2,7 @@
 //**require**//
 var App,
     AppLoaded,
-    system,
-    rootViewModel;
+    system;
 
 require(["config"], function (config) {
     var testRootPath = 'unitTests/';
@@ -12,10 +11,9 @@ require(["config"], function (config) {
         
     require(["jquery", 
              "knockout", 
-             "kendo", 
              "system", 
              "framework/logLevel"],
-    function($, ko, kendo, system, logLevel) {
+    function($, ko, system, logLevel) {
         var testsToRun = [testRootPath + "system_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                          

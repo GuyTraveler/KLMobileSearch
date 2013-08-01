@@ -3,8 +3,9 @@ define(["knockout",
         "services/sharepoint/authenticationService", 
         "services/siteDataCachingService", 
         "domain/credentialType",
+        "domain/authenticationMode",
         "domain/keyValuePair"], 
-    function (ko, system, authenticationService, SiteDataCachingService, credentialType, keyValuePair) {
+    function (ko, system, authenticationService, SiteDataCachingService, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -60,13 +61,16 @@ define(["knockout",
                 window.App.showLoading();
                 
                 dataService = new authenticationService(self.url());
-                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);
+                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);    
             }
             
             self.onSiteUrlValidated = function (result) {
+                var detectedCredentialType;
+                
                 system.logVerbose("site url validation success");
                 
-                self.setValidUrl();   
+                detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
+                self.setValidUrl(detectedCredentialType);   
                 
                 window.App.hideLoading();
             }
@@ -76,7 +80,8 @@ define(["knockout",
                 system.logVerbose("site url validation failed with status: " + status);
                 
                 if (status == 401 || status == 200) {
-                    self.setValidUrl();   
+                    //unknown credential type in this case...
+                    self.setValidUrl(credentialType.ntlm);   
                 }
                 else {
                     self.setInvalidUrl();
@@ -85,8 +90,12 @@ define(["knockout",
                 window.App.hideLoading();
             }
             
-            self.setValidUrl = function () {
+            self.setValidUrl = function (detectedCredType) {
+                if (!detectedCredType)
+                    detectedCredType = credentialType.ntlm;
+                
                 self.validationImageSrc(validUrl);
+                self.siteCredentialType(detectedCredType);
             }
             
             self.setInvalidUrl = function () {
@@ -95,6 +104,16 @@ define(["knockout",
             
             self.resetUrlValidation = function () {
                 self.validationImageSrc(questionUrl);    
+            }
+            
+            
+            self.parseCredentialType =  function (spAuthenticationMode) {
+                if (spAuthenticationMode == authenticationMode.Forms) {
+                    return credentialType.claimsOrForms;
+                }
+                else {
+                    return credentialType.ntlm;
+                }
             }
             
             

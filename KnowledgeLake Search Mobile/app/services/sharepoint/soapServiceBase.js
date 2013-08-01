@@ -99,7 +99,7 @@ define(["jquery"], function ($) {
             
             system.logVerbose("FULLY PARSED JSON OBJECT: " + JSON.stringify(responseJson));
             
-            return soap;
+            return responseJson;
         }
         
         //recursive method to translate SOAP elements to a JSON object
