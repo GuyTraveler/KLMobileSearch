@@ -7,5 +7,6 @@ define({
     cancel: "Cancel",
     save: "Save",
     siteUrl: "Url",
-    validate: "Validate"
+    validate: "Validate",
+    loading: "Loading..."
 });

@@ -11,8 +11,11 @@ require(["config"], function (config) {
              "knockout", 
              "kendo", 
              "system", 
-             "framework/logLevel",              
+             "framework/logLevel",
+             //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
              "viewmodels/homeViewModel",
+             "viewmodels/configureSiteViewModel",
+             "viewmodels/resultsViewModel",
              "framework/knockout/kendoView"], 
     function($, ko, kendo, system, logLevel, homeViewModel) {
         var testHref = "test.html?coverage=true";                
@@ -40,9 +43,11 @@ require(["config"], function (config) {
 function onLastViewModelLoaded() {
     if (!window.App) {
         window.App = new kendo.mobile.Application(document.body, {
-            transition: 'slide'
+            transition: 'slide',
+            loading: '<h1>' + window.system.strings.loading + '</h1>'
         });
-        window.AppLoaded(true);
         system.logVerbose("kendo application loaded");
+        
+        window.AppLoaded(true);
     }
 }

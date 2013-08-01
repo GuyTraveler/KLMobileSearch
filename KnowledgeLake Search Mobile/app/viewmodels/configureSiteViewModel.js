@@ -1,5 +1,5 @@
-define(["knockout", "system", "FileManagement"], 
-    function (ko, system, File) {
+define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataService"], 
+    function (ko, system, File, siteDataService) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -23,7 +23,23 @@ define(["knockout", "system", "FileManagement"],
             }
             
             self.validateSiteUrl = function () {
+                var dataService;
+                
                 system.logVerbose("validateSiteUrl called");
+                window.App.showLoading();
+                
+                dataService = new siteDataService(self.url());
+                dataService.GetSiteUrl(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);
+            }
+            
+            self.onSiteUrlValidated = function (result) {
+                system.logVerbose("site url validation success");
+                window.App.hideLoading();
+            }
+            
+            self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
+                system.logVerbose("site url validation failed");
+                window.App.hideLoading();
             }
             
             
