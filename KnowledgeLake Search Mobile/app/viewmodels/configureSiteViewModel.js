@@ -1,5 +1,5 @@
-define(["knockout", "system"], 
-    function (ko, system) {
+define(["knockout", "system", "FileManagement"], 
+    function (ko, system, File) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -14,7 +14,12 @@ define(["knockout", "system"],
             
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
-                window.App().navigate(homeUrl);
+                
+                // add logic to append newest site to sites.dat
+                // if file exists writeAppend
+                // if file does not exist write
+                
+                window.App.navigate(homeUrl);
             }
             
             self.validateSiteUrl = function () {

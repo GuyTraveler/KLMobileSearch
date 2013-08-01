@@ -135,6 +135,45 @@ define(["system", "jquery"], function (system, $) {
             return dfd.promise();
         }
         
+        self.writeAppend = function (path, data) {
+            var dfd = $.Deferred();
+            
+            if(self.fileSystem)
+            {
+                self.fileSystem.root.getFile(path, {create: true, exclusive: false},
+                function (fileEntry) {
+                    fileEntry.createWriter(
+                    function (writer) {
+                        writer.onwrite = function (evt) {
+                            dfd.resolve(true);
+                        }
+                        writer.onerror = function (error) {
+                            system.logError("Failed to write data to file: " + error.code);
+                            dfd.fail(false);
+                        }
+                        
+                        writer.seek(writer.length);
+                        writer.write(data);
+                    },
+                    function (error) {
+                        system.logError("Failed to create file writer: " + error.code);
+                        dfd.fail(false);
+                    });
+                },
+                function (error) {
+                    system.logError("Failed to get file entry: " + error.code);
+                    dfd.fail();
+                });
+            }
+            else
+            {
+                system.logFatal("File system not initialized. (Write)");
+                dfd.fail(false);
+            }
+            
+            return dfd.promise();
+        }
+        
         self.Delete = function (path) {
             var dfd = $.Deferred();
             

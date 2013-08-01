@@ -1,6 +1,7 @@
 //globals:
 //**require**//
 var App,
+    AppLoaded,
     system;
 
 require(["config"], function (config) {
@@ -22,7 +23,7 @@ require(["config"], function (config) {
            
         system.setLogLevel(config.logLevel);
         window.system = system;   
-        window.App = ko.observable(null);
+        window.AppLoaded = ko.observable(false);
           
         ko.applyBindings(null, document.body);
                 
@@ -37,10 +38,11 @@ require(["config"], function (config) {
 });
 
 function onLastViewModelLoaded() {
-    if (!window.App || !window.App()) {
-        window.App(new kendo.mobile.Application(document.body, {
+    if (!window.App) {
+        window.App = new kendo.mobile.Application(document.body, {
             transition: 'slide'
-        }));
+        });
+        window.AppLoaded(true);
         system.logVerbose("kendo application loaded");
     }
 }

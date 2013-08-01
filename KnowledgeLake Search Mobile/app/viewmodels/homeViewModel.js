@@ -8,8 +8,9 @@ define(["knockout", "system", "FileManagement"],
             self.init = function (e) {
                 system.logVerbose("homeViewModel init");
                 
-                window.App.subscribe(function (updatedValue) {
-                                                  
+                window.AppLoaded.subscribe(function (updatedValue) {
+                    if(updatedValue)
+                    {                                                  
                         var existsPromise = File.Exists("sites.dat");
                 
                         existsPromise.done(function (result) {
@@ -18,10 +19,11 @@ define(["knockout", "system", "FileManagement"],
                         });
                         
                         existsPromise.fail(function (result) {
-                            window.App().navigate("#configureSite");
+                            window.App.navigate("#configureSite");
                         });
                     
-                    // possibly add logic to remove subscription
+                        // possibly add logic to remove subscription
+                   }
                 });
             }
             
