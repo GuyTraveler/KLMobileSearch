@@ -78,7 +78,17 @@ define(["jquery", "FileManagement"], function ($, File) {
             });
             
             return dfd.promise();
-        }        
+        }
+        
+        self.SiteExists = function (url) {
+            if(self.sites)
+            {
+                var 
+                
+            }
+            
+            return false;
+        }
     }
 
     return new service(); 
