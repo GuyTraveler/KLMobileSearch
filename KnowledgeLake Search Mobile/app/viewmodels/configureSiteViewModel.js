@@ -1,5 +1,5 @@
-define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataService"], 
-    function (ko, system, File, siteDataService) {
+define(["knockout", "system", "services/sharepoint/siteDataService", "services/siteDataCachingService"], 
+    function (ko, system, siteDataService, SiteDataCachingService) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -14,14 +14,29 @@ define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataSer
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
+                
+                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), new credential("type", "userName", "password", "domain")));
+                
+                addSitePromise.done(function (result) {          
+                    window.App.navigate(homeUrl);
+                    // after navigate possibly on show update the listview datasource to the latest SiteDataCachingService.sites
+                });
+                
+                addSitePromise.fail(function (result) {
+                    if(result)
+                    {
+                        // throw site connection already exists
+                    }
+                    else
+                    {
+                        // critical error writing new site data                                   
+                        // recovery options? modal dialog?
+                    }
+                });
             }
             
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
-                
-                // add logic to append newest site to sites.dat
-                // if file exists writeAppend
-                // if file does not exist write
                 
                 window.App.navigate(homeUrl);
             }
@@ -57,7 +72,6 @@ define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataSer
                 
                 window.App.hideLoading();
             }
-            
             
             self.setValidUrl = function () {
                 self.validationImageSrc(validUrl);

@@ -88,6 +88,7 @@
     <Content Include="app\domain\soapParameter.js" />
     <Content Include="app\framework\FileManagement.js" />
     <Content Include="app\framework\knockout\kendoView.js" />
+    <Content Include="app\services\siteDataCachingService.js" />
     <Content Include="app\images\question.png" />
     <Content Include="app\images\valid.png" />
     <Content Include="app\images\invalid.png" />

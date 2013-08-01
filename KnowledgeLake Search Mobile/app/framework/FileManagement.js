@@ -45,7 +45,7 @@ define(["system", "jquery"], function (system, $) {
                     dfd.resolve(true);
                 },
                 function () {
-                    dfd.reject(false);
+                    dfd.reject(true);
                 });
             }
             else
@@ -111,64 +111,25 @@ define(["system", "jquery"], function (system, $) {
                         }
                         writer.onerror = function (error) {
                             system.logError("Failed to write data to file: " + error.code);
-                            dfd.fail(false);
+                            dfd.reject(false);
                         }
                         
                         writer.write(data);
                     },
                     function (error) {
                         system.logError("Failed to create file writer: " + error.code);
-                        dfd.fail(false);
+                        dfd.reject(false);
                     });
                 },
                 function (error) {
                     system.logError("Failed to get file entry: " + error.code);
-                    dfd.fail();
+                    dfd.reject(false);
                 });
             }
             else
             {
                 system.logFatal("File system not initialized. (Write)");
-                dfd.fail(false);
-            }
-            
-            return dfd.promise();
-        }
-        
-        self.writeAppend = function (path, data) {
-            var dfd = $.Deferred();
-            
-            if(self.fileSystem)
-            {
-                self.fileSystem.root.getFile(path, {create: true, exclusive: false},
-                function (fileEntry) {
-                    fileEntry.createWriter(
-                    function (writer) {
-                        writer.onwrite = function (evt) {
-                            dfd.resolve(true);
-                        }
-                        writer.onerror = function (error) {
-                            system.logError("Failed to write data to file: " + error.code);
-                            dfd.fail(false);
-                        }
-                        
-                        writer.seek(writer.length);
-                        writer.write(data);
-                    },
-                    function (error) {
-                        system.logError("Failed to create file writer: " + error.code);
-                        dfd.fail(false);
-                    });
-                },
-                function (error) {
-                    system.logError("Failed to get file entry: " + error.code);
-                    dfd.fail();
-                });
-            }
-            else
-            {
-                system.logFatal("File system not initialized. (Write)");
-                dfd.fail(false);
+                dfd.reject(false);
             }
             
             return dfd.promise();
@@ -192,7 +153,7 @@ define(["system", "jquery"], function (system, $) {
                 },
                 function (error) {
                     // File does not exist (not a failure state)
-                    dfd.resolve();
+                    dfd.resolve(false);
                 });
             }
             else
