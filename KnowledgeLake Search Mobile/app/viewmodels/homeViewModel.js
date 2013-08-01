@@ -1,5 +1,5 @@
-define(["knockout", "system"], 
-    function (ko, system) {
+define(["knockout", "system", "FileManagement"], 
+    function (ko, system, File) {
         var homeViewModel = function () {
             var self = this;
             
@@ -7,6 +7,23 @@ define(["knockout", "system"],
             
             self.init = function (e) {
                 system.logVerbose("homeViewModel init");
+                
+                window.App.subscribe(function (updatedValue) {
+                                                  
+                        var existsPromise = File.Exists("sites.dat");
+                
+                        existsPromise.done(function (result) {
+                            console.log("sites.dat exists");
+                            // read sites data from file system
+                            // populate view model property
+                        });
+                        
+                        existsPromise.fail(function (result) {                            
+                            console.log("sites.dat does not exist");
+                            window.App().navigate("#configureSite");
+                        });
+                    
+                });
             }
             
             self.beforeShow = function (e) {
