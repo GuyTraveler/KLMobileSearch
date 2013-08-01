@@ -1,5 +1,11 @@
-define(["knockout", "system", "services/sharepoint/siteDataService", "services/siteDataCachingService"], 
-    function (ko, system, siteDataService, SiteDataCachingService) {
+define(["knockout", 
+        "system", 
+        "services/sharepoint/authenticationService", 
+        "services/siteDataCachingService", 
+        "domain/credentialType",
+        "domain/authenticationMode",
+        "domain/keyValuePair"], 
+    function (ko, system, authenticationService, SiteDataCachingService, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -10,7 +16,14 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
                  
             
             self.url = ko.observable(defaultUrlText);
+            self.siteCredentialType = ko.observable(credentialType.ntlm);
+            self.siteUserName = ko.observable("");
+            self.sitePassword = ko.observable("");
+            self.siteDomain = ko.observable("");
+            
             self.validationImageSrc = ko.observable(questionUrl);
+            self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
+                                                       new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
@@ -47,14 +60,17 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
                 system.logVerbose("validateSiteUrl called");
                 window.App.showLoading();
                 
-                dataService = new siteDataService(self.url());
-                dataService.GetSiteUrl(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);
+                dataService = new authenticationService(self.url());
+                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);    
             }
             
             self.onSiteUrlValidated = function (result) {
+                var detectedCredentialType;
+                
                 system.logVerbose("site url validation success");
                 
-                self.setValidUrl();   
+                detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
+                self.setValidUrl(detectedCredentialType);   
                 
                 window.App.hideLoading();
             }
@@ -64,7 +80,8 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
                 system.logVerbose("site url validation failed with status: " + status);
                 
                 if (status == 401 || status == 200) {
-                    self.setValidUrl();   
+                    //unknown credential type in this case...
+                    self.setValidUrl(credentialType.ntlm);   
                 }
                 else {
                     self.setInvalidUrl();
@@ -73,8 +90,12 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
                 window.App.hideLoading();
             }
             
-            self.setValidUrl = function () {
+            self.setValidUrl = function (detectedCredType) {
+                if (!detectedCredType)
+                    detectedCredType = credentialType.ntlm;
+                
                 self.validationImageSrc(validUrl);
+                self.siteCredentialType(detectedCredType);
             }
             
             self.setInvalidUrl = function () {
@@ -86,9 +107,19 @@ define(["knockout", "system", "services/sharepoint/siteDataService", "services/s
             }
             
             
+            self.parseCredentialType =  function (spAuthenticationMode) {
+                if (spAuthenticationMode == authenticationMode.Forms) {
+                    return credentialType.claimsOrForms;
+                }
+                else {
+                    return credentialType.ntlm;
+                }
+            }
+            
+            
             
             self.init = function (e) {
-                system.logVerbose("configureSiteViewModel init");
+                system.logVerbose("configureSiteViewModel init");          
             }
             
             self.beforeShow = function (e) {

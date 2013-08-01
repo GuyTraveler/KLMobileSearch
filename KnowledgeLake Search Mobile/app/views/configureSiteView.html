@@ -15,7 +15,7 @@
                 <img width="16" data-bind="attr: { src: validationImageSrc }" />
                 <span data-bind="text: system.strings.siteUrl" />
             </p>
-            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
+            <input type="url" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
         </label>    
     </li>
     <li>
@@ -23,7 +23,32 @@
             <p class="list-view-label">
                 <span data-bind="text: system.strings.credentialType" />
             </p>
-            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
+            <select id="credentialTypeDropDown" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
+        </label>
+    </li>
+    
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.userName" />
+            </p>
+            <input type="text" data-bind="text: siteUserName" class="list-view-input" />            
+        </label>
+    </li>
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.password" />
+            </p>
+            <input type="password" data-bind="text: sitePassword" class="list-view-input" />            
+        </label>
+    </li>
+    <li>
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.domain" />
+            </p>
+            <input type="text" data-bind="text: siteDomain" class="list-view-input" />            
         </label>
     </li>
 </ul>          

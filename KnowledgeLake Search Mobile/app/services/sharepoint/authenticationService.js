@@ -1,4 +1,4 @@
-define(["jquery", "domain/soapParameter", "services/sharepoint/soapServiceBase"], function ($, soapParameter, soapServiceBase) {
+define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
     
     var authenticationService = function (siteUrl) {
         var self = this,

@@ -8,5 +8,11 @@ define({
     save: "Save",
     siteUrl: "Url",
     validate: "Validate",
-    loading: "Loading..."
+    loading: "Loading...",
+    credentialType: "Type",
+    userName: "User",
+    password: "Password",
+    domain: "Domain",
+    windows: "Windows",
+    claimsForms: "Claims/Forms"
 });

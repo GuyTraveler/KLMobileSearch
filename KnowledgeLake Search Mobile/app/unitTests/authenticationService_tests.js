@@ -49,7 +49,7 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             QUnit.ok(service);
             
             service.Mode(url, function (result) {
-                var mode = $(result).find("ModeResult").text();
+                var mode = result.ModeResult.value;
                 
                 QUnit.equal(mode, authenticationMode.Windows);
                 QUnit.start();
@@ -72,7 +72,7 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             QUnit.ok(service);
             
             service.Mode(url, function (result) {
-                var mode = $(result).find("ModeResult").text();
+                var mode = result.ModeResult.value;
                 
                 QUnit.equal(mode, authenticationMode.ClaimsOrForms);
                 QUnit.start();
@@ -96,7 +96,7 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             QUnit.ok(service);
             
             service.Mode(url, function (result) {
-                var mode = $(result).find("ModeResult").text();
+                var mode = result.ModeResult.value;
                 
                 QUnit.equal(mode, authenticationMode.ClaimsOrForms);
                 QUnit.start();

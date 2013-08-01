@@ -100,10 +100,8 @@ define(["services/sharepoint/siteDataService", "ntlm"],
             QUnit.ok(authResult);
             
             service.GetSiteUrl(url, function (result) {
-                var stringResult = (new XMLSerializer()).serializeToString(result);
-                
                 QUnit.ok(true, "GetSiteUrl was successful");
-                QUnit.ok(stringResult.indexOf(url) > -1, "Found URL in response");
+                QUnit.equal(url, result.siteUrl.value, "Found URL in response");
                 QUnit.start();
             },
             function (XMLHttpRequest, textStatus, errorThrown) {

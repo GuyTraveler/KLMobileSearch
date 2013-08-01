@@ -77,10 +77,8 @@ define(["services/sharepoint/websService", "ntlm"],
             QUnit.ok(authResult);
             
             service.GetWeb(url, function (result) {
-                var stringResult = (new XMLSerializer()).serializeToString(result);               
-                
                 QUnit.ok(true, "GetWeb was successful");
-                QUnit.ok(stringResult.indexOf(url) > -1, "Found URL in response");
+                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
                 QUnit.start();
             },
             function (XMLHttpRequest, textStatus, errorThrown) {

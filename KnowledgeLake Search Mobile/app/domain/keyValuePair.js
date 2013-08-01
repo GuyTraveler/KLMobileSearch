@@ -1,5 +1,5 @@
 define([], function () {
-    var soapParameter = function(key, value) {
+    var keyValuePair = function(key, value) {
         var self = this;
        
         self.key = key;
@@ -8,5 +8,5 @@ define([], function () {
         return self;
     };
     
-    return soapParameter;
+    return keyValuePair;
 });
