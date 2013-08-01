@@ -7,7 +7,8 @@ define([], function() {
            knockout: 'lib/knockout',
            system: 'framework/system',
            FileManagement: 'framework/FileManagement',
-           ntlm: 'lib/ntlm'
+           ntlm: 'lib/ntlm',
+           i18n: 'lib/i18n'
        },
        shim: {
            jquery: {
@@ -22,11 +23,11 @@ define([], function() {
            }
        },
        /******custom configuration*******/
-/*       config: {
+       config: {
            i18n: {
                locale: 'es'
            }  
-       },*/
+       },
        logLevel: 0, //verbose (see logLevel.js)    
        isQunit: false
    };

@@ -14,7 +14,7 @@ define(["knockout", "system"],
             
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
-                window.App.navigate(homeUrl);
+                window.App().navigate(homeUrl);
             }
             
             self.validateSiteUrl = function () {

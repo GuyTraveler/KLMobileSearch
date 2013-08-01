@@ -11,13 +11,13 @@
         <link href="app/styles/app.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle, loaded: 'onHomeLoaded' }" data-layout="default-layout">            
+        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }" data-layout="default-layout">            
         </div>
      
         <div data-bind="kendoView: { id: 'configureSite', title: system.strings.configureSitePageTitle }" data-transition="overlay:up">
         </div>
         
-        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle }" data-layout="default-layout">            
+        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle, loaded: 'onLastViewModelLoaded' }" data-layout="default-layout">            
         </div>
 
         
