@@ -1,3 +1,4 @@
 define({
-    appTitle: "KnowledgeLake búsqueda móvil"
+    appTitle: "KnowledgeLake búsqueda móvil",
+    loading: "carga..."
 });

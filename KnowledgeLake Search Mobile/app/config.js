@@ -23,12 +23,12 @@ define([], function() {
            }
        },
        /******custom configuration*******/
-       /*config: {
+/*       config: {
            i18n: {
                locale: 'es'
            }  
        },*/
        logLevel: 0, //verbose (see logLevel.js)    
-       isQunit: true
+       isQunit: false
    };
 });

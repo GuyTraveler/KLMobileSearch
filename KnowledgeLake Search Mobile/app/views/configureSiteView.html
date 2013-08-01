@@ -10,10 +10,7 @@
     <li>
         <label>
             <span data-bind="text: system.strings.siteUrl" />
-            <input type="search" data-bind="value: url" />
+            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" />
         </label>      
-    </li>
-    <li>
-        <button data-role="button" data-align="right" class="button full-width" data-bind="click: validateSiteUrl, text: system.strings.validate"></button>
     </li>
 </ul>          

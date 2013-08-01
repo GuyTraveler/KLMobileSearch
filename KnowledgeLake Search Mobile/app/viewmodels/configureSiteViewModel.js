@@ -1,5 +1,5 @@
-define(["knockout", "system", "services/siteDataCachingService"], 
-    function (ko, system, SiteDataCachingService) {
+define(["knockout", "system", "services/sharepoint/siteDataService", "services/siteDataCachingService"], 
+    function (ko, system, siteDataService, SiteDataCachingService) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -9,7 +9,7 @@ define(["knockout", "system", "services/siteDataCachingService"],
             self.url = ko.observable(defaultUrlText);
             
             self.saveSiteSettings = function () {
-                system.logVerbose("save site settings");        
+                system.logVerbose("save site settings");
                 
                 var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), new credential("type", "userName", "password", "domain")));
                 
@@ -32,13 +32,30 @@ define(["knockout", "system", "services/siteDataCachingService"],
             }
             
             self.closeSiteSettings = function () {
-                system.logVerbose("closing site settings");                
+                system.logVerbose("closing site settings");
+                
                 window.App.navigate(homeUrl);
             }
             
             self.validateSiteUrl = function () {
+                var dataService;
+                
                 system.logVerbose("validateSiteUrl called");
-            }            
+                window.App.showLoading();
+                
+                dataService = new siteDataService(self.url());
+                dataService.GetSiteUrl(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);
+            }
+            
+            self.onSiteUrlValidated = function (result) {
+                system.logVerbose("site url validation success");
+                window.App.hideLoading();
+            }
+            
+            self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
+                system.logVerbose("site url validation failed");
+                window.App.hideLoading();
+            }
             
             self.init = function (e) {
                 system.logVerbose("configureSiteViewModel init");
