@@ -17,8 +17,10 @@ define(["knockout", "system", "services/siteDataCachingService"],
                             var loadSitesPromise = SiteDataCachingService.LoadSites();
                     
                             loadSitesPromise.done(function (result) {
-                                self.siteDataSource = SiteDataCachingService.sites; 
-                                
+                                if(SiteDataCachingService.sites)
+                                    self.siteDataSource = SiteDataCachingService.sites;
+                                else
+                                    window.App.navigate("#configureSite");
                                 // somewhere wire up kendolistview data source
                             });
                             
