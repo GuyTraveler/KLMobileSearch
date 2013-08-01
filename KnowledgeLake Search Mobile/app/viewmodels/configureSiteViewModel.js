@@ -3,10 +3,14 @@ define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataSer
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
-                homeUrl = "#home";
+                homeUrl = "#home",
+                questionUrl = "app/images/question.png",
+                invalidUrl = "app/images/invalid.png",
+                validUrl = "app/images/valid.png";
                  
             
             self.url = ko.observable(defaultUrlText);
+            self.validationImageSrc = ko.observable(questionUrl);
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
@@ -34,13 +38,39 @@ define(["knockout", "system", "FileManagement", "services/sharepoint/siteDataSer
             
             self.onSiteUrlValidated = function (result) {
                 system.logVerbose("site url validation success");
+                
+                self.setValidUrl();   
+                
                 window.App.hideLoading();
             }
             
             self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
-                system.logVerbose("site url validation failed");
+                var status = XMLHttpRequest.status;
+                system.logVerbose("site url validation failed with status: " + status);
+                
+                if (status == 401 || status == 200) {
+                    self.setValidUrl();   
+                }
+                else {
+                    self.setInvalidUrl();
+                }
+                
                 window.App.hideLoading();
             }
+            
+            
+            self.setValidUrl = function () {
+                self.validationImageSrc(validUrl);
+            }
+            
+            self.setInvalidUrl = function () {
+                self.validationImageSrc(invalidUrl);    
+            }
+            
+            self.resetUrlValidation = function () {
+                self.validationImageSrc(questionUrl);    
+            }
+            
             
             
             self.init = function (e) {

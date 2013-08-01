@@ -2,6 +2,14 @@ body {
     font: Arial, sans-serif;
 }
 
+.list-view-label {
+    width: 20%!important; 
+    word-wrap: break-word
+}
+
+.list-view-input {
+    width: 70%!important;
+}
 .full-width {
     width: 100%;
 }

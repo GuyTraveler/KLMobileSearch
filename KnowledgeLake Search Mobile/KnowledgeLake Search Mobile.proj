@@ -22,6 +22,7 @@
     <Folder Include="app\lib" />
     <Folder Include="app\framework\knockout" />
     <Folder Include="app\framework" />
+    <Folder Include="app\images" />
     <Folder Include="app\services\sharepoint" />
     <Folder Include="app\services\sharepoint\soapTemplates\Authentication" />
     <Folder Include="app\services\sharepoint\soapTemplates\Webs" />
@@ -87,6 +88,9 @@
     <Content Include="app\domain\soapParameter.js" />
     <Content Include="app\framework\FileManagement.js" />
     <Content Include="app\framework\knockout\kendoView.js" />
+    <Content Include="app\images\question.png" />
+    <Content Include="app\images\valid.png" />
+    <Content Include="app\images\invalid.png" />
     <Content Include="app\lib\i18n.js" />
     <Content Include="app\lib\blanket.js" />
     <Content Include="app\nls\de\strings.js" />

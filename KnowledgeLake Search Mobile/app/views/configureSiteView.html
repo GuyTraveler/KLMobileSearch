@@ -6,11 +6,16 @@
     </div>
 </header>
 
+<h3 data-bind="text: system.strings.configureSitePageTitle" />
+
 <ul data-role="listview" data-style="inset">
     <li>
-        <label>
-            <span data-bind="text: system.strings.siteUrl" />
-            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" />
-        </label>      
+        <label>            
+            <p class="list-view-label">
+                <img width="16" data-bind="attr: { src: validationImageSrc }" />
+                <span data-bind="text: system.strings.siteUrl" />
+            </p>
+            <input type="search" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
+        </label>    
     </li>
 </ul>          
