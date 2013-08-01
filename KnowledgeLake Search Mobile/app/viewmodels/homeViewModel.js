@@ -13,16 +13,15 @@ define(["knockout", "system", "FileManagement"],
                         var existsPromise = File.Exists("sites.dat");
                 
                         existsPromise.done(function (result) {
-                            console.log("sites.dat exists");
                             // read sites data from file system
                             // populate view model property
                         });
                         
-                        existsPromise.fail(function (result) {                            
-                            console.log("sites.dat does not exist");
+                        existsPromise.fail(function (result) {
                             window.App().navigate("#configureSite");
                         });
                     
+                    // possibly add logic to remove subscription
                 });
             }
             
