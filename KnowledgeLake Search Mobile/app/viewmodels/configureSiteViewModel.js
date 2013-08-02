@@ -1,5 +1,6 @@
 define(["knockout", 
         "system", 
+        "ntlm",
         "services/sharepoint/authenticationService", 
         "services/sharepoint/siteDataService", 
         "services/siteDataCachingService", 
@@ -8,7 +9,7 @@ define(["knockout",
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair"], 
-    function (ko, system, authenticationService, siteDataService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
+    function (ko, system, ntlm, authenticationService, siteDataService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css
@@ -50,6 +51,43 @@ define(["knockout",
             self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
                                                        new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
+            
+            self.statusMessage.subscribe(function (newValue) {
+                if (newValue) {
+                    self.showStatus(true);
+                    
+                    setTimeout(function () {
+                        self.showStatus(false);
+                        
+                        setTimeout(function () {
+                            self.statusMessage("");
+                        }, messageFadeoutTime);
+                    }, messageDisplayTime);
+                }
+            });
+            
+            self.statusOff = ko.computed(function () {
+                return !self.showStatus(); 
+            });
+            
+            self.errorMessage.subscribe(function (newValue) {
+                if (newValue) {
+                    self.showError(true);
+                    
+                    setTimeout(function () {
+                        self.showError(false);
+                        
+                        setTimeout(function () {
+                            self.errorMessage("");
+                        }, messageFadeoutTime);
+                    }, messageDisplayTime);
+                }
+            });
+             
+            self.errorOff = ko.computed(function () {
+                return !self.showError(); 
+            });
+            
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
