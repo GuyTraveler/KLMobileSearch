@@ -2,14 +2,14 @@ define(["knockout",
         "system", 
         "ntlm",
         "services/sharepoint/authenticationService", 
-        "services/sharepoint/siteDataService", 
+        "services/sharepoint/websService", 
         "services/siteDataCachingService", 
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair"], 
-    function (ko, system, ntlm, authenticationService, siteDataService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
+    function (ko, system, ntlm, authenticationService, websService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css
@@ -19,10 +19,13 @@ define(["knockout",
                 questionImageUrl = "app/images/question.png",
                 invalidImageUrl = "app/images/invalid.png",
                 validImageUrl = "app/images/valid.png",
-                office365SigninIndicator = "wa=wsignin1.0";
+                office365SigninIndicator = "wa=wsignin1.0",
+                sharepointVersionHeader = "MicrosoftSharePointTeamServices";
                  
             
             self.url = ko.observable(defaultUrlText);
+            self.siteTitle = ko.observable("");
+            self.sharePointVersion = ko.observable(0);
             self.ntlmAuthUrl = ko.computed(function () {
                 var authUrl = self.url();
                 
@@ -103,7 +106,7 @@ define(["knockout",
                     return;
                 }
                 
-                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", 
+                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
                                         new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
                 
                 addSitePromise.done(function (result) {          
@@ -223,7 +226,28 @@ define(["knockout",
                 ntlm.setCredentials(self.siteDomain(), self.siteUserName(), self.sitePassword());
                     
                 if (ntlm.authenticate(self.ntlmAuthUrl())) {
-                    self.credValidationImageSrc(validImageUrl);
+                    var service = new websService(self.url());
+                
+                    service.GetWeb(self.url(),
+                    function (result, textStatus, xhr) {
+                        var spVersion;
+                        
+                        self.isCredentialsValid(true);
+                        self.credValidationImageSrc(validImageUrl);
+                        
+                        self.siteTitle(result.GetWebResult.Web.Title);
+                        
+                        spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+                        self.sharePointVersion(spVersion.substring(0, 2));
+                    },
+                    function () {  //fail, invalidate our creds
+                        self.isCredentialsValid(false);
+                        self.credValidationImageSrc(invalidImageUrl);
+                        
+                        self.siteTitle("");
+
+                        self.sharePointVersion(0);
+                    });
                 }
                 else {
                     self.credValidationImageSrc(invalidImageUrl);
@@ -232,14 +256,21 @@ define(["knockout",
             
             //try generic logon and pop the logon window if it fails
             self.logonClaims = function () {
-                var dataService = new siteDataService(self.url());
+                var service = new websService(self.url());
                 
-                dataService.GetSiteUrl(self.url(),
-                function () {
+                service.GetWeb(self.url(),
+                function (result, textStatus, xhr) {
+                    var spVersion;
+                    
                     self.isCredentialsValid(true);
                     self.credValidationImageSrc(validImageUrl);
+                    
+                    self.siteTitle(result.GetWebResult.Web.Title);
+                    
+                    spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+                    self.sharePointVersion(spVersion.substring(0, 2));
                 },
-                function () {
+                function () {  //fail, show logon window
                     var windowRef = window.open(self.url());
                     
                     windowRef.addEventListener("loadstop", function (e) {
@@ -261,22 +292,6 @@ define(["knockout",
                 });
             }
        
-            //generic web service call...if it passes, we have a valid cookie.
-            self.logonWithCookie = function () {
-                var dataService = new siteDataService(self.url()),
-                    dfdSiteData = $.Deferred();
-                
-                dataService.GetSiteUrl(self.url(), 
-                function () {
-                    dfdSiteData.resolve();
-                },
-                function () {
-                    dfdSiteData.reject();  
-                });
-                
-                return dfdSiteData;
-            }
-            
             self.isLoggedOnUrl = function (url) {
                 return url.indexOf(self.url()) == 0 && url.toLowerCase().indexOf(office365SigninIndicator) < 0;
             }

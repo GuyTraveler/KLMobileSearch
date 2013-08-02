@@ -43,7 +43,7 @@ define(["jquery"], function ($) {
                         data: postData,
                         dataType: "xml",
                         xhrFields: { withCredentials: true },
-                        success: function (result) {
+                        success: function (result, textStatus, jqXHR) {
                             var resultJson;
                             
                             system.logVerbose("Successful ajax service call: " + serviceName + "." + methodName);
@@ -51,7 +51,7 @@ define(["jquery"], function ($) {
                             resultJson = self.soapToJson(methodName, result);
                             
                             if (typeof successCallback === 'function')
-                                successCallback(resultJson);
+                                successCallback(resultJson, textStatus, jqXHR);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             system.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);

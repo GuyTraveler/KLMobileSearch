@@ -27,6 +27,15 @@
         </label>    
     </li>
     <li>
+        <label>            
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.siteTitle" />
+            </p>
+            <input type="text" data-bind="value: siteTitle, event: { blur: validateSiteUrl }" class="list-view-input" />            
+        </label>    
+    </li>
+    
+    <li>
         <label>
             <p class="list-view-label">
                 <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
@@ -49,7 +58,7 @@
                 </p>
                 <input type="text" data-bind="value: siteUserName, event: { blur: logonWindows }" class="list-view-input" />            
             </label>
-        </li>
+        </li>        
         <li>
             <label>
                 <p class="list-view-label">

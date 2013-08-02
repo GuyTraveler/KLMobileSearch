@@ -7,6 +7,7 @@ define({
     cancel: "Cancel",
     save: "Save",
     siteUrl: "Url",
+    siteTitle: "Title",
     validate: "Validate",
     loading: "Loading...",
     credentialType: "Type",
