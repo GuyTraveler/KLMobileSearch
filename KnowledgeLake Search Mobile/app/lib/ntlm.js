@@ -234,24 +234,30 @@ define([], function () {
     };
     
     Ntlm.authenticate = function(url) {
-        if (!Ntlm.domain || !Ntlm.username || !Ntlm.lmHashedPassword || !Ntlm.ntHashedPassword) {
-            Ntlm.error('No NTLM credentials specified. Use Ntlm.setCredentials(...) before making calls.');
+        try {        
+            if (!Ntlm.domain || !Ntlm.username || !Ntlm.lmHashedPassword || !Ntlm.ntHashedPassword) {
+                Ntlm.error('No NTLM credentials specified. Use Ntlm.setCredentials(...) before making calls.');
+                return false;
+            }
+            var hostname = Ntlm.getLocation(url).hostname;
+            var msg1 = Ntlm.createMessage1(hostname);
+            var request = new XMLHttpRequest();
+            request.open('GET', url, false);
+            request.setRequestHeader('Authorization', 'NTLM ' + msg1.toBase64());
+            request.send(null);
+            var response = request.getResponseHeader('WWW-Authenticate');
+            var challenge = Ntlm.getChallenge(response);
+        
+            var msg3 = Ntlm.createMessage3(challenge, hostname);
+            request.open('GET', url, false);
+            request.setRequestHeader('Authorization', 'NTLM ' + msg3.toBase64());
+            request.send(null);
+            return request.status == 200;
+        }
+        catch (ex) {
+            console.error("Error in NTLM.authenticate: " + ex.message);
             return false;
         }
-        var hostname = Ntlm.getLocation(url).hostname;
-        var msg1 = Ntlm.createMessage1(hostname);
-        var request = new XMLHttpRequest();
-        request.open('GET', url, false);
-        request.setRequestHeader('Authorization', 'NTLM ' + msg1.toBase64());
-        request.send(null);
-        var response = request.getResponseHeader('WWW-Authenticate');
-        var challenge = Ntlm.getChallenge(response);
-    
-        var msg3 = Ntlm.createMessage3(challenge, hostname);
-        request.open('GET', url, false);
-        request.setRequestHeader('Authorization', 'NTLM ' + msg3.toBase64());
-        request.send(null);
-        return request.status == 200;
     };
     
     /*

@@ -1,29 +1,90 @@
 define(["knockout", 
         "system", 
         "services/sharepoint/authenticationService", 
+        "services/sharepoint/siteDataService", 
         "services/siteDataCachingService", 
         "domain/credentialType",
         "domain/authenticationMode",
-        "domain/keyValuePair"], 
-    function (ko, system, authenticationService, SiteDataCachingService, credentialType, authenticationMode, keyValuePair) {
+        "domain/keyValuePair",
+        "ntlm"], 
+    function (ko, system, authenticationService, siteDataService, SiteDataCachingService, credentialType, authenticationMode, keyValuePair, ntlm) {
         var configureSiteViewModel = function () {
             var self = this,
+                messageFadeoutTime = 1000, //should match fade-out transition time in app.css
+                messageDisplayTime = 5000,
                 defaultUrlText = "http://",
                 homeUrl = "#home",
-                questionUrl = "app/images/question.png",
-                invalidUrl = "app/images/invalid.png",
-                validUrl = "app/images/valid.png";
+                questionImageUrl = "app/images/question.png",
+                invalidImageUrl = "app/images/invalid.png",
+                validImageUrl = "app/images/valid.png",
+                office365SigninIndicator = "wa=wsignin1.0";
                  
             
             self.url = ko.observable(defaultUrlText);
+            self.ntlmAuthUrl = ko.computed(function () {
+                var authUrl = self.url();
+                
+                if (authUrl.charAt(authUrl.length - 1) != '/') {
+                    authUrl += "/";
+                }
+                
+                return authUrl + "_vti_bin/copy.asmx";                
+            });
             self.siteCredentialType = ko.observable(credentialType.ntlm);
             self.siteUserName = ko.observable("");
             self.sitePassword = ko.observable("");
             self.siteDomain = ko.observable("");
+            self.isWindowsCredential = ko.computed(function () {
+                return self.siteCredentialType() == credentialType.ntlm; 
+            });
+            self.isClaimsFormsCredential = ko.computed(function () {
+                return self.siteCredentialType() == credentialType.claimsOrForms; 
+            });
             
-            self.validationImageSrc = ko.observable(questionUrl);
+            self.statusMessage = ko.observable("");
+            self.showStatus = ko.observable(false);
+            self.errorMessage = ko.observable("");
+            self.showError = ko.observable(false);
+            self.urlValidationImageSrc = ko.observable(questionImageUrl);
+            self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
                                                        new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
+           
+            self.statusMessage.subscribe(function (newValue) {
+                if (newValue) {
+                    self.showStatus(true);
+                    
+                    setTimeout(function () {
+                        self.showStatus(false);
+                        
+                        setTimeout(function () {
+                            self.statusMessage("");
+                        }, messageFadeoutTime);
+                    }, messageDisplayTime);
+                }
+            });
+            
+            self.statusOff = ko.computed(function () {
+                return !self.showStatus(); 
+            });
+            
+            self.errorMessage.subscribe(function (newValue) {
+                if (newValue) {
+                    self.showError(true);
+                    
+                    setTimeout(function () {
+                        self.showError(false);
+                        
+                        setTimeout(function () {
+                            self.errorMessage("");
+                        }, messageFadeoutTime);
+                    }, messageDisplayTime);
+                }
+            });
+             
+            self.errorOff = ko.computed(function () {
+                return !self.showError(); 
+            });
             
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
@@ -94,19 +155,38 @@ define(["knockout",
                 if (typeof detectedCredType === 'undefined')
                     detectedCredType = credentialType.ntlm;
                 
-                self.validationImageSrc(validUrl);
+                self.urlValidationImageSrc(validImageUrl);
+                self.credValidationImageSrc(questionImageUrl);
+                
                 self.siteCredentialType(detectedCredType);
+                
+                self.statusMessage(system.strings.urlValidMessage);
+                self.errorMessage("");
+                
+                if (self.siteCredentialType() == credentialType.claimsOrForms) {
+                    self.logonClaims();
+                }
+                else {
+                    self.logonWindows();
+                }
             }
             
             self.setInvalidUrl = function () {
-                self.validationImageSrc(invalidUrl);    
+                self.urlValidationImageSrc(invalidImageUrl);  
+                self.credValidationImageSrc(questionImageUrl);
+                
+                self.statusMessage("");
+                self.errorMessage(system.strings.urlInvalidMessage);
             }
             
             self.resetUrlValidation = function () {
-                self.validationImageSrc(questionUrl);    
+                self.urlValidationImageSrc(questionImageUrl); 
+                self.credValidationImageSrc(questionImageUrl);
+                
+                self.statusMessage("");
+                self.errorMessage("");
             }
-            
-            
+                        
             self.parseCredentialType =  function (spAuthenticationMode) {
                 if (spAuthenticationMode == authenticationMode.ClaimsOrForms) {
                     return credentialType.claimsOrForms;
@@ -117,6 +197,65 @@ define(["knockout",
             }
             
             
+            self.logonWindows = function () {
+                ntlm.setCredentials(self.siteDomain(), self.siteUserName(), self.sitePassword());
+                    
+                if (ntlm.authenticate(self.ntlmAuthUrl())) {
+                    self.credValidationImageSrc(validImageUrl);
+                }
+                else {
+                    self.credValidationImageSrc(invalidImageUrl);
+                }
+            }
+            
+            //try generic logon and pop the logon window if it fails
+            self.logonClaims = function () {
+                var dataService = new siteDataService(self.url());
+                
+                dataService.GetSiteUrl(self.url(),
+                function () {
+                    self.credValidationImageSrc(validImageUrl);
+                },
+                function () {
+                    var windowRef = window.open(self.url());
+                    
+                    windowRef.addEventListener("loadstop", function (e) {
+                        if (self.isLoggedOnUrl(e.url)) {
+                            console.log(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
+                            windowRef.close();
+                            self.credValidationImageSrc(validImageUrl);
+                        }
+                    });
+                    
+                    windowRef.addEventListener("exit", function (e) {
+                        if (!self.isLoggedOnUrl(e.url)) {
+                            console.log(e.url + " present when child browser closed! Cookie failed to be obtained."); 
+                            self.credValidationImageSrc(invalidImageUrl);
+                        }
+                    });
+                });
+            }
+       
+            //generic web service call...if it passes, we have a valid cookie.
+            self.logonWithCookie = function () {
+                var dataService = new siteDataService(self.url()),
+                    dfdSiteData = $.Deferred();
+                
+                dataService.GetSiteUrl(self.url(), 
+                function () {
+                    dfdSiteData.resolve();
+                },
+                function () {
+                    dfdSiteData.reject();  
+                });
+                
+                return dfdSiteData;
+            }
+            
+            self.isLoggedOnUrl = function (url) {
+                return url.indexOf(self.url()) == 0 && url.toLowerCase().indexOf(office365SigninIndicator) < 0;
+            }
+                        
             
             self.init = function (e) {
                 system.logVerbose("configureSiteViewModel init");          

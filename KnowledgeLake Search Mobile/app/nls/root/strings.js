@@ -10,9 +10,14 @@ define({
     validate: "Validate",
     loading: "Loading...",
     credentialType: "Type",
+    windowsCredentials: "Windows Credentials",
     userName: "User",
     password: "Password",
     domain: "Domain",
     windows: "Windows",
-    claimsForms: "Claims/Forms"
+    claimsForms: "Claims/Forms",
+    urlValidMessage: "The URL is valid",
+    urlInvalidMessage: " The URL is not valid",
+    logonFailed: "Logon to SharePoint failed",
+    logonSuccess:" Logon to SharePoint succeeded"
 });
