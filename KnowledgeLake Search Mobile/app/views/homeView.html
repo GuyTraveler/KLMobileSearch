@@ -2,9 +2,8 @@
 
 <script type="text/x-kendo-template" id="sitesListViewTemplate">
     <div class="itemContainer">
-        <div class="site">                
-            <img class="siteIcon" src="styles/icons/#=siteType#.ico" alt="#=siteType#"/>
-            <h3 class="siteTitle">${title}</h3>
+        <div class="site">
+            <h3 class="siteTitle">${data.title}</h3>
         </div>
         <div class="keywordSearch">
             <input class="keyword" />
@@ -13,7 +12,7 @@
     </div>
 </script>
 
-<style scoped>
+<style type="text/css">
     .itemContainer {
         position: relative;
         height: 2em;

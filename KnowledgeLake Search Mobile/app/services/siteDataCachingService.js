@@ -16,7 +16,8 @@ define(["jquery", "FileManagement"], function ($, File) {
                     var readPromise = File.Read(siteDataFilePath);
                     
                     readPromise.done(function (siteData) {
-                        dfd.resolve(siteData); 
+                        self.sites = JSON.parse(siteData);
+                        dfd.resolve(true); 
                     });
                     
                     readPromise.fail(function (result) {
