@@ -19,5 +19,7 @@ define({
     urlValidMessage: "The URL is valid",
     urlInvalidMessage: " The URL is not valid",
     logonFailed: "Logon to SharePoint failed",
-    logonSuccess:" Logon to SharePoint succeeded"
+    logonSuccess:" Logon to SharePoint succeeded",
+    siteAlreadyConfigured: "Site has already been added",
+    errorWritingSiteData: "Error saving site data to the file system"
 });

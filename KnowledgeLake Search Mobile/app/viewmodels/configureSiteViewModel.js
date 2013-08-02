@@ -47,6 +47,8 @@ define(["knockout",
             self.showStatus = ko.observable(false);
             self.errorMessage = ko.observable("");
             self.showError = ko.observable(false);
+            self.isUrlValid = ko.observable(false);
+            self.isCredentialsValid = ko.observable(false);
             self.urlValidationImageSrc = ko.observable(questionImageUrl);
             self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
@@ -97,18 +99,15 @@ define(["knockout",
                 
                 addSitePromise.done(function (result) {          
                     window.App.navigate(homeUrl);
-                    // after navigate possibly on show update the listview datasource to the latest SiteDataCachingService.sites
                 });
                 
                 addSitePromise.fail(function (result) {
-                    if(result)
-                    {
-                        // throw site connection already exists
+                    if(result) {
+                        self.errorMessage(system.strings.siteAlreadyConfigured);
                     }
-                    else
-                    {
-                        // critical error writing new site data                                   
-                        // recovery options? modal dialog?
+                    else {
+                        //probably no system at all (emulator), should we take some other action?
+                        self.errorMessage(system.strings.errorWritingSiteData);
                     }
                 });
             }
@@ -124,6 +123,9 @@ define(["knockout",
                 
                 system.logVerbose("validateSiteUrl called");
                 window.App.showLoading();
+                
+                self.isUrlValid(false);
+                self.isCredentialsValid(false);
                 
                 dataService = new authenticationService(self.url());
                 dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);    
@@ -159,6 +161,8 @@ define(["knockout",
                 if (typeof detectedCredType === 'undefined')
                     detectedCredType = credentialType.ntlm;
                 
+                self.isUrlValid(true);
+                
                 self.urlValidationImageSrc(validImageUrl);
                 self.credValidationImageSrc(questionImageUrl);
                 
@@ -176,6 +180,8 @@ define(["knockout",
             }
             
             self.setInvalidUrl = function () {
+                self.isUrlValid(false);
+                
                 self.urlValidationImageSrc(invalidImageUrl);  
                 self.credValidationImageSrc(questionImageUrl);
                 
@@ -184,6 +190,9 @@ define(["knockout",
             }
             
             self.resetUrlValidation = function () {
+                self.isUrlValid(false);
+                self.isCredentialsValid(false);
+                
                 self.urlValidationImageSrc(questionImageUrl); 
                 self.credValidationImageSrc(questionImageUrl);
                 
@@ -218,6 +227,7 @@ define(["knockout",
                 
                 dataService.GetSiteUrl(self.url(),
                 function () {
+                    self.isCredentialsValid(true);
                     self.credValidationImageSrc(validImageUrl);
                 },
                 function () {
@@ -228,6 +238,7 @@ define(["knockout",
                             console.log(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
                             windowRef.close();
                             self.credValidationImageSrc(validImageUrl);
+                            self.isCredentialsValid(true);
                         }
                     });
                     
@@ -235,6 +246,7 @@ define(["knockout",
                         if (!self.isLoggedOnUrl(e.url)) {
                             console.log(e.url + " present when child browser closed! Cookie failed to be obtained."); 
                             self.credValidationImageSrc(invalidImageUrl);
+                            self.isCredentialsValid(false);
                         }
                     });
                 });
