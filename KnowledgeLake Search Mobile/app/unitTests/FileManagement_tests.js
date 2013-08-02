@@ -51,13 +51,13 @@ define(["FileManagement","system", "jquery"], function (File, system, $) {
                 var existsPromise = File.Exists(filePath);
                 
                 //assert
-                existsPromise.done(function (result) {
-                    QUnit.ok(false);
+                existsPromise.done(function (result) {                    
+                    QUnit.equal(result, false);
                     QUnit.start();
                 });
                 
                 existsPromise.fail(function (result) {
-                    QUnit.ok(true);
+                    QUnit.ok(false);
                     QUnit.start();
                 });
             });
