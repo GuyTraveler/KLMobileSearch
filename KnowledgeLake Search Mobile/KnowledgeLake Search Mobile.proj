@@ -119,7 +119,7 @@
     <Content Include="app\unitTests\localization_tests.js" />
     <Content Include="app\unitTests\siteDataCachingService_test.js" />
     <Content Include="app\unitTests\siteDataService_tests.js" />
-    <Content Include="app\unitTests\soapParameter_tests.js" />
+    <Content Include="app\unitTests\keyValuePair_tests.js" />
     <Content Include="app\unitTests\system_tests.js" />
     <Content Include="app\unitTests\homeViewModel_tests.js" />
     <Content Include="app\unitTests\websService_tests.js" />

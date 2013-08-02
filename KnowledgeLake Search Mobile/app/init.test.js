@@ -15,6 +15,7 @@ require(["config"], function (config) {
              "framework/logLevel"],
     function($, ko, system, logLevel) {
         var testsToRun = [testRootPath + "system_tests",
+                          testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                          
                           testRootPath + "siteDataService_tests",

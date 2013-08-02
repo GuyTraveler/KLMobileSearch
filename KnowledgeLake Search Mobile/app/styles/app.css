@@ -2,6 +2,25 @@ body {
     font: Arial, sans-serif;
 }
 
+
+.status-message,
+.error-message {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.status-message {
+    color: Green;
+}
+
+.error-message { 
+    color: Red;
+}
+
+img.margin-img {
+    margin-left: -18px;
+}
+
 .list-view-label {
     width: 30%!important; 
     word-wrap: break-word
@@ -12,4 +31,20 @@ body {
 }
 .full-width {
     width: 100%;
+}
+
+.opaque {
+    opacity: 1;
+    -webkit-transition: opacity 1s linear;
+    -moz-transition: opacity 1s linear;
+    -o-transition: opacity 1s linear;
+    transition: opacity 1s linear;
+}
+
+.fade-out {
+    opacity: 0;
+    -webkit-transition: opacity 1s linear;
+    -moz-transition: opacity 1s linear;
+    -o-transition: opacity 1s linear;
+    transition: opacity 1s linear;
 }
