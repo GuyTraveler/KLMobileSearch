@@ -83,8 +83,14 @@ define(["jquery", "FileManagement"], function ($, File) {
         self.SiteExists = function (url) {
             if(self.sites)
             {
-                var 
+                var filtered = $(self.sites).filter(function () {
+                    return this.url === url;
+                });
                 
+                if(filtered.length > 0)
+                {
+                    return true;
+                }         
             }
             
             return false;
