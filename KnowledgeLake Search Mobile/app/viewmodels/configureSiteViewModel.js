@@ -94,6 +94,15 @@ define(["knockout",
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
                 
+                if (!self.isUrlValid()) {
+                    self.errorMessage(system.strings.urlInvalidMessage);
+                    return;
+                }
+                else if (!self.isCredentialsValid()) {
+                    self.errorMessage(system.strings.credentialsInvalidMessage);
+                    return;
+                }
+                
                 var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", 
                                         new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
                 
