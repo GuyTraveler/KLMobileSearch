@@ -1,1 +1,53 @@
-<span data-bind="text: TestMessage"></span>
+<ul id="listView"></ul>
+
+<script type="text/x-kendo-template" id="sitesListViewTemplate">
+    <div class="itemContainer">
+        <div class="site">                
+            <img class="siteIcon" src="styles/icons/#=sharepointType#.ico" alt="#=sharepointType#"/>
+            <h3 class="siteTitle">${title}</h3>
+        </div>
+        <div class="keywordSearch">
+            <input class="keyword" />
+            <div class="searchButton" data-role="button">Search</div>
+        </div>
+    </div>
+</script>
+
+<style scoped>
+    .itemContainer {
+        position: relative;
+        height: 2em;
+    }
+    .site {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: block;
+    }            
+    .keywordSearch {  
+        display: none;                
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    
+    .siteIcon {
+        float: left;
+    }
+    .siteTitle {
+        display: inline-block;
+        font-size: 1em;
+        margin: .45em 0 0 .75em;
+    }
+    
+    .keyword {
+        float: left;
+        width: 60%;
+        height: 80%;
+    }
+    .searchButton {
+        float: right;
+        width: 20%;
+        height: 60%;
+    }
+</style>

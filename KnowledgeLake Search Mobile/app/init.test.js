@@ -30,6 +30,7 @@ require(["config"], function (config) {
         //add tests that CANNOT be run in the SIMULATOR here
         if (!system.isRunningInSimulator()) {
             testsToRun.push(testRootPath + "FileManagement_tests");
+            testsToRun.push(testRootPath + "siteDataCachingService_test");
         }
         
         QUnit.moduleStart(function (details) {

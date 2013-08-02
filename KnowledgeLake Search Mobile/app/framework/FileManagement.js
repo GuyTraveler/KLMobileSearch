@@ -45,7 +45,7 @@ define(["system", "jquery"], function (system, $) {
                     dfd.resolve(true);
                 },
                 function () {
-                    dfd.reject(true);
+                    dfd.resolve(false);
                 });
             }
             else
