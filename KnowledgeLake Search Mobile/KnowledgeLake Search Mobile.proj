@@ -117,6 +117,7 @@
     <Content Include="app\unitTests\authenticationService_tests.js" />
     <Content Include="app\unitTests\FileManagement_tests.js" />
     <Content Include="app\unitTests\localization_tests.js" />
+    <Content Include="app\unitTests\siteDataCachingService_test.js" />
     <Content Include="app\unitTests\siteDataService_tests.js" />
     <Content Include="app\unitTests\soapParameter_tests.js" />
     <Content Include="app\unitTests\system_tests.js" />

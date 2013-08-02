@@ -1,11 +1,13 @@
 define(["knockout", 
         "system", 
         "services/sharepoint/authenticationService", 
-        "services/siteDataCachingService", 
+        "services/siteDataCachingService",
+        "domain/site",
+        "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair"], 
-    function (ko, system, authenticationService, SiteDataCachingService, credentialType, authenticationMode, keyValuePair) {
+    function (ko, system, authenticationService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 defaultUrlText = "http://",
@@ -28,7 +30,8 @@ define(["knockout",
             self.saveSiteSettings = function () {
                 system.logVerbose("save site settings");
                 
-                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", new credential("type", "userName", "password", "domain")));
+                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", 
+                                        new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
                 
                 addSitePromise.done(function (result) {          
                     window.App.navigate(homeUrl);
