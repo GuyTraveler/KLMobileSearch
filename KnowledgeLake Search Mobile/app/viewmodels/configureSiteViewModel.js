@@ -94,7 +94,7 @@ define(["knockout",
             }
             
             self.setValidUrl = function (detectedCredType) {
-                if (!detectedCredType)
+                if (typeof detectedCredType === 'undefined')
                     detectedCredType = credentialType.ntlm;
                 
                 self.validationImageSrc(validUrl);
@@ -111,7 +111,7 @@ define(["knockout",
             
             
             self.parseCredentialType =  function (spAuthenticationMode) {
-                if (spAuthenticationMode == authenticationMode.Forms) {
+                if (spAuthenticationMode == authenticationMode.ClaimsOrForms) {
                     return credentialType.claimsOrForms;
                 }
                 else {
