@@ -230,25 +230,25 @@ define(["knockout",
                     var service = new websService(self.url());
                 
                     service.GetWeb(self.url(),
-                    function (result, textStatus, xhr) {
-                        var spVersion;
-                        
-                        self.isCredentialsValid(true);
-                        self.credValidationImageSrc(validImageUrl);
-                        
-                        self.siteTitle(result.GetWebResult.Web.Title);
-                        
-                        spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-                        self.sharePointVersion(spVersion.substring(0, 2));
-                    },
-                    function () {  //fail, invalidate our creds
-                        self.isCredentialsValid(false);
-                        self.credValidationImageSrc(invalidImageUrl);
-                        
-                        self.siteTitle("");
-
-                        self.sharePointVersion(0);
-                    });
+                        function (result, textStatus, xhr) {
+                            var spVersion;
+                            
+                            self.isCredentialsValid(true);
+                            self.credValidationImageSrc(validImageUrl);
+                            
+                            self.siteTitle(result.GetWebResult.Web.Title);
+                            
+                            spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+                            self.sharePointVersion(spVersion.substring(0, 2));
+                        },
+                        function () {  //fail, invalidate our creds
+                            self.isCredentialsValid(false);
+                            self.credValidationImageSrc(invalidImageUrl);
+                            
+                            self.siteTitle("");
+    
+                            self.sharePointVersion(0);
+                        });
                 }
                 else {
                     self.credValidationImageSrc(invalidImageUrl);
