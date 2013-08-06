@@ -20,7 +20,8 @@ define(["knockout",
                 invalidImageUrl = "app/images/invalid.png",
                 validImageUrl = "app/images/valid.png",
                 office365SigninIndicator = "wa=wsignin1.0",
-                sharepointVersionHeader = "MicrosoftSharePointTeamServices";
+                sharepointVersionHeader = "MicrosoftSharePointTeamServices",
+                isLoggingOn;
                  
             
             self.url = ko.observable(defaultUrlText);
@@ -253,45 +254,55 @@ define(["knockout",
                     self.credValidationImageSrc(invalidImageUrl);
                 }
             }
-            
+                        
             //try generic logon and pop the logon window if it fails
             self.logonClaims = function () {
                 var service = new websService(self.url());
                 
+                if (isLoggingOn) return;
+                
+                isLoggingOn = true;
                 service.GetWeb(self.url(),
-                function (result, textStatus, xhr) {
-                    var spVersion;
-                    
-                    self.isCredentialsValid(true);
-                    self.credValidationImageSrc(validImageUrl);
-                    
-                    self.siteTitle(result.GetWebResult.Web.Title);
-                    
-                    spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-                    self.sharePointVersion(spVersion.substring(0, 2));
-                },
-                function () {  //fail, show logon window
-                    var windowRef = window.open(self.url());
-                    
-                    windowRef.addEventListener("loadstop", function (e) {
-                        if (self.isLoggedOnUrl(e.url)) {
-                            system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
-                            windowRef.close();
-                            self.credValidationImageSrc(validImageUrl);
-                            self.isCredentialsValid(true);
-                        } 
-                        else {
-                            system.logVerbose(e.url + " loaded in child window...");
-                        }
-                    });
-                    
-                    windowRef.addEventListener("exit", function (e) {
-                        if (!self.isLoggedOnUrl(e.url)) {
-                            system.logVerbose(e.url + " present when child browser closed! Cookie failed to be obtained."); 
-                            self.credValidationImageSrc(invalidImageUrl);
-                            self.isCredentialsValid(false);
-                        }
-                    });
+                    function (result, textStatus, xhr) {
+                        var spVersion;
+                        
+                        self.isCredentialsValid(true);
+                        self.credValidationImageSrc(validImageUrl);
+                        
+                        self.siteTitle(result.GetWebResult.Web.Title);
+                        
+                        spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+                        self.sharePointVersion(spVersion.substring(0, 2));
+                        isLoggingOn = false;
+                    },
+                    function () {  //fail, show logon window
+                        system.logVerbose("GetWeb FAILED, opening logon dialog...");
+                        
+                        var windowRef = window.open(self.url(), "_blank");                                    
+                        
+                        windowRef.addEventListener("loadstop", function (e) {
+                            system.logVerbose("in loadstop");
+                            if (self.isLoggedOnUrl(e.url)) {
+                                system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
+                                windowRef.close();
+                                self.credValidationImageSrc(validImageUrl);
+                                self.isCredentialsValid(true);
+                            }
+                            else {
+                                system.logVerbose(e.url + " loaded in child window...");
+                            }
+                        });
+                        
+                        windowRef.addEventListener("exit", function (e) {
+                            system.logVerbose("in exit");
+                            isLoggingOn = false;
+                            
+                            if (!self.isLoggedOnUrl(e.url)) {
+                                system.logVerbose(e.url + " present when child browser closed! Cookie failed to be obtained."); 
+                                self.credValidationImageSrc(invalidImageUrl);
+                                self.isCredentialsValid(false);                            
+                            }
+                        });
                 });
             }
        
