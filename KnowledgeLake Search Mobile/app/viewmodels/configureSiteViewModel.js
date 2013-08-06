@@ -275,16 +275,19 @@ define(["knockout",
                     
                     windowRef.addEventListener("loadstop", function (e) {
                         if (self.isLoggedOnUrl(e.url)) {
-                            console.log(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
+                            system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
                             windowRef.close();
                             self.credValidationImageSrc(validImageUrl);
                             self.isCredentialsValid(true);
+                        } 
+                        else {
+                            system.logVerbose(e.url + " loaded in child window...");
                         }
                     });
                     
                     windowRef.addEventListener("exit", function (e) {
                         if (!self.isLoggedOnUrl(e.url)) {
-                            console.log(e.url + " present when child browser closed! Cookie failed to be obtained."); 
+                            system.logVerbose(e.url + " present when child browser closed! Cookie failed to be obtained."); 
                             self.credValidationImageSrc(invalidImageUrl);
                             self.isCredentialsValid(false);
                         }
