@@ -1,4 +1,5 @@
 /*global QUnit*/
+//explicit request to authenticationService
 define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticationMode"],
     function (authenticationService, ntlm, authenticationMode) {
         QUnit.module("Testing authenticationService");

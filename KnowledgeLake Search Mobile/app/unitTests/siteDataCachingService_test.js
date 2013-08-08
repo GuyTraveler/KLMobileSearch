@@ -1,4 +1,9 @@
-define(["services/siteDataCachingService", "domain/site", "domain/credential", "domain/credentialType", "FileManagement"], 
+//explicitly request siteDataCachingService
+define(["services/siteDataCachingService", 
+		"domain/site", 
+		"domain/credential", 
+		"domain/credentialType", 
+		"FileManagement"], 
     function (SiteDataCachingService, site, credential, credentialType, File) {
     QUnit.module("Testing services/siteDataCachingService");
     

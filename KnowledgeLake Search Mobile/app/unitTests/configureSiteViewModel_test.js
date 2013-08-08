@@ -1,4 +1,7 @@
-define(["system", "viewmodels/configureSiteViewModel", "domain/credentialType", "domain/authenticationMode"],
+define(["system", 
+		"viewmodels/configureSiteViewModel", 
+		"domain/credentialType", 
+		"domain/authenticationMode"],
     
 	function (system, configureSiteViewModel, credentialType, authenticationMode) {
 		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",

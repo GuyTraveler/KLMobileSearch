@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(["services/sharepoint/websService", "ntlm"],
+define(["services/sharepoint/websService", 
+		"ntlm"],
     function (websService, ntlm) {
         QUnit.module("Testing websService");
         

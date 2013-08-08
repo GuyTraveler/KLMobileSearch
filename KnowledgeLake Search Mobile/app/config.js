@@ -1,30 +1,18 @@
-define(["paths.app", "paths.test", "framework/logLevel"], function(appPaths, testPaths, logLevel) {
+define(["map", "map.test", "framework/logLevel"], function(map, testMap, logLevel) {
 	
     var isUnitTesting = true,
-	    loggingLevel = logLevel.verbose,		
-		overwritePaths = function(firstPriority, secondPriority) {
-			var prop,
-                newDest = {};
-            for (prop in firstPriority) {
-                newDest[prop] = firstPriority[prop];
-            }
-            for (prop in secondPriority) {
-                if (!(newDest[prop])) {
-                    newDest[prop] = secondPriority[prop];
-                }
-            }
-            return newDest;
-	    };
+	    loggingLevel = logLevel.verbose;
 	
 	var config = {           
 	   baseUrl: 'app/',
-	   paths: appPaths,  //default to normal application paths
-	   /******custom configuration*******/
-	   /*       config: {
-	       i18n: {
-	           locale: 'es'
-	       }  
-	   },*/
+	   paths: {            
+		   //lib
+	       jquery: 'lib/jquery',
+	       kendo: 'lib/kendo.mobile.min',
+	       knockout: 'lib/knockout',	       
+	       ntlm: 'lib/ntlm',
+	       i18n: 'lib/i18n'		   
+       },
 	   shim: {
 	       jquery: {
 	           exports: 'jquery'
@@ -38,11 +26,20 @@ define(["paths.app", "paths.test", "framework/logLevel"], function(appPaths, tes
 	       }
 	   },	   
 	   logLevel: loggingLevel,
+	   /******custom configuration*******/
+	   /*       config: {
+	       i18n: {
+	           locale: 'es'
+	       }  
+	   },*/
 	   isQunit: isUnitTesting
 	};
 		
 	if (isUnitTesting) {
-		config.paths = overwritePaths(testPaths, config.paths);
+		config.map = testMap;
+    }
+	else {
+		config.map = map;
     }
 	
 	return config;

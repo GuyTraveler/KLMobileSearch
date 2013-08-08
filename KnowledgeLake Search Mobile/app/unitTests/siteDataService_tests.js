@@ -1,5 +1,7 @@
 /*global QUnit*/
-define(["services/sharepoint/siteDataService", "ntlm"],
+//explicitly request siteDataService
+define(["services/sharepoint/siteDataService", 
+		"ntlm"],
     function (siteDataService, ntlm) {
         QUnit.module("Testing siteDataService");
        

@@ -1,7 +1,6 @@
 /*global QUnit*/
-define(['system',
-        'framework/logLevel'
-        ],
+define(['framework/system',
+        'framework/logLevel'],
     function (system, logLevel) {
         QUnit.module("Testing framework/system");
 

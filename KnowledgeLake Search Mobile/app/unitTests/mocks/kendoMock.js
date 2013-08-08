@@ -26,9 +26,22 @@ define([], function () {
 					
 					return self;
 		    	}
-			}
+			},
+			data: {
+				DataSource: {
+					create: function (dataObject) {
+						return {
+							data: dataObject.data 
+                        }
+                    }
+                }
+            }
 	};
 		
-	console.log("Setting MOCK kendo application to window.App");
-	window.App = kendo.mobile.mockApp();
+	if (!window.App)
+		console.log("Setting MOCK kendo application to window.App");
+	
+	window.App = window.App || new kendo.mobile.mockApp();
+	
+	return kendo;
 });

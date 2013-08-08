@@ -1,5 +1,5 @@
-define(["knockout", "system", "services/siteDataCachingService", "jquery"], 
-    function (ko, system, SiteDataCachingService, $) {
+define(["knockout", "system", "jquery", "ISiteDataCachingService", "kendo"], 
+    function (ko, system, $, SiteDataCachingService, kendo) {
         var homeViewModel = function () {
             var self = this;
             
@@ -13,7 +13,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                     if(updatedValue)
                     {
                         if(!SiteDataCachingService.sites)
-                        {
+                        { 
                             var loadSitesPromise = SiteDataCachingService.LoadSites();
                     
                             loadSitesPromise.done(function (result) {
