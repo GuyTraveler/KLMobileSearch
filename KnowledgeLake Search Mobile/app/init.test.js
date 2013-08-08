@@ -5,8 +5,6 @@ var App,
     system;
 
 require(["config"], function (config) {
-    var testRootPath = 'unitTests/';
-    
     require.config(config);
         
     require(["jquery", 
@@ -14,7 +12,8 @@ require(["config"], function (config) {
              "system", 
              "framework/logLevel"],
     function($, ko, system, logLevel) {
-        var testsToRun = [testRootPath + "system_tests",
+        var testRootPath = 'unitTests/',
+			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                          
@@ -22,7 +21,8 @@ require(["config"], function (config) {
                           testRootPath + "websService_tests",
                           testRootPath + "authenticationService_tests",
 						  testRootPath + "configureSiteViewModel_test",
-						  testRootPath + "siteDataCachingService_test"
+						  testRootPath + "siteDataCachingService_test",
+						  testRootPath + "ntlmLogonService_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         

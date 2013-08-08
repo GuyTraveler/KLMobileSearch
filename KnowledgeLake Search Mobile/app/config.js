@@ -1,14 +1,14 @@
-define(["map", "map.test", "framework/logLevel"], function(map, testMap, logLevel) {
+define(["framework/logLevel"], function(logLevel) {
 	
     var isUnitTesting = true,
 	    loggingLevel = logLevel.verbose;
 	
 	var config = {           
 	   baseUrl: 'app/',
-	   paths: {            
+	   paths: {
 		   //lib
 	       jquery: 'lib/jquery',
-	       kendo: 'lib/kendo.mobile.min',
+	       kendoMain: 'lib/kendo.mobile.min',
 	       knockout: 'lib/knockout',	       
 	       ntlm: 'lib/ntlm',
 	       i18n: 'lib/i18n'		   
@@ -20,11 +20,23 @@ define(["map", "map.test", "framework/logLevel"], function(map, testMap, logLeve
 	       knockout: {
 	           exports: 'ko'  
 	       },
-	       kendo: {
+	       kendoMain: {
 	           deps: ['jquery'],
-	           exports: 'kendo'               
+	           exports: 'kendoMain'               
 	       }
-	   },	   
+	   },
+	   map: {              
+		   '*': {
+			   'kendo': 'factory/kendoFactory',
+			   'FileManagement': 'factory/fileManagementFactory',		   
+			   'system': 'framework/system',
+			   //service locations
+			   'IAuthenticationService': 'services/sharepoint/authenticationService',
+			   'IWebsService': 'services/sharepoint/websService',
+			   'ISiteDataService': 'services/sharepoint/siteDataService',
+			   'ISiteDataCachingService': 'services/siteDataCachingService'
+	       }
+	   },
 	   logLevel: loggingLevel,
 	   /******custom configuration*******/
 	   /*       config: {
@@ -34,13 +46,6 @@ define(["map", "map.test", "framework/logLevel"], function(map, testMap, logLeve
 	   },*/
 	   isQunit: isUnitTesting
 	};
-		
-	if (isUnitTesting) {
-		config.map = testMap;
-    }
-	else {
-		config.map = map;
-    }
 	
 	return config;
 });

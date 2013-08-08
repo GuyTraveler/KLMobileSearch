@@ -38,10 +38,5 @@ define([], function () {
             }
 	};
 		
-	if (!window.App)
-		console.log("Setting MOCK kendo application to window.App");
-	
-	window.App = window.App || new kendo.mobile.mockApp();
-	
 	return kendo;
 });

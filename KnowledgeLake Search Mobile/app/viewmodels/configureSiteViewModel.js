@@ -11,7 +11,7 @@ define(["knockout",
         "domain/keyValuePair",
 		//uncaught dependencies
 		"kendo"], 
-    function (ko, system, ntlm, authenticationService, websService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
+    function (ko, system, ntlm, authenticationService, websService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair, kendo) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css

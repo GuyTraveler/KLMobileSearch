@@ -9,6 +9,7 @@ define(["system",
 			ntlmTestUser = "spadmin",
 			ntlmTestPassword = "password",
 			ntlmTestDomain = "dev.local",
+			homeUrl = "#home",
 			validImageCheck = "/valid",
 			invalidImageCheck = "/invalid",
 			questionImageCheck = "/question",
@@ -78,7 +79,6 @@ define(["system",
 			vm.url(ntlmTestUrl);
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isLoggedOnUrl(ntlmTestUrl + office365SigninIndicator), false);
         });
 		
@@ -91,7 +91,6 @@ define(["system",
 			vm.url(ntlmTestUrl);
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isLoggedOnUrl("http://www.google.com"), false);
         });
 		
@@ -104,7 +103,6 @@ define(["system",
 			vm.siteTitle("");
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isTitleValid(), false);
 		});
 		
@@ -117,7 +115,6 @@ define(["system",
 			vm.siteTitle(null);
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isTitleValid(), false);
 		});
 		
@@ -130,7 +127,6 @@ define(["system",
 			vm.siteTitle("   ");
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isTitleValid(), false);
 		});
 		
@@ -161,7 +157,6 @@ define(["system",
 			parsedClaims = vm.parseCredentialType(claimsAuth);
 						
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(parsedNtlm, credentialType.ntlm);
 			QUnit.equal(parsedClaims, credentialType.claimsOrForms);
         });
@@ -190,7 +185,6 @@ define(["system",
 			vm.setTitle("xxxx");
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isTitleValid(), true);
 			QUnit.equal(vm.siteTitle(), "xxxx");
         });
@@ -218,9 +212,8 @@ define(["system",
 			vm = new configureSiteViewModel();
 			
 			//assert
-			QUnit.ok(vm);
-			
-			QUnit.equal(vm.validateAll(), false);QUnit.ok(vm.errorMessage());
+			QUnit.equal(vm.validateAll(), false);
+			QUnit.ok(vm.errorMessage());
 			QUnit.notEqual(vm.errorMessage(), "");
 			QUnit.equal(vm.showError(), true);
 			
@@ -271,8 +264,7 @@ define(["system",
 			vm.closeSiteSettings();
 			
 			//assert
-			QUnit.ok(vm);
-			QUnit.equal(window.App.currentUrl, "#home");
+			QUnit.equal(window.App.currentUrl, homeUrl);
         });
 		
 		QUnit.test("configureSiteViewModel.setInvalidUrl puts vm in error state",  function () {
@@ -284,7 +276,6 @@ define(["system",
 			vm.setInvalidUrl();
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.ok(vm.urlValidationImageSrc().indexOf(invalidImageCheck) > -1);
 			QUnit.ok(vm.credValidationImageSrc().indexOf(questionImageCheck) > -1);
@@ -320,7 +311,6 @@ define(["system",
 			vm.resetUrlValidation();			
 			
 			//assert
-			QUnit.ok(vm);
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
 			QUnit.ok(vm.urlValidationImageSrc().indexOf(questionImageCheck) > -1);
@@ -341,6 +331,7 @@ define(["system",
 			
 			//assert
 			QUnit.equal(window.App.isLoading, true);
+			QUnit.ok(urlValidationPromise);
 			
 			urlValidationPromise.done(function (credType) {
 				QUnit.ok(false, "URL should not have been returned as valid but was");
@@ -367,6 +358,7 @@ define(["system",
 			
 			//assert
 			QUnit.equal(window.App.isLoading, true);
+			QUnit.ok(urlValidationPromise);
 			
 			urlValidationPromise.done(function (credType) {
 				QUnit.ok(true);
@@ -394,6 +386,7 @@ define(["system",
 			
 			//assert
 			QUnit.equal(window.App.isLoading, true);
+			QUnit.ok(urlValidationPromise);
 			
 			urlValidationPromise.done(function (credType) {
 				QUnit.ok(true);
@@ -420,7 +413,7 @@ define(["system",
 			credValidationPromise = vm.logonWindows();
 			
 			//assert
-			QUnit.ok(vm);
+			QUnit.ok(credValidationPromise);
 			
 			credValidationPromise.done(function (title, version) {
 				QUnit.ok(false, "credential validation should have failed");	
@@ -447,6 +440,8 @@ define(["system",
 			credValidationPromise = vm.logonWindows();
 			
 			//assert
+			QUnit.ok(credValidationPromise);
+			
 			credValidationPromise.done(function (title, version) {
 				QUnit.ok(true);	
 				QUnit.start();
@@ -457,6 +452,8 @@ define(["system",
 				QUnit.start();
             });
         });
+		
+		//TODO: logon claims tests after we get logon stuff factored out
 			
 		QUnit.test("test configureSiteViewModel.validateAll with invalid url puts vm in error state", function () {
 			//arrange
@@ -466,12 +463,109 @@ define(["system",
 			vm = new configureSiteViewModel();
 			
 			//assert
-			QUnit.ok(vm);
-			
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.validateAll(), false);  //this triggers error state
 			QUnit.notEqual(vm.errorMessage(), "");
 			QUnit.equal(vm.showError(), true);
         });
 	
+		QUnit.test("test configureSiteViewModel.validateAll validates bad URL", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new configureSiteViewModel();
+			
+			//assert
+			QUnit.equal(vm.validateAll(), false);
+			QUnit.equal(vm.errorMessage(), system.strings.urlInvalidMessage);
+        });
+		
+		QUnit.test("test configureSiteViewModel.validateAll validates bad site title", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.url(ntlmTestUrl);
+			vm.setValidUrl();
+			
+			//assert
+			QUnit.ok(vm);
+			
+			QUnit.equal(vm.validateAll(), false);
+			QUnit.equal(vm.errorMessage(), system.strings.siteTitleRequired);
+        });
+		
+		QUnit.test("test configureSiteViewModel.validateAll validates bad credentials", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.url(ntlmTestUrl);
+			vm.setValidUrl();
+			vm.siteTitle("dfdsfds");
+			
+			//assert
+			QUnit.equal(vm.validateAll(), false);
+			QUnit.equal(vm.errorMessage(), system.strings.credentialsInvalidMessage);
+        });
+		
+		QUnit.test("test configureSiteViewModel.validateAll validates all good", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.url(ntlmTestUrl);
+			vm.setValidUrl();
+			vm.siteTitle("dfdsfds");
+			vm.isCredentialsValid(true);
+			
+			//assert
+			QUnit.equal(vm.validateAll(), true);
+			QUnit.equal(vm.errorMessage(), "");
+        });
+		
+		QUnit.test("test configureSiteViewModel.saveSiteSettings won't save invalid site", function () {
+			//arrange
+			var vm,
+				saveSettingsPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			saveSettingsPromise = vm.saveSiteSettings();
+						
+			//assert
+			QUnit.ok(!saveSettingsPromise);
+		});
+		
+		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid site", function () {
+			//arrange
+			var vm,
+				saveSettingsPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.url(ntlmTestUrl);
+			vm.setValidUrl();
+			vm.siteTitle("dfdsfds");
+			vm.isCredentialsValid(true);
+			saveSettingsPromise = vm.saveSiteSettings();
+						
+			//assert
+			QUnit.equal(vm.validateAll(), true);
+			QUnit.ok(saveSettingsPromise);
+			
+			saveSettingsPromise.done(function () {
+				QUnit.equal(window.App.currentUrl, homeUrl);
+				QUnit.start();
+            });
+			
+			saveSettingsPromise.fail(function () {
+				QUnit.ok(false, "saveSiteSettings failed when it should have succeeded");
+				QUnit.start();
+            });
+        });
     });
