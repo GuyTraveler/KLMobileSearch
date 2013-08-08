@@ -20,7 +20,8 @@ require(["config"], function (config) {
                           testRootPath + "localization_tests",                          
                           testRootPath + "siteDataService_tests",
                           testRootPath + "websService_tests",
-                          testRootPath + "authenticationService_tests"
+                          testRootPath + "authenticationService_tests",
+						  testRootPath + "configureSiteViewModel_test"
                           //ADDITIONAL TESTS GO HERE
                          ];
         

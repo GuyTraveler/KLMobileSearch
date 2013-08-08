@@ -8,11 +8,11 @@
 
 <h3 data-bind="text: system.strings.configureSitePageTitle" />
 
-<div data-bind="css: { 'error-message': true, 'opaque': showError, 'fade-out': errorOff }">
+<div data-bind="css: { 'error-message': true, 'opaque': showError, 'fade-out': !showError() }">
     <span data-bind="text: errorMessage" />
 </div>
 
-<div data-bind="css: { 'status-message': true, 'opaque': showStatus, 'fade-out': statusOff }">
+<div data-bind="css: { 'status-message': true, 'opaque': showStatus, 'fade-out': !showStatus() }">
     <span data-bind="text: statusMessage" />
 </div>
 
@@ -31,7 +31,7 @@
             <p class="list-view-label">
                 <span data-bind="text: system.strings.siteTitle" />
             </p>
-            <input type="text" data-bind="value: siteTitle, event: { blur: validateSiteUrl }" class="list-view-input" />            
+            <input type="text" data-bind="value: siteTitle" class="list-view-input" />            
         </label>    
     </li>
     

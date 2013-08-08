@@ -79,7 +79,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         }
                     });
                     
-                    loadSitesPromise.fail(function (result) {
+/*                    loadSitesPromise.fail(function (result) {
                         if(result)
                         {
                             console.log("sites.dat does not exist");
@@ -90,7 +90,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                             // critical error reading site data                                    
                             // recovery options? modal dialog?
                         }
-                    });                    
+                    }); */                   
                 }                
             }
             
