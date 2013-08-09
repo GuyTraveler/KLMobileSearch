@@ -56,44 +56,7 @@ define(["system",
 			
 			QUnit.equal(vm.isTitleValid(), false);			
         });
-		
-		QUnit.test("configureSiteViewModel.isLoggedOnUrl with exact url is true", function () {
-			//arrange
-			var vm;
-			
-			//act
-			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
-			
-			//assert
-			QUnit.ok(vm);
-			QUnit.equal(vm.isLoggedOnUrl(ntlmTestUrl), true);
-        });
-		
-		QUnit.test("configureSiteViewModel.isLoggedOnUrl: exact URL with Office 365 Logon is false", function () {
-			//arrange
-			var vm;
-			
-			//act
-			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
-			
-			//assert
-			QUnit.equal(vm.isLoggedOnUrl(ntlmTestUrl + office365SigninIndicator), false);
-        });
-		
-		QUnit.test("configureSiteViewModel.isLoggedOnUrl: wrong url returns false", function () {
-			//arrange
-			var vm;
-			
-			//act
-			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
-			
-			//assert
-			QUnit.equal(vm.isLoggedOnUrl("http://www.google.com"), false);
-        });
-		
+	
 		QUnit.test("configureSiteViewModel test invalid siteTitle shows invalid (1)", function () {
 			//arrange
 			var vm;
@@ -393,16 +356,20 @@ define(["system",
 				QUnit.equal(window.App.isLoading, false);
 				QUnit.equal(credType, credentialType.claimsOrForms);
 				
+				//shut down the logon window
+				QUnit.ok(vm.claimsService.windowRef);
+				vm.claimsService.windowRef.close();
+				
 				QUnit.start();
             });
 			urlValidationPromise.fail(function (status) {
-				QUnit.ok(true, "Could not validate " + adfsTestUrl); 
+				QUnit.ok(false, "Could not validate " + adfsTestUrl); 
 				
 				QUnit.start();
             });
         });
 		
-		QUnit.asyncTest("configureSiteViewModel.logonWindows fails with bad creds", function () {
+		QUnit.asyncTest("configureSiteViewModel.logon (NTLM) fails with bad creds", function () {
 			//arrange
 			var vm,
 				credValidationPromise;
@@ -410,7 +377,7 @@ define(["system",
 			//act
 			vm = new configureSiteViewModel();
 			vm.url(ntlmTestUrl);
-			credValidationPromise = vm.logonWindows();
+			credValidationPromise = vm.logon();
 			
 			//assert
 			QUnit.ok(credValidationPromise);
@@ -426,7 +393,7 @@ define(["system",
             });
         });
 		
-		QUnit.asyncTest("configureSiteViewModel.logonWindows succeeds with good creds", function () {
+		QUnit.asyncTest("configureSiteViewModel.logon (NTLM) succeeds with good creds", function () {
 			//arrange
 			var vm,
 				credValidationPromise;
@@ -437,7 +404,7 @@ define(["system",
 			vm.siteUserName(ntlmTestUser);
 			vm.sitePassword(ntlmTestPassword);
 			vm.siteDomain(ntlmTestDomain);
-			credValidationPromise = vm.logonWindows();
+			credValidationPromise = vm.logon();
 			
 			//assert
 			QUnit.ok(credValidationPromise);

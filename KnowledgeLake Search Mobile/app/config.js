@@ -1,7 +1,7 @@
 define(["framework/logLevel"], function(logLevel) {
 	
     var isUnitTesting = true,
-	    loggingLevel = logLevel.verbose;
+	    loggingLevel = logLevel.Verbose;
 	
 	var config = {           
 	   baseUrl: 'app/',
@@ -34,7 +34,9 @@ define(["framework/logLevel"], function(logLevel) {
 			   'IAuthenticationService': 'services/sharepoint/authenticationService',
 			   'IWebsService': 'services/sharepoint/websService',
 			   'ISiteDataService': 'services/sharepoint/siteDataService',
-			   'ISiteDataCachingService': 'services/siteDataCachingService'
+			   'ISiteDataCachingService': 'services/siteDataCachingService',
+			   'INtlmLogonService': 'services/ntlmLogonService',
+			   'IClaimsLogonService': 'services/claimsLogonService'
 	       }
 	   },
 	   logLevel: loggingLevel,

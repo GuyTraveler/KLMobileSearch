@@ -92,7 +92,7 @@ define(["services/sharepoint/websService",
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {
             //arrange
             var service,
-                url = "https://knowledgelake.sharepoint.com";
+                url = "https://kl.sharepoint.com";
             
             //act
             service = new websService(url);

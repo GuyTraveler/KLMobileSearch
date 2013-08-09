@@ -1,51 +1,46 @@
 define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) {
-    var system = function() {
-        var self = this;
-        
-        self.logLevel = logLevel.Error;
-        self.strings = strings;
-      
-        self.setLogLevel = function (level) {
-            self.logLevel = level;
-        }
-        
-        self.logVerbose = function (msg) {
-            var log = self.logLevel <= logLevel.Verbose;
+    return {
+        logLevel: logLevel.Error,
+        strings: strings,
+		setLogLevel: function (level) {
+            this.logLevel = level;
+        },
+		logVerbose: function (msg) {
+            var log = this.logLevel <= logLevel.Verbose;
             
             if (log) console.log(msg);
             
             return log;
         },
-        self.logDebug = function (msg) {
-            var log = self.logLevel <= logLevel.Debug;
+        logDebug: function (msg) {
+            var log = this.logLevel <= logLevel.Debug;
             
             if (log) console.debug(msg);
             
             return log;
         },
-        self.logWarning = function (msg) {
-            var log = self.logLevel <= logLevel.Warn;
+        logWarning: function (msg) {
+            var log = this.logLevel <= logLevel.Warn;
             
             if (log) console.warn(msg);
             
             return log;  
         },
-        self.logError = function (msg) {
-            var log = self.logLevel <= logLevel.Error;
+        logError: function (msg) {
+            var log = this.logLevel <= logLevel.Error;
             
             if (log) console.error(msg);
             
             return log;
         },
-        self.logFatal = function (msg) {
-            var log = self.logLevel <= logLevel.Fatal;
+        logFatal: function (msg) {
+            var log = this.logLevel <= logLevel.Fatal;
             
             if (log) console.error(msg);
             
             return log;
-        }
-        
-        self.isRunningInSimulator = function () {
+        },
+		isRunningInSimulator: function () {
             // device uuids for simulated devices
             var iPhone = "e0101010d38bde8e6740011221af335301010333";
             var iPhone5 = "e0101010d38bde8e6740011221af335301010333";
@@ -67,10 +62,5 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
             
             return false;
         }
-    
-        
-        return self;
     };
-    
-    return new system();
 });

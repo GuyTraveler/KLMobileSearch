@@ -1,17 +1,17 @@
 define(["knockout", 
         "system", 
-        "ntlm",
         "IAuthenticationService", 
         "IWebsService", 
         "ISiteDataCachingService", 
+		"INtlmLogonService",
+		"IClaimsLogonService",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
-        "domain/keyValuePair",
-		//uncaught dependencies
-		"kendo"], 
-    function (ko, system, ntlm, authenticationService, websService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair, kendo) {
+        "domain/keyValuePair"], 
+    function (ko, system, authenticationService, websService, SiteDataCachingService, ntlmLogonService, claimsLogonService,
+		      site, credential, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css
@@ -21,14 +21,17 @@ define(["knockout",
                 questionImageUrl = "app/images/question.png",
                 invalidImageUrl = "app/images/invalid.png",
                 validImageUrl = "app/images/valid.png",
-                office365SigninIndicator = "wa=wsignin1.0",
                 sharepointVersionHeader = "MicrosoftSharePointTeamServices",
-                isLoggingOn,
-				urlValidationDfd,
-				credentialValidationDfd;
-                 
-            
+				urlValidationDfd;
+                
+			self.ntlmService = new ntlmLogonService();
+			self.claimsService = new claimsLogonService();
+			
             self.url = ko.observable(defaultUrlText);
+			self.url.subscribe(function (newValue) {
+				self.ntlmService = new ntlmLogonService(newValue);
+				self.claimsService = new claimsLogonService(newValue);
+            });
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
             self.ntlmAuthUrl = ko.computed(function () {
@@ -184,16 +187,13 @@ define(["knockout",
                 self.statusMessage(system.strings.urlValidMessage);
                 self.errorMessage("");
                 
-                if (self.siteCredentialType() == credentialType.claimsOrForms) {
-                    self.logonClaims();
-                }
-                else {
-                    self.logonWindows();
-                }
+                self.logon();
             }
             
             self.setInvalidUrl = function () {
                 self.isUrlValid(false);
+				self.clearTitle();
+				self.sharePointVersion(0);
                 
                 self.urlValidationImageSrc(invalidImageUrl);  
                 self.credValidationImageSrc(questionImageUrl);
@@ -223,106 +223,60 @@ define(["knockout",
             }
             
             
-            self.logonWindows = function () {
-				credentialValidationDfd = $.Deferred();
+            self.logon = function () {
+				var logonService = self.getLogonService(),
+					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
+					getWebDfd = $.Deferred();
 				
-                ntlm.setCredentials(self.siteDomain(), self.siteUserName(), self.sitePassword());
-                    
-                if (ntlm.authenticate(self.ntlmAuthUrl())) {
-                    var service = new websService(self.url());
+				//probably already logging on
+				if (!logonPromise) {
+					getWebDfd.reject(false);
+                }
+				
+				logonPromise.done(function () {
+					var service = new websService(self.url());
                 
                     service.GetWeb(self.url(),
                         function (result, textStatus, xhr) {
-                            var spVersion;
-                            
+                            var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+							
                             self.isCredentialsValid(true);
-                            self.credValidationImageSrc(validImageUrl);
-                            
-                            self.setTitle(result.GetWebResult.Web.Title);
-                            
-                            spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+                            self.credValidationImageSrc(validImageUrl);                            
+                            self.setTitle(result.GetWebResult.Web.Title);                            
                             self.sharePointVersion(spVersion.substring(0, 2));
 							
-							credentialValidationDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
                         },
                         function () {  //fail, invalidate our creds
                             self.isCredentialsValid(false);
-                            self.credValidationImageSrc(invalidImageUrl);
-                            
-                            self.clearTitle();
-    
+                            self.credValidationImageSrc(invalidImageUrl);                            
+                            self.clearTitle();    
                             self.sharePointVersion(0);
 
-							credentialValidationDfd.reject();							
-                        });
-                }
-                else {
-                    self.credValidationImageSrc(invalidImageUrl);
-					credentialValidationDfd.reject();					
-                }
-				
-				return credentialValidationDfd.promise();
-            }
-                        
-            //try generic logon and pop the logon window if it fails
-            self.logonClaims = function () {
-                var service = new websService(self.url());
-                
-                if (isLoggingOn) return;
-                
-                isLoggingOn = true;
-                service.GetWeb(self.url(),
-                    function (result, textStatus, xhr) {
-                        var spVersion;
-                        
-                        self.isCredentialsValid(true);
-                        self.credValidationImageSrc(validImageUrl);
-                        
-                        self.setTitle(result.GetWebResult.Web.Title);
-                        
-                        spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-                        self.sharePointVersion(spVersion.substring(0, 2));
-                        isLoggingOn = false;
-                    },
-                    function () {  //fail, show logon window
-                        system.logVerbose("GetWeb FAILED, opening logon dialog...");
-                        
-                        var windowRef = window.open(self.url(), "_blank");                                    
-                        
-                        windowRef.addEventListener("loadstop", function (e) {
-                            
-                            if (self.isLoggedOnUrl(e.url)) {
-                                system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
-                                
-                                windowRef.close();
-                                
-                                self.credValidationImageSrc(validImageUrl);
-                                self.isCredentialsValid(true);
-                                
-                                isLoggingOn = false;
-                                self.logonClaims();  //call again to grab the correct site title & sharepoint version
-                            }
-                            else {
-                                system.logVerbose(e.url + " loaded in child window...");
-                            }
-                        });
-                        
-                        windowRef.addEventListener("exit", function (e) {                            
-                            isLoggingOn = false;
-                            
-                            if (!self.isLoggedOnUrl(e.url)) {
-                                system.logVerbose(e.url + " present when child browser closed! Cookie failed to be obtained."); 
-                                self.credValidationImageSrc(invalidImageUrl);
-                                self.isCredentialsValid(false);                            
-                            }
+							getWebDfd.reject();							
                         });
                 });
+				
+				logonPromise.fail(function () {
+					self.isCredentialsValid(false);
+                    self.credValidationImageSrc(invalidImageUrl);                    
+                    self.clearTitle();
+                    self.sharePointVersion(0);
+
+					getWebDfd.reject();		
+                });
+				
+				return getWebDfd.promise();
+            }
+             
+			self.getLogonService = function () {
+				if (self.siteCredentialType() == credentialType.claimsOrForms) {
+					return self.claimsService;					
+                }
+				
+				return self.ntlmService;
             }
        
-            self.isLoggedOnUrl = function (url) {
-                return url && url.indexOf(self.url()) == 0 && url.toLowerCase().indexOf(office365SigninIndicator) < 0;
-            }
-        
             self.isTitleValid = function () {
                 return (self.siteTitle() != undefined && self.siteTitle().trim() != "");
             }
