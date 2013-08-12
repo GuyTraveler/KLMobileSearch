@@ -1,4 +1,5 @@
 /*global QUnit*/
+//explictly request localized string modules
 define(['require',
         'i18n!nls/strings',
         'nls/root/strings',

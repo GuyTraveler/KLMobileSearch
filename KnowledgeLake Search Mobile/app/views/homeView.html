@@ -1,9 +1,8 @@
-<ul id="listView" data-role="listview" data-bind="source: siteDataSource" data-template="sitesListViewTemplate"></ul>
+<ul id="listView" data-role="listview" data-bind="source: siteDataSource" data-auto-bind="false" data-template="sitesListViewTemplate"></ul>
 
 <script type="text/x-kendo-template" id="sitesListViewTemplate">
     <div class="itemContainer" data-role="touch" data-enable-swipe="true" data-swipe="swipe">
         <div class="site">
-            <div class="searchButton" data-role="button">howdy</div>
             <h3 class="siteTitle">${title}</h3>
         </div>
         <div class="keywordSearch">

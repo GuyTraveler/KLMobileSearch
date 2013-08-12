@@ -1,4 +1,7 @@
-define(["FileManagement","system", "jquery"], function (File, system, $) {
+//explictly request the actual FileManagment
+define(["framework/FileManagement", 
+		"system", 
+		"jquery"], function (File, system, $) {
         QUnit.module("Testing framework/FileManagement");
 
         QUnit.test("test fileSystem is up and running", function () {

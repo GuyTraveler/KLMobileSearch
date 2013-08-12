@@ -8,11 +8,11 @@
 
 <h3 data-bind="text: system.strings.configureSitePageTitle" />
 
-<div data-bind="css: { 'error-message': true, 'opaque': showError, 'fade-out': errorOff }">
+<div data-bind="css: { 'error-message': true, 'opaque': showError, 'fade-out': !showError() }">
     <span data-bind="text: errorMessage" />
 </div>
 
-<div data-bind="css: { 'status-message': true, 'opaque': showStatus, 'fade-out': statusOff }">
+<div data-bind="css: { 'status-message': true, 'opaque': showStatus, 'fade-out': !showStatus() }">
     <span data-bind="text: statusMessage" />
 </div>
 
@@ -26,6 +26,15 @@
             <input type="url" data-bind="value: url, event: { blur: validateSiteUrl }" class="list-view-input" />            
         </label>    
     </li>
+    <li>
+        <label>            
+            <p class="list-view-label">
+                <span data-bind="text: system.strings.siteTitle" />
+            </p>
+            <input type="text" data-bind="value: siteTitle" class="list-view-input" />            
+        </label>    
+    </li>
+    
     <li>
         <label>
             <p class="list-view-label">
@@ -47,16 +56,16 @@
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
                     <span data-bind="text: system.strings.userName" />
                 </p>
-                <input type="text" data-bind="value: siteUserName, event: { blur: logonWindows }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteUserName, event: { blur: logon }" class="list-view-input" />            
             </label>
-        </li>
+        </li>        
         <li>
             <label>
                 <p class="list-view-label">
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
                     <span data-bind="text: system.strings.password" />
                 </p>
-                <input type="password" data-bind="value: sitePassword, event: { blur: logonWindows }" class="list-view-input" />            
+                <input type="password" data-bind="value: sitePassword, event: { blur: logon }" class="list-view-input" />            
             </label>
         </li>
         <li>
@@ -65,7 +74,7 @@
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
                     <span data-bind="text: system.strings.domain" />
                 </p>
-                <input type="text" data-bind="value: siteDomain, event: { blur: logonWindows }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteDomain, event: { blur: logon }" class="list-view-input" />            
             </label>
         </li>
     </ul>

@@ -2,8 +2,7 @@
 define(['require',
         'jquery',
         'knockout',
-        'viewmodels/homeViewModel'
-        ],
+        'viewmodels/homeViewModel'],
     function (require, $, ko, homeViewModel) {
         QUnit.module("Testing homeViewModel");
 

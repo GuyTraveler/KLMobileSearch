@@ -11,13 +11,14 @@ require(["config"], function (config) {
              "knockout", 
              "kendo", 
              "system", 
+			 "extensions",
              "framework/logLevel",
              //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
              "viewmodels/homeViewModel",
              "viewmodels/configureSiteViewModel",
              "viewmodels/resultsViewModel",
              "framework/knockout/kendoView"], 
-    function($, ko, kendo, system, logLevel, homeViewModel) {
+    function($, ko, kendo, system, extensions, logLevel, homeViewModel) {
         var testHref = "test.html?coverage=true";                
         
         if (config.isQunit && window.location.href.indexOf(testHref) < 0) {

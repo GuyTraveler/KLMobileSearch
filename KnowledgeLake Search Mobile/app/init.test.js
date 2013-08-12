@@ -5,22 +5,26 @@ var App,
     system;
 
 require(["config"], function (config) {
-    var testRootPath = 'unitTests/';
-    
     require.config(config);
         
     require(["jquery", 
              "knockout", 
              "system", 
+			 "extensions",
              "framework/logLevel"],
-    function($, ko, system, logLevel) {
-        var testsToRun = [testRootPath + "system_tests",
+    function($, ko, system, extensions, logLevel) {
+        var testRootPath = 'unitTests/',
+			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                          
                           testRootPath + "siteDataService_tests",
                           testRootPath + "websService_tests",
-                          testRootPath + "authenticationService_tests"
+                          testRootPath + "authenticationService_tests",
+						  testRootPath + "configureSiteViewModel_test",
+						  testRootPath + "siteDataCachingService_test",
+						  testRootPath + "ntlmLogonService_tests",
+						  testRootPath + "claimsLogonService_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         
@@ -30,7 +34,6 @@ require(["config"], function (config) {
         //add tests that CANNOT be run in the SIMULATOR here
         if (!system.isRunningInSimulator()) {
             testsToRun.push(testRootPath + "FileManagement_tests");
-            testsToRun.push(testRootPath + "siteDataCachingService_test");
         }
         
         QUnit.moduleStart(function (details) {

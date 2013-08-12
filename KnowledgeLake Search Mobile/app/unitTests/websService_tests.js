@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(["services/sharepoint/websService", "ntlm"],
+define(["services/sharepoint/websService", 
+		"ntlm"],
     function (websService, ntlm) {
         QUnit.module("Testing websService");
         
@@ -86,15 +87,42 @@ define(["services/sharepoint/websService", "ntlm"],
                 QUnit.start();
             });           
         });
+                 
+        QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
+            //arrange
+            var service,
+                url = "http://prodsp2010.dev.local/sites/team4/",
+                authResult = false;
+            
+            //act
+            service = new websService(url);
+            ntlm.setCredentials("dev", "spadmin", "password");
+            authResult = ntlm.authenticate(service.serviceUrl);
+            
+            //assert
+            QUnit.ok(service);
+            QUnit.ok(authResult);
+            
+            service.GetWeb(url, function (result) {
+                QUnit.ok(true, "GetWeb was successful");
+                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+                QUnit.start();
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
+                QUnit.start();
+            });           
+        });
         
          
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {
             //arrange
             var service,
-                url = "https://knowledgelake.sharepoint.com";
+                url = "https://kl.sharepoint.com";
             
             //act
             service = new websService(url);
+            deleteAllCookies();
                         
             //assert
             QUnit.ok(service);
@@ -109,4 +137,15 @@ define(["services/sharepoint/websService", "ntlm"],
             });
         });
         
+        
+        function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+        
+            for (var i = 0; i < cookies.length; i++) {
+            	var cookie = cookies[i];
+            	var eqPos = cookie.indexOf("=");
+            	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        }
     });

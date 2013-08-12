@@ -1,28 +1,39 @@
 define(["knockout", 
         "system", 
-        "ntlm",
-        "services/sharepoint/authenticationService", 
-        "services/sharepoint/siteDataService", 
-        "services/siteDataCachingService", 
+        "IAuthenticationService", 
+        "IWebsService", 
+        "ISiteDataCachingService", 
+		"INtlmLogonService",
+		"IClaimsLogonService",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair"], 
-    function (ko, system, ntlm, authenticationService, siteDataService, SiteDataCachingService, site, credential, credentialType, authenticationMode, keyValuePair) {
+    function (ko, system, authenticationService, websService, SiteDataCachingService, ntlmLogonService, claimsLogonService,
+		      site, credential, credentialType, authenticationMode, keyValuePair) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css
                 messageDisplayTime = 5000,
-                defaultUrlText = "http://",
+                defaultUrlText = "http://",			
                 homeUrl = "#home",
                 questionImageUrl = "app/images/question.png",
                 invalidImageUrl = "app/images/invalid.png",
                 validImageUrl = "app/images/valid.png",
-                office365SigninIndicator = "wa=wsignin1.0";
-                 
-            
+                sharepointVersionHeader = "MicrosoftSharePointTeamServices",
+				urlValidationDfd;
+                
+			self.ntlmService = new ntlmLogonService();
+			self.claimsService = new claimsLogonService();
+			
             self.url = ko.observable(defaultUrlText);
+			self.url.subscribe(function (newValue) {
+				self.ntlmService = new ntlmLogonService(newValue);
+				self.claimsService = new claimsLogonService(newValue);
+            });
+            self.siteTitle = ko.observable("");
+            self.sharePointVersion = ko.observable(0);
             self.ntlmAuthUrl = ko.computed(function () {
                 var authUrl = self.url();
                 
@@ -44,7 +55,7 @@ define(["knockout",
             });
             
             self.statusMessage = ko.observable("");
-            self.showStatus = ko.observable(false);
+            self.showStatus = ko.observable(false);			              
             self.errorMessage = ko.observable("");
             self.showError = ko.observable(false);
             self.isUrlValid = ko.observable(false);
@@ -67,11 +78,7 @@ define(["knockout",
                     }, messageDisplayTime);
                 }
             });
-            
-            self.statusOff = ko.computed(function () {
-                return !self.showStatus(); 
-            });
-            
+       
             self.errorMessage.subscribe(function (newValue) {
                 if (newValue) {
                     self.showError(true);
@@ -85,25 +92,14 @@ define(["knockout",
                     }, messageDisplayTime);
                 }
             });
-             
-            self.errorOff = ko.computed(function () {
-                return !self.showError(); 
-            });
-            
-            
+                         
             self.saveSiteSettings = function () {
+                var addSitePromise;
                 system.logVerbose("save site settings");
                 
-                if (!self.isUrlValid()) {
-                    self.errorMessage(system.strings.urlInvalidMessage);
-                    return;
-                }
-                else if (!self.isCredentialsValid()) {
-                    self.errorMessage(system.strings.credentialsInvalidMessage);
-                    return;
-                }
+                if (!self.validateAll()) return null;
                 
-                var addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), "title", 
+                addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
                                         new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
                 
                 addSitePromise.done(function (result) {          
@@ -119,11 +115,12 @@ define(["knockout",
                         self.errorMessage(system.strings.errorWritingSiteData);
                     }
                 });
+				
+				return addSitePromise;
             }
             
             self.closeSiteSettings = function () {
                 system.logVerbose("closing site settings");
-                
                 window.App.navigate(homeUrl);
             }
             
@@ -131,13 +128,18 @@ define(["knockout",
                 var dataService;
                 
                 system.logVerbose("validateSiteUrl called");
-                window.App.showLoading();
+				
+				window.App.showLoading();
                 
                 self.isUrlValid(false);
                 self.isCredentialsValid(false);
                 
                 dataService = new authenticationService(self.url());
-                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed);    
+                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed); 
+				
+				urlValidationDfd = $.Deferred();
+				
+				return urlValidationDfd.promise();
             }
             
             self.onSiteUrlValidated = function (result) {
@@ -149,21 +151,26 @@ define(["knockout",
                 self.setValidUrl(detectedCredentialType);   
                 
                 window.App.hideLoading();
+				urlValidationDfd.resolve(detectedCredentialType);
             }
             
             self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
-                var status = XMLHttpRequest.status;
+                var status = XMLHttpRequest.status,
+					detectedCredentialType;
                 system.logVerbose("site url validation failed with status: " + status);
                 
+				window.App.hideLoading();
+				
                 if (status == 401 || status == 200) {
-                    //unknown credential type in this case...
-                    self.setValidUrl(credentialType.ntlm);   
+					//unknown credential type in this case...
+					detectedCredentialType = credentialType.ntlm;                    
+                    self.setValidUrl(detectedCredentialType);   
+					urlValidationDfd.resolve(detectedCredentialType);
                 }
                 else {
                     self.setInvalidUrl();
-                }
-                
-                window.App.hideLoading();
+					urlValidationDfd.reject(textStatus);
+                }                               							
             }
             
             self.setValidUrl = function (detectedCredType) {
@@ -180,16 +187,13 @@ define(["knockout",
                 self.statusMessage(system.strings.urlValidMessage);
                 self.errorMessage("");
                 
-                if (self.siteCredentialType() == credentialType.claimsOrForms) {
-                    self.logonClaims();
-                }
-                else {
-                    self.logonWindows();
-                }
+                self.logon();
             }
             
             self.setInvalidUrl = function () {
                 self.isUrlValid(false);
+				self.clearTitle();
+				self.sharePointVersion(0);
                 
                 self.urlValidationImageSrc(invalidImageUrl);  
                 self.credValidationImageSrc(questionImageUrl);
@@ -219,88 +223,90 @@ define(["knockout",
             }
             
             
-            self.logonWindows = function () {
-                ntlm.setCredentials(self.siteDomain(), self.siteUserName(), self.sitePassword());
-                    
-                if (ntlm.authenticate(self.ntlmAuthUrl())) {
-                    self.credValidationImageSrc(validImageUrl);
+            self.logon = function () {
+				var logonService = self.getLogonService(),
+					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
+					getWebDfd = $.Deferred();
+				
+				//probably already logging on
+				if (!logonPromise) {
+					getWebDfd.reject(false);
                 }
-                else {
-                    self.credValidationImageSrc(invalidImageUrl);
-                }
-            }
-            
-            //try generic logon and pop the logon window if it fails
-            self.logonClaims = function () {
-                var dataService = new siteDataService(self.url());
-                
-                dataService.GetSiteUrl(self.url(),
-                function () {
-                    self.isCredentialsValid(true);
-                    self.credValidationImageSrc(validImageUrl);
-                },
-                function () {
-                    var windowRef = window.open(self.url());
-                    
-                    windowRef.addEventListener("loadstop", function (e) {
-                        if (self.isLoggedOnUrl(e.url)) {
-                            console.log(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
-                            windowRef.close();
-                            self.credValidationImageSrc(validImageUrl);
+				
+				logonPromise.done(function () {
+					var service = new websService(self.url());
+                	
+                    service.GetWeb(self.url(),
+                        function (result, textStatus, xhr) {
+                            var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+							
                             self.isCredentialsValid(true);
-                        }
-                    });
-                    
-                    windowRef.addEventListener("exit", function (e) {
-                        if (!self.isLoggedOnUrl(e.url)) {
-                            console.log(e.url + " present when child browser closed! Cookie failed to be obtained."); 
-                            self.credValidationImageSrc(invalidImageUrl);
+                            self.credValidationImageSrc(validImageUrl);                            
+                            self.setTitle(result.GetWebResult.Web.Title);                            
+                            self.sharePointVersion(spVersion.substring(0, 2));
+							
+							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+                        },
+                        function () {  //fail, invalidate our creds
                             self.isCredentialsValid(false);
-                        }
-                    });
+                            self.credValidationImageSrc(invalidImageUrl);                            
+                            self.clearTitle();    
+                            self.sharePointVersion(0);
+
+							getWebDfd.reject();							
+                        });
                 });
+				
+				logonPromise.fail(function () {
+					self.isCredentialsValid(false);
+                    self.credValidationImageSrc(invalidImageUrl);                    
+                    self.clearTitle();
+                    self.sharePointVersion(0);
+
+					getWebDfd.reject();		
+                });
+				
+				return getWebDfd.promise();
+            }
+             
+			self.getLogonService = function () {
+				if (self.siteCredentialType() == credentialType.claimsOrForms) {
+					return self.claimsService;					
+                }
+				
+				return self.ntlmService;
             }
        
-            //generic web service call...if it passes, we have a valid cookie.
-            self.logonWithCookie = function () {
-                var dataService = new siteDataService(self.url()),
-                    dfdSiteData = $.Deferred();
+            self.isTitleValid = function () {
+                return (self.siteTitle() != undefined && self.siteTitle().trim() != "");
+            }
                 
-                dataService.GetSiteUrl(self.url(), 
-                function () {
-                    dfdSiteData.resolve();
-                },
-                function () {
-                    dfdSiteData.reject();  
-                });
+            self.setTitle = function (title) {
+                if (!self.isTitleValid()) {
+                    self.siteTitle(title);
+                }
+            }
+            
+            self.clearTitle = function () {
+                self.siteTitle("");
+            }
+            
+            self.validateAll = function () {
+                if (!self.isUrlValid()) {
+                    self.errorMessage(system.strings.urlInvalidMessage);
+                    return false;
+                }
+                else if (!self.isTitleValid()) {
+                    self.errorMessage(system.strings.siteTitleRequired);
+                    return false;
+                }
+                else if (!self.isCredentialsValid()) {
+                    self.errorMessage(system.strings.credentialsInvalidMessage);
+                    return false;
+                }
                 
-                return dfdSiteData;
-            }
-            
-            self.isLoggedOnUrl = function (url) {
-                return url.indexOf(self.url()) == 0 && url.toLowerCase().indexOf(office365SigninIndicator) < 0;
-            }
-                        
-            
-            self.init = function (e) {
-                system.logVerbose("configureSiteViewModel init");          
-            }
-            
-            self.beforeShow = function (e) {
-                system.logVerbose("configureSiteViewModel beforeShow");
-            }
-            
-            self.show = function (e) {
-                system.logVerbose("configureSiteViewModel show");
-            }
-            
-            self.afterShow = function (e) {
-                system.logVerbose("configureSiteViewModel afterShow");
-            }
-            
-            self.hide = function (e) {
-                system.logVerbose("configureSiteViewModel hide");
-            } 
+                return true;
+            }             
    
             return self;
         };

@@ -2,16 +2,23 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
     function (ko, system, SiteDataCachingService, $) {
         var homeViewModel = function () {
             var self = this;
-
-            self.siteDataSource = new kendo.data.DataSource({data: 
-                            [{"credential":{"domain":"dev","credentialType":0,"password":"password","userName":"ryan.braun"},"title":"title","url":"http://prodsp2013.dev.local"}]});
+                       
+            self.siteDataSource = new kendo.data.DataSource();
+            
+            self.SetDataSource = function () {
+                if(self.siteDataSource)
+                    self.siteDataSource.data(SiteDataCachingService.sites);
+                
+                else
+                    self.siteDataSource = new kendo.data.DataSource({data: SiteDataCachingService.sites});                  
+            }
             
             self.LoadSiteData = function () {
                 if(window.AppLoaded)
                 {
                     if (SiteDataCachingService.sites)
                     {
-                        //self.siteDataSource.data(SiteDataCachingService.sites);
+                        self.SetDataSource();
                     }
                     
                     else 
@@ -19,15 +26,9 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         var loadSitesPromise = SiteDataCachingService.LoadSites();
                       
                         loadSitesPromise.done(function (result) {
-                            if (SiteDataCachingService.sites) 
-                            {
-                                //self.siteDataSource.data(SiteDataCachingService.sites);
-                                //self.siteDataSource.read();
-                                
-                                console.log("sites: " + JSON.stringify(SiteDataCachingService.sites));
-                                //console.log("siteDataSource: " + self.siteDataSource.data()[0].url);
-                                console.log("Stringified: " + JSON.stringify(self.siteDataSource.data()));
-                            }
+                            if (SiteDataCachingService.sites)
+                                self.SetDataSource();
+                            
                             else
                                 window.App.navigate("#configureSite");
                         });
@@ -47,18 +48,15 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.init = function (e) {
                 system.logVerbose("homeViewModel init");
+                
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
-                    {
-                       self.LoadSiteData();
-                    }
+                        self.LoadSiteData();
                 });
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");
-                
-                //self.LoadSiteData();
+                system.logVerbose("homeViewModel beforeShow");                
             }
             
             self.show = function (e) {

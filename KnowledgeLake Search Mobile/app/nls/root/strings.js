@@ -7,6 +7,7 @@ define({
     cancel: "Cancel",
     save: "Save",
     siteUrl: "Url",
+    siteTitle: "Title",
     validate: "Validate",
     loading: "Loading...",
     credentialType: "Type",
@@ -22,5 +23,6 @@ define({
     logonFailed: "Logon to SharePoint failed",
     logonSuccess:" Logon to SharePoint succeeded",
     siteAlreadyConfigured: "Site has already been added",
-    errorWritingSiteData: "Error saving site data to the file system"
+    errorWritingSiteData: "Error saving site data to the file system",
+    siteTitleRequired: "Site title is required"
 });
