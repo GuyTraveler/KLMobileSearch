@@ -3,8 +3,7 @@ define(["jquery",
 		"IWebsService"], 
 	function ($, system, websService) {
 		var claimsLogonService = function (siteUrl) {
-			var self = this,
-				office365SigninIndicator = "wa=wsignin1.0";
+			var self = this;
 			
 			self.isLoggingOn = false;
 			self.windowRef = null;
@@ -62,7 +61,16 @@ define(["jquery",
             };
 			
             self.isLoggedOnUrl = function (url) {
-                return url && url.indexOf(siteUrl) == 0 && url.toLowerCase().indexOf(office365SigninIndicator) < 0;
+				if (!url) return false;
+				if (url.indexOf(siteUrl) != 0) return false;
+				
+				for (var i = system.claimsSignInIndicators.length - 1; i >= 0; i--) {
+					var indicator = system.claimsSignInIndicators[i];
+					
+					if (url.indexOf(indicator) > -1) return false;
+                }
+				
+                return true;
             };
 			
 			return self;

@@ -3,9 +3,9 @@ define(["framework/FileManagement",
 		"system"],
 	function (File, FileMock, system) {
 		if (system.isRunningInSimulator()) {
-			return FileMock;
+			return new FileMock();
         }
 		else {
-			return File;
+			return new File();
         }
     });

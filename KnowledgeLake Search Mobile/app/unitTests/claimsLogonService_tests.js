@@ -1,8 +1,7 @@
 /*global QUnit*/
 define(['services/claimsLogonService'],
     function (claimsLogonService) {
-		var claimsTestUrl = "https://knowledgelake.sharepoint.com",
-			office365SigninIndicator = "wa=wsignin1.0";
+		var claimsTestUrl = "https://knowledgelake.sharepoint.com";
 		
         QUnit.module("Testing claimsLogonService");
 
@@ -25,7 +24,7 @@ define(['services/claimsLogonService'],
 			service = new claimsLogonService(claimsTestUrl);
 			
 			//assert
-			QUnit.equal(service.isLoggedOnUrl(claimsTestUrl + office365SigninIndicator), false);
+			QUnit.equal(service.isLoggedOnUrl(claimsTestUrl + system.claimsSignInIndicators[0]), false);
         });
 			
 		QUnit.test("claimsLogonService.isLoggedOnUrl with exact url is true", function () {

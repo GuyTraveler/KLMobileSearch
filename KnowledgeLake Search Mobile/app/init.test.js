@@ -10,8 +10,9 @@ require(["config"], function (config) {
     require(["jquery", 
              "knockout", 
              "system", 
+			 "extensions",
              "framework/logLevel"],
-    function($, ko, system, logLevel) {
+    function($, ko, system, extensions, logLevel) {
         var testRootPath = 'unitTests/',
 			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",

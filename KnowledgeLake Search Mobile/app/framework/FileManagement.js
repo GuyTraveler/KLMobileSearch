@@ -166,5 +166,5 @@ define(["system", "jquery"], function (system, $) {
         }
     }
     
-    return new File();
+    return File;
 });

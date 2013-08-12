@@ -12,8 +12,7 @@ define(["system",
 			homeUrl = "#home",
 			validImageCheck = "/valid",
 			invalidImageCheck = "/invalid",
-			questionImageCheck = "/question",
-			office365SigninIndicator = "wa=wsignin1.0";
+			questionImageCheck = "/question";
 		
         QUnit.module("Testing configureSiteViewModel");
        

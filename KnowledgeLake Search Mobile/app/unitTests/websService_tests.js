@@ -87,6 +87,32 @@ define(["services/sharepoint/websService",
                 QUnit.start();
             });           
         });
+                 
+        QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
+            //arrange
+            var service,
+                url = "http://prodsp2010.dev.local/sites/team4/",
+                authResult = false;
+            
+            //act
+            service = new websService(url);
+            ntlm.setCredentials("dev", "spadmin", "password");
+            authResult = ntlm.authenticate(service.serviceUrl);
+            
+            //assert
+            QUnit.ok(service);
+            QUnit.ok(authResult);
+            
+            service.GetWeb(url, function (result) {
+                QUnit.ok(true, "GetWeb was successful");
+                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+                QUnit.start();
+            },
+            function (XMLHttpRequest, textStatus, errorThrown) {
+                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
+                QUnit.start();
+            });           
+        });
         
          
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {

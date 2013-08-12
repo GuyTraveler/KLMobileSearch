@@ -235,7 +235,7 @@ define(["knockout",
 				
 				logonPromise.done(function () {
 					var service = new websService(self.url());
-                
+                	
                     service.GetWeb(self.url(),
                         function (result, textStatus, xhr) {
                             var spVersion = xhr.getResponseHeader(sharepointVersionHeader);

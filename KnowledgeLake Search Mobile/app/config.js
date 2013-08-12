@@ -30,6 +30,7 @@ define(["framework/logLevel"], function(logLevel) {
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',		   
 			   'system': 'framework/system',
+			   'extensions': 'framework/extensions',
 			   //service locations
 			   'IAuthenticationService': 'services/sharepoint/authenticationService',
 			   'IWebsService': 'services/sharepoint/websService',

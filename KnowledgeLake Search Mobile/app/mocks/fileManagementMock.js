@@ -92,5 +92,5 @@ define([], function () {
 		return self;
     };
 	
-	return new fileSystemMock();
+	return fileSystemMock;
 });
