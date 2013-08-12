@@ -5,14 +5,16 @@ define(['require',
         'viewmodels/homeViewModel',
         "domain/site", 
 		"domain/credential", 
-		"domain/credentialType"],
-    function (require, $, ko, homeViewModel, site, credential, credentialType) {
+		"domain/credentialType", 
+        "services/siteDataCachingService"],
+    function (require, $, ko, homeViewModel, site, credential, credentialType, SiteDataCachingService) {
         QUnit.module("Testing homeViewModel");
         
         QUnit.test("test SetDataSource if siteDataSource is null", function () {
             //arrange
             var vm;
-			var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+			var siteData = [];
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             
 			//act
 			vm = new homeViewModel();
@@ -21,7 +23,23 @@ define(['require',
             vm.SetDataSource(siteData);
 			
 			//assert
-			QUnit.equal(vm.siteDataSource.data(), siteData);			
+            QUnit.equal(JSON.stringify(vm.siteDataSource.data()), JSON.stringify(siteData));
+        });
+        
+        QUnit.test("test SetDataSource if siteDataSource is already defined", function () {
+            //arrange
+            var vm;
+			var siteData = [];
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            
+			//act
+			vm = new homeViewModel();
+            
+            vm.siteDataSource = new kendo.data.DataSource({data: []});
+            vm.SetDataSource(siteData);
+			
+			//assert
+            QUnit.equal(JSON.stringify(vm.siteDataSource.data()), JSON.stringify(siteData));
         });
         
         QUnit.test("test homeViewModel ctor", function () {
@@ -44,6 +62,33 @@ define(['require',
             //act 
             vm = new homeViewModel();
             vm.init();
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        QUnit.test("test homeViewModel LoadSiteData", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new homeViewModel();
+            window.AppLoaded(true);
+            vm.LoadSiteData();
+                        
+            //assert
+            QUnit.ok(vm);
+        }); 
+        
+        QUnit.test("test homeViewModel LoadSiteData if sites is null", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new homeViewModel();
+            window.AppLoaded(true);
+            SiteDataCachingService.sites = null; 
+            vm.LoadSiteData();
                         
             //assert
             QUnit.ok(vm);
@@ -95,5 +140,41 @@ define(['require',
                         
             //assert
             QUnit.ok(vm);
+        });
+        
+        QUnit.test("test homeViewModel navigate", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new homeViewModel();
+            vm.navigate();
+                        
+            //assert
+            QUnit.ok(vm);
         });  
+        
+        QUnit.test("test homeViewModel swipe left", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new homeViewModel();
+            vm.swipe({"direction":"left", "touch":{"currentTarget":$("<div/>")}});
+                        
+            //assert
+            QUnit.ok(vm);
+        });  
+        
+        QUnit.test("test homeViewModel swipe right", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new homeViewModel();
+            vm.swipe({"direction":"right", "touch":{"currentTarget":$("<div/>")}});
+                        
+            //assert
+            QUnit.ok(vm);
+        }); 
     });

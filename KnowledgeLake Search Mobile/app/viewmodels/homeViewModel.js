@@ -3,16 +3,15 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
         var homeViewModel = function () {
             var self = this;
                        
-            self.siteDataSource = new kendo.data.DataSource();
+            self.siteDataSource = null;
             
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
-                    if(self.siteDataSource)
-                        self.siteDataSource.data(sites);
+                    if(!self.siteDataSource)
+                        self.siteDataSource = new kendo.data.DataSource({data: []});                    
                     
-                    else
-                        self.siteDataSource = new kendo.data.DataSource({data: sites});
+                    self.siteDataSource.data(sites);
                 }
             }
             
