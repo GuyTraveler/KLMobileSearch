@@ -22,9 +22,10 @@ require(["config"], function (config) {
                           testRootPath + "websService_tests",
                           testRootPath + "authenticationService_tests",
 						  testRootPath + "configureSiteViewModel_test",
-						  testRootPath + "siteDataCachingService_test",
+						  testRootPath + "siteDataCachingService_test",						  
 						  testRootPath + "ntlmLogonService_tests",
-						  testRootPath + "claimsLogonService_tests"
+						  testRootPath + "claimsLogonService_tests",
+						  testRootPath + "searchService_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         

@@ -1,4 +1,8 @@
-define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
+define(["jquery", 
+		"system",
+		"domain/keyValuePair",
+		"services/sharepoint/soapServiceBase"], 
+	function ($, system, keyValuePair, soapServiceBase) {
     
     var authenticationService = function (siteUrl) {
         var self = this,
@@ -8,6 +12,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         soapServiceBase.call(self, siteUrl, serviceName);
         
         self.Mode = function (webUrl, successCallback, failCallback) {
+			system.logVerbose("authenticationService.Mode called");
             self.executeSoapMethod("Mode", null, successCallback, failCallback);
         }
         
