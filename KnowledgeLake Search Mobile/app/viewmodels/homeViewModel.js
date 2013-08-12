@@ -2,96 +2,63 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
     function (ko, system, SiteDataCachingService, $) {
         var homeViewModel = function () {
             var self = this;
+
+            self.siteDataSource = new kendo.data.DataSource({data: 
+                            [{"credential":{"domain":"dev","credentialType":0,"password":"password","userName":"ryan.braun"},"title":"title","url":"http://prodsp2013.dev.local"}]});
             
-            self.TestMessage = ko.observable("Homegg");            
-            self.siteDataSource = null; 
+            self.LoadSiteData = function () {
+                if(window.AppLoaded)
+                {
+                    if (SiteDataCachingService.sites)
+                    {
+                        //self.siteDataSource.data(SiteDataCachingService.sites);
+                    }
+                    
+                    else 
+                    {
+                        var loadSitesPromise = SiteDataCachingService.LoadSites();
+                      
+                        loadSitesPromise.done(function (result) {
+                            if (SiteDataCachingService.sites) 
+                            {
+                                //self.siteDataSource.data(SiteDataCachingService.sites);
+                                //self.siteDataSource.read();
+                                
+                                console.log("sites: " + JSON.stringify(SiteDataCachingService.sites));
+                                //console.log("siteDataSource: " + self.siteDataSource.data()[0].url);
+                                console.log("Stringified: " + JSON.stringify(self.siteDataSource.data()));
+                            }
+                            else
+                                window.App.navigate("#configureSite");
+                        });
+                      
+                        loadSitesPromise.fail(function (result) {
+                            if (result) {
+                                window.App.navigate("#configureSite");
+                            }
+                            else {
+                                // critical error reading site data
+                                // recovery options? modal dialog?
+                            }
+                        });
+                    }
+                }
+            }
             
             self.init = function (e) {
                 system.logVerbose("homeViewModel init");
-                
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
                     {
-                        if(!SiteDataCachingService.sites)
-                        {
-                            var loadSitesPromise = SiteDataCachingService.LoadSites();
-                    
-                            loadSitesPromise.done(function (result) {
-                                if(SiteDataCachingService.sites)
-                                {                            
-                                    self.siteDataSource = new kendo.data.DataSource.create({data: SiteDataCachingService.sites});                            
-    
-                                    $("#listView").kendoMobileListView({
-                                        dataSource: self.siteDataSource,
-                                        template: $("#sitesListViewTemplate").html()
-                                    })
-                                    .kendoTouch({
-                                        filter: ">li",
-                                        enableSwipe: true,
-                                        tap: self.navigate,
-                                        swipe: self.swipe
-                                    });
-                                }
-                                else
-                                    window.App.navigate("#configureSite");
-                            });
-                            
-                            loadSitesPromise.fail(function (result) {
-                                if(result)
-                                {
-                                    console.log("sites.dat does not exist"); 
-                                    window.App.navigate("#configureSite");
-                                }
-                                else
-                                {
-                                    // critical error reading site data                                    
-                                    // recovery options? modal dialog?
-                                }
-                            });
-                        }
-                    
-                        // possibly add logic to remove subscription
-                   }
+                       self.LoadSiteData();
+                    }
                 });
             }
             
             self.beforeShow = function (e) {
                 system.logVerbose("homeViewModel beforeShow");
                 
-                if(SiteDataCachingService.sites)
-                {
-                    self.siteDataSource = new kendo.data.DataSource.create({data: SiteDataCachingService.sites});
-                }
-                
-                else
-                {
-                    var loadSitesPromise = SiteDataCachingService.LoadSites();
-                    
-                    loadSitesPromise.done(function (result) {
-                        if(SiteDataCachingService.sites)
-                        {
-                            self.siteDataSource = new kendo.data.DataSource.create({data: SiteDataCachingService.sites});
-                        }
-                        else
-                        {
-                            console.log("no site data populated");
-                            window.App.navigate("#configureSite");
-                        }
-                    });
-                    
-                    loadSitesPromise.fail(function (result) {
-                        if(result)
-                        {
-                            console.log("sites.dat does not exist");
-                            window.App.navigate("#configureSite");
-                        }
-                        else
-                        {
-                            // critical error reading site data                                    
-                            // recovery options? modal dialog?
-                        }
-                    });                    
-                }                
+                //self.LoadSiteData();
             }
             
             self.show = function (e) {
