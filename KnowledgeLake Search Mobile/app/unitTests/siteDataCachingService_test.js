@@ -11,9 +11,9 @@ define(["services/siteDataCachingService",
         //arrange
         SiteDataCachingService.sites = [];
         
-        SiteDataCachingService.sites.push(new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-        SiteDataCachingService.sites.push(new site("http://prodsp2010.dev.local", "Home", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
-        SiteDataCachingService.sites.push(new site("http://prodsp2013.dev.local", "Prod", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
+        SiteDataCachingService.sites.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+        SiteDataCachingService.sites.push(new site("http://prodsp2010.dev.local", 15, "Home", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
+        SiteDataCachingService.sites.push(new site("http://prodsp2013.dev.local", 15, "Prod", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
         
         //act
         var result = SiteDataCachingService.SiteExists("http://prodsp2010.dev.local");
@@ -26,9 +26,9 @@ define(["services/siteDataCachingService",
         //arrange
         SiteDataCachingService.sites = [];
         
-        SiteDataCachingService.sites.push(new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-        SiteDataCachingService.sites.push(new site("http://prodsp2010.dev.local", "Home", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
-        SiteDataCachingService.sites.push(new site("http://prodsp2013.dev.local", "Prod", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
+        SiteDataCachingService.sites.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+        SiteDataCachingService.sites.push(new site("http://prodsp2010.dev.local", 15, "Home", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
+        SiteDataCachingService.sites.push(new site("http://prodsp2013.dev.local", 15, "Prod", new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));        
         
         //act
         var result = SiteDataCachingService.SiteExists("http://prodsp2015.dev.local");
@@ -51,7 +51,7 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test AddSite if sites is null", function () {
         //arrange
         SiteDataCachingService.sites = null;
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
         var addSitePromise = SiteDataCachingService.AddSite(newSite);
@@ -73,7 +73,7 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test AddSite if it already exists in sites", function () {
         //arrange
         SiteDataCachingService.sites = [];        
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         SiteDataCachingService.sites.push(newSite);
         
@@ -95,7 +95,7 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test AddSite if site does not exist", function () {
         //arrange
         SiteDataCachingService.sites = [];        
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
         var addSitePromise = SiteDataCachingService.AddSite(newSite);
@@ -117,7 +117,7 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test RemoveSite if sites is null", function () {
         //arrange
         SiteDataCachingService.sites = null;        
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
         var removeSitePromise = SiteDataCachingService.RemoveSite(newSite);
@@ -137,8 +137,8 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test RemoveSite if site does not exist", function () {
         //arrange
         SiteDataCachingService.sites = [];        
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));        
-        var removeSite = new site("http://prodsp2010.dev.local", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));        
+        var removeSite = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         SiteDataCachingService.sites.push(newSite);
         
@@ -160,8 +160,8 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test RemoveSite if site exists", function () {
         //arrange
         SiteDataCachingService.sites = [];        
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));        
-        var removeSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));        
+        var removeSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         SiteDataCachingService.sites.push(newSite);
         
@@ -212,7 +212,7 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test LoadSites if sites.dat exists", function () {
         //arrange
         SiteDataCachingService.sites = [];
-        var newSite = new site("http://", "invalid", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
         var addSitePromise = SiteDataCachingService.AddSite(newSite);

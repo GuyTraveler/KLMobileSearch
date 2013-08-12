@@ -2,10 +2,28 @@
 define(['require',
         'jquery',
         'knockout',
-        'viewmodels/homeViewModel'],
-    function (require, $, ko, homeViewModel) {
+        'viewmodels/homeViewModel',
+        "domain/site", 
+		"domain/credential", 
+		"domain/credentialType"],
+    function (require, $, ko, homeViewModel, site, credential, credentialType) {
         QUnit.module("Testing homeViewModel");
-
+        
+        QUnit.test("test SetDataSource if siteDataSource is null", function () {
+            //arrange
+            var vm;
+			var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            
+			//act
+			vm = new homeViewModel();
+            
+            vm.siteDataSource = null;
+            vm.SetDataSource(siteData);
+			
+			//assert
+			QUnit.equal(vm.siteDataSource.data(), siteData);			
+        });
+        
         QUnit.test("test homeViewModel ctor", function () {
             //arrange
             var vm;
@@ -15,6 +33,8 @@ define(['require',
                         
             //assert
             QUnit.ok(vm);
+            QUnit.ok(window.App);
+			QUnit.ok(window.App.isMock);
         });               
         
         QUnit.test("test homeViewModel init", function () {

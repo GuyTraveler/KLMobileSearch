@@ -5,21 +5,22 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                        
             self.siteDataSource = new kendo.data.DataSource();
             
-            self.SetDataSource = function () {
-                if(self.siteDataSource)
-                    self.siteDataSource.data(SiteDataCachingService.sites);
-                
-                else
-                    self.siteDataSource = new kendo.data.DataSource({data: SiteDataCachingService.sites});                  
+            self.SetDataSource = function (sites) {
+                if(sites)
+                {
+                    if(self.siteDataSource)
+                        self.siteDataSource.data(sites);
+                    
+                    else
+                        self.siteDataSource = new kendo.data.DataSource({data: sites});
+                }
             }
             
             self.LoadSiteData = function () {
                 if(window.AppLoaded)
                 {
-                    if (SiteDataCachingService.sites)
-                    {
-                        self.SetDataSource();
-                    }
+                    if (SiteDataCachingService.sites)                    
+                        self.SetDataSource(SiteDataCachingService.sites);
                     
                     else 
                     {
@@ -27,7 +28,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                       
                         loadSitesPromise.done(function (result) {
                             if (SiteDataCachingService.sites)
-                                self.SetDataSource();
+                                self.SetDataSource(SiteDataCachingService.sites);
                             
                             else
                                 window.App.navigate("#configureSite");

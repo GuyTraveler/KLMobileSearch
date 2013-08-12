@@ -1,5 +1,5 @@
 //explictly request the actual FileManagment
-define(["framework/FileManagement", 
+define(["factory/fileManagementFactory", 
 		"system", 
 		"jquery"], function (File, system, $) {
         QUnit.module("Testing framework/FileManagement");
@@ -12,7 +12,7 @@ define(["framework/FileManagement",
             //assert
             QUnit.ok(File);
             
-            QUnit.ok(File.fileSystem);
+            QUnit.ok(File.fileSystem, "message: " + File.fileSystem);
         });
     
         QUnit.asyncTest("test file exists if file exists", function () {

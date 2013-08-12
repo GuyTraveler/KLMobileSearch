@@ -24,7 +24,8 @@ require(["config"], function (config) {
 						  testRootPath + "configureSiteViewModel_test",
 						  testRootPath + "siteDataCachingService_test",
 						  testRootPath + "ntlmLogonService_tests",
-						  testRootPath + "claimsLogonService_tests"
+						  testRootPath + "claimsLogonService_tests",
+                          testRootPath + "FileManagement_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         
@@ -33,7 +34,7 @@ require(["config"], function (config) {
         
         //add tests that CANNOT be run in the SIMULATOR here
         if (!system.isRunningInSimulator()) {
-            testsToRun.push(testRootPath + "FileManagement_tests");
+            //testsToRun.push();
         }
         
         QUnit.moduleStart(function (details) {
