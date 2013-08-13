@@ -1,20 +1,16 @@
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li>
-	    <div class="itemContainer" data-role="touch" data-enable-swipe="true" data-swipe="swipe">
+	    <div class="itemContainer">
 	        <div class="site">
 	            <h3 class="siteTitle" data-bind="text: title"></h3>
 	        </div>
 	        <div class="keywordSearch">
-	            <input class="keyword" />
-	            <div class="searchButton" data-role="button">Search</div>
+	            <input class="keyword" type="text" />
+	            <div class="searchButton">Search</div>
 	        </div>
 	    </div>
 	</li>
 </ul>
-
-<script type="text/x-kendo-template" id="sitesListViewTemplate">
-	
-</script>
 
 <style type="text/css">
     .itemContainer {

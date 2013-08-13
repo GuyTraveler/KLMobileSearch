@@ -9,6 +9,14 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 if(sites)
                 {
                     self.siteDataSource(sites);
+                    
+                    //TODO: these kendo methods need to be factored out to knockout bindings so 
+                    //we don't pollute the viewModels with kendo code lest it will be worthless with regular web apps
+                    $(".itemContainer").kendoTouch({
+                        enableSwipe: true,
+                        swipe: self.swipe 
+                    });
+                    $(".searchButton").kendoMobileButton();
                 }
             }
             
@@ -75,6 +83,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             }
             
             self.swipe = function(e) {
+                console.log("swipe");
                 var div = $(e.touch.currentTarget);
                 
                 if(e.direction == "left")
