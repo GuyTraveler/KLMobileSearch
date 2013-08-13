@@ -27,15 +27,24 @@ define(["framework/logLevel"], function(logLevel) {
 	   },
 	   map: {              
 		   '*': {
+               //factory
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',		   
+               
+               //framework
 			   'system': 'framework/system',
 			   'extensions': 'framework/extensions',
-			   //service locations
+			   
+               //service locations               
+               //sharepoint wrappers
 			   'IAuthenticationService': 'services/sharepoint/authenticationService',
 			   'IWebsService': 'services/sharepoint/websService',
 			   'ISiteDataService': 'services/sharepoint/siteDataService',
+               'ISearchService': 'services/sharepoint/searchService',
+               
+               //ours
 			   'ISiteDataCachingService': 'services/siteDataCachingService',
+               'IQueryService': 'services/queryService',               
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService'
 	       }
