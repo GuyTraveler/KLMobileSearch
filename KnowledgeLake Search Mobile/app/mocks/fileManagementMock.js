@@ -23,10 +23,10 @@ define([], function () {
 					if (entry.path == fileEntry.path) {
 						fileBag[i] = entry;
 						return;
-                    }
-					
-					fileBag.push(fileEntry);
+                    }									
                 }
+                
+                fileBag.push(fileEntry);
             };
 		
 		self.fileSystem = {};
@@ -49,7 +49,7 @@ define([], function () {
 			var dfd = $.Deferred(),
 				entry = { 
 					path: path,
-					data: data
+					data: typeof data === 'string' ? data : JSON.stringify(data)
                 };						
 			
 			saveFileEntry(entry);
@@ -63,7 +63,7 @@ define([], function () {
 				entry = findEntry(path);
 			
 			if (entry) {
-				dfd.resolve(entry.path);
+				dfd.resolve(entry.data);
             }
 			else {
 				dfd.reject(false);
@@ -79,7 +79,7 @@ define([], function () {
 			
 			if (entry) {
 				index = fileBag.indexOf(entry);
-				fileBag = fileBag.splice(index, 1);
+				fileBag.splice(index, 1);
 				dfd.resolve(fileBag[path]);
             }
 			else {
