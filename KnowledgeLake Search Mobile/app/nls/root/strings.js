@@ -6,6 +6,8 @@ define({
     resultsPageTitle: "Search Results",
     cancel: "Cancel",
     save: "Save",
+    editSite: "Edit",
+    deleteSite: "Delete",
     siteUrl: "Url",
     siteTitle: "Title",
     validate: "Validate",

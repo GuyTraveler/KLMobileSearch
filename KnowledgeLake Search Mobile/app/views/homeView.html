@@ -1,9 +1,16 @@
+<header data-role="header" data-bind="visible: navBarVisible">
+    <div data-role="navbar">        
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: editSite, text: system.strings.editSite"></button>
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: deleteSite, text: system.strings.deleteSite"></button>
+    </div>
+</header>
+
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li>
 	    <div class="itemContainer">
 	        <div class="site">
                 <a data-bind="click: $parent.setSelectedSite">
-                    <img class="siteIcon" data-bind="attr: {src: siteIcon}"/>
+                    <img class="siteIcon" data-bind="attr: {src: icon}"/>
                 </a>
 	            <h3 class="siteTitle" data-bind="text: title"></h3>
 	        </div>
@@ -14,6 +21,17 @@
 	    </div>
 	</li>
 </ul>
+
+<footer data-role="footer">
+    <div data-role="tabstrip">
+        <a href="#home" data-icon="home">
+            <span data-bind="text: system.strings.homeLinkText"></span>
+        </a>
+        <a data-icon="add" data-bind="click: onAddClick">
+            <span data-bind="text: system.strings.addSiteLinkText"></span>
+        </a>
+    </div>
+</footer> 
 
 <style type="text/css">
     .itemContainer {

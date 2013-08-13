@@ -4,7 +4,9 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             var self = this;
                        
             self.siteDataSource = ko.observableArray();
-            self.selectedSite = null; 
+            
+            self.selectedSite = null;            
+            self.navBarVisible = ko.observable(false);
             
             self.SetDataSource = function (sites) {
                 if(sites)
@@ -101,10 +103,51 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.setSelectedSite = function (site) {
                 if(self.selectedSite === site)
+                {
                     self.selectedSite = null;
+                    self.navBarVisible(false);
+                }
                 
                 else
+                {
                     self.selectedSite = site;
+                    self.navBarVisible(true);
+                }
+            }
+            
+            self.onAddClick = function () {
+                self.selectedSite = null;
+                self.navBarVisible(false);
+                window.App.navigate("#configureSite"); 
+            }
+            
+            self.editSite = function () {
+                if(self.selectedSite)
+                {
+                    window.App.navigate("#configureSite");                    
+                }
+            }
+            
+            self.deleteSite = function () {
+                if(self.selectedSite)
+                {
+                    // prompt before removal if yes proceed with deletion
+                    var removeSitePromise = SiteDataCachingService.RemoveSite(self.selectedSite);
+                      
+                    removeSitePromise.done(function (result) {
+                        self.LoadSiteData(); 
+                    });
+                  
+                    removeSitePromise.fail(function (result) {
+                        if (result) {
+                            // site does not exist
+                        }
+                        else {
+                            // critical error removing site data
+                            // recovery options? modal dialog?
+                        }
+                    });
+                }
             }
             
             return self;
