@@ -1,5 +1,5 @@
 /*global QUnit*/
-//explicit request to authenticationService
+//explicit request to searchService
 define(["services/sharepoint/searchService",
 		"INtlmLogonService"],
     function (searchService, ntlmLogonService) {
