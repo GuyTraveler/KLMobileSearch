@@ -33,6 +33,8 @@ define(["jquery"], function ($) {
                     
                     postData = (new XMLSerializer()).serializeToString(xmlDoc);
                     
+					system.logVerbose("posting SOAP request to " + self.serviceUrl);
+					
                     $.ajax({
                         url: self.serviceUrl,
                         async: true,
@@ -104,15 +106,37 @@ define(["jquery"], function ($) {
         
         //recursive method to translate SOAP elements to a JSON object
         self.parseXmlElementToJson = function (parentObject, elem) {
-            parentObject[elem.tagName] = {};
-            parentObject[elem.tagName][jsonTextPropertyName] = $(elem).clone().children().remove().end().text();
+			var tagName = elem.tagName,
+				counter = 0;
+			
+			//if this property name exists already, start appending a number to it...
+			if (typeof parentObject[tagName] !== 'undefined') {
+				while (typeof parentObject[tagName] !== 'undefined') {
+					++counter;
+					tagName = elem.tagName + counter;
+				}
+            }
+
+            parentObject[tagName] = {};			
+            parentObject[tagName][jsonTextPropertyName] = $(elem).clone().children().remove().end().text();
             
             $.each(elem.attributes, function(i, att) {
-                parentObject[elem.tagName][att.name] = att.value;                                                 
+				counter = 0;
+				
+				//if this property name exists already, start appending a number to it...
+				if (typeof parentObject[tagName][att.name] !== 'undefined') {				
+					while (typeof parentObject[tagName][att.name + counter] !== 'undefined') 
+						++counter;
+					
+					parentObject[tagName][att.name + counter] = att.value;
+                }
+				else {
+                	parentObject[tagName][att.name] = att.value;                                                 
+				}
             });
             
             $.each($(elem).children(), function (j, childElem) {
-                self.parseXmlElementToJson(parentObject[elem.tagName], childElem);
+                self.parseXmlElementToJson(parentObject[tagName], childElem);
             });  
         }
        

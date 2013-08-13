@@ -8,12 +8,11 @@ require(["config"], function (config) {
     require.config(config);
         
     require(["jquery", 
-             "knockout",
-             "kendo",
+             "knockout", 
              "system", 
 			 "extensions",
              "framework/logLevel"],
-    function($, ko, kendo, system, extensions, logLevel) {
+    function($, ko, system, extensions, logLevel) {
         var testRootPath = 'unitTests/',
 			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
@@ -34,9 +33,9 @@ require(["config"], function (config) {
         window.AppLoaded = ko.observable(false);
         
         //add tests that CANNOT be run in the SIMULATOR here
-        if (!system.isRunningInSimulator()) {
-            //testsToRun.push();
-        }
+        /*if (!system.isRunningInSimulator()) {
+            testsToRun.push();
+        }*/
         
         QUnit.moduleStart(function (details) {
             window.system.setLogLevel(logLevel.Verbose); 

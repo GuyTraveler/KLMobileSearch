@@ -155,10 +155,11 @@ define(["knockout",
             }
             
             self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
-                var status = XMLHttpRequest.status,
+                var status,
 					detectedCredentialType;
                 system.logVerbose("site url validation failed with status: " + status);
                 
+				status = XMLHttpRequest.status;
 				window.App.hideLoading();
 				
                 if (status == 401 || status == 200) {
@@ -306,7 +307,12 @@ define(["knockout",
                 }
                 
                 return true;
-            }             
+            }     
+			
+			self.beforeShow = function (e) {
+				system.logVerbose("configureSiteViewModel.beforeShow");
+				//todo: add logic to rip the active site data off the homeViewModel and display
+            }
    
             return self;
         };

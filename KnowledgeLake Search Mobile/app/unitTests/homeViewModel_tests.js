@@ -10,6 +10,21 @@ define(['require',
     function (require, $, ko, homeViewModel, site, credential, credentialType, SiteDataCachingService) {
         QUnit.module("Testing homeViewModel");
         
+        QUnit.test("test SetDataSource if siteDataSource is already defined", function () {
+            //arrange
+            var vm;
+			var siteData = [];
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            
+			//act
+			vm = new homeViewModel();
+            
+            vm.SetDataSource(siteData);
+			
+			//assert
+            QUnit.equal(JSON.stringify(vm.siteDataSource.data()), JSON.stringify(siteData));
+        });
+        
         QUnit.test("test SetDataSource if siteDataSource is null", function () {
             //arrange
             var vm;
@@ -20,22 +35,6 @@ define(['require',
 			vm = new homeViewModel();
             
             vm.siteDataSource = null;
-            vm.SetDataSource(siteData);
-			
-			//assert
-            QUnit.equal(JSON.stringify(vm.siteDataSource.data()), JSON.stringify(siteData));
-        });
-        
-        QUnit.test("test SetDataSource if siteDataSource is already defined", function () {
-            //arrange
-            var vm;
-			var siteData = [];
-            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-            
-			//act
-			vm = new homeViewModel();
-            
-            vm.siteDataSource = new kendo.data.DataSource({data: []});
             vm.SetDataSource(siteData);
 			
 			//assert
