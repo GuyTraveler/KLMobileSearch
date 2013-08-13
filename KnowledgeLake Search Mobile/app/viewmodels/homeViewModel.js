@@ -3,22 +3,30 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
         var homeViewModel = function () {
             var self = this;
                        
-            self.siteDataSource = ko.observableArray();            
-            self.selectedSite = null;            
+            self.siteDataSource = ko.observableArray();
+            self.selectedSite = null; 
             
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
                     self.siteDataSource(sites);
+                    
+                    //TODO: these kendo methods need to be factored out to knockout bindings so 
+                    //we don't pollute the viewModels with kendo code lest it will be worthless with regular web apps
+                    $(".itemContainer").kendoTouch({
+                        enableSwipe: true,
+                        swipe: self.swipe 
+                    });
+                    $(".searchButton").kendoMobileButton();
                 }
             }
             
             self.LoadSiteData = function () {
-                if(window.AppLoaded)
+                if(window.AppLoaded && window.AppLoaded() === true)
                 {
-                    if (SiteDataCachingService.sites)                    
+                    if (SiteDataCachingService.sites) {             
                         self.SetDataSource(SiteDataCachingService.sites);
-                    
+                    }
                     else 
                     {
                         var loadSitesPromise = SiteDataCachingService.LoadSites();
@@ -54,7 +62,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");
+                system.logVerbose("homeViewModel beforeShow");  
                 
                 if(window.App)
                     self.LoadSiteData();
@@ -89,7 +97,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         div.find(".keywordSearch").hide();
                     });
                 }
-            }        
+            }
             
             self.setSelectedSite = function (site) {
                 if(self.selectedSite === site)
