@@ -49,7 +49,7 @@ define([], function () {
 			var dfd = $.Deferred(),
 				entry = { 
 					path: path,
-					data: data
+					data: typeof data === 'string' ? data : JSON.stringify(data)
                 };						
 			
 			saveFileEntry(entry);
