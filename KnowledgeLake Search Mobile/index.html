@@ -11,35 +11,13 @@
         <link href="app/styles/app.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }" data-layout="default-layout">            
+        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }">            
         </div>
      
         <div data-bind="kendoView: { id: 'configureSite', title: system.strings.configureSitePageTitle }" data-transition="overlay:up">
         </div>
         
-        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle, loaded: 'onLastViewModelLoaded' }" data-layout="default-layout">            
-        </div>
-
-        
-        
-        <div data-role="layout" data-id="default-layout">
-            <header data-role="header">
-                <div data-role="navbar">
-                    <span data-role="view-title"></span>
-                </div>
-            </header>
-
-            <footer data-role="footer">
-                <div data-role="tabstrip">
-                    <a href="#home" data-icon="home">
-                        <span data-bind="text: system.strings.homeLinkText"></span>
-                    </a>
-                    <a href="#configureSite" data-icon="add">
-                        <span data-bind="text: system.strings.addSiteLinkText"></span>
-                    </a>
-                </div>
-            </footer>
-        </div> 
-        
+        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle, loaded: 'onLastViewModelLoaded' }">            
+        </div>        
     </body>
 </html>

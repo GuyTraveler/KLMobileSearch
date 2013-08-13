@@ -115,11 +115,15 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 }
             }
             
+            self.onAddClick = function () {
+                self.selectedSite = null;
+                self.navBarVisible(false);
+                window.App.navigate("#configureSite"); 
+            }
+            
             self.editSite = function () {
                 if(self.selectedSite)
                 {
-                    // add code in configureSiteView model to populate on navigate
-                    // also add logic to check for a edit call or a add call
                     window.App.navigate("#configureSite");                    
                 }
             }
@@ -127,9 +131,8 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             self.deleteSite = function () {
                 if(self.selectedSite)
                 {
-                    // prompt before removal
-                    // if yes
-                    var removeSitePromise = SiteDataCachingService.RemoveSite();
+                    // prompt before removal if yes proceed with deletion
+                    var removeSitePromise = SiteDataCachingService.RemoveSite(self.selectedSite);
                       
                     removeSitePromise.done(function (result) {
                         self.LoadSiteData(); 
