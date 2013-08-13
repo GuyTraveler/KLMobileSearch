@@ -7,7 +7,7 @@ define(["services/sharepoint/searchService",
 			ntlmTestUser = "spadmin",
 			ntlmTestPassword = "password",
 			ntlmTestDomain = "dev.local",
-			testQueryXml = "<QueryPacket xmlns='urn:Microsoft.Search.Query'><Query><SupportedFormats><Format revision='1'> urn:Microsoft.Search.Response.Document:Document</Format></SupportedFormats><Context><QueryText type='STRING'>test</QueryText></Context></Query></QueryPacket>",
+			testQueryXml = "<QueryPacket><Query><Context><QueryText type='MSSQLFT'><![CDATA[SELECT 'Title','LastModifiedTime','Path' FROM SCOPE() WHERE (CONTAINS('\"test\"') AND IsDocument = TRUE) ]]></QueryText></Context><Range><Count>5000</Count></Range><TrimDuplicates>false</TrimDuplicates></Query></QueryPacket>",
 			emptyQueryXml = "<QueryPacket xmlns='urn:Microsoft.Search.Query'><Query><SupportedFormats><Format revision='1'> urn:Microsoft.Search.Response.Document:Document</Format></SupportedFormats><Context><QueryText type='STRING'></QueryText></Context></Query></QueryPacket>";
 		
         QUnit.module("Testing searchService");
