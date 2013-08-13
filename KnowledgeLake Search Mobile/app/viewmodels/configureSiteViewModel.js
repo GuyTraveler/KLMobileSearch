@@ -307,11 +307,21 @@ define(["knockout",
                 }
                 
                 return true;
-            }     
+            }
+            
+            self.populateConfigureSiteViewModel = function () {
+                self.url(homeViewModel.selectedSite.url);
+                self.siteTitle(homeViewModel.selectedSite.title);
+                self.sharePointVersion(homeViewModel.selectedSite.majorVersion);
+                self.siteCredentialType(homeViewModel.selectedSite.credential.credentialType);
+                self.siteUserName(homeViewModel.selectedSite.credential.userName);
+                self.sitePassword(homeViewModel.selectedSite.credential.password);
+                self.siteDomain(homeViewModel.selectedSite.credential.domain);  
+            }
 			
 			self.beforeShow = function (e) {
-				system.logVerbose("configureSiteViewModel.beforeShow");
-				//todo: add logic to rip the active site data off the homeViewModel and display
+                if(homeViewModel.selectedSite)
+                    self.populateConfigureSiteViewModel();                
             }
    
             return self;
