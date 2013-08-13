@@ -3,24 +3,21 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
         var homeViewModel = function () {
             var self = this;
                        
-            self.siteDataSource = null;
+            self.siteDataSource = ko.observableArray();
             
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
-                    if(!self.siteDataSource)
-                        self.siteDataSource = new kendo.data.DataSource({data: []});                    
-                    
-                    self.siteDataSource.data(sites);
+                    self.siteDataSource(sites);
                 }
             }
             
             self.LoadSiteData = function () {
-                if(window.AppLoaded)
+                if(window.AppLoaded && window.AppLoaded() === true)
                 {
-                    if (SiteDataCachingService.sites)                    
+                    if (SiteDataCachingService.sites) {             
                         self.SetDataSource(SiteDataCachingService.sites);
-                    
+                    }
                     else 
                     {
                         var loadSitesPromise = SiteDataCachingService.LoadSites();
@@ -56,7 +53,9 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");                
+                system.logVerbose("homeViewModel beforeShow");  
+                
+				self.LoadSiteData();
             }
             
             self.show = function (e) {
