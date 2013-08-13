@@ -1,18 +1,19 @@
-<ul id="listView" data-role="listview" data-bind="source: siteDataSource" data-auto-bind="false" data-template="sitesListViewTemplate"></ul>
-
-<script type="text/x-kendo-template" id="sitesListViewTemplate">
-    <div class="itemContainer" data-role="touch" data-enable-swipe="true" data-swipe="swipe">
-        <div class="site">
-            <img class="siteIcon" src="images/#=siteIcon#"/>            
-            <h3 class="siteTitle">${title}</h3>
+<ul id="listView" data-role="listview" data-bind="foreach: siteDataSource">
+    <li>
+        <div class="itemContainer" data-role="touch" data-enable-swipe="true" data-swipe="swipe">
+            <div class="site">
+                <a data-bind="click: $parent.setSelectedSite">
+                    <img class="siteIcon" data-bind="attr: {src: siteIcon}"/>
+                </a>
+                <h3 class="siteTitle" data-bind="text: title"></h3>
+            </div>
+            <div class="keywordSearch">
+                <input class="keyword" />
+                <div class="searchButton" data-role="button">Search</div>
+            </div>
         </div>
-        <div class="keywordSearch">
-            <input class="keyword" />
-            <div class="searchButton" data-role="button">Search</div>
-        </div>
-    </div>
-</script>
-
+    </li>
+</ul>
 <style type="text/css">
     .itemContainer {
         position: relative;

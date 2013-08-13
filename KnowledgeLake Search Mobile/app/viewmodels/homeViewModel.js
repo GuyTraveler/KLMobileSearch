@@ -3,16 +3,13 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
         var homeViewModel = function () {
             var self = this;
                        
-            self.siteDataSource = null;
-            self.selectedSite = null;
+            self.siteDataSource = ko.observableArray();            
+            self.selectedSite = null;            
             
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
-                    if(!self.siteDataSource)
-                        self.siteDataSource = new kendo.data.DataSource({data: []});                    
-                    
-                    self.siteDataSource.data(sites);
+                    self.siteDataSource(sites);
                 }
             }
             
@@ -57,7 +54,10 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");                
+                system.logVerbose("homeViewModel beforeShow");
+                
+                if(window.App)
+                    self.LoadSiteData();
             }
             
             self.show = function (e) {
@@ -72,11 +72,11 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 system.logVerbose("homeViewModel hide");
             }
             
-            self.navigate = function(e) {
+            self.navigate = function (e) {
                 system.logVerbose("site list view item tapped");                
             }
             
-            self.swipe = function(e) {
+            self.swipe = function (e) {
                 var div = $(e.touch.currentTarget);
                 
                 if(e.direction == "left")
@@ -89,6 +89,14 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         div.find(".keywordSearch").hide();
                     });
                 }
+            }        
+            
+            self.setSelectedSite = function (site) {
+                if(self.selectedSite === site)
+                    self.selectedSite = null;
+                
+                else
+                    self.selectedSite = site;
             }
             
             return self;

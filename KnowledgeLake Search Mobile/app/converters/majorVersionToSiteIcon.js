@@ -4,9 +4,9 @@ define([], function () {
        
         self.convert = function (majorVersion) {
             if (majorVersion >= 15)
-                return "site13.png";
+                return "images/site13.png";
             else
-                return "site10.png";
+                return "images/site10.png";
         };        
        
         return self;
