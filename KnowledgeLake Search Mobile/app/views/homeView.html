@@ -1,3 +1,10 @@
+<header data-role="header" data-bind="visible: navBarVisible">
+    <div data-role="navbar">        
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: editSite">Edit</button>
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: deleteSite">Delete</button>
+    </div>
+</header>
+
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li>
 	    <div class="itemContainer">

@@ -4,7 +4,9 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             var self = this;
                        
             self.siteDataSource = ko.observableArray();
-            self.selectedSite = null; 
+            
+            self.selectedSite = null;            
+            self.navBarVisible = ko.observable(false);
             
             self.SetDataSource = function (sites) {
                 if(sites)
@@ -101,10 +103,48 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.setSelectedSite = function (site) {
                 if(self.selectedSite === site)
+                {
                     self.selectedSite = null;
+                    self.navBarVisible(false);
+                }
                 
                 else
+                {
                     self.selectedSite = site;
+                    self.navBarVisible(true);
+                }
+            }
+            
+            self.editSite = function () {
+                if(self.selectedSite)
+                {
+                    // add code in configureSiteView model to populate on navigate
+                    // also add logic to check for a edit call or a add call
+                    window.App.navigate("#configureSite");                    
+                }
+            }
+            
+            self.deleteSite = function () {
+                if(self.selectedSite)
+                {
+                    // prompt before removal
+                    // if yes
+                    var removeSitePromise = SiteDataCachingService.RemoveSite();
+                      
+                    removeSitePromise.done(function (result) {
+                        self.LoadSiteData(); 
+                    });
+                  
+                    removeSitePromise.fail(function (result) {
+                        if (result) {
+                            // site does not exist
+                        }
+                        else {
+                            // critical error removing site data
+                            // recovery options? modal dialog?
+                        }
+                    });
+                }
             }
             
             return self;
