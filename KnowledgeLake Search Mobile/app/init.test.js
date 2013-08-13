@@ -26,7 +26,8 @@ require(["config"], function (config) {
 						  testRootPath + "siteDataCachingService_test",
 						  testRootPath + "ntlmLogonService_tests",
 						  testRootPath + "claimsLogonService_tests",
-                          testRootPath + "FileManagement_tests"
+                          testRootPath + "FileManagement_tests",
+                          testRootPath + "searchService_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         
