@@ -4,6 +4,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             var self = this;
                        
             self.siteDataSource = null;
+            self.selectedSite = null;
             
             self.SetDataSource = function (sites) {
                 if(sites)
