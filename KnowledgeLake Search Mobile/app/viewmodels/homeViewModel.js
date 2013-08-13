@@ -4,6 +4,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             var self = this;
                        
             self.siteDataSource = ko.observableArray();
+            self.selectedSite = null; 
             
             self.SetDataSource = function (sites) {
                 if(sites)
@@ -63,7 +64,8 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             self.beforeShow = function (e) {
                 system.logVerbose("homeViewModel beforeShow");  
                 
-				self.LoadSiteData();
+                if(window.App)
+                    self.LoadSiteData();
             }
             
             self.show = function (e) {
@@ -78,12 +80,11 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 system.logVerbose("homeViewModel hide");
             }
             
-            self.navigate = function(e) {
+            self.navigate = function (e) {
                 system.logVerbose("site list view item tapped");                
             }
             
-            self.swipe = function(e) {
-                console.log("swipe");
+            self.swipe = function (e) {
                 var div = $(e.touch.currentTarget);
                 
                 if(e.direction == "left")
@@ -96,6 +97,14 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         div.find(".keywordSearch").hide();
                     });
                 }
+            }
+            
+            self.setSelectedSite = function (site) {
+                if(self.selectedSite === site)
+                    self.selectedSite = null;
+                
+                else
+                    self.selectedSite = site;
             }
             
             return self;
