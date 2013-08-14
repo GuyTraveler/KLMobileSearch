@@ -1,5 +1,5 @@
 define(["system", "jquery"], function (system, $) {
-    var File = function () {
+    var fileManagement = function () {
         var self = this;
         
         self.fileSystem = null;
@@ -166,5 +166,5 @@ define(["system", "jquery"], function (system, $) {
         }
     }
     
-    return File;
+    return fileManagement;
 });

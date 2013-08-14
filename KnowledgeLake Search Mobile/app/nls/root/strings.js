@@ -8,6 +8,7 @@ define({
     save: "Save",
     editSite: "Edit",
     deleteSite: "Delete",
+    download: "Download",
     siteUrl: "Url",
     siteTitle: "Title",
     validate: "Validate",

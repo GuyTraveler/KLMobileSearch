@@ -102,8 +102,8 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 }
             }
             
-            self.setSelectedSite = function (site) {
-                if(self.selectedSite === site)
+            self.setSelectedSite = function (selection) {
+                if(self.selectedSite === selection)
                 {
                     self.selectedSite = null;
                     self.navBarVisible(false);
@@ -111,7 +111,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 
                 else
                 {
-                    self.selectedSite = site;
+                    self.selectedSite = selection;
                     self.navBarVisible(true);
                 }
             }

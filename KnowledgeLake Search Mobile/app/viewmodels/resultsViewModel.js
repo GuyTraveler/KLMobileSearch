@@ -2,7 +2,15 @@ define(["knockout"], function (ko) {
     var resultsViewModel = function () {
         var self = this;
         
-        self.TestMessage = ko.observable("Search Results"); 
+        self.resultDataSource = ko.observableArray(); 
+        
+        self.selectedResult = null;
+        self.navBarVisible = ko.observable(false);
+        
+        self.SetDataSource = function (results) {
+            if(results)
+                self.siteDataSource(results);
+        }
         
         self.init = function (e) {
             system.logVerbose("resultsViewModel init");
@@ -22,6 +30,27 @@ define(["knockout"], function (ko) {
         
         self.hide = function (e) {
             system.logVerbose("resultsViewModel hide");
+        }
+        
+        self.setSelectedResult = function (selection) {
+            if(self.selectedResult === selection)
+            {
+                self.selectedResult = null;
+                self.navBarVisible(false);
+            }
+            
+            else
+            {
+                self.selectedResult = selection;
+                self.navBarVisible(true);
+            }
+        }
+        
+        self.downloadResult = function () {
+            if(self.selectedResult)
+            {
+                // call filetransfer command                 
+            }
         }
             
         return self;

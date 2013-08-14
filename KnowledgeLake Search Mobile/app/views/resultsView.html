@@ -1,1 +1,33 @@
-<span data-bind="text: TestMessage"></span>
+<header data-role="header" data-bind="visible: navBarVisible">
+    <div data-role="navbar">        
+        <button class="nav-button" data-align="right" data-role="button" data-icon="download" data-bind="click: downloadResult, text: system.strings.download"></button>
+    </div>
+</header>
+
+<ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
+	<li>
+        <a data-bind="click: $parent.setSelectedResult">
+            <img class="resultIcon" data-bind="attr: {src: icon}"/>
+        </a>
+        <h3 class="resultTitle" data-bind="text: title"></h3>
+	</li>
+</ul>
+
+<footer data-role="footer">
+    <div data-role="tabstrip">
+        <a href="#home" data-icon="home">
+            <span data-bind="text: system.strings.homeLinkText"></span>
+        </a>
+    </div>
+</footer>
+
+<style type="text/css">    
+    .resultIcon {
+        float: left;
+    }
+    .resultTitle {
+        display: inline-block;
+        font-size: 1em;
+        margin: .45em 0 0 .75em;
+    }    
+</style>
