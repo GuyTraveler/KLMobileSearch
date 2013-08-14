@@ -309,19 +309,31 @@ define(["knockout",
                 return true;
             }
             
-            self.populateConfigureSiteViewModel = function () {
-                self.url(homeViewModel.selectedSite.url);
-                self.siteTitle(homeViewModel.selectedSite.title);
-                self.sharePointVersion(homeViewModel.selectedSite.majorVersion);
-                self.siteCredentialType(homeViewModel.selectedSite.credential.credentialType);
-                self.siteUserName(homeViewModel.selectedSite.credential.userName);
-                self.sitePassword(homeViewModel.selectedSite.credential.password);
-                self.siteDomain(homeViewModel.selectedSite.credential.domain);  
+            self.clearPopulatedConfigureSiteViewModel = function () {
+                self.url(defaultUrlText);
+                self.siteTitle("");
+                self.sharePointVersion(0);
+                self.siteCredentialType(credentialType.ntlm);
+                self.siteUserName("");
+                self.sitePassword("");
+                self.siteDomain("");  
+            }
+            
+            self.populateConfigureSiteViewModel = function (selectedSite) {
+                self.url(selectedSite.url);
+                self.siteTitle(selectedSite.title);
+                self.sharePointVersion(selectedSite.majorVersion);
+                self.siteCredentialType(selectedSite.credential.credentialType);
+                self.siteUserName(selectedSite.credential.userName);
+                self.sitePassword(selectedSite.credential.password);
+                self.siteDomain(selectedSite.credential.domain);  
             }
 			
 			self.beforeShow = function (e) {
                 if(homeViewModel.selectedSite)
-                    self.populateConfigureSiteViewModel();                
+                    self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
+                else                    
+                    self.clearPopulatedConfigureSiteViewModel();
             }
    
             return self;

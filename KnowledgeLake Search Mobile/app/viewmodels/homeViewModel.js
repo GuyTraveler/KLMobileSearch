@@ -1,7 +1,8 @@
 define(["knockout", "system", "services/siteDataCachingService", "jquery"], 
     function (ko, system, SiteDataCachingService, $) {
         var homeViewModel = function () {
-            var self = this;
+            var self = this, 
+                configureSiteUrl = "#configureSite";
                        
             self.siteDataSource = ko.observableArray();
             
@@ -38,12 +39,12 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                                 self.SetDataSource(SiteDataCachingService.sites);
                             
                             else
-                                window.App.navigate("#configureSite");
+                                window.App.navigate(configureSiteUrl);
                         });
                       
                         loadSitesPromise.fail(function (result) {
                             if (result) {
-                                window.App.navigate("#configureSite");
+                                window.App.navigate(configureSiteUrl);
                             }
                             else {
                                 // critical error reading site data
@@ -118,13 +119,13 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             self.onAddClick = function () {
                 self.selectedSite = null;
                 self.navBarVisible(false);
-                window.App.navigate("#configureSite"); 
+                window.App.navigate(configureSiteUrl); 
             }
             
             self.editSite = function () {
                 if(self.selectedSite)
                 {
-                    window.App.navigate("#configureSite");                    
+                    window.App.navigate(configureSiteUrl);                    
                 }
             }
             

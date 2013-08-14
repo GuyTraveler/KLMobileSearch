@@ -1,11 +1,15 @@
 define(["system", 
-		"viewmodels/configureSiteViewModel", 
-		"domain/credentialType", 
+		"viewmodels/configureSiteViewModel",
+        'viewmodels/homeViewModel', 
+		"domain/site", 
+		"domain/credential", 
+		"domain/credentialType",
 		"domain/authenticationMode"],
     
-	function (system, configureSiteViewModel, credentialType, authenticationMode) {
+	function (system, configureSiteViewModel, homeViewModel, site, credential, credentialType, authenticationMode) {
 		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
 			adfsTestUrl = "https://kl.sharepoint.com/sites/devtesting",
+            defaultUrlText = "http://",
 			ntlmTestUser = "spadmin",
 			ntlmTestPassword = "password",
 			ntlmTestDomain = "dev.local",
@@ -534,4 +538,62 @@ define(["system",
 				QUnit.start();
             });
         });
+        
+        QUnit.test("test configureSiteViewModel clearPopulatedConfigureSiteViewModel", function () {
+            //arrange
+            var configureSiteVM;
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                        
+            configureSiteVM = new configureSiteViewModel();            
+            configureSiteVM.populateConfigureSiteViewModel(siteData);
+            
+            //act 
+            configureSiteVM.clearPopulatedConfigureSiteViewModel();
+                        
+            //assert
+            QUnit.equal(configureSiteVM.url(), defaultUrlText);
+            QUnit.equal(configureSiteVM.siteTitle(), "");
+            QUnit.equal(configureSiteVM.sharePointVersion(), 0);
+            QUnit.equal(configureSiteVM.siteCredentialType(), credentialType.ntlm);
+            QUnit.equal(configureSiteVM.siteUserName(), "");
+            QUnit.equal(configureSiteVM.sitePassword(), "");
+            QUnit.equal(configureSiteVM.siteDomain(), "");
+        });
+        
+        QUnit.test("test configureSiteViewModel populateConfigureSiteViewModel", function () {
+            //arrange
+            var configureSiteVM;
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                        
+            configureSiteVM = new configureSiteViewModel();
+            
+            //act 
+            configureSiteVM.populateConfigureSiteViewModel(siteData);
+                        
+            //assert
+            QUnit.equal(configureSiteVM.url(), siteData.url);
+            QUnit.equal(configureSiteVM.siteTitle(), siteData.title);
+            QUnit.equal(configureSiteVM.sharePointVersion(), siteData.majorVersion);
+            QUnit.equal(configureSiteVM.siteCredentialType(), siteData.credential.credentialType);
+            QUnit.equal(configureSiteVM.siteUserName(), siteData.credential.userName);
+            QUnit.equal(configureSiteVM.sitePassword(), siteData.credential.password);
+            QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
+        });
+        
+        /*QUnit.test("test configureSiteViewModel beforeShow", function () {
+            //arrange
+            var configureSiteVM;
+            var homeVM;
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                        
+            homeVM = new homeViewModel();
+            configureSiteVM = new configureSiteViewModel();
+            homeVM.selectedSite = siteData;
+            
+            //act 
+            configureSiteVM.beforeShow();
+                        
+            //assert
+            QUnit.ok(configureSiteVM);
+        });*/
     });
