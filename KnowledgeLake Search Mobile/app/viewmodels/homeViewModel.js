@@ -118,6 +118,11 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                     self.navBarVisible(true);
                 }
             }
+			
+			self.isSelectedSite = function (item) {
+				if (self.navBarVisible())
+					return (self.selectedSite == item);
+            }
             
             self.onAddClick = function () {
                 self.selectedSite = null;

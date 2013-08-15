@@ -6,7 +6,7 @@
 </header>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
-	<li>
+	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }">
 	    <div class="itemContainer">
 	        <div class="site">
                 <a data-bind="click: $parent.setSelectedSite">
@@ -14,6 +14,7 @@
                 </a>
 	            <h3 class="siteTitle" data-bind="text: title"></h3>
 	        </div>
+			
 	        <div class="keywordSearch">
 				<div class="keyword">
 					<input class="keyword" type="text" />
@@ -36,6 +37,9 @@
 </footer> 
 
 <style type="text/css">
+	.highlight {
+		background-color: #66FFFC!important;
+    }
     .itemContainer {
         position: relative;
         height: 2em;
