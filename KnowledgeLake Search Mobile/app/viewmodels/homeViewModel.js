@@ -56,7 +56,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             }
             
             self.init = function (e) {
-                system.logVerbose("homeViewModel init");
+                system.logVerbose("homeViewModel init");        
                 
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
@@ -104,16 +104,12 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.setSelectedSite = function (selection) {
                 if(self.selectedSite === selection)
-                {
                     self.selectedSite = null;
-                    self.navBarVisible(false);
-                }
                 
                 else
-                {
                     self.selectedSite = selection;
-                    self.navBarVisible(true);
-                }
+                
+                self.navBarVisible(self.selectedSite);
             }
             
             self.onAddClick = function () {

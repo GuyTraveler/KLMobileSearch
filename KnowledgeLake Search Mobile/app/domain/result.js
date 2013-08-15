@@ -11,7 +11,7 @@ define(["converters/urlToFileTypeIcon"], function (UrlToFileTypeIcon) {
 		
 		self.setUrl(url);
         self.metadata = metadata || {};
-        self.title = metadata.Title || metadata.title;
+        self.title = self.metadata.Title || self.metadata.title;
        
         return self;
     };

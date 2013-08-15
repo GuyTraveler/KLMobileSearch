@@ -1,11 +1,11 @@
-define(["knockout"], function (ko) {
+define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
     var resultsViewModel = function () {
         var self = this;
         
-        self.resultDataSource = ko.observableArray(); 
+        self.resultDataSource = ko.observableArray([{"title":"pdf document", "url":"http://prodsp2010.dev.local/sites/team2/RyanLib/10Page.pdf", "icon":"app/images/icons/ICPDF.png"}]); 
         
         self.selectedResult = null;
-        self.navBarVisible = ko.observable(false);
+        self.navBarVisible = ko.observable(true);
         
         self.SetDataSource = function (results) {
             if(results)
@@ -34,22 +34,26 @@ define(["knockout"], function (ko) {
         
         self.setSelectedResult = function (selection) {
             if(self.selectedResult === selection)
-            {
                 self.selectedResult = null;
-                self.navBarVisible(false);
-            }
             
             else
-            {
                 self.selectedResult = selection;
-                self.navBarVisible(true);
-            }
+            
+            self.navBarVisible(self.selectedResult);
         }
         
         self.downloadResult = function () {
             if(self.selectedResult)
             {
-                // call filetransfer command                 
+                var transferPromise = FileTransfer.transfer(self.selectedResult.url);
+                
+                transferPromise.done(function (result) {                    
+                    console.log(result);
+                });
+                
+                transferPromise.fail(function (result) {
+                    // pop failure to download file
+                });	     
             }
         }
             

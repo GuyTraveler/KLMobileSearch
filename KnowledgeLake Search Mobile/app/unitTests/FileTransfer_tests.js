@@ -12,15 +12,40 @@ define(["framework/FileTransfer",
             QUnit.ok(FileTransfer);
         });
             
-        QUnit.test("test fileTransfer transfer", function () {
-            //arrange
+        QUnit.asyncTest("test FileTransfer transfer", function () {
+            //arrange            
             var uri = "http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf";
             
             //act
-            // will return a promise (will require async test)
-            FileTransfer.transfer(uri);
-                        
-            //assert
-            QUnit.ok(FileTransfer);
+            var transferPromise = FileTransfer.transfer(uri);
+            
+            transferPromise.done(function (result) {
+                QUnit.ok(true);               
+                QUnit.start();
+            });
+            
+            transferPromise.fail(function (result) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+        });
+            
+        QUnit.asyncTest("test FileTransfer getFolder", function () {
+            //arrange
+            var knowledgelakeDirectory = "KnowledgeLake";
+            
+            //act
+            var getFolderPromise = FileTransfer.getFolder();
+            
+            getFolderPromise.done(function (result) {
+                QUnit.ok(result.isDirectory);
+                QUnit.equal(result.name, knowledgelakeDirectory);            
+                QUnit.start();
+            });
+            
+            getFolderPromise.fail(function (result) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
         });
 });
