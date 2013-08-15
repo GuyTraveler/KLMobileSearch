@@ -9,7 +9,7 @@ define(["knockout"], function (ko) {
         
         self.SetDataSource = function (results) {
             if(results)
-                self.siteDataSource(results);
+                self.resultDataSource(results);
         }
         
         self.init = function (e) {

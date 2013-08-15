@@ -28,7 +28,9 @@ require(["config"], function (config) {
 						  testRootPath + "claimsLogonService_tests",
                           testRootPath + "FileManagement_tests",
                           testRootPath + "searchService_tests",
-                          testRootPath + "queryService_tests"
+                          testRootPath + "queryService_tests",
+                          testRootPath + "resultsViewModel_tests",
+                          testRootPath + "FileTransfer_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         
