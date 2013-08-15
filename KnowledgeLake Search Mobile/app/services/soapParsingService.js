@@ -1,5 +1,5 @@
-define(["jquery", "domain/result"],
-    function ($, result) {
+define(["jquery", "system", "domain/result"],
+    function ($, system, result) {
 		
 		var soapParsingService = function () {
 			var self = this,
@@ -30,25 +30,30 @@ define(["jquery", "domain/result"],
 				
 				if (!resultsRoot) 
 					return results;
-				
+
 				//iterate each result
 				for (relevantResult in resultsRoot) {
-					resultItem = new result();
 					
-					//iterate each property of each result
-					for (relevantResultProperty in relevantResult) {
-						setResultProperty(relevantResultProperty, relevantResult, resultItem);
-                    }
-					
-					results.push(resultItem);
+					if (typeof resultsRoot[relevantResult] === 'object') {											
+						resultItem = new result();
+						
+						//iterate each property of each result
+						for (relevantResultProperty in resultsRoot[relevantResult]) {
+							setResultProperty(relevantResultProperty, resultsRoot[relevantResult], resultItem);
+	                    }
+						
+						results.push(resultItem);
+					}
                 }
 				
-				return 
+				return results;
             };
 			
 			getResultRoot = function (json) {
-				if (!json || !json.QueryExResult || !json.QueryExResult['diffgr:diffgram']) 
+				if (!json || !json.QueryExResult || !json.QueryExResult['diffgr:diffgram']) {
+					system.logDebug("results Root not found on JSON object");
 					return null;
+				}
 				
 				return json.QueryExResult['diffgr:diffgram'].Results;
             };
@@ -61,14 +66,18 @@ define(["jquery", "domain/result"],
 				
 				mappedPropertyName = getMappedPropertyName(relevantResultProperty)
 				
-				resultItem[mappedPropertyName] = relevantResult[relevantResultProperty];
+				//object types will have a 'value' property hanging off of it, string types are attributes...
+				if (typeof relevantResult[relevantResultProperty] === 'object')
+					resultItem.metadata[mappedPropertyName] = relevantResult[relevantResultProperty].value;
+				else if (typeof relevantResult[relevantResultProperty] === 'string')
+					resultItem.metadata[mappedPropertyName] = relevantResult[relevantResultProperty];
 				
 				//properties attached to 'result' domain object
 				if (mappedPropertyName == "Path") {
-					resultItem.setUrl(resultItem[mappedPropertyName]);
+					resultItem.setUrl(resultItem.metadata[mappedPropertyName]);
                 }
 				else if (mappedPropertyName == "Title") {
-					resultItem.Title = resultItem[mappedPropertyName];
+					resultItem.title = resultItem.metadata[mappedPropertyName];
                 }
 			};
 			
