@@ -5,7 +5,7 @@ define(["jquery",
         "ISearchService"], 
     function ($, ko, system, keywordConjunction, searchService) {
         
-        var queryService = function (siteUrl) {
+        var soapQueryService = function (siteUrl) {
             var self = this,
                 buildKeywordClause,
                 maxResults = 5000,
@@ -68,5 +68,5 @@ define(["jquery",
             return self;
         };
                 
-        return queryService;
+        return soapQueryService;
     });

@@ -47,12 +47,11 @@ define(["services/soapParsingService"],
 			
 			QUnit.ok(results[0].metadata);
 			
+			QUnit.equal(results[0].url, "http://prodsp2010.dev.local/2071 Test Library/Forms/AllItems.aspx");
 			QUnit.equal(results[0].icon, "app/images/icon/ICGEN.png");			
 			QUnit.equal(results[0].title, "2071 Test Library");
-			QUnit.equal(results[0].metadata.order, 0);
 			
-			QUnit.notEqual(results[0].icon.length, 0);
-			QUnit.equal(results[0].metadata.order, 0);
+			QUnit.equal(results[0].metadata.order, 0);			
 			QUnit.equal(results[0].metadata.CollapsingStatus, 0);
 			QUnit.equal(results[0].metadata.ContentClass, "STS_List_DocumentLibrary");
 			QUnit.equal(results[0].metadata.HitHighlightedProperties, "<HHTitle>2071 <c0>Test</c0> Library</HHTitle><HHUrl>http://prodsp2010.dev.local/2071 <c0>Test</c0> Library/Forms/AllItems.aspx</HHUrl>");
@@ -68,7 +67,7 @@ define(["services/soapParsingService"],
 			QUnit.equal(results[0].metadata.order, "0");
         });
 		
-		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully", function () {
+		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully 1", function () {
 			//arrange
 			var service,
 				results;
@@ -80,7 +79,85 @@ define(["services/soapParsingService"],
 			//assert
 			QUnit.ok(results);
 			QUnit.equal(results.length, 0);
+        });
 			
+		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully 2", function () {
+			//arrange
+			var service,
+				results;
+			
+			//act
+			service = new soapParsingService();
+			results = service.parseSoapJson({ QueryExResult: 'hhh' });
+			
+			//assert
+			QUnit.ok(results);
+			QUnit.equal(results.length, 0);
+        });
+				
+		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully 3", function () {
+			//arrange
+			var service,
+				results;
+			
+			//act
+			service = new soapParsingService();
+			results = service.parseSoapJson(
+			{ 
+				QueryExResult: { 
+					'diffgr:diffgram': 'ggg'
+				}
+			});
+			
+			//assert
+			QUnit.ok(results);
+			QUnit.equal(results.length, 0);
+        });
+					
+		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully 4", function () {
+			//arrange
+			var service,
+				results;
+			
+			//act
+			service = new soapParsingService();
+			results = service.parseSoapJson(
+			{ 
+				QueryExResult: { 
+					'diffgr:diffgram': {
+						Results: {}
+                    }
+				}
+			});
+			
+			//assert
+			QUnit.ok(results);
+			QUnit.equal(results.length, 0);
+        });
+						
+		QUnit.test("test soapParsingService.parseSoapJson invalid results fails gracefully 5", function () {
+			//arrange
+			var service,
+				results;
+			
+			//act
+			service = new soapParsingService();
+			results = service.parseSoapJson(
+			{ 
+				QueryExResult: { 
+					'diffgr:diffgram': {
+						Results: {
+							RelevantResults: {
+								test: { }
+                            }
+                        }
+                    }
+				}
+			});
+			
+			//assert
+			QUnit.ok(results);
+			QUnit.equal(results.length, 1);
         });
 		
 		

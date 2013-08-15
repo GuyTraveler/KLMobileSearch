@@ -44,7 +44,7 @@ define(["framework/logLevel"], function(logLevel) {
                
                //ours
 			   'ISiteDataCachingService': 'services/siteDataCachingService',
-               'IQueryService': 'services/queryService',               
+               'IQueryService': 'services/soapQueryService',               
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService'
 	       }

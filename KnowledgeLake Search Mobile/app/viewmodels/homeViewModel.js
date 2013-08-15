@@ -96,7 +96,10 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 }
                 else if(e.direction == "right")
                 {
-                    $.when( kendo.fx(div.find(".keywordSearch")).tile("left", div.find(".site")).reverse()).then( function () {
+                    $.when( kendo.fx(div.find(".keywordSearch"))
+					             .tile("left", div.find(".site"))
+					             .reverse())
+					 .then( function () {
                         div.find(".keywordSearch").hide();
                     });
                 }
@@ -150,7 +153,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                     });
                 }
             }
-            
+			
             return self;
         };
         
