@@ -1,4 +1,4 @@
-/*TODO: this class should only apply to Android*/
+/*android only*/
 li.item {
 	margin-left: -15px!important;
 	margin-right: -15px!important;
@@ -9,41 +9,83 @@ li.highlight {
 	color: Black;
 }
 
-div.itemContainer {
+div div.grip-andr-fix {
+	height: 0.2em;
+}
 
+div div.grip-top {
+	top: 0em;			
+}
+
+div div.grip-middle {
+	top: 0.5em;		
+}
+
+div div.grip-bottom {
+	top: 1em;
+}
+
+div.itemContainer {
     height: 2em;
 }
+	
+	div.site {		
+	    position: absolute;
+	    width: 100%;
+	    height: 100%;
+	    display: block;
+	}
+	
+		img.siteIcon {
+		    float: left;
+		}
+		
+		h3.siteTitle {
+		    display: inline-block;
+		    font-size: 1em;
+		    margin: .45em 0 0 .75em;
+		}
+		
+		div.grip-main {
+			position: absolute;
+			right: 1.4em;
+			top: 0.4em;
+		}	
+	
+			div.grip-main div {
+				position: absolute;
+				left: 0em;
+				height: 0.25em;
+				width: 0.7em;
+				background-color: Gray;
+			}				
+					
+		div.keywordSearch {  
+		    display: none;
+			position: relative;
+		}
+		
+		div.grip-keyword {
+			position: absolute;
+			left: -0.7em;
+			top: 0.4em;
+		}	
+	 	
+			div.grip-keyword div {
+				position: absolute;
+				height: 0.25em;
+				width: 0.7em;
+				background-color: Gray;
+            }			
 
-div.site {		
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: block;
-}   
-
-div.keywordSearch {  
-    display: none;
-	position: relative;
-}
- 	
-input.keyword {
-	position: absolute;
-	left: 0;
-	top: 1.25em!important;
-	width: 65%!important;		
-}
-
-button.searchButton {
-	position: absolute;
-	right: 1%;
-}
-
-img.siteIcon {
-    float: left;
-}
-
-h3.siteTitle {
-    display: inline-block;
-    font-size: 1em;
-    margin: .45em 0 0 .75em;
-}
+			input.keyword {
+				position: absolute;
+				left: 0.5em;
+				top: 1.25em!important;
+				width: 55%!important;		
+			}
+		
+			button.searchButton {
+				position: absolute;
+				right: 1%;
+			}

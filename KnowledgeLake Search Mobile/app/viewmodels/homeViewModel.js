@@ -8,6 +8,10 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.selectedSite = null;            
             self.navBarVisible = ko.observable(false);
+			
+			self.navBarVisible.subscribe(function (newValue) {
+				$(".nav-button").kendoMobileButton();
+            });
             
             self.SetDataSource = function (sites) {
                 if(sites)

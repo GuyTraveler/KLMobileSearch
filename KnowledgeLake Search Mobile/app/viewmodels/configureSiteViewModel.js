@@ -310,13 +310,13 @@ define(["knockout",
             }
             
             self.clearPopulatedConfigureSiteViewModel = function () {
-                self.url(defaultUrlText);
-                self.siteTitle("");
-                self.sharePointVersion(0);
+                self.url("http://prodsp2010.dev.local/sites/team4");
+                self.siteTitle("Team 4 Home");
+                self.sharePointVersion(14);
                 self.siteCredentialType(credentialType.ntlm);
-                self.siteUserName("");
-                self.sitePassword("");
-                self.siteDomain("");  
+                self.siteUserName("steve.danner");
+                self.sitePassword("password");
+                self.siteDomain("dev");  
             }
             
             self.populateConfigureSiteViewModel = function (selectedSite) {
