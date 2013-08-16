@@ -1,0 +1,49 @@
+/*TODO: this class should only apply to Android*/
+li.item {
+	margin-left: -15px!important;
+	margin-right: -15px!important;
+}
+
+li.highlight {		
+	background-color: #D0E8F2!important;
+	color: Black;
+}
+
+div.itemContainer {
+
+    height: 2em;
+}
+
+div.site {		
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+}   
+
+div.keywordSearch {  
+    display: none;
+	position: relative;
+}
+ 	
+input.keyword {
+	position: absolute;
+	left: 0;
+	top: 1.25em!important;
+	width: 65%!important;		
+}
+
+button.searchButton {
+	position: absolute;
+	right: 1%;
+}
+
+img.siteIcon {
+    float: left;
+}
+
+h3.siteTitle {
+    display: inline-block;
+    font-size: 1em;
+    margin: .45em 0 0 .75em;
+}

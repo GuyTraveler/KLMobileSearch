@@ -6,7 +6,7 @@
 </header>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
-	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }">
+	<li data-bind="css: { 'item': true, 'highlight': $parent.isSelectedSite($data) }">
 	    <div class="itemContainer">
 	        <div class="site">
                 <a data-bind="click: $parent.setSelectedSite">
@@ -16,10 +16,8 @@
 	        </div>
 			
 	        <div class="keywordSearch">
-				<div class="keyword">
-					<input class="keyword" type="text" />
-                </div>	            
-	            <div class="searchButton">Search</div>
+				<input type="text" class="keyword" />
+				<button class="searchButton">Search</button>
             </div>
 	    </div>
 	</li>
@@ -35,45 +33,3 @@
         </a>
     </div>
 </footer> 
-
-<style type="text/css">
-	.highlight {
-		background-color: #66FFFC!important;
-    }
-    .itemContainer {
-        position: relative;
-        height: 2em;
-    }
-    .site {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: block;
-    }            
-    .keywordSearch {  
-        display: none;                
-        width: 100%;
-        height: 100%;
-        position: absolute;
-    }
-    
-    .siteIcon {
-        float: left;
-    }
-    .siteTitle {
-        display: inline-block;
-        font-size: 1em;
-        margin: .45em 0 0 .75em;
-    }
-    
-    .keyword {
-		float: left;
-        width: 60%;
-        height: 80%;
-    }
-    .searchButton {
-        float: left;
-        width: 20%;
-        height: 60%;
-    }
-</style>

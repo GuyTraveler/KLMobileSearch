@@ -92,6 +92,10 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 
                 if(e.direction == "left")
                 {
+					//clear navbar/selection before showing search
+					if (self.selectedSite)
+						self.setSelectedSite(self.selectedSite);
+					
                     kendo.fx(div.find(".keywordSearch").css("display", "block")).tile("left", div.find(".site")).play();       
                 }
                 else if(e.direction == "right")
