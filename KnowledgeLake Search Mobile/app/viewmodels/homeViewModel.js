@@ -101,6 +101,10 @@ define(["knockout",
                 
                 if(e.direction == "left")
                 {
+                    //clear navbar/selection before showing search
+					if (self.selectedSite)
+						self.setSelectedSite(self.selectedSite);
+                    
                     kendo.fx(div.find(".keywordSearch").css("display", "block")).tile("left", div.find(".site")).play();       
                 }
                 else if(e.direction == "right")
@@ -122,6 +126,11 @@ define(["knockout",
                     self.selectedSite = selection;
                 
                 self.navBarVisible(self.selectedSite);
+            }
+            
+            self.isSelectedSite = function (item) {
+				if (self.navBarVisible())
+					return (self.selectedSite == item);
             }
             
             self.onAddClick = function () {
