@@ -1,7 +1,8 @@
 //explictly request the actual FileManagment
 define(["factory/fileManagementFactory", 
+        "domain/promiseResponse/fileSystemResponse",
 		"system", 
-		"jquery"], function (File, system, $) {
+		"jquery"], function (File, FileSystemResponse, system, $) {
         QUnit.module("Testing framework/FileManagement");
 
         QUnit.test("test fileSystem is up and running", function () {
@@ -12,7 +13,7 @@ define(["factory/fileManagementFactory",
             //assert
             QUnit.ok(File);
             
-            QUnit.ok(File.fileSystem, "message: " + File.fileSystem);
+            QUnit.ok(File.fileSystem);
         });
     
         QUnit.asyncTest("test file exists if file exists", function () {
@@ -28,17 +29,17 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {
-                    QUnit.ok(true);
+                    QUnit.equal(result.response, FileSystemResponse.FileFound);
                     QUnit.start();
                 });
                 
-                existsPromise.fail(function (result) {
+                existsPromise.fail(function (error) {
                     QUnit.ok(false);
                     QUnit.start();
                 });
             });
             
-            writePromise.fail(function (result) {
+            writePromise.fail(function (error) {
                 QUnit.ok(false);
             });
         });
@@ -55,17 +56,17 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {                    
-                    QUnit.equal(result, false);
+                    QUnit.equal(result.response, FileSystemResponse.FileNotFound);
                     QUnit.start();
                 });
                 
-                existsPromise.fail(function (result) {
+                existsPromise.fail(function (error) {
                     QUnit.ok(false);
                     QUnit.start();
                 });
             });
             
-            deletePromise.fail(function (result) {
+            deletePromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
@@ -79,24 +80,24 @@ define(["factory/fileManagementFactory",
             var writePromise = File.Write(filePath, testData);
             
             writePromise.done(function (result) {
-                QUnit.ok(result);
+                QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
                 
                 //act
                 var readPromise = File.Read(filePath);
                 
                 //assert
                 readPromise.done(function (result) {
-                    QUnit.equal(result, testData);
+                    QUnit.equal(result.response, testData);
                     QUnit.start();
                 });
                 
-                readPromise.fail(function (result) {
+                readPromise.fail(function (error) {
                     QUnit.ok(false);
                     QUnit.start();
                 });
             });
             
-            writePromise.fail(function (result) {
+            writePromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
@@ -118,13 +119,13 @@ define(["factory/fileManagementFactory",
                     QUnit.start();
                 });
                 
-                readPromise.fail(function (result) {
-                    QUnit.ok(true);
+                readPromise.fail(function (error) {
+                    QUnit.equal(error.response, FileSystemResponse.FileNotFound);
                     QUnit.start();
                 });
             });
             
-            deletePromise.fail(function (result) {
+            deletePromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
@@ -143,17 +144,17 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 deletePromise.done(function (result) {
-                    QUnit.ok(true);
+                    QUnit.equal(result.response, FileSystemResponse.FileDeleteSuccess);
                     QUnit.start();
                 });
                 
-                deletePromise.fail(function (result) {
+                deletePromise.fail(function (error) {
                     QUnit.ok(false);
                     QUnit.start();
                 });
             });
             
-            writePromise.fail(function (result) {
+            writePromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
@@ -187,7 +188,7 @@ define(["factory/fileManagementFactory",
             QUnit.ok(false);
             QUnit.start();
             });
-            readPromise.fail(function (result) {
+            readPromise.fail(function (error) {
             QUnit.equal(result, false);
             QUnit.start();
             });
@@ -204,7 +205,7 @@ define(["factory/fileManagementFactory",
             QUnit.ok(false);
             QUnit.start();
             });
-            writePromise.fail(function (result) {
+            writePromise.fail(function (error) {
             QUnit.equal(result, false);
             QUnit.start();
             });

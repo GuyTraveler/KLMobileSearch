@@ -4,10 +4,11 @@
     </div>
 </header>
 
+<div data-bind="if: resultDataSource().length == 0">No results found...</div>
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 	<li>
         <a data-bind="click: $parent.setSelectedResult">
-            <img class="resultIcon" data-bind="attr: {src: icon}"/>
+            <img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
         </a>
         <h3 class="resultTitle" data-bind="text: title"></h3>
 	</li>

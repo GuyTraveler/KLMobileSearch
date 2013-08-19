@@ -14,17 +14,17 @@ define(["framework/FileTransfer",
             
         QUnit.asyncTest("test FileTransfer transfer", function () {
             //arrange            
-            var uri = "http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf";
+            var uri = "http://www.knowledgelake.com/PublishingImages/HomepageSlides/content-out-of-chaos.jpg";
             
             //act
             var transferPromise = FileTransfer.transfer(uri);
             
             transferPromise.done(function (result) {
-                QUnit.ok(true);               
+                QUnit.ok(result);               
                 QUnit.start();
             });
             
-            transferPromise.fail(function (result) {
+            transferPromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
@@ -43,9 +43,21 @@ define(["framework/FileTransfer",
                 QUnit.start();
             });
             
-            getFolderPromise.fail(function (result) {
+            getFolderPromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });
+        });
+            
+        QUnit.test("test fileTransfer convertUrlToFileName", function () {
+            //arrange
+            var url = "http://www.knowledgelake.com/PublishingImages/HomepageSlides/";
+            var fileName = "content-out-of-chaos.jpg";
+            
+            //act
+            var result = FileTransfer.convertUrlToFileName(url + fileName);
+            
+            //assert
+            QUnit.equal(result, fileName);
         });
 });

@@ -9,9 +9,10 @@ define(["knockout",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
-        "domain/keyValuePair"], 
+        "domain/keyValuePair", 
+        "domain/promiseResponse/cachingServiceResponse"], 
     function (ko, system, authenticationService, websService, SiteDataCachingService, ntlmLogonService, claimsLogonService,
-		      site, credential, credentialType, authenticationMode, keyValuePair) {
+		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
                 messageFadeoutTime = 1000, //should match fade-out transition time in app.css
@@ -64,7 +65,7 @@ define(["knockout",
             self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
                                                        new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
-            
+                        
             self.statusMessage.subscribe(function (newValue) {
                 if (newValue) {
                     self.showStatus(true);
@@ -106,8 +107,8 @@ define(["knockout",
                     window.App.navigate(homeUrl);
                 });
                 
-                addSitePromise.fail(function (result) {
-                    if(result) {
+                addSitePromise.fail(function (error) {
+                    if(error.response === CachingServiceResponse.SiteConnectionExists) {
                         self.errorMessage(system.strings.siteAlreadyConfigured);
                     }
                     else {

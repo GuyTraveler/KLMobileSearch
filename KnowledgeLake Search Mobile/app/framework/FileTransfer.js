@@ -1,27 +1,26 @@
-define(["system", "jquery", "FileManagement", "converters/urlToFileName"], function (system, $, File, UrlToFileName) {
+define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystemResponse"], function (system, $, File, FileSystemResponse) {
     var fileTransfer = function () {
         var self = this,
-            knowledgelakeDirectory = "KnowledgeLake",
             downloadDirectory = "Download",
-            downloadPath = knowledgelakeDirectory + "/" + downloadDirectory;
+            knowledgelakeDirectory = "KnowledgeLake";
         
         self.transfer = function (url) {            
             var dfd = $.Deferred();
             
             if(url)
             {
-                var getFolderPromise = self.getFolder(downloadPath);
+                var getFolderPromise = self.getFolder();
                 
                 getFolderPromise.done(function (folder) {
                     if (folder)
                     {
-                        var fileName = UrlToFileName.convert(url);                        
-                        var filePath = folder + "/" + fileName;
+                        var fileName = self.convertUrlToFileName(url);                        
+                        var filePath = folder.fullPath + "/" + fileName;
                         
                         var existsPromise = File.Exists(filePath); 
                         
                         existsPromise.done(function (result) {
-                            if(result)
+                            if(result.response === FileSystemResponse.FileFound)
                             {
                                 // pop dialog to provide unique filename
                                 // call transfer again with uniqueFileName
@@ -32,7 +31,6 @@ define(["system", "jquery", "FileManagement", "converters/urlToFileName"], funct
                                 
                                 transfer.download(url, filePath,
             		            function(entry) {
-                                    console.log(entry.fullPath);
                                     dfd.resolve(entry.fullPath); 
                         		},
                         		function(error) {
@@ -41,7 +39,7 @@ define(["system", "jquery", "FileManagement", "converters/urlToFileName"], funct
                             }
                         });
                         
-                        existsPromise.fail(function (result) {
+                        existsPromise.fail(function (error) {
                             dfd.reject(false);
                         });	    
                     }               
@@ -53,7 +51,7 @@ define(["system", "jquery", "FileManagement", "converters/urlToFileName"], funct
                     }
                 });
               
-                getFolderPromise.fail(function (result) {
+                getFolderPromise.fail(function (error) {
                     dfd.reject(false);
                 });      
             }
@@ -96,7 +94,16 @@ define(["system", "jquery", "FileManagement", "converters/urlToFileName"], funct
 	    }
         
         self.convertUrlToFileName = function (url) {
+            defaultFileName = "";       
+       
+            var urlComponents = url.split("/");
             
+            if(urlComponents)
+            {
+                return urlComponents[urlComponents.length-1];
+            }
+            
+            return defaultFileName;   
         }
     }
     
