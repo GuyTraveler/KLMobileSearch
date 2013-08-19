@@ -1,12 +1,16 @@
-<header data-role="header" data-bind="visible: navBarVisible">
+<header data-role="header">
     <div data-role="navbar">        
-        <button class="nav-button" data-align="right" data-role="button" data-icon="download" data-bind="click: downloadResult, text: system.strings.download"></button>
+        <button class="nav-button" data-align="right"
+				data-role="button" data-icon="compose" 
+				data-bind="click: editProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+			<span data-bind="text: system.strings.editProperties"></span>
+        </button>
     </div>
 </header>
 
-<div data-bind="if: resultDataSource().length == 0">No results found...</div>
+<h3 data-bind="if: resultDataSource().length === 0">No results found...</h3>
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-	<li>
+	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedResult($data) }">
         <a data-bind="click: $parent.setSelectedResult">
             <img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
         </a>

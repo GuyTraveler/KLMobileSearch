@@ -6,6 +6,10 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
         
         self.selectedResult = null;
         self.navBarVisible = ko.observable(false);
+            
+        self.navBarVisible.subscribe(function (newValue) {
+			$(".nav-button").kendoMobileButton();
+        });
         
         self.SetDataSource = function (results) {
             if(results)
@@ -41,8 +45,20 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
             
             self.navBarVisible(self.selectedResult);
         }
+            
+        self.isSelectedResult = function (item) {
+			if (self.navBarVisible())
+				return (self.selectedResult == item);
+        }
         
-        self.downloadResult = function () {
+        self.editProperties = function () {
+            if(self.selectedResult)
+            {
+                // navigate to properties page with properties from result                    
+            }
+        }
+        
+        /*self.downloadResult = function () {
             if(self.selectedResult)
             {              
                 var transferPromise = FileTransfer.transfer(self.selectedResult.url);
@@ -56,7 +72,7 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
                     // pop failure to download file
                 });	     
             }
-        }
+        }*/
             
         return self;
     };

@@ -7,6 +7,7 @@ define({
     cancel: "Cancel",
     save: "Save",
     editSite: "Edit",
+    editProperties: "Edit",
     deleteSite: "Delete",
     download: "Download",
     siteUrl: "Url",
