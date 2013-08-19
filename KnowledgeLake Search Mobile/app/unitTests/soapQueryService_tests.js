@@ -1,9 +1,9 @@
 /*global QUnit*/
 //explicit request to queryService
-define(["services/queryService",
+define(["services/soapQueryService",
         "INtlmLogonService",
         "domain/keywordConjunction"],
-    function (queryService, ntlmLogonService, keywordConjunction) {
+    function (soapQueryService, ntlmLogonService, keywordConjunction) {
         var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
 			ntlmTestUser = "spadmin",
 			ntlmTestPassword = "password",
@@ -20,7 +20,7 @@ define(["services/queryService",
             var service;
             
             //act
-            service = new queryService("");
+            service = new soapQueryService("");
             
             //assert
             QUnit.ok(service);
@@ -96,7 +96,7 @@ define(["services/queryService",
             //act
             shouldFail = shouldFail && shouldFail !== false;
             
-            service = new queryService(ntlmTestUrl);
+            service = new soapQueryService(ntlmTestUrl);
             logonService = new ntlmLogonService(ntlmTestUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 			

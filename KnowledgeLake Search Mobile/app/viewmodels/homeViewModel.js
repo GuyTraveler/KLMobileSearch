@@ -14,6 +14,10 @@ define(["knockout",
             self.selectedSite = null;            
             self.navBarVisible = ko.observable(false);
             
+            self.navBarVisible.subscribe(function (newValue) {
+				$(".nav-button").kendoMobileButton();
+            });
+            
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
@@ -61,7 +65,7 @@ define(["knockout",
             }
             
             self.init = function (e) {
-                system.logVerbose("homeViewModel init");        
+                system.logVerbose("homeViewModel init");
                 
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
@@ -101,7 +105,10 @@ define(["knockout",
                 }
                 else if(e.direction == "right")
                 {
-                    $.when( kendo.fx(div.find(".keywordSearch")).tile("left", div.find(".site")).reverse()).then( function () {
+                    $.when( kendo.fx(div.find(".keywordSearch"))
+					             .tile("left", div.find(".site"))
+					             .reverse())
+					 .then( function () {
                         div.find(".keywordSearch").hide();
                     });
                 }

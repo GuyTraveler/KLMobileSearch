@@ -28,9 +28,10 @@ require(["config"], function (config) {
 						  testRootPath + "claimsLogonService_tests",
                           testRootPath + "FileManagement_tests",
                           testRootPath + "searchService_tests",
-                          testRootPath + "queryService_tests",
+                          testRootPath + "soapQueryService_tests",
                           testRootPath + "resultsViewModel_tests",
-                          testRootPath + "iconConverter_tests"
+                          testRootPath + "FileTransfer_tests",
+						  testRootPath + "soapParsingService_tests"
                           //ADDITIONAL TESTS GO HERE
                          ];
         
