@@ -1,3 +1,5 @@
+/* in-memory file system implementation */
+
 define([], function () {
 	var fileSystemMock = function () {
 		var self = this,
