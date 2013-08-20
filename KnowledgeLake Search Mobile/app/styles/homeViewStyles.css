@@ -28,6 +28,22 @@ div div.grip-bottom {
 div.itemContainer {
     height: 2em;
 }
+
+div.imageContainer {
+    float: left;
+}
+
+div.resultContentContainer {
+    float: left;
+}
+
+div.resultTitleContainer {
+    width: 100%;
+}
+
+div.resultLastModifiedContainer {
+    width: 100%;
+}
 	
 	div.site {		
 	    position: absolute;

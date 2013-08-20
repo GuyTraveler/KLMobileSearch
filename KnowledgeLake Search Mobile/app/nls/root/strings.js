@@ -14,6 +14,7 @@ define({
     siteTitle: "Title",
     validate: "Validate",
     loading: "Loading...",
+    searching: "Searching...",
     credentialType: "Type",
     windowsCredentials: "Windows Credentials",
     userName: "User",

@@ -1,4 +1,8 @@
-define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
+define(["knockout", 
+        "IQueryService", 
+        "domain/keywordConjunction", 
+        "factory/logonServiceFactory"], 
+    function (ko, QueryService, keywordConjunction, LogonServiceFactory) {
     var resultsViewModel = function () {
         var self = this;
         
@@ -22,6 +26,10 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
         
         self.beforeShow = function (e) {
             system.logVerbose("resultsViewModel beforeShow");
+            
+            
+            if(homeViewModel.selectedSite)  
+                self.keywordSearch(homeViewModel.selectedSite);
         }
         
         self.show = function (e) {
@@ -46,9 +54,9 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
             self.navBarVisible(self.selectedResult);
         }
             
-        self.isSelectedResult = function (item) {
+        self.isSelectedResult = function (result) {
 			if (self.navBarVisible())
-				return (self.selectedResult == item);
+				return (self.selectedResult === result);
         }
         
         self.editProperties = function () {
@@ -58,21 +66,43 @@ define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
             }
         }
         
-        /*self.downloadResult = function () {
-            if(self.selectedResult)
-            {              
-                var transferPromise = FileTransfer.transfer(self.selectedResult.url);
+        self.navigateToResult = function (result) {
+            // /Forms/DispForm.aspx?ID=
+            if(result)
+            {                
+                window.open(result.url, "_blank");
+            }
+        }
+        
+        self.keywordSearch = function (searchSite) {          
+            window.App.loading = "<h1>" + system.strings.searching + "</h1>";
+            window.App.showLoading();
+            
+            service = new QueryService(searchSite.url);
+            logonService = LogonServiceFactory.createLogonService(searchSite);
+            
+            logonPromise = logonService.logon(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
+            
+            logonPromise.done(function () {                
+                searchPromise = service.keywordSearch(searchSite.keyword, keywordConjunction.and, true);                
                 
-                transferPromise.done(function (result) {   
-                    console.log("success: " + result);
+                searchPromise.done(function (result) {
+                    self.SetDataSource(result);
+                    
+                    window.App.hideLoading();
                 });
                 
-                transferPromise.fail(function (error) {
-                    console.log(result);
-                    // pop failure to download file
-                });	     
-            }
-        }*/
+                searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
+                    // search failed
+                    window.App.hideLoading();
+                });
+            });
+            
+            logonPromise.fail(function () {
+                // failed to login
+                window.App.hideLoading();
+            });
+        }
             
         return self;
     };

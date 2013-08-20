@@ -10,11 +10,22 @@
 
 <h3 data-bind="if: resultDataSource().length === 0">No results found...</h3>
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedResult($data) }">
-        <a data-bind="click: $parent.setSelectedResult">
-            <img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
-        </a>
-        <h3 class="resultTitle" data-bind="text: title"></h3>
+	<li data-bind="css: { 'item': true, 'highlight': $parent.isSelectedResult($data) }">
+        <div class="klljlj">
+            <div class="imageContainer">
+                <a data-bind="click: $parent.setSelectedResult">
+                    <img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
+                </a>
+            </div>
+            <div class="resultContentContainer" data-bind="click: $parent.navigateToResult">
+                <div class="resultTitleContainer">
+                    <h1 class="resultTitle" data-bind="text: metadata.Title"></h1>
+                </div>
+                <div class="resultLastModifiedContainer">
+                    <span data-bind="text: metadata.LastModifiedTime"></span>
+                </div>
+            </div>
+        </div>
 	</li>
 </ul>
 
