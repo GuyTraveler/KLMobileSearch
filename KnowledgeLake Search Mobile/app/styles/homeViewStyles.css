@@ -48,8 +48,10 @@ div.itemContainer {
 		
 		div.grip-main {
 			position: absolute;
-			right: 1.4em;
+			right: 0.7em;
 			top: 0.4em;
+			height: 100%;
+			min-width: 0.7em;
 		}	
 	
 			div.grip-main div {
@@ -63,12 +65,15 @@ div.itemContainer {
 		div.keywordSearch {  
 		    display: none;
 			position: relative;
+			height: 100%;
 		}
 		
 		div.grip-keyword {
 			position: absolute;
-			left: -0.7em;
+			left: -0.6em;
 			top: 0.4em;
+			height: 100%;
+			min-width: 0.7em;
 		}	
 	 	
 			div.grip-keyword div {
