@@ -1,4 +1,9 @@
-define(["system", "jquery"], function (system, $) {
+define(["system", 
+        "jquery", 
+        "domain/promiseResponse/promiseResolveResponse", 
+        "domain/promiseResponse/promiseRejectResponse",
+        "domain/promiseResponse/fileSystemResponse"], 
+        function (system, $, PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse) {
     var fileManagement = function () {
         var self = this;
         
@@ -9,7 +14,7 @@ define(["system", "jquery"], function (system, $) {
         }
         
         var onFileSystemFail = function (error) {
-            self.deferred.fail(error);
+            self.deferred.reject(error);
         }
         
         self.loadFileSystem = function () {
@@ -32,7 +37,7 @@ define(["system", "jquery"], function (system, $) {
         fileSystemPromise.fail(function(error) {
             system.fileSystem = null;
             
-            system.logFatal("Unable to connect to the file system: " + error.code);
+            system.logFatal(FileResponse.LoadFileSysystemFailure + ": " + error.code);
         });
         
         self.Exists = function (path) {
@@ -42,15 +47,15 @@ define(["system", "jquery"], function (system, $) {
             {
                 self.fileSystem.root.getFile(path, { create: false },
                 function () {
-                    dfd.resolve(true);
+                    dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileFound));
                 },
                 function () {
-                    dfd.resolve(false);
+                    dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileNotFound));
                 });
             }
             else
             {
-                dfd.reject(false);
+                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -68,30 +73,26 @@ define(["system", "jquery"], function (system, $) {
                         var reader = new FileReader();
                         
                         reader.onload = function (evt) {
-                            dfd.resolve(evt.target.result);
+                            dfd.resolve(new PromiseResolveResponse(evt.target.result));
                         }
                         
                         reader.onerror = function (error) {
-                            system.logError("Failed to read data from file: " + error.code);
-                            dfd.reject(false);
+                            dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileReadFailure, error));
                         }
                         
                         reader.readAsText(file);
                     },
                     function (error) {
-                        system.logError("Failed to get file instance: " + error.code);
-                        dfd.reject(false);
+                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetFileFailure, error));
                     });
                 },
                 function (error) {
-                    system.logError("File does not exist: " + error.code);
-                    dfd.reject(false);
+                    dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileNotFound, error));
                 });
             }
             else
             {
-                system.logFatal("File system not initialized. (Read)");
-                dfd.reject(false);
+                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -107,29 +108,25 @@ define(["system", "jquery"], function (system, $) {
                     fileEntry.createWriter(
                     function (writer) {
                         writer.onwrite = function (evt) {
-                            dfd.resolve(true);
+                            dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileWriteSuccess));
                         }
                         writer.onerror = function (error) {
-                            system.logError("Failed to write data to file: " + error.code);
-                            dfd.reject(false);
+                            dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileWriteFailure, error));
                         }
                         
                         writer.write(data);
                     },
                     function (error) {
-                        system.logError("Failed to create file writer: " + error.code);
-                        dfd.reject(false);
+                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetWriterFailure, error));
                     });
                 },
                 function (error) {
-                    system.logError("Failed to get file entry: " + error.code);
-                    dfd.reject(false);
+                    dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetFileFailure, error));
                 });
             }
             else
             {
-                system.logFatal("File system not initialized. (Write)");
-                dfd.reject(false);
+                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -144,22 +141,19 @@ define(["system", "jquery"], function (system, $) {
                 function (fileEntry) {
                     fileEntry.remove(
                     function () {
-                        dfd.resolve(true);
+                        dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileDeleteSuccess));
                     },
                     function (error) {
-                        system.logError("Failed to delete file: " + error.code);
-                        dfd.reject(false);
+                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileDeleteFailure, error));
                     });
                 },
                 function (error) {
-                    // File does not exist (not a failure state)
-                    dfd.resolve(false);
+                    dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileNotFound));
                 });
             }
             else
             {
-                system.logFatal("File system not initialized. (Delete)");
-                dfd.reject(false);
+                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
             }
             
             return dfd.promise();

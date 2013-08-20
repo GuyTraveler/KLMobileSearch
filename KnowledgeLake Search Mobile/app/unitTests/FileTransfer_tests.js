@@ -12,15 +12,52 @@ define(["framework/FileTransfer",
             QUnit.ok(FileTransfer);
         });
             
-        QUnit.test("test fileTransfer transfer", function () {
-            //arrange
-            var uri = "http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf";
+        QUnit.asyncTest("test FileTransfer transfer", function () {
+            //arrange            
+            var uri = "http://www.knowledgelake.com/PublishingImages/HomepageSlides/content-out-of-chaos.jpg";
             
             //act
-            // will return a promise (will require async test)
-            FileTransfer.transfer(uri);
-                        
+            var transferPromise = FileTransfer.transfer(uri);
+            
+            transferPromise.done(function (result) {
+                QUnit.ok(result);               
+                QUnit.start();
+            });
+            
+            transferPromise.fail(function (error) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+        });
+            
+        QUnit.asyncTest("test FileTransfer getFolder", function () {
+            //arrange
+            var knowledgelakeDirectory = "KnowledgeLake";
+            
+            //act
+            var getFolderPromise = FileTransfer.getFolder();
+            
+            getFolderPromise.done(function (result) {
+                QUnit.ok(result.isDirectory);
+                QUnit.equal(result.name, knowledgelakeDirectory);            
+                QUnit.start();
+            });
+            
+            getFolderPromise.fail(function (error) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+        });
+            
+        QUnit.test("test fileTransfer convertUrlToFileName", function () {
+            //arrange
+            var url = "http://www.knowledgelake.com/PublishingImages/HomepageSlides/";
+            var fileName = "content-out-of-chaos.jpg";
+            
+            //act
+            var result = FileTransfer.convertUrlToFileName(url + fileName);
+            
             //assert
-            QUnit.ok(FileTransfer);
+            QUnit.equal(result, fileName);
         });
 });

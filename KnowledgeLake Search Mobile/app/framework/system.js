@@ -56,11 +56,11 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 			// current device uuid
             var deviceUUID = device.uuid;
             
-            if(deviceUUID == iPhone ||
-                deviceUUID == iPhone5 ||
-                deviceUUID == iPad ||
-                deviceUUID == Android ||
-                deviceUUID == AndroidTablet)
+            if(deviceUUID === iPhone ||
+                deviceUUID === iPhone5 ||
+                deviceUUID === iPad ||
+                deviceUUID === Android ||
+                deviceUUID === AndroidTablet)
             {
                 return true;
             }

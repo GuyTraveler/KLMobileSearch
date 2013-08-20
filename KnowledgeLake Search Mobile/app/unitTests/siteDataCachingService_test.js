@@ -3,8 +3,10 @@ define(["services/siteDataCachingService",
 		"domain/site", 
 		"domain/credential", 
 		"domain/credentialType", 
-		"FileManagement"], 
-    function (SiteDataCachingService, site, credential, credentialType, File) {
+		"FileManagement", 
+        "domain/promiseResponse/cachingServiceResponse", 
+        "domain/promiseResponse/fileSystemResponse"], 
+    function (SiteDataCachingService, site, credential, credentialType, File, CachingServiceResponse, FileSystemResponse) {
     QUnit.module("Testing services/siteDataCachingService");
     
     QUnit.test("test SiteExists if the site exists", function () {
@@ -19,7 +21,7 @@ define(["services/siteDataCachingService",
         var result = SiteDataCachingService.SiteExists("http://prodsp2010.dev.local");
                     
         //assert
-        QUnit.ok(result);
+        QUnit.equal(result, true);
     });
     
     QUnit.test("test SiteExists if the site does not exist", function () {
@@ -58,13 +60,13 @@ define(["services/siteDataCachingService",
             
         //assert
         addSitePromise.done(function (result) {
-            QUnit.ok(true);
+            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
             var siteExists = SiteDataCachingService.SiteExists("http://");
-            QUnit.ok(siteExists);
+            QUnit.equal(siteExists, true);
             QUnit.start();
         });
         
-        addSitePromise.fail(function (result) {
+        addSitePromise.fail(function (error) {
             QUnit.ok(false);
             QUnit.start();
         });
@@ -86,8 +88,8 @@ define(["services/siteDataCachingService",
             QUnit.start();
         });
         
-        addSitePromise.fail(function (result) {
-            QUnit.equal(result, true);
+        addSitePromise.fail(function (error) {
+            QUnit.equal(error.response, CachingServiceResponse.SiteConnectionExists);
             QUnit.start();
         });
     });
@@ -102,13 +104,13 @@ define(["services/siteDataCachingService",
             
         //assert
         addSitePromise.done(function (result) {
-            QUnit.ok(true);            
+            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);            
             var siteExists = SiteDataCachingService.SiteExists("http://");
-            QUnit.ok(siteExists);
+            QUnit.equal(siteExists, true);
             QUnit.start();
         });
         
-        addSitePromise.fail(function (result) {
+        addSitePromise.fail(function (error) {
             QUnit.ok(false);
             QUnit.start();
         });
@@ -128,8 +130,8 @@ define(["services/siteDataCachingService",
             QUnit.start();
         });
         
-        removeSitePromise.fail(function (result) {
-            QUnit.ok(true);
+        removeSitePromise.fail(function (error) {
+            QUnit.equal(error.response, CachingServiceResponse.SiteDataEmpty);
             QUnit.start();
         });
     });
@@ -151,8 +153,8 @@ define(["services/siteDataCachingService",
             QUnit.start();
         });
         
-        removeSitePromise.fail(function (result) {
-            QUnit.equal(result, true);
+        removeSitePromise.fail(function (error) {
+            QUnit.equal(error.response, CachingServiceResponse.InvalidSite);
             QUnit.start();
         });
     });
@@ -170,11 +172,11 @@ define(["services/siteDataCachingService",
             
         //assert
         removeSitePromise.done(function (result) {
-            QUnit.ok(true);
+            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
             QUnit.start();
         });
         
-        removeSitePromise.fail(function (result) {
+        removeSitePromise.fail(function (error) {
             QUnit.ok(false);
             QUnit.start();
         });
@@ -183,10 +185,10 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test LoadSites if sites.dat does not exist", function () {
         //arrange
         SiteDataCachingService.sites = null;
-        var siteDataFilePath = "sites.dat";
+        var siteDataFileName = "sites.dat";
         
         //act
-        var deletePromise = File.Delete(siteDataFilePath);
+        var deletePromise = File.Delete(siteDataFileName);
         
         deletePromise.done(function (result) {
             //assert
@@ -197,13 +199,13 @@ define(["services/siteDataCachingService",
                 QUnit.start();
             });
             
-            loadSitesPromise.fail(function (result) {
-                QUnit.equal(result, true);
+            loadSitesPromise.fail(function (error) {
+                QUnit.equal(error.response, FileSystemResponse.FileNotFound);
                 QUnit.start();
             });
         });
         
-        deletePromise.fail(function (result) {
+        deletePromise.fail(function (error) {
             QUnit.ok(false);
             QUnit.start();
         });
@@ -211,10 +213,12 @@ define(["services/siteDataCachingService",
         
     QUnit.asyncTest("test LoadSites if sites.dat exists", function () {
         //arrange
+        console.log("start test");
         SiteDataCachingService.sites = [];
         var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
+        console.log("calling add site");
         var addSitePromise = SiteDataCachingService.AddSite(newSite);
             
         //assert
@@ -227,13 +231,14 @@ define(["services/siteDataCachingService",
                 QUnit.start();
             });
             
-            loadSitesPromise.fail(function (result) {
-                QUnit.ok(true);
+            loadSitesPromise.fail(function (error) {
+                QUnit.ok(false);
                 QUnit.start();
             });
         });
         
-        addSitePromise.fail(function (result) {
+        addSitePromise.fail(function (error) {
+            console.log("add site failed");
             QUnit.ok(false);
             QUnit.start();
         });

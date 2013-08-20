@@ -89,3 +89,8 @@ div.itemContainer {
 				position: absolute;
 				right: 1%;
 			}
+
+img.resultIcon {
+    float: left;
+    height: 1.88em;
+}

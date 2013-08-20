@@ -18,7 +18,7 @@
 	    <div class="itemContainer">
 	        <div class="site">
                 <a data-bind="click: $parent.setSelectedSite">
-                    <img class="siteIcon" data-bind="attr: {src: icon}"/>
+                    <img class="siteIcon" data-bind="majorVersionToSiteIcon: majorVersion"/>
                 </a>
 	            
 				<h3 class="siteTitle" data-bind="text: title"></h3>

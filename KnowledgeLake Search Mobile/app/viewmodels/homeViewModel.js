@@ -1,5 +1,10 @@
-define(["knockout", "system", "services/siteDataCachingService", "jquery"], 
-    function (ko, system, SiteDataCachingService, $) {
+define(["knockout", 
+        "system", 
+        "jquery", 
+        "ISiteDataCachingService", 
+        "domain/promiseResponse/fileSystemResponse", 
+        "domain/promiseResponse/cachingServiceResponse"], 
+    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite";
@@ -8,8 +13,8 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.selectedSite = null;            
             self.navBarVisible = ko.observable(false);
-			
-			self.navBarVisible.subscribe(function (newValue) {
+            
+            self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
             });
             
@@ -39,15 +44,15 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         var loadSitesPromise = SiteDataCachingService.LoadSites();
                       
                         loadSitesPromise.done(function (result) {
-                            if (SiteDataCachingService.sites)
-                                self.SetDataSource(SiteDataCachingService.sites);
+                            if (result.response)
+                                self.SetDataSource(result.response);
                             
                             else
                                 window.App.navigate(configureSiteUrl);
                         });
                       
-                        loadSitesPromise.fail(function (result) {
-                            if (result) {
+                        loadSitesPromise.fail(function (error) {
+                            if (error.response === FileSystemResponse.FileNotFound) {
                                 window.App.navigate(configureSiteUrl);
                             }
                             else {
@@ -96,10 +101,10 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                 
                 if(e.direction == "left")
                 {
-					//clear navbar/selection before showing search
+                    //clear navbar/selection before showing search
 					if (self.selectedSite)
 						self.setSelectedSite(self.selectedSite);
-					
+                    
                     kendo.fx(div.find(".keywordSearch").css("display", "block")).tile("left", div.find(".site")).play();       
                 }
                 else if(e.direction == "right")
@@ -115,19 +120,15 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
             
             self.setSelectedSite = function (selection) {
                 if(self.selectedSite === selection)
-                {
                     self.selectedSite = null;
-                    self.navBarVisible(false);
-                }
                 
                 else
-                {
                     self.selectedSite = selection;
-                    self.navBarVisible(true);
-                }
+                
+                self.navBarVisible(self.selectedSite);
             }
-			
-			self.isSelectedSite = function (item) {
+            
+            self.isSelectedSite = function (item) {
 				if (self.navBarVisible())
 					return (self.selectedSite == item);
             }
@@ -155,8 +156,8 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                         self.LoadSiteData(); 
                     });
                   
-                    removeSitePromise.fail(function (result) {
-                        if (result) {
+                    removeSitePromise.fail(function (error) {
+                        if (error.response === CachingServiceResponse.InvalidSite) {
                             // site does not exist
                         }
                         else {
@@ -166,7 +167,7 @@ define(["knockout", "system", "services/siteDataCachingService", "jquery"],
                     });
                 }
             }
-			
+            
             return self;
         };
         

@@ -1,4 +1,4 @@
-define(["knockout"], function (ko) {
+define(["knockout", "framework/FileTransfer"], function (ko, FileTransfer) {
     var resultsViewModel = function () {
         var self = this;
         
@@ -6,6 +6,10 @@ define(["knockout"], function (ko) {
         
         self.selectedResult = null;
         self.navBarVisible = ko.observable(false);
+            
+        self.navBarVisible.subscribe(function (newValue) {
+			$(".nav-button").kendoMobileButton();
+        });
         
         self.SetDataSource = function (results) {
             if(results)
@@ -34,24 +38,41 @@ define(["knockout"], function (ko) {
         
         self.setSelectedResult = function (selection) {
             if(self.selectedResult === selection)
-            {
                 self.selectedResult = null;
-                self.navBarVisible(false);
-            }
             
             else
-            {
                 self.selectedResult = selection;
-                self.navBarVisible(true);
+            
+            self.navBarVisible(self.selectedResult);
+        }
+            
+        self.isSelectedResult = function (item) {
+			if (self.navBarVisible())
+				return (self.selectedResult == item);
+        }
+        
+        self.editProperties = function () {
+            if(self.selectedResult)
+            {
+                // navigate to properties page with properties from result                    
             }
         }
         
-        self.downloadResult = function () {
+        /*self.downloadResult = function () {
             if(self.selectedResult)
-            {
-                // call filetransfer command                 
+            {              
+                var transferPromise = FileTransfer.transfer(self.selectedResult.url);
+                
+                transferPromise.done(function (result) {   
+                    console.log("success: " + result);
+                });
+                
+                transferPromise.fail(function (error) {
+                    console.log(result);
+                    // pop failure to download file
+                });	     
             }
-        }
+        }*/
             
         return self;
     };

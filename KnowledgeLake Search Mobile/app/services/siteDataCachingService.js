@@ -1,36 +1,42 @@
-define(["jquery", "FileManagement"], function ($, File) {
+define(["jquery", 
+        "FileManagement",  
+        "domain/promiseResponse/promiseResolveResponse", 
+        "domain/promiseResponse/promiseRejectResponse", 
+        "domain/promiseResponse/cachingServiceResponse", 
+        "domain/promiseResponse/fileSystemResponse"], 
+        function ($, File, PromiseResolveResponse, PromiseRejectResponse, CachingServiceResponse, FileSystemResponse) {
     var service = function () {
         var self = this, 
-            siteDataFilePath = "sites.dat";
+            siteDataFileName = "sites.dat";
         
         self.sites = null;
         
         self.LoadSites = function () {
             var dfd = $.Deferred();
             
-            var existsPromise = File.Exists(siteDataFilePath);
+            var existsPromise = File.Exists(siteDataFileName);
                 
             existsPromise.done(function (result) {
-                if(result)
+                if(result.response === FileSystemResponse.FileFound)
                 {
-                    var readPromise = File.Read(siteDataFilePath);
+                    var readPromise = File.Read(siteDataFileName);
                     
-                    readPromise.done(function (siteData) {
-                        self.sites = JSON.parse(siteData);
-                        dfd.resolve(true); 
+                    readPromise.done(function (result) {
+                        self.sites = JSON.parse(result.response);
+                        dfd.resolve(new PromiseResolveResponse(self.sites)); 
                     });
                     
-                    readPromise.fail(function (result) {
-                        dfd.reject(false);
+                    readPromise.fail(function (error) {
+                        dfd.reject(error);
                     });
                 }
                 else
-                    dfd.reject(true);
+                    dfd.reject(result);
             });
             
-            existsPromise.fail(function (result) {                                 
+            existsPromise.fail(function (error) {                                 
                 // critical error 
-                dfd.reject(false);
+                dfd.reject(error);
             });
             
             return dfd.promise();
@@ -48,8 +54,7 @@ define(["jquery", "FileManagement"], function ($, File) {
 				}
                 else
                 {
-                    // throw site connection already exists
-                    dfd.reject(true);
+                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.SiteConnectionExists, null));
                 }
             }
             else
@@ -74,11 +79,11 @@ define(["jquery", "FileManagement"], function ($, File) {
                     self.WriteSiteData(dfd);
                 }
                 else
-                    dfd.reject(true);
+                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));
             }
             else
             {
-                dfd.reject(false);
+                dfd.reject(new PromiseRejectResponse(CachingServiceResponse.SiteDataEmpty, null));
             }
             
             return dfd.promise();
@@ -101,13 +106,13 @@ define(["jquery", "FileManagement"], function ($, File) {
         }
   
 		self.WriteSiteData = function (dfd) {
-			var writePromise = File.Write(siteDataFilePath, self.sites);
+			var writePromise = File.Write(siteDataFileName, self.sites);
                   
 			writePromise.done(function (result) {
-				dfd.resolve(true);
+				dfd.resolve(result);
 			});
-			writePromise.fail(function (result) {
-				dfd.reject(false);
+			writePromise.fail(function (error) {
+				dfd.reject(error);
 			});
 		}
         
