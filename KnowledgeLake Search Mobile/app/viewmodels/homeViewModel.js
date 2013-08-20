@@ -96,27 +96,40 @@ define(["knockout",
             self.navigate = function (e) {
                 system.logVerbose("site list view item tapped");                
             }
+			
+			self.mainGripClick = function (data, event) {
+				self.showKeywordSearch(event.currentTarget.parentElement.parentElement);
+            }
+			
+			self.keywordGripClick = function (data, event) {
+				self.hideKeywordSearch(event.currentTarget.parentElement.parentElement);
+            }
             
             self.swipe = function (e) {
-                var div = $(e.touch.currentTarget);
-                
-                if(e.direction == "left")
-                {
-                    //clear navbar/selection before showing search
-					if (self.selectedSite)
-						self.setSelectedSite(self.selectedSite);
-                    
-                    kendo.fx(div.find(".keywordSearch").css("display", "block")).tile("left", div.find(".site")).play();       
+                if(e.direction == "left") {
+                    self.showKeywordSearch(e.touch.currentTarget);
                 }
                 else if(e.direction == "right")
                 {
-                    $.when( kendo.fx(div.find(".keywordSearch"))
-					             .tile("left", div.find(".site"))
-					             .reverse())
-					 .then( function () {
-                        div.find(".keywordSearch").hide();
-                    });
+                    self.hideKeywordSearch(e.touch.currentTarget);
                 }
+            }
+			
+			self.showKeywordSearch = function (element) {				
+				//clear navbar/selection before showing search
+				if (self.selectedSite)
+					self.setSelectedSite(self.selectedSite);
+                
+                kendo.fx($(element).find(".keywordSearch").css("display", "block")).tile("left", $(element).find(".site")).play();       	
+            }
+			
+			self.hideKeywordSearch = function (element) {
+				$.when( kendo.fx($(element).find(".keywordSearch"))
+				             .tile("left", $(element).find(".site"))
+				             .reverse())
+				 .then( function () {
+                    $(element).find(".keywordSearch").hide();
+                });
             }
             
             self.setSelectedSite = function (selection) {

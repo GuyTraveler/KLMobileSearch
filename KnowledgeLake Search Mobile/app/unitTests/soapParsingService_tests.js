@@ -48,7 +48,6 @@ define(["services/soapParsingService"],
 			QUnit.ok(results[0].metadata);
 			
 			QUnit.equal(results[0].url, "http://prodsp2010.dev.local/2071 Test Library/Forms/AllItems.aspx");
-			QUnit.equal(results[0].icon, "app/images/icon/ICGEN.png");			
 			QUnit.equal(results[0].title, "2071 Test Library");
 			
 			QUnit.equal(results[0].metadata.order, 0);			

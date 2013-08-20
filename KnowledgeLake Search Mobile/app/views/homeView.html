@@ -23,7 +23,7 @@
 	            
 				<h3 class="siteTitle" data-bind="text: title"></h3>
 				
-				<div class="grip-main">
+				<div class="grip-main" data-bind="click: $parent.mainGripClick">
 					<div data-bind="css: { 'grip-top': true, 'grip-andr-fix': window.App.os.android }"></div>
 					<div class="grip-middle"></div>
 					<div class="grip-bottom"></div>
@@ -31,7 +31,7 @@
 	        </div>
 			
 	        <div class="keywordSearch">
-				<div class="grip-keyword">
+				<div class="grip-keyword" data-bind="click: $parent.keywordGripClick">
 					<div data-bind="css: { 'grip-top': true, 'grip-andr-fix': window.App.os.android }"></div>
 					<div class="grip-middle"></div>
 					<div class="grip-bottom"></div>
