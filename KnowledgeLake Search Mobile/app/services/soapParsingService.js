@@ -74,7 +74,7 @@ define(["jquery", "system", "domain/result"],
 				
 				//properties attached to 'result' domain object
 				if (mappedPropertyName == "Path") {
-					resultItem.setUrl(resultItem.metadata[mappedPropertyName]);
+					resultItem.url = resultItem.metadata[mappedPropertyName];
                 }
 				else if (mappedPropertyName == "Title") {
 					resultItem.title = resultItem.metadata[mappedPropertyName];

@@ -1,3 +1,4 @@
+//not currently used
 define(["framework/FileTransfer", 
 		"system", 
 		"jquery"], function (FileTransfer, system, $) {
