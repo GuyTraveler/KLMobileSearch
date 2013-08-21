@@ -4,8 +4,9 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         var self = this,
             serviceName = "Webs";
     
-        self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        /*self.prototype = Object.create(soapServiceBase.prototype);
+        soapServiceBase.call(self, siteUrl, serviceName);*/
+		$.extend(self, new soapServiceBase(siteUrl, serviceName));
         
         self.GetWeb = function (webUrl, successCallback, failCallback) {
             var parameters = [];

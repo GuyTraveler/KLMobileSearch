@@ -38,7 +38,7 @@ define(["knockout",
             self.ntlmAuthUrl = ko.computed(function () {
                 var authUrl = self.url();
                 
-                if (authUrl.charAt(authUrl.length - 1) != '/') {
+                if (!authUrl.endsWith('/')) {
                     authUrl += "/";
                 }
                 

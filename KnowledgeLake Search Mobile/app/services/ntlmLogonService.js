@@ -1,14 +1,16 @@
 define(["jquery", 
 		"ntlm", 
 		"system",
-		"ISiteDataService"], 
+		"ISiteDataService",
+		//uncaught depends
+		"extensions"], 
 	function ($, ntlm, system, siteDataService) {
 		var ntlmLogonService = function (siteUrl) {
 			var self = this,
 				getAuthUrl = function () {
 					var authUrl = siteUrl;
 		                
-		            if (authUrl.charAt(authUrl.length - 1) != '/') {
+		            if (!authUrl.endsWith('/')) {
 		                authUrl += "/";
 		            }
 		            

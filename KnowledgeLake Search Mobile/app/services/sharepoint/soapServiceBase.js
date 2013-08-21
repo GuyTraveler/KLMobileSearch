@@ -1,11 +1,14 @@
-define(["jquery"], function ($) {
+define(["jquery", 
+		//uncaught depends
+		"extensions"], 
+	function ($) {
     var soapServiceBase = function (siteUrl, serviceName) {
         var self = this,
             jsonTextPropertyName = "value";
         
         self.serviceUrl = siteUrl;
         
-        if (siteUrl.charAt(siteUrl.length - 1) != '/') {
+        if (!siteUrl.endsWith('/')) {
             self.serviceUrl += "/";
         }
         
