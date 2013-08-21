@@ -19,8 +19,10 @@ define(["jquery",
             return $.get(url);
         }
            
-        self.executeSoapMethod = function (methodName, parameters, successCallback, failCallback) {
-            self.loadSoapTemplate(methodName)
+        self.executeSoapMethod = function (methodName, parameters) {
+            var soapDfd = $.Deferred();
+			
+			self.loadSoapTemplate(methodName)
                 .done(function (template) {
                     var $soap = template,
                         parm,
@@ -33,7 +35,6 @@ define(["jquery",
                         }
                     }
                     
-                    //postData = (new XMLSerializer()).serializeToString(xmlDoc);
 					postData = $soap;
                     
 					system.logVerbose("posting SOAP request to " + self.serviceUrl);
@@ -55,8 +56,7 @@ define(["jquery",
                             
                             resultJson = self.soapToJson(methodName, result);
                             
-                            if (typeof successCallback === 'function')
-                                successCallback(resultJson, textStatus, jqXHR);
+                            soapDfd.resolve(resultJson, textStatus, jqXHR);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             system.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
@@ -66,8 +66,7 @@ define(["jquery",
                             system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
                             system.logVerbose("Error request status :" + XMLHttpRequest.status); 
                             
-                            if (typeof failCallback === 'function')
-                                failCallback(XMLHttpRequest, $soap, errorThrown);
+                            soapDfd.reject(XMLHttpRequest, $soap, errorThrown);
                         },
                         complete: function (jqXHR, textStatus) {
                             system.logVerbose("Completed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
@@ -84,10 +83,11 @@ define(["jquery",
                     system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
                     system.logVerbose("Error request status :" + XMLHttpRequest.status); 
                     
-                    if (typeof failCallback === 'function')
-                        failCallback(XMLHttpRequest, textStatus + " " + message, errorThrown);
+					soapDfd.reject(XMLHttpRequest, textStatus + " " + message, errorThrown);                 
                 });
-        }
+        
+			return soapDfd;
+		}
         
         //converts a SOAP packet to a JSON object
         self.soapToJson = function(methodName, soap) {

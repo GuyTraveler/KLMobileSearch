@@ -7,7 +7,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-        self.GetListItems = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID, successCallback, failCallback) {
+        self.GetListItems = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID) {
             var parameters = [
                 new keyValuePair("listName", listName),
 				new keyValuePair("viewName", viewName),
@@ -18,7 +18,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 				new keyValuePair("webID", webID)
             ];
             
-            self.executeSoapMethod("GetListItems", parameters, successCallback, failCallback);
+            return self.executeSoapMethod("GetListItems", parameters);
         }
         
         return self;

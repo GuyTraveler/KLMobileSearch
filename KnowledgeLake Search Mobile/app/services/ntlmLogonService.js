@@ -40,11 +40,11 @@ define(["jquery",
 					siteData = new siteDataService(siteUrl);
 				
 				//lightweight SP call to verify we are authenticated
-				siteData.GetSiteUrl(siteUrl, 
-					function () {
+				siteData.GetSiteUrl(siteUrl)
+					.done(function () {
 		                dfd.resolve(true);
-		            },
-		            function (XMLHttpRequest, textStatus, errorThrown) {
+		            })
+		            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
 		                if (XMLHttpRequest.status == 200)
 							dfd.resolve(true);
 						else

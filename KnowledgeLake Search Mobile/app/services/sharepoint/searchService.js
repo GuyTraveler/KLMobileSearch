@@ -13,24 +13,24 @@ define(["jquery",
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-		self.Status = function (successCallback, failCallback) {
+		self.Status = function () {
 			system.logVerbose("searchService.Status called");
-			self.executeSoapMethod("Status", null, successCallback, failCallback);
+			return self.executeSoapMethod("Status", null);
         }
 		
-		self.GetSearchMetadata = function (successCallback, failCallback) {
+		self.GetSearchMetadata = function () {
 			system.logVerbose("searchService.GetSearchMetadata called");
-			self.executeSoapMethod("GetSearchMetadata", null, successCallback, failCallback);
+			return self.executeSoapMethod("GetSearchMetadata", null);
         }
 		
-		self.QueryEx = function (queryXml, successCallback, failCallback) {
-			var parameters = [];
+		self.QueryEx = function (queryXml) {
+			var parameters = [
+					new keyValuePair("queryXml", queryXml.encodeAngleBrackets())
+				];
 			
 			system.logVerbose("searchService.QueryEx called");
 			
-			parameters.push(new keyValuePair("queryXml", queryXml.encodeAngleBrackets()));
-			
-			self.executeSoapMethod("QueryEx", parameters, successCallback, failCallback);
+			return self.executeSoapMethod("QueryEx", parameters);
         }
         
         return self;

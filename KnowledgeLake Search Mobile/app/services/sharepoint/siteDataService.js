@@ -7,12 +7,12 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-        self.GetSiteUrl = function (url, successCallback, failCallback) {
+        self.GetSiteUrl = function (url) {
             var parameters = [
                 new keyValuePair("Url", url)
             ];
             
-            self.executeSoapMethod("GetSiteUrl", parameters, successCallback, failCallback);
+            return self.executeSoapMethod("GetSiteUrl", parameters);
         }
         
         return self;

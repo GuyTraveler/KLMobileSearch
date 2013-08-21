@@ -11,9 +11,9 @@ define(["jquery",
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-        self.Mode = function (webUrl, successCallback, failCallback) {
+        self.Mode = function (webUrl) {
 			system.logVerbose("authenticationService.Mode called");
-            self.executeSoapMethod("Mode", null, successCallback, failCallback);
+            return self.executeSoapMethod("Mode", null);
         }
         
         return self;

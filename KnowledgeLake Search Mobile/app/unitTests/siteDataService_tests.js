@@ -18,7 +18,8 @@ define(["services/sharepoint/siteDataService",
         
         QUnit.asyncTest("Test siteDataService with non-existent soap template fails", function () {
             //arrange
-            var service;
+            var service,
+				servicePromise;
             
             //act
             service = new siteDataService("");
@@ -27,15 +28,20 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
                          
             service.BadMethod = function () {
-                this.executeSoapMethod("BadMethod", null, function (result) {
-                    QUnit.ok(false, "BadMethod should have failed");
-                    QUnit.start();
-                },
-                function (XMLHttpRequest, textStatus, errorThrown) {
-                    QUnit.ok(true);
-                    QUnit.start();
-                });
-            };
+                return this.executeSoapMethod("BadMethod", null);
+			};
+			
+			servicePromise = service.BadMethod();
+			
+			servicePromise.done(function (result) {
+                QUnit.ok(false, "BadMethod should have failed");
+                QUnit.start();
+            });
+			
+            servicePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
             
             service.BadMethod();
         });
@@ -51,14 +57,15 @@ define(["services/sharepoint/siteDataService",
             //assert
             QUnit.ok(service);
             
-            service.GetSiteUrl(url, function (result) {
-                QUnit.ok(false, "GetSiteUrl was successful when it should have been 404");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.GetSiteUrl(url)
+				.done(function (result) {
+	                QUnit.ok(false, "GetSiteUrl was successful when it should have been 404");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });
         
           
@@ -75,14 +82,15 @@ define(["services/sharepoint/siteDataService",
             //assert
             QUnit.ok(service);
             
-            service.GetSiteUrl(url, function (result) {
-                QUnit.ok(false, "GetSiteUrl was successful when it should have been 401");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.equal(XMLHttpRequest.status, 401);
-                QUnit.start();
-            });
+            service.GetSiteUrl(url)
+				.done(function (result) {
+	                QUnit.ok(false, "GetSiteUrl was successful when it should have been 401");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.equal(XMLHttpRequest.status, 401);
+	                QUnit.start();
+	            });
         });
         
               
@@ -101,14 +109,15 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetSiteUrl(url, function (result) {
-                QUnit.ok(true, "GetSiteUrl was successful");
-                QUnit.equal(url, result.siteUrl.value, "Found URL in response");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(false,  "GetSiteUrl failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetSiteUrl(url)
+				.done(function (result) {
+	                QUnit.ok(true, "GetSiteUrl was successful");
+	                QUnit.equal(url, result.siteUrl.value, "Found URL in response");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false,  "GetSiteUrl failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
     });

@@ -25,13 +25,13 @@ define(["jquery",
                 
                 system.logVerbose("calling QueryEx with XML: " + queryXml);
                 
-                service.QueryEx(queryXml,
-                    function (result) {
+                service.QueryEx(queryXml)
+                    .done(function (result) {
                         soapParsingService = new SoapParsingService();
                         
                         searchDfd.resolve(soapParsingService.parseSoapJson(result));  
-                    },
-                    function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         searchDfd.reject(XMLHttpRequest, textStatus, errorThrown);
                     });
                 

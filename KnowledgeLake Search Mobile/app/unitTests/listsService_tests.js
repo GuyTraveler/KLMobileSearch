@@ -30,7 +30,8 @@ define(["services/sharepoint/listsService",
 		
   	  QUnit.asyncTest("Test listsService with non-existent soap template fails", function () {
             //arrange
-            var service;
+            var service,
+				servicePromise;
             
             //act
             service = new listsService("");
@@ -39,15 +40,20 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
                          
             service.BadMethod = function () {
-                this.executeSoapMethod("BadMethod", null, function (result) {
-                    QUnit.ok(false, "BadMethod should have failed");
-                    QUnit.start();
-                },
-                function (XMLHttpRequest, textStatus, errorThrown) {
-                    QUnit.ok(true);
-                    QUnit.start();
-                });
-            };
+                return this.executeSoapMethod("BadMethod", null);
+			};
+			
+			servicePromise = service.BadMethod();
+			
+			servicePromise.done(function (result) {
+                QUnit.ok(false, "BadMethod should have failed");
+                QUnit.start();
+            });
+			
+            servicePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
             
             service.BadMethod();
         });
@@ -66,14 +72,15 @@ define(["services/sharepoint/listsService",
             //assert
             QUnit.ok(service);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems was successful when it should have been 401");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.equal(XMLHttpRequest.status, 401);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems was successful when it should have been 401");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.equal(XMLHttpRequest.status, 401);
+	                QUnit.start();
+	            });
         });
          
 		QUnit.asyncTest("Test lists with valid data returns proper result", function () {
@@ -91,26 +98,27 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(true, "GetListItems was successful");
-                QUnit.ok(result);
-				QUnit.ok(result.GetListItemsResult);
-				QUnit.ok(result.GetListItemsResult.listitems);
-				QUnit.ok(result.GetListItemsResult.listitems['rs:data']);
-				QUnit.ok(result.GetListItemsResult.listitems['rs:data'].ItemCount);
-				
-				QUnit.equal(result.GetListItemsResult.listitems['rs:data'].ItemCount, 1);
-				
-				QUnit.ok(result.GetListItemsResult.listitems['rs:data']['z:row']);
-				QUnit.ok(result.GetListItemsResult.listitems['rs:data']['z:row'].ows_FileLeafRef);
-				QUnit.equal(result.GetListItemsResult.listitems['rs:data']['z:row'].ows_FileLeafRef, "1498;#1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif");
-                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(false,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(true, "GetListItems was successful");
+	                QUnit.ok(result);
+					QUnit.ok(result.GetListItemsResult);
+					QUnit.ok(result.GetListItemsResult.listitems);
+					QUnit.ok(result.GetListItemsResult.listitems['rs:data']);
+					QUnit.ok(result.GetListItemsResult.listitems['rs:data'].ItemCount);
+					
+					QUnit.equal(result.GetListItemsResult.listitems['rs:data'].ItemCount, 1);
+					
+					QUnit.ok(result.GetListItemsResult.listitems['rs:data']['z:row']);
+					QUnit.ok(result.GetListItemsResult.listitems['rs:data']['z:row'].ows_FileLeafRef);
+					QUnit.equal(result.GetListItemsResult.listitems['rs:data']['z:row'].ows_FileLeafRef, "1498;#1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif");
+	                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 		
 		QUnit.asyncTest("Test lists with invalid XML fails gracefully", function () {
@@ -128,14 +136,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, "fdfd", viewFields, rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, "fdfd", viewFields, rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
 		QUnit.asyncTest("Test lists with invalid list name fails gracefully", function () {
@@ -153,17 +162,18 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems("dfdfadf", viewName, query, viewFields, rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems("dfdfadf", viewName, query, viewFields, rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
-		QUnit.asyncTest("Test lists with invalid view name fails gracefully", function () {
+		QUnit.asyncTest("Test lists with invalid viewName fails gracefully", function () {
             //arrange
             var service,
                 url = "http://prodsp2010.dev.local/sites/team4",
@@ -178,14 +188,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, "ffff", query, viewFields, rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, "ffff", query, viewFields, rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
 		QUnit.asyncTest("Test lists with invalid viewFields fails gracefully", function () {
@@ -203,14 +214,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, "gggg", rowLimit, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, "gggg", rowLimit, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
 		QUnit.asyncTest("Test lists with negative rowLimit fails gracefully", function () {
@@ -228,14 +240,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, -99, queryOptions, webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, viewFields, -99, queryOptions, webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
 		QUnit.asyncTest("Test lists with invalid queryOptions fails gracefully", function () {
@@ -253,14 +266,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, "ffdfd", webID, function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, viewFields, rowLimit, "ffdfd", webID)
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 				
 		QUnit.asyncTest("Test lists with invalid webId fails gracefully", function () {
@@ -278,14 +292,15 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, "ggg", function (result) {
-                QUnit.ok(false, "GetListItems should have failed");                
-				QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });
+            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, "ggg")
+				.done(function (result) {
+	                QUnit.ok(false, "GetListItems should have failed");                
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetListItems failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
         });
 		
     });

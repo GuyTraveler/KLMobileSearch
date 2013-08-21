@@ -27,14 +27,15 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             //assert
             QUnit.ok(service);
             
-            service.Mode(url, function (result) {
-                QUnit.ok(false, "Mode was successful when it should have been 404");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.Mode(url)
+				.done(function (result) {
+	                QUnit.ok(false, "Mode was successful when it should have been 404");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });
                 
         //TODO: test a couple of Claims sites also
@@ -49,16 +50,17 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             //assert
             QUnit.ok(service);
             
-            service.Mode(url, function (result) {
-                var mode = result.ModeResult.value;
-                
-                QUnit.equal(mode, authenticationMode.Windows);
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.Mode(url)
+				.done(function (result) {
+	                var mode = result.ModeResult.value;
+	                
+	                QUnit.equal(mode, authenticationMode.Windows);
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });        
         
         QUnit.asyncTest("Test authentication Office 365 returns Forms", function () {
@@ -72,16 +74,17 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             //assert
             QUnit.ok(service);
             
-            service.Mode(url, function (result) {
-                var mode = result.ModeResult.value;
-                
-                QUnit.equal(mode, authenticationMode.ClaimsOrForms);
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.Mode(url)
+				.done(function (result) {
+	                var mode = result.ModeResult.value;
+	                
+	                QUnit.equal(mode, authenticationMode.ClaimsOrForms);
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });        
         
             
@@ -96,15 +99,16 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
             //assert
             QUnit.ok(service);
             
-            service.Mode(url, function (result) {
-                var mode = result.ModeResult.value;
-                
-                QUnit.equal(mode, authenticationMode.ClaimsOrForms);
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.Mode(url)
+				.done(function (result) {
+	                var mode = result.ModeResult.value;
+	                
+	                QUnit.equal(mode, authenticationMode.ClaimsOrForms);
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });        
     });

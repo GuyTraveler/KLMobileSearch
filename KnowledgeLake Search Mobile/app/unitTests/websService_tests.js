@@ -27,14 +27,15 @@ define(["services/sharepoint/websService",
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(url, function (result) {
-                QUnit.ok(false, "GetWeb was successful when it should have been 404");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.notEqual(XMLHttpRequest.status, 200);
-                QUnit.start();
-            });
+            service.GetWeb(url)
+				.done(function (result) {
+	                QUnit.ok(false, "GetWeb was successful when it should have been 404");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
         });
         
           
@@ -51,14 +52,15 @@ define(["services/sharepoint/websService",
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(url, function (result) {
-                QUnit.ok(false, "GetWeb was successful when it should have been 401");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.equal(XMLHttpRequest.status, 401);
-                QUnit.start();
-            });
+            service.GetWeb(url)
+				.done(function (result) {
+	                QUnit.ok(false, "GetWeb was successful when it should have been 401");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.equal(XMLHttpRequest.status, 401);
+	                QUnit.start();
+	            });
         });
         
               
@@ -77,15 +79,16 @@ define(["services/sharepoint/websService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetWeb(url, function (result) {
-                QUnit.ok(true, "GetWeb was successful");
-                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });           
+            service.GetWeb(url)
+				.done(function (result) {
+	                QUnit.ok(true, "GetWeb was successful");
+	                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });           
         });
                  
         QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
@@ -103,15 +106,16 @@ define(["services/sharepoint/websService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetWeb(url, function (result) {
-                QUnit.ok(true, "GetWeb was successful");
-                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
-                QUnit.start();
-            });           
+            service.GetWeb(url)
+				.done(function (result) {
+	                QUnit.ok(true, "GetWeb was successful");
+	                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false,  "GetWeb failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });           
         });
         
          
@@ -127,14 +131,15 @@ define(["services/sharepoint/websService",
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(url, function (result) {
-                QUnit.ok(false, "GetWeb was successful when it should have been 401");
-                QUnit.start();
-            },
-            function (XMLHttpRequest, textStatus, errorThrown) {
-                QUnit.ok(true, "GetWeb failed with no credentials supplied");
-                QUnit.start();
-            });
+            service.GetWeb(url)
+				.done(function (result) {
+	                QUnit.ok(false, "GetWeb was successful when it should have been 401");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true, "GetWeb failed with no credentials supplied");
+	                QUnit.start();
+	            });
         });
         
         
