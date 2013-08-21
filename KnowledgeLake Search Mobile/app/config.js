@@ -41,6 +41,7 @@ define(["framework/logLevel"], function(logLevel) {
 			   'IWebsService': 'services/sharepoint/websService',
 			   'ISiteDataService': 'services/sharepoint/siteDataService',
                'ISearchService': 'services/sharepoint/searchService',
+			   'IListsService': 'services/sharepoint/listsService',
                
                //ours
 			   'ISiteDataCachingService': 'services/siteDataCachingService',

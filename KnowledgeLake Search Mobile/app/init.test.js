@@ -18,7 +18,7 @@ require(["config"], function (config) {
 			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
-                          testRootPath + "localization_tests",                          
+                          testRootPath + "localization_tests",                    
                           testRootPath + "siteDataService_tests",
                           testRootPath + "websService_tests",
                           testRootPath + "authenticationService_tests",
@@ -30,8 +30,9 @@ require(["config"], function (config) {
                           testRootPath + "searchService_tests",
                           testRootPath + "soapQueryService_tests",
                           testRootPath + "resultsViewModel_tests",
-                          //testRootPath + "FileTransfer_tests", //not currently used
-						  testRootPath + "soapParsingService_tests"
+						  testRootPath + "soapParsingService_tests",
+						  testRootPath + "listsService_tests"
+                          //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
         

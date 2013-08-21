@@ -22,19 +22,19 @@ define(["jquery",
         self.executeSoapMethod = function (methodName, parameters, successCallback, failCallback) {
             self.loadSoapTemplate(methodName)
                 .done(function (template) {
-                    var xmlDoc = $.parseXML(template),
-                        $soap = $(xmlDoc),
+                    var $soap = template,
                         parm,
                         postData;
                     
                     if (parameters) {
                         for (var i = parameters.length - 1; i >= 0; i--) {
                             parm = parameters[i];
-                            $soap.find(parm.key).text(parm.value);
+                            $soap = $soap.replace("{" + parm.key + "}", parm.value);
                         }
                     }
                     
-                    postData = (new XMLSerializer()).serializeToString(xmlDoc);
+                    //postData = (new XMLSerializer()).serializeToString(xmlDoc);
+					postData = $soap;
                     
 					system.logVerbose("posting SOAP request to " + self.serviceUrl);
 					
