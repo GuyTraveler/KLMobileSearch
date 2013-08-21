@@ -1,7 +1,9 @@
 define(["jquery", 
 		"system",
 		"domain/keyValuePair",
-		"services/sharepoint/soapServiceBase"], 
+		"services/sharepoint/soapServiceBase",
+		//uncaught depends
+		"extensions"], 
 	function ($, system, keyValuePair, soapServiceBase) {
     
     var searchService = function (siteUrl) {
@@ -26,7 +28,7 @@ define(["jquery",
 			
 			system.logVerbose("searchService.QueryEx called");
 			
-			parameters.push(new keyValuePair("queryXml", queryXml));
+			parameters.push(new keyValuePair("queryXml", queryXml.encodeAngleBrackets()));
 			
 			self.executeSoapMethod("QueryEx", parameters, successCallback, failCallback);
         }

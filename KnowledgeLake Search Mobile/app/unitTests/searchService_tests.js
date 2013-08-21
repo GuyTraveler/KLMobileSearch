@@ -580,9 +580,11 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(testQueryXml.replace("{value}", searchString),
+				service.QueryEx(testQueryXml.replace("{value}", searchString.encodeXML()),
 					function (result) {
 						QUnit.ok(result && result.QueryExResult);
+						QUnit.ok(result.QueryExResult['diffgr:diffgram'] != null);
+						QUnit.ok(result.QueryExResult['diffgr:diffgram'].Results != null);
 						QUnit.ok(result.QueryExResult['diffgr:diffgram'].Results.RelevantResults)
 						QUnit.equal(typeof result.QueryExResult['diffgr:diffgram'].Results.RelevantResults, 'object');
 						//
