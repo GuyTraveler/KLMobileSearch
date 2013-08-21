@@ -2,8 +2,9 @@ define(["jquery",
         "knockout",
         "system",
         "domain/keywordConjunction",
-        "ISearchService"], 
-    function ($, ko, system, keywordConjunction, searchService) {
+        "ISearchService", 
+        "services/soapParsingService"], 
+    function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
         
         var soapQueryService = function (siteUrl) {
             var self = this,
@@ -26,8 +27,9 @@ define(["jquery",
                 
                 service.QueryEx(queryXml,
                     function (result) {
-                        //TODO: parse results to a cleaner array
-                        searchDfd.resolve(result);  
+                        soapParsingService = new SoapParsingService();
+                        
+                        searchDfd.resolve(soapParsingService.parseSoapJson(result));  
                     },
                     function (XMLHttpRequest, textStatus, errorThrown) {
                         searchDfd.reject(XMLHttpRequest, textStatus, errorThrown);

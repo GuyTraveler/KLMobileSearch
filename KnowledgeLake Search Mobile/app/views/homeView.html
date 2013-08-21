@@ -37,8 +37,8 @@
 					<div class="grip-bottom"></div>
                 </div>
 				
-				<input type="text" class="keyword" />
-				<button class="searchButton">Search</button>
+				<input class="keyword" type="text" data-bind="value: keyword" />
+				<button class="searchButton" data-bind="click: $parent.search">Search</button>
             </div>
 	    </div>
 	</li>

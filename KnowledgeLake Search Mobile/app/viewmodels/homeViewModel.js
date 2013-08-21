@@ -7,11 +7,12 @@ define(["knockout",
     function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse) {
         var homeViewModel = function () {
             var self = this, 
-                configureSiteUrl = "#configureSite";
+                configureSiteUrl = "#configureSite",
+                resultsUrl = "#results";
                        
             self.siteDataSource = ko.observableArray();
             
-            self.selectedSite = null;            
+            self.selectedSite = null;
             self.navBarVisible = ko.observable(false);
             
             self.navBarVisible.subscribe(function (newValue) {
@@ -150,6 +151,13 @@ define(["knockout",
                 self.selectedSite = null;
                 self.navBarVisible(false);
                 window.App.navigate(configureSiteUrl); 
+            }
+            
+            self.search = function (selection) {
+                if(self.selectedSite !== selection)
+                    self.selectedSite = selection;
+                
+                window.App.navigate(resultsUrl);              
             }
             
             self.editSite = function () {
