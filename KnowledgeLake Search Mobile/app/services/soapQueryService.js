@@ -27,7 +27,7 @@ define(["jquery",
                 
                 service.QueryEx(queryXml,
                     function (result) {
-                        soapParsingService = new SoapParsingService();
+                        var soapParsingService = new SoapParsingService();
                         
                         searchDfd.resolve(soapParsingService.parseSoapJson(result));  
                     },
