@@ -124,4 +124,367 @@ define(["services/soapQueryService",
 				QUnit.start();	
             });
         };
+		
+		
+    
+        
+        QUnit.module("Test soapQueryService known Invalid chars all fail gracefully");
+    
+        
+        QUnit.asyncTest("test (!)", function () {
+            invalidCharTest("!", true);
+        });
+               
+        QUnit.asyncTest("test (\")", function () {
+           invalidCharTest("\"", true);
+        });
+        
+        QUnit.asyncTest("test (#)", function () {
+           invalidCharTest("#", true);
+        });
+        
+        QUnit.asyncTest("test ($)", function () {
+           invalidCharTest("$", true);
+        });
+        
+        QUnit.asyncTest("test (%)", function () {
+           invalidCharTest("%", true);
+        });
+        
+        QUnit.asyncTest("test (&)", function () {
+           invalidCharTest("&", true);
+        });
+        
+        QUnit.asyncTest("test (')", function () {
+           invalidCharTest("'", true);
+        });
+        
+        QUnit.asyncTest("test (()", function () {
+           invalidCharTest("(", true);
+        });
+        
+        QUnit.asyncTest("test ())", function () {
+           invalidCharTest(")", true);
+        });
+        
+        QUnit.asyncTest("test (*)", function () {
+           invalidCharTest("*", true);
+        });
+        
+        QUnit.asyncTest("test (+)", function () {
+           invalidCharTest("+", true);
+        });
+        
+        QUnit.asyncTest("test (,)", function () {
+           invalidCharTest(",", true);
+        });
+        
+        QUnit.asyncTest("test (-)", function () {
+           invalidCharTest("-", true);
+        });
+        
+        QUnit.asyncTest("test (.)", function () {
+           invalidCharTest(".", true);
+        });
+        
+        QUnit.asyncTest("test (/)", function () {
+           invalidCharTest("/", true);
+        });
+        
+        QUnit.asyncTest("test (:)", function () {
+           invalidCharTest(":", true);
+        });
+        
+        QUnit.asyncTest("test (;)", function () {
+           invalidCharTest(";", true);
+        });
+        
+        QUnit.asyncTest("test (<)", function () {
+           invalidCharTest("<", true);
+        });
+        
+        QUnit.asyncTest("test (=)", function () {
+           invalidCharTest("=", true);
+        });
+        
+        QUnit.asyncTest("test (>)", function () {
+           invalidCharTest(">", true);
+        });
+        
+        QUnit.asyncTest("test (?)", function () {
+           invalidCharTest("?", true);
+        });
+        
+        QUnit.asyncTest("test (@)", function () {
+           invalidCharTest("@", true);
+        });
+        
+        QUnit.asyncTest("test ([)", function () {
+           invalidCharTest("[", true);
+        });
+        
+        QUnit.asyncTest("test (\\)", function () {
+           invalidCharTest("\\", true);
+        });
+        
+        QUnit.asyncTest("test (])", function () {
+           invalidCharTest("]", true);
+        });
+        
+        QUnit.asyncTest("test (^)", function () {
+           invalidCharTest("^", true);
+        });
+        
+        QUnit.asyncTest("test (_)", function () {
+           invalidCharTest("_", true);
+        });
+        
+        QUnit.asyncTest("test (`)", function () {
+           invalidCharTest("`", true);
+        });
+        
+        QUnit.asyncTest("test ({)", function () {
+           invalidCharTest("{", true);
+        });
+        
+        QUnit.asyncTest("test (})", function () {
+           invalidCharTest("}", true);
+        });
+        
+        QUnit.asyncTest("test (~)", function () {
+           invalidCharTest("~", true);
+        });
+        
+        QUnit.asyncTest("test (—)", function () {
+           invalidCharTest("—", true);
+        });
+        
+        QUnit.asyncTest("test (–)", function () {
+           invalidCharTest("–", true);
+        });
+        
+        QUnit.asyncTest("test (¡)", function () {
+           invalidCharTest("¡", true);
+        });
+        
+        QUnit.asyncTest("test (¦)", function () {
+           invalidCharTest("¦", true);
+        });
+        
+        QUnit.asyncTest("test (|)", function () {
+           invalidCharTest("|", true);
+        });
+        
+        QUnit.asyncTest("test (¨)", function () {
+           invalidCharTest("¨", true);
+        });
+        
+        QUnit.asyncTest("test (´)", function () {
+           invalidCharTest("´", true);
+        });
+        
+        QUnit.asyncTest("test (¯)", function () {
+           invalidCharTest("¯", true);
+        });
+        
+        QUnit.asyncTest("test (¸)", function () {
+           invalidCharTest("¸", true);
+        });
+    
+        
+        
+        QUnit.module("Test searchService known Invalid chars with other alpha-numeric text succeeds");
+    
+        
+        QUnit.asyncTest("test (!mobility)", function () {
+            invalidCharTest("!mobility", false);
+        });
+               
+        QUnit.asyncTest("test (\"mobility)", function () {
+           invalidCharTest("\"mobility", false);
+        });
+        
+        QUnit.asyncTest("test (#mobility)", function () {
+           invalidCharTest("#mobility", false);
+        });
+        
+        QUnit.asyncTest("test ($mobility)", function () {
+           invalidCharTest("$mobility", false);
+        });
+        
+        QUnit.asyncTest("test (%mobility)", function () {
+           invalidCharTest("%mobility", false);
+        });
+        
+        QUnit.asyncTest("test (&mobility)", function () {
+           invalidCharTest("&mobility", false);
+        });
+        
+        QUnit.asyncTest("test ('mobility)", function () {
+           invalidCharTest("'mobility", false);
+        });
+        
+        QUnit.asyncTest("test ((mobility)", function () {
+           invalidCharTest("(mobility", false);
+        });
+        
+        QUnit.asyncTest("test ()mobility)", function () {
+           invalidCharTest(")mobility", false);
+        });
+        
+        QUnit.asyncTest("test (*mobility)", function () {
+           invalidCharTest("*mobility", false);
+        });
+        
+        QUnit.asyncTest("test (+mobility)", function () {
+           invalidCharTest("+mobility", false);
+        });
+        
+        QUnit.asyncTest("test (,mobility)", function () {
+           invalidCharTest(",mobility", false);
+        });
+        
+        QUnit.asyncTest("test (-mobility)", function () {
+           invalidCharTest("-mobility", false);
+        });
+        
+        QUnit.asyncTest("test (.mobility)", function () {
+           invalidCharTest(".mobility", false);
+        });
+        
+        QUnit.asyncTest("test (/mobility)", function () {
+           invalidCharTest("/mobility", false);
+        });
+        
+        QUnit.asyncTest("test (:mobility)", function () {
+           invalidCharTest(":mobility", false);
+        });
+        
+        QUnit.asyncTest("test (;mobility)", function () {
+           invalidCharTest(";mobility", false);
+        });
+        
+        QUnit.asyncTest("test (<mobility)", function () {
+           invalidCharTest("<mobility", false);
+        });
+        
+        QUnit.asyncTest("test (=mobility)", function () {
+           invalidCharTest("=mobility", false);
+        });
+        
+        QUnit.asyncTest("test (>mobility)", function () {
+           invalidCharTest(">mobility", false);
+        });
+        
+        QUnit.asyncTest("test (?mobility)", function () {
+           invalidCharTest("?mobility", false);
+        });
+        
+        QUnit.asyncTest("test (@mobility)", function () {
+           invalidCharTest("@mobility", false);
+        });
+        
+        QUnit.asyncTest("test ([mobility)", function () {
+           invalidCharTest("[mobility", false);
+        });
+        
+        QUnit.asyncTest("test (\\mobility)", function () {
+           invalidCharTest("\\mobility", false);
+        });
+        
+        QUnit.asyncTest("test (]mobility)", function () {
+           invalidCharTest("]mobility", false);
+        });
+        
+        QUnit.asyncTest("test (^mobility)", function () {
+           invalidCharTest("^mobility", false);
+        });
+        
+        QUnit.asyncTest("test (_mobility)", function () {
+           invalidCharTest("_mobility", false);
+        });
+        
+        QUnit.asyncTest("test (`mobility)", function () {
+           invalidCharTest("`mobility", false);
+        });
+        
+        QUnit.asyncTest("test ({mobility)", function () {
+           invalidCharTest("{mobility", false);
+        });
+        
+        QUnit.asyncTest("test (}mobility)", function () {
+           invalidCharTest("}mobility", false);
+        });
+        
+        QUnit.asyncTest("test (~mobility)", function () {
+           invalidCharTest("~mobility", false);
+        });
+        
+        QUnit.asyncTest("test (—mobility)", function () {
+           invalidCharTest("—mobility", false);
+        });
+        
+        QUnit.asyncTest("test (–mobility)", function () {
+           invalidCharTest("–mobility", false);
+        });
+        
+        QUnit.asyncTest("test (¡mobility)", function () {
+           invalidCharTest("¡mobility", false);
+        });
+        
+        QUnit.asyncTest("test (¦mobility)", function () {
+           invalidCharTest("¦mobility", false);
+        });
+        
+        QUnit.asyncTest("test (|mobility)", function () {
+           invalidCharTest("|mobility", false);
+        });
+        
+        QUnit.asyncTest("test (¨mobility)", function () {
+           invalidCharTest("¨mobility", false);
+        });
+        
+        QUnit.asyncTest("test (´mobility)", function () {
+           invalidCharTest("´mobility", false);
+        });
+        
+        QUnit.asyncTest("test (¯mobility)", function () {
+           invalidCharTest("¯mobility", false);
+        });
+        
+        QUnit.asyncTest("test (¸mobility)", function () {
+           invalidCharTest("¸mobility", false);
+        });
+     
+        invalidCharTest = function (searchString, shouldFail) {
+            //arrange
+            var service,
+				logonService,
+				logonPromise;
+            
+            //act
+            service = new soapQueryService(ntlmTestUrl);
+			logonService = new ntlmLogonService(ntlmTestUrl);
+			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			
+            //assert
+            logonPromise.done(function (result) {
+				service.keywordSearch(searchString)
+					.done(function (result) {
+						QUnit.ok(result);
+						QUnit.equal(Object.prototype.toString.call(result), '[object Array]');
+						
+						QUnit.start();
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						QUnit.ok(shouldFail);
+						QUnit.start();
+                    });				
+            });
+			
+			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				QUnit.ok(false, "invalidCharTest failed to logon!");
+				QUnit.start();	
+            }); 
+        }
     });
