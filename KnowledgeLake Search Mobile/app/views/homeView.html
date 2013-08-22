@@ -17,9 +17,11 @@
 	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedSite($data) }">
 	    <div class="itemContainer">
 	        <div class="site">
-                <a data-bind="click: $parent.setSelectedSite">
-                    <img class="siteIcon" data-bind="majorVersionToSiteIcon: majorVersion"/>
-                </a>
+				<div class="imageContainer">
+	                <a data-bind="click: $parent.setSelectedSite">
+	                    <img class="siteIcon" width="32" data-bind="majorVersionToSiteIcon: majorVersion"/>
+	                </a>
+				</div>
 	            
 				<h3 class="siteTitle" data-bind="text: title"></h3>
 				
