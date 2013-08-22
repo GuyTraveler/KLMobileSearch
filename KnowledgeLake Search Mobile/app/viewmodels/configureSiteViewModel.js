@@ -33,6 +33,7 @@ define(["knockout",
 				self.ntlmService = new ntlmLogonService(newValue);
 				self.claimsService = new claimsLogonService(newValue);
             });
+            self.enableUrl = ko.observable(true);
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
             self.ntlmAuthUrl = ko.computed(function () {
@@ -313,6 +314,8 @@ define(["knockout",
             }
             
             self.clearPopulatedConfigureSiteViewModel = function () {
+                self.enableUrl(true);
+                
                 self.url(defaultUrlText);
                 self.siteTitle("");
                 self.sharePointVersion(0);
@@ -323,6 +326,8 @@ define(["knockout",
             }
             
             self.populateConfigureSiteViewModel = function (selectedSite) {
+                self.enableUrl(false);
+                
                 self.url(selectedSite.url);
                 self.siteTitle(selectedSite.title);
                 self.sharePointVersion(selectedSite.majorVersion);
