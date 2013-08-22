@@ -17,7 +17,10 @@ define(["knockout",
         
         self.SetDataSource = function (results) {
             if(results)
+            {               
+                self.resultDataSource([]);
                 self.resultDataSource(results);
+            }
         }
         
         self.init = function (e) {

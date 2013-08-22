@@ -95,30 +95,56 @@ define(["knockout",
                 }
             });
                          
-            self.saveSiteSettings = function () {
-                var addSitePromise;
+            self.saveSiteSettings = function () {                
                 system.logVerbose("save site settings");
                 
-                if (!self.validateAll()) return null;
+                if(homeViewModel.selectedSite)
+                {
+                    var updateSitePromise;
+                    
+                    if (!self.validateAll()) return null;
+                    
+                    updateSitePromise = SiteDataCachingService.UpdateSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
+                                            new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
+                    
+                    updateSitePromise.done(function (result) {          
+                        window.App.navigate(homeUrl);
+                    });
+                    
+                    updateSitePromise.fail(function (error) {
+                        if(error.response === CachingServiceResponse.InvalidSite) {
+                            self.errorMessage(error.response);
+                        }
+                        else {
+                            //probably no system at all (emulator), should we take some other action?
+                            self.errorMessage(system.strings.errorWritingSiteData);
+                        }
+                    });
+                }
                 
-                addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
-                                        new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
-                
-                addSitePromise.done(function (result) {          
-                    window.App.navigate(homeUrl);
-                });
-                
-                addSitePromise.fail(function (error) {
-                    if(error.response === CachingServiceResponse.SiteConnectionExists) {
-                        self.errorMessage(system.strings.siteAlreadyConfigured);
-                    }
-                    else {
-                        //probably no system at all (emulator), should we take some other action?
-                        self.errorMessage(system.strings.errorWritingSiteData);
-                    }
-                });
-				
-				return addSitePromise;
+                else
+                {
+                    var addSitePromise;
+                    
+                    if (!self.validateAll()) return null;
+                    
+                    addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
+                                            new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
+                    
+                    addSitePromise.done(function (result) {          
+                        window.App.navigate(homeUrl);
+                    });
+                    
+                    addSitePromise.fail(function (error) {
+                        if(error.response === CachingServiceResponse.SiteConnectionExists) {
+                            self.errorMessage(system.strings.siteAlreadyConfigured);
+                        }
+                        else {
+                            //probably no system at all (emulator), should we take some other action?
+                            self.errorMessage(system.strings.errorWritingSiteData);
+                        }
+                    });
+                }
             }
             
             self.closeSiteSettings = function () {
@@ -334,7 +360,9 @@ define(["knockout",
                 self.siteCredentialType(selectedSite.credential.credentialType);
                 self.siteUserName(selectedSite.credential.userName);
                 self.sitePassword(selectedSite.credential.password);
-                self.siteDomain(selectedSite.credential.domain);  
+                self.siteDomain(selectedSite.credential.domain);
+                
+                self.setValidUrl(self.url);
             }
 			
 			self.beforeShow = function (e) {

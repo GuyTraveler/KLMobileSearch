@@ -22,6 +22,7 @@ define(["knockout",
             self.SetDataSource = function (sites) {
                 if(sites)
                 {
+                    self.siteDataSource([]);
                     self.siteDataSource(sites);
                     
                     //TODO: these kendo methods need to be factored out to knockout bindings so 
@@ -37,7 +38,7 @@ define(["knockout",
             self.LoadSiteData = function () {
                 if(window.AppLoaded && window.AppLoaded() === true)
                 {
-                    if (SiteDataCachingService.sites) {             
+                    if (SiteDataCachingService.sites) {
                         self.SetDataSource(SiteDataCachingService.sites);
                     }
                     else 
@@ -174,7 +175,9 @@ define(["knockout",
                     var removeSitePromise = SiteDataCachingService.RemoveSite(self.selectedSite);
                       
                     removeSitePromise.done(function (result) {
-                        self.LoadSiteData(); 
+                        self.LoadSiteData();
+                        
+                        self.setSelectedSite(null);
                     });
                   
                     removeSitePromise.fail(function (error) {

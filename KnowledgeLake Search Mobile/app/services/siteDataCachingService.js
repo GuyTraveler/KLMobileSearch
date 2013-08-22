@@ -68,6 +68,43 @@ define(["jquery",
             return dfd.promise();
 		}
         
+        self.UpdateSite = function (site) {
+            var dfd = $.Deferred();
+            
+            if(self.sites)
+            {
+				if(self.SiteExists(site.url))
+                {
+                    var siteIndex = self.IndexOfSite(site.url);
+                    
+                    if(siteIndex !== -1)
+                    {                       
+                        self.sites[siteIndex].title = site.title;
+                        self.sites[siteIndex].majorVersion = site.majorVersion;
+                        self.sites[siteIndex].credential = site.credential;
+					    
+                        self.WriteSiteData(dfd);
+                    }
+                    
+                    else
+                        dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));               
+				}
+                else
+                {
+                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));
+                }
+            }
+            else
+            {
+                self.sites = [];
+                
+                self.sites.push(site);                
+                self.WriteSiteData(dfd);                
+            }
+            
+            return dfd.promise();            
+        }
+        
         self.RemoveSite = function (site) {
             var dfd = $.Deferred(); 
             
@@ -103,6 +140,19 @@ define(["jquery",
             }
             
             return false;
+        }
+        
+        self.IndexOfSite = function (url) {
+            if(self.sites)
+            {
+                for(var i = 0; i < self.sites.length; i++)
+                {
+                    if(self.sites[i].url === url)
+                        return i;
+                }
+            }
+            
+            return -1; 
         }
   
 		self.WriteSiteData = function (dfd) {
