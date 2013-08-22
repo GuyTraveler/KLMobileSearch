@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = true,
+    var isUnitTesting = false,
 	    loggingLevel = logLevel.Verbose;
 	
 	var config = {           
@@ -47,7 +47,8 @@ define(["framework/logLevel"], function(logLevel) {
 			   'ISiteDataCachingService': 'services/siteDataCachingService',
                'IQueryService': 'services/soapQueryService',               
 			   'INtlmLogonService': 'services/ntlmLogonService',
-			   'IClaimsLogonService': 'services/claimsLogonService'
+			   'IClaimsLogonService': 'services/claimsLogonService',
+			   'IDocumentService': 'services/documentService'
 	       }
 	   },
 	   logLevel: loggingLevel,
