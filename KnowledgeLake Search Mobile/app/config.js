@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = false,
+    var isUnitTesting = true,
 	    loggingLevel = logLevel.Verbose;
 	
 	var config = {           
@@ -11,7 +11,8 @@ define(["framework/logLevel"], function(logLevel) {
 	       kendoMain: 'lib/kendo.mobile.min',
 	       knockout: 'lib/knockout',	       
 	       ntlm: 'lib/ntlm',
-	       i18n: 'lib/i18n'		   
+	       i18n: 'lib/i18n',
+		   jsUri: 'lib/jsUri'
        },
 	   shim: {
 	       jquery: {
@@ -23,7 +24,10 @@ define(["framework/logLevel"], function(logLevel) {
 	       kendoMain: {
 	           deps: ['jquery'],
 	           exports: 'kendoMain'               
-	       }
+	       },
+		   jsUri: {
+			   exports: 'jsUri'
+           }
 	   },
 	   map: {              
 		   '*': {
@@ -34,6 +38,7 @@ define(["framework/logLevel"], function(logLevel) {
                //framework
 			   'system': 'framework/system',
 			   'extensions': 'framework/extensions',
+			   'Uri': 'jsUri',
 			   
                //service locations               
                //sharepoint wrappers

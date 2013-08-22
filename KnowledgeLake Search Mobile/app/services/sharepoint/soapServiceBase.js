@@ -26,12 +26,14 @@ define(["jquery",
                 .done(function (template) {
                     var $soap = template,
                         parm,
-                        postData;
+                        postData,
+						parmValue;
                     
                     if (parameters) {
                         for (var i = parameters.length - 1; i >= 0; i--) {
                             parm = parameters[i];
-                            $soap = $soap.replace("{" + parm.key + "}", parm.value);
+							parmValue = parm.value != null ? parm.value : "";
+                            $soap = $soap.replace("{" + parm.key + "}", parmValue);
                         }
                     }
                     

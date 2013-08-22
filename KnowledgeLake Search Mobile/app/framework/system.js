@@ -3,6 +3,7 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
         logLevel: logLevel.Error,
         strings: strings,
 		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
+		sharePointDelimiter: ";#",
 		setLogLevel: function (level) {
             this.logLevel = level;
         },
