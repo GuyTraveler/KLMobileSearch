@@ -27,7 +27,7 @@ define(["jquery",
                 
                 service.QueryEx(queryXml)
                     .done(function (result) {
-                        soapParsingService = new SoapParsingService();
+                        var soapParsingService = new SoapParsingService();
                         
                         searchDfd.resolve(soapParsingService.parseSoapJson(result));  
                     })
@@ -53,7 +53,7 @@ define(["jquery",
                     wordCount = keywordPhrases.length;
                                         
                     for (var i = 0; i < wordCount; i++) {
-                        keywordClause = keywordClause + "\"" + escape(keywordPhrases[i].encodeXML()) + "\" " + conjunction + " ";
+                        keywordClause = keywordClause + "\"" + escape(keywordPhrases[i]) + "\" " + conjunction + " ";
                     }
                     
                     keywordClause = $.trim(keywordClause);
