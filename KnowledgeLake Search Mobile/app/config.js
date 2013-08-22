@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = false,
+    var isUnitTesting = false, 
 	    loggingLevel = logLevel.Verbose;
 	
 	var config = {           
