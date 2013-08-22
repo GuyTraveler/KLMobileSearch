@@ -13,8 +13,6 @@ define(["services/soapQueryService",
         
         QUnit.module("testing queryService");
         
-        //TODO: check the results after writing result parser and using it from within queryService
-        
         QUnit.test("Test can instantiate queryService", function () {
             //arrange
             var service;

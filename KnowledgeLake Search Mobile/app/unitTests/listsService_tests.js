@@ -12,7 +12,9 @@ define(["services/sharepoint/listsService",
 			webID = "",
 			ntlmUser = "spadmin",
 			ntlmPassword = "password",
-			ntlmDomain = "dev";
+			ntlmDomain = "dev",
+			testListID = "60dab558-74aa-41b3-b9ae-96ade51d60d1",  //TestLib
+			testListName = "TestLib";
 		
 		
         QUnit.module("Testing listsService");
@@ -303,4 +305,63 @@ define(["services/sharepoint/listsService",
 	            });
         });
 		
+		
+		QUnit.asyncTest("Test Lists.GetList is OK with good list ID", function () {
+            //arrange
+            var service,
+                url = "http://prodsp2010.dev.local/sites/team4",
+                authResult = false;
+            
+            //act
+            service = new listsService(url);
+            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            authResult = ntlm.authenticate(service.serviceUrl);
+            
+            //assert
+            QUnit.ok(service);
+            QUnit.ok(authResult);
+            
+            service.GetList(testListID)
+				.done(function (result) {
+	                QUnit.ok(true);
+					QUnit.ok(result);
+					QUnit.ok(result.GetListResult);
+					QUnit.ok(result.GetListResult.List);
+					QUnit.ok(result.GetListResult.List);
+					QUnit.ok(result.GetListResult.List.RootFolder);
+					QUnit.ok(result.GetListResult.List.RootFolder.indexOf(testListName) > -1);
+					
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false,  "GetList failed with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
+        });
+		
+		QUnit.asyncTest("Test Lists.GetList with bad list ID fails gracefully", function () {
+            //arrange
+            var service,
+                url = "http://prodsp2010.dev.local/sites/team4",
+                authResult = false;
+            
+            //act
+            service = new listsService(url);
+            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            authResult = ntlm.authenticate(service.serviceUrl);
+            
+            //assert
+            QUnit.ok(service);
+            QUnit.ok(authResult);
+            
+            service.GetList("adsfasdfammnndsfas")
+				.done(function (result) {
+	                QUnit.ok(false, "GetList should have failed");
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(true,  "GetList failed gracefully with result: " + XMLHttpRequest.status);
+	                QUnit.start();
+	            });
+        });
     });

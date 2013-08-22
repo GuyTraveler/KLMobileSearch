@@ -14,6 +14,14 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
             
             return self.executeSoapMethod("GetSiteUrl", parameters);
         }
+		
+		self.GetURLSegments = function (strURL) {
+			var parameters = [
+				new keyValuePair("strURL", strURL)
+			];
+			
+			return self.executeSoapMethod("GetURLSegments", parameters);
+        }
         
         return self;
     };
