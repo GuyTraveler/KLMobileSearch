@@ -1,14 +1,16 @@
 define(["jquery", 
 		"ntlm", 
 		"system",
-		"ISiteDataService"], 
+		"ISiteDataService",
+		//uncaught depends
+		"extensions"], 
 	function ($, ntlm, system, siteDataService) {
 		var ntlmLogonService = function (siteUrl) {
 			var self = this,
 				getAuthUrl = function () {
 					var authUrl = siteUrl;
 		                
-		            if (authUrl.charAt(authUrl.length - 1) != '/') {
+		            if (!authUrl.endsWith('/')) {
 		                authUrl += "/";
 		            }
 		            
@@ -38,11 +40,11 @@ define(["jquery",
 					siteData = new siteDataService(siteUrl);
 				
 				//lightweight SP call to verify we are authenticated
-				siteData.GetSiteUrl(siteUrl, 
-					function () {
+				siteData.GetSiteUrl(siteUrl)
+					.done(function () {
 		                dfd.resolve(true);
-		            },
-		            function (XMLHttpRequest, textStatus, errorThrown) {
+		            })
+		            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
 		                if (XMLHttpRequest.status == 200)
 							dfd.resolve(true);
 						else

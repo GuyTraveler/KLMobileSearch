@@ -17,9 +17,7 @@ define(['knockout',
                     && parameters.id
                     && parameters.id.length > 0) {
                 
-                    //set up the element with the proper data- attributes for kendo
-                    $(element).attr("data-title", parameters.title ? parameters.title : "");
-                    $(element).attr("data-role", "view");
+                    //use the ID param for element ID
                     $(element).attr("id", parameters.id);
                         
                     shortModelName = parameters.id + "ViewModel";

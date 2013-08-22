@@ -41,12 +41,14 @@ define(["framework/logLevel"], function(logLevel) {
 			   'IWebsService': 'services/sharepoint/websService',
 			   'ISiteDataService': 'services/sharepoint/siteDataService',
                'ISearchService': 'services/sharepoint/searchService',
+			   'IListsService': 'services/sharepoint/listsService',
                
                //ours
 			   'ISiteDataCachingService': 'services/siteDataCachingService',
                'IQueryService': 'services/soapQueryService',               
 			   'INtlmLogonService': 'services/ntlmLogonService',
-			   'IClaimsLogonService': 'services/claimsLogonService'
+			   'IClaimsLogonService': 'services/claimsLogonService',
+			   'IDocumentService': 'services/documentService'
 	       }
 	   },
 	   logLevel: loggingLevel,

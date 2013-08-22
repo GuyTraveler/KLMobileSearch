@@ -25,13 +25,13 @@ define(["jquery",
                 
                 system.logVerbose("calling QueryEx with XML: " + queryXml);
                 
-                service.QueryEx(queryXml,
-                    function (result) {
+                service.QueryEx(queryXml)
+                    .done(function (result) {
                         var soapParsingService = new SoapParsingService();
                         
                         searchDfd.resolve(soapParsingService.parseSoapJson(result));  
-                    },
-                    function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         searchDfd.reject(XMLHttpRequest, textStatus, errorThrown);
                     });
                 
@@ -45,7 +45,7 @@ define(["jquery",
                 if (typeof keywordPhrases === 'string') {
                     system.logVerbose("keywordPhrases is string: " + keywordPhrases);
                     
-                    keywordClause = "\"" + escape(keywordPhrases) + "\"";
+                    keywordClause = "\"" + escape(keywordPhrases.encodeXML()) + "\"";
                 }
                 else if (Object.prototype.toString.call(keywordPhrases) === '[object Array]') {
                     system.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);

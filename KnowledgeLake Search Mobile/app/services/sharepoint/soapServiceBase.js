@@ -1,11 +1,14 @@
-define(["jquery"], function ($) {
+define(["jquery", 
+		//uncaught depends
+		"extensions"], 
+	function ($) {
     var soapServiceBase = function (siteUrl, serviceName) {
         var self = this,
             jsonTextPropertyName = "value";
         
         self.serviceUrl = siteUrl;
         
-        if (siteUrl.charAt(siteUrl.length - 1) != '/') {
+        if (!siteUrl.endsWith('/')) {
             self.serviceUrl += "/";
         }
         
@@ -16,22 +19,23 @@ define(["jquery"], function ($) {
             return $.get(url);
         }
            
-        self.executeSoapMethod = function (methodName, parameters, successCallback, failCallback) {
-            self.loadSoapTemplate(methodName)
+        self.executeSoapMethod = function (methodName, parameters) {
+            var soapDfd = $.Deferred();
+			
+			self.loadSoapTemplate(methodName)
                 .done(function (template) {
-                    var xmlDoc = $.parseXML(template),
-                        $soap = $(xmlDoc),
+                    var $soap = template,
                         parm,
                         postData;
                     
                     if (parameters) {
                         for (var i = parameters.length - 1; i >= 0; i--) {
                             parm = parameters[i];
-                            $soap.find(parm.key).text(parm.value);
+                            $soap = $soap.replace("{" + parm.key + "}", parm.value);
                         }
                     }
                     
-                    postData = (new XMLSerializer()).serializeToString(xmlDoc);
+					postData = $soap;
                     
 					system.logVerbose("posting SOAP request to " + self.serviceUrl);
 					
@@ -52,8 +56,7 @@ define(["jquery"], function ($) {
                             
                             resultJson = self.soapToJson(methodName, result);
                             
-                            if (typeof successCallback === 'function')
-                                successCallback(resultJson, textStatus, jqXHR);
+                            soapDfd.resolve(resultJson, textStatus, jqXHR);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             system.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
@@ -63,8 +66,7 @@ define(["jquery"], function ($) {
                             system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
                             system.logVerbose("Error request status :" + XMLHttpRequest.status); 
                             
-                            if (typeof failCallback === 'function')
-                                failCallback(XMLHttpRequest, $soap, errorThrown);
+                            soapDfd.reject(XMLHttpRequest, $soap, errorThrown);
                         },
                         complete: function (jqXHR, textStatus) {
                             system.logVerbose("Completed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
@@ -81,10 +83,11 @@ define(["jquery"], function ($) {
                     system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
                     system.logVerbose("Error request status :" + XMLHttpRequest.status); 
                     
-                    if (typeof failCallback === 'function')
-                        failCallback(XMLHttpRequest, textStatus + " " + message, errorThrown);
+					soapDfd.reject(XMLHttpRequest, textStatus + " " + message, errorThrown);                 
                 });
-        }
+        
+			return soapDfd;
+		}
         
         //converts a SOAP packet to a JSON object
         self.soapToJson = function(methodName, soap) {

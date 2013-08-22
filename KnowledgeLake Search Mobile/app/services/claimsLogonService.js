@@ -46,16 +46,19 @@ define(["jquery",
 			
 			self.checkLogonStatus = function () {
 				var dfd = $.Deferred(),
+					getWebPromise,
 					service = new websService(siteUrl);
 				
 				//lightweight SP call to verify we are authenticated
-				service.GetWeb(siteUrl, 
-					function () {
-		                dfd.resolve(true);
-		            },
-		            function (XMLHttpRequest, textStatus, errorThrown) {
-		                dfd.reject(false);
-		            });
+				getWebPromise = service.GetWeb(siteUrl);
+				
+				getWebPromise.done(function () {
+	                dfd.resolve(true);
+	            });
+				
+	            getWebPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                dfd.reject(false);
+	            });
 				
 				return dfd.promise();
             };

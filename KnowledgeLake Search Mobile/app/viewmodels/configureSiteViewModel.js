@@ -38,7 +38,7 @@ define(["knockout",
             self.ntlmAuthUrl = ko.computed(function () {
                 var authUrl = self.url();
                 
-                if (authUrl.charAt(authUrl.length - 1) != '/') {
+                if (!authUrl.endsWith('/')) {
                     authUrl += "/";
                 }
                 
@@ -136,7 +136,9 @@ define(["knockout",
                 self.isCredentialsValid(false);
                 
                 dataService = new authenticationService(self.url());
-                dataService.Mode(self.url(), self.onSiteUrlValidated, self.onSiteUrlFailed); 
+                dataService.Mode(self.url())
+					.done(self.onSiteUrlValidated)
+					.fail(self.onSiteUrlFailed); 
 				
 				urlValidationDfd = $.Deferred();
 				
@@ -238,8 +240,8 @@ define(["knockout",
 				logonPromise.done(function () {
 					var service = new websService(self.url());
                 	
-                    service.GetWeb(self.url(),
-                        function (result, textStatus, xhr) {
+                    service.GetWeb(self.url())
+                        .done(function (result, textStatus, xhr) {
                             var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
 							
                             self.isCredentialsValid(true);
@@ -248,8 +250,8 @@ define(["knockout",
                             self.sharePointVersion(spVersion.substring(0, 2));
 							
 							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
-                        },
-                        function () {  //fail, invalidate our creds
+                        })
+                        .fail(function () {  //fail, invalidate our creds
                             self.isCredentialsValid(false);
                             self.credValidationImageSrc(invalidImageUrl);                            
                             self.clearTitle();    

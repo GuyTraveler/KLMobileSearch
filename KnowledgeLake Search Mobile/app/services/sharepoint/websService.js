@@ -4,10 +4,11 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         var self = this,
             serviceName = "Webs";
     
-        self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        /*self.prototype = Object.create(soapServiceBase.prototype);
+        soapServiceBase.call(self, siteUrl, serviceName);*/
+		$.extend(self, new soapServiceBase(siteUrl, serviceName));
         
-        self.GetWeb = function (webUrl, successCallback, failCallback) {
+        self.GetWeb = function (webUrl) {
             var parameters = [];
 			
 			if (webUrl.endsWith("/"))
@@ -15,7 +16,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 			
 			parameters.push(new keyValuePair("webUrl", webUrl));
             
-            self.executeSoapMethod("GetWeb", parameters, successCallback, failCallback);
+            return self.executeSoapMethod("GetWeb", parameters);
         }
         
         return self;

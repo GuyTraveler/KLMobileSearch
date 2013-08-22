@@ -38,13 +38,13 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.Status(
-					function (result) {
+				service.Status()
+					.done(function (result) {
 						QUnit.ok(result && result.StatusResult && result.StatusResult.value);
 						QUnit.ok(result.StatusResult.value == "ONLINE" || result.StatusResult.value == "OFFLINE");
 						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						QUnit.ok(false, "search status failed to be obtained");
 						QUnit.start();
                     });				
@@ -64,12 +64,12 @@ define(["services/sharepoint/searchService",
             service = new searchService("http://dfdf");
 			
             //assert
-			service.Status(
-				function (result) {
+			service.Status()
+				.done(function (result) {
 					QUnit.ok(false, "searchService.Status should have failed");
 					QUnit.start();
-                },
-				function (XMLHttpRequest, textStatus, errorThrown) {
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 					QUnit.ok(true);
 					QUnit.start();
                 });				
@@ -88,13 +88,13 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.GetSearchMetadata(
-					function (result) {
+				service.GetSearchMetadata()
+					.done(function (result) {
 						QUnit.ok(result && result.GetSearchMetadataResult);
 						QUnit.ok(typeof result.GetSearchMetadataResult === 'object');
 						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						QUnit.ok(false, "GetSearchMetadata failed");
 						QUnit.start();
                     });				
@@ -114,12 +114,12 @@ define(["services/sharepoint/searchService",
             service = new searchService("http://dfdf");
 			
             //assert
-			service.GetSearchMetadata(
-				function (result) {
+			service.GetSearchMetadata()
+				.done(function (result) {
 					QUnit.ok(false, "searchService.GetSearchMetadata should have failed");
 					QUnit.start();
-                },
-				function (XMLHttpRequest, textStatus, errorThrown) {
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 					QUnit.ok(true);
 					QUnit.start();
                 });		
@@ -138,15 +138,15 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(testQueryXml.replace("{value}", "test"),
-					function (result) {
+				service.QueryEx(testQueryXml.replace("{value}", "test"))
+					.done(function (result) {
 						QUnit.ok(result && result.QueryExResult);
 						QUnit.ok(result.QueryExResult['diffgr:diffgram'].Results.RelevantResults)
 						QUnit.equal(typeof result.QueryExResult['diffgr:diffgram'].Results.RelevantResults, 'object');
 						//
 						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						QUnit.ok(false, "QueryEx failed");
 						QUnit.start();
                     });				
@@ -166,12 +166,12 @@ define(["services/sharepoint/searchService",
             service = new searchService("http://dfdf");
 			
             //assert
-			service.QueryEx(testQueryXml,
-				function (result) {
+			service.QueryEx(testQueryXml)
+				.done(function (result) {
 					QUnit.ok(false, "searchService.QueryEx should have failed");
 					QUnit.start();
-                },
-				function (XMLHttpRequest, textStatus, errorThrown) {
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 					QUnit.ok(true);
 					QUnit.start();
                 });			
@@ -190,12 +190,12 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(emptyQueryXml,
-					function (result) {
+				service.QueryEx(emptyQueryXml)
+					.done(function (result) {
 						QUnit.ok(false, "QueryEx with empty search should not succeed");
 						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						QUnit.ok(true);
 						QUnit.start();
                     });				
@@ -220,12 +220,12 @@ define(["services/sharepoint/searchService",
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(emptyQueryXml + "fdfd",
-					function (result) {
+				service.QueryEx(emptyQueryXml + "fdfd")
+					.done(function (result) {
 						QUnit.ok(false, "QueryEx with malformed search should not succeed");
 						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						QUnit.ok(true);
 						QUnit.start();
                     });				
@@ -237,366 +237,4 @@ define(["services/sharepoint/searchService",
             });
         });	               
     
-    
-        
-        QUnit.module("Test searchService known Invalid chars all fail gracefully");
-    
-        
-        QUnit.asyncTest("test (!)", function () {
-            invalidCharTest("!", true);
-        });
-               
-        QUnit.asyncTest("test (\")", function () {
-           invalidCharTest("\"", true);
-        });
-        
-        QUnit.asyncTest("test (#)", function () {
-           invalidCharTest("#", true);
-        });
-        
-        QUnit.asyncTest("test ($)", function () {
-           invalidCharTest("$", true);
-        });
-        
-        QUnit.asyncTest("test (%)", function () {
-           invalidCharTest("%", true);
-        });
-        
-        QUnit.asyncTest("test (&)", function () {
-           invalidCharTest("&", true);
-        });
-        
-        QUnit.asyncTest("test (')", function () {
-           invalidCharTest("'", true);
-        });
-        
-        QUnit.asyncTest("test (()", function () {
-           invalidCharTest("(", true);
-        });
-        
-        QUnit.asyncTest("test ())", function () {
-           invalidCharTest(")", true);
-        });
-        
-        QUnit.asyncTest("test (*)", function () {
-           invalidCharTest("*", true);
-        });
-        
-        QUnit.asyncTest("test (+)", function () {
-           invalidCharTest("+", true);
-        });
-        
-        QUnit.asyncTest("test (,)", function () {
-           invalidCharTest(",", true);
-        });
-        
-        QUnit.asyncTest("test (-)", function () {
-           invalidCharTest("-", true);
-        });
-        
-        QUnit.asyncTest("test (.)", function () {
-           invalidCharTest(".", true);
-        });
-        
-        QUnit.asyncTest("test (/)", function () {
-           invalidCharTest("/", true);
-        });
-        
-        QUnit.asyncTest("test (:)", function () {
-           invalidCharTest(":", true);
-        });
-        
-        QUnit.asyncTest("test (;)", function () {
-           invalidCharTest(";", true);
-        });
-        
-        QUnit.asyncTest("test (<)", function () {
-           invalidCharTest("<", true);
-        });
-        
-        QUnit.asyncTest("test (=)", function () {
-           invalidCharTest("=", true);
-        });
-        
-        QUnit.asyncTest("test (>)", function () {
-           invalidCharTest(">", true);
-        });
-        
-        QUnit.asyncTest("test (?)", function () {
-           invalidCharTest("?", true);
-        });
-        
-        QUnit.asyncTest("test (@)", function () {
-           invalidCharTest("@", true);
-        });
-        
-        QUnit.asyncTest("test ([)", function () {
-           invalidCharTest("[", true);
-        });
-        
-        QUnit.asyncTest("test (\\)", function () {
-           invalidCharTest("\\", true);
-        });
-        
-        QUnit.asyncTest("test (])", function () {
-           invalidCharTest("]", true);
-        });
-        
-        QUnit.asyncTest("test (^)", function () {
-           invalidCharTest("^", true);
-        });
-        
-        QUnit.asyncTest("test (_)", function () {
-           invalidCharTest("_", true);
-        });
-        
-        QUnit.asyncTest("test (`)", function () {
-           invalidCharTest("`", true);
-        });
-        
-        QUnit.asyncTest("test ({)", function () {
-           invalidCharTest("{", true);
-        });
-        
-        QUnit.asyncTest("test (})", function () {
-           invalidCharTest("}", true);
-        });
-        
-        QUnit.asyncTest("test (~)", function () {
-           invalidCharTest("~", true);
-        });
-        
-        QUnit.asyncTest("test (—)", function () {
-           invalidCharTest("—", true);
-        });
-        
-        QUnit.asyncTest("test (–)", function () {
-           invalidCharTest("–", true);
-        });
-        
-        QUnit.asyncTest("test (¡)", function () {
-           invalidCharTest("¡", true);
-        });
-        
-        QUnit.asyncTest("test (¦)", function () {
-           invalidCharTest("¦", true);
-        });
-        
-        QUnit.asyncTest("test (|)", function () {
-           invalidCharTest("|", true);
-        });
-        
-        QUnit.asyncTest("test (¨)", function () {
-           invalidCharTest("¨", true);
-        });
-        
-        QUnit.asyncTest("test (´)", function () {
-           invalidCharTest("´", true);
-        });
-        
-        QUnit.asyncTest("test (¯)", function () {
-           invalidCharTest("¯", true);
-        });
-        
-        QUnit.asyncTest("test (¸)", function () {
-           invalidCharTest("¸", true);
-        });
-    
-        
-        
-        QUnit.module("Test searchService known Invalid chars with other alpha-numeric text succeeds");
-    
-        
-        QUnit.asyncTest("test (!mobility)", function () {
-            invalidCharTest("!mobility", false);
-        });
-               
-        QUnit.asyncTest("test (\"mobility)", function () {
-           invalidCharTest("\"mobility", false);
-        });
-        
-        QUnit.asyncTest("test (#mobility)", function () {
-           invalidCharTest("#mobility", false);
-        });
-        
-        QUnit.asyncTest("test ($mobility)", function () {
-           invalidCharTest("$mobility", false);
-        });
-        
-        QUnit.asyncTest("test (%mobility)", function () {
-           invalidCharTest("%mobility", false);
-        });
-        
-        QUnit.asyncTest("test (&mobility)", function () {
-           invalidCharTest("&mobility", false);
-        });
-        
-        QUnit.asyncTest("test ('mobility)", function () {
-           invalidCharTest("'mobility", false);
-        });
-        
-        QUnit.asyncTest("test ((mobility)", function () {
-           invalidCharTest("(mobility", false);
-        });
-        
-        QUnit.asyncTest("test ()mobility)", function () {
-           invalidCharTest(")mobility", false);
-        });
-        
-        QUnit.asyncTest("test (*mobility)", function () {
-           invalidCharTest("*mobility", false);
-        });
-        
-        QUnit.asyncTest("test (+mobility)", function () {
-           invalidCharTest("+mobility", false);
-        });
-        
-        QUnit.asyncTest("test (,mobility)", function () {
-           invalidCharTest(",mobility", false);
-        });
-        
-        QUnit.asyncTest("test (-mobility)", function () {
-           invalidCharTest("-mobility", false);
-        });
-        
-        QUnit.asyncTest("test (.mobility)", function () {
-           invalidCharTest(".mobility", false);
-        });
-        
-        QUnit.asyncTest("test (/mobility)", function () {
-           invalidCharTest("/mobility", false);
-        });
-        
-        QUnit.asyncTest("test (:mobility)", function () {
-           invalidCharTest(":mobility", false);
-        });
-        
-        QUnit.asyncTest("test (;mobility)", function () {
-           invalidCharTest(";mobility", false);
-        });
-        
-        QUnit.asyncTest("test (<mobility)", function () {
-           invalidCharTest("<mobility", false);
-        });
-        
-        QUnit.asyncTest("test (=mobility)", function () {
-           invalidCharTest("=mobility", false);
-        });
-        
-        QUnit.asyncTest("test (>mobility)", function () {
-           invalidCharTest(">mobility", false);
-        });
-        
-        QUnit.asyncTest("test (?mobility)", function () {
-           invalidCharTest("?mobility", false);
-        });
-        
-        QUnit.asyncTest("test (@mobility)", function () {
-           invalidCharTest("@mobility", false);
-        });
-        
-        QUnit.asyncTest("test ([mobility)", function () {
-           invalidCharTest("[mobility", false);
-        });
-        
-        QUnit.asyncTest("test (\\mobility)", function () {
-           invalidCharTest("\\mobility", false);
-        });
-        
-        QUnit.asyncTest("test (]mobility)", function () {
-           invalidCharTest("]mobility", false);
-        });
-        
-        QUnit.asyncTest("test (^mobility)", function () {
-           invalidCharTest("^mobility", false);
-        });
-        
-        QUnit.asyncTest("test (_mobility)", function () {
-           invalidCharTest("_mobility", false);
-        });
-        
-        QUnit.asyncTest("test (`mobility)", function () {
-           invalidCharTest("`mobility", false);
-        });
-        
-        QUnit.asyncTest("test ({mobility)", function () {
-           invalidCharTest("{mobility", false);
-        });
-        
-        QUnit.asyncTest("test (}mobility)", function () {
-           invalidCharTest("}mobility", false);
-        });
-        
-        QUnit.asyncTest("test (~mobility)", function () {
-           invalidCharTest("~mobility", false);
-        });
-        
-        QUnit.asyncTest("test (—mobility)", function () {
-           invalidCharTest("—mobility", false);
-        });
-        
-        QUnit.asyncTest("test (–mobility)", function () {
-           invalidCharTest("–mobility", false);
-        });
-        
-        QUnit.asyncTest("test (¡mobility)", function () {
-           invalidCharTest("¡mobility", false);
-        });
-        
-        QUnit.asyncTest("test (¦mobility)", function () {
-           invalidCharTest("¦mobility", false);
-        });
-        
-        QUnit.asyncTest("test (|mobility)", function () {
-           invalidCharTest("|mobility", false);
-        });
-        
-        QUnit.asyncTest("test (¨mobility)", function () {
-           invalidCharTest("¨mobility", false);
-        });
-        
-        QUnit.asyncTest("test (´mobility)", function () {
-           invalidCharTest("´mobility", false);
-        });
-        
-        QUnit.asyncTest("test (¯mobility)", function () {
-           invalidCharTest("¯mobility", false);
-        });
-        
-        QUnit.asyncTest("test (¸mobility)", function () {
-           invalidCharTest("¸mobility", false);
-        });
-     
-        invalidCharTest = function (searchString, shouldFail) {
-            //arrange
-            var service,
-				logonService,
-				logonPromise;
-            
-            //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
-			
-            //assert
-            logonPromise.done(function (result) {
-				service.QueryEx(testQueryXml.replace("{value}", searchString),
-					function (result) {
-						QUnit.ok(result && result.QueryExResult);
-						QUnit.ok(result.QueryExResult['diffgr:diffgram'].Results.RelevantResults)
-						QUnit.equal(typeof result.QueryExResult['diffgr:diffgram'].Results.RelevantResults, 'object');
-						//
-						QUnit.start();
-                    },
-					function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(shouldFail);
-						QUnit.start();
-                    });				
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "invalidCharTest failed to logon!");
-				QUnit.start();	
-            }); 
-        }
     });

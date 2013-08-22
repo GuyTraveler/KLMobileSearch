@@ -12,13 +12,13 @@
 		<link href="app/styles/homeViewStyles.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home', title: system.strings.appTitle }">            
+        <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': system.strings.appTitle, 'data-role': 'view' }">            
         </div>
      
-        <div data-bind="kendoView: { id: 'configureSite', title: system.strings.configureSitePageTitle }" data-transition="overlay:up">
+        <div data-bind="kendoView: { id: 'configureSite' }, attr: { 'data-title': system.strings.configureSitePageTitle, 'data-role': 'view' }" data-transition="overlay:up">
         </div>
         
-        <div data-bind="kendoView: { id: 'results', title: system.strings.resultsPageTitle, loaded: 'onLastViewModelLoaded' }">            
+        <div data-bind="kendoView: { id: 'results', loaded: 'onLastViewModelLoaded' }, attr: { 'data-title': system.strings.resultsPageTitle, 'data-role': 'view' }">            
         </div>        
     </body>
 </html>
