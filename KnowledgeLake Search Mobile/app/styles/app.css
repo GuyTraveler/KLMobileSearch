@@ -3,17 +3,21 @@ body {
 }
 
 
-.status-message,
-.error-message {
+div.imageContainer {
+    float: left;
+}
+
+div.status-message,
+div.error-message {
     margin-left: 15px;
     margin-right: 15px;
 }
 
-.status-message {
+div.status-message {
     color: Green;
 }
 
-.error-message { 
+div.error-message { 
     color: Red;
 }
 
@@ -26,9 +30,10 @@ img.margin-img {
     word-wrap: break-word
 }
 
-.list-view-input {
+p.list-view-input {
     width: 65%!important;
 }
+
 .full-width {
     width: 100%;
 }

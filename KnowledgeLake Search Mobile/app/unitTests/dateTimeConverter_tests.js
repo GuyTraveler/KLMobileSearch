@@ -141,6 +141,18 @@ define(['services/dateTimeConverter'],
             //assert
             QUnit.equal(result, "30.12.1988 08:15");
         });
+           
+        QUnit.test("test dateTimeConverter formatDate date (1988, 11, 30, 8, 8) formatString dd.MM.yyyy HH:mm", function () {
+            //arrange
+            var date = new Date(1988, 11, 30, 8, 8), 
+                formatString = "dd.MM.yyyy HH:mm";
+            
+            //act            
+            var result = DateTimeConverter.formatDate(date, formatString);
+                        
+            //assert
+            QUnit.equal(result, "30.12.1988 08:08");
+        });
         
         QUnit.test("test dateTimeConverter dateTimeToLocaleString locale null date null", function () {
             //arrange

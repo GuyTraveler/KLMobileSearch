@@ -9,13 +9,13 @@
 </header>
 
 <h3 data-bind="if: resultDataSource().length === 0">No results found...</h3>
+
+
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-	<li data-bind="css: { 'item': true, 'highlight': $parent.isSelectedResult($data) }">
-        <div class="klljlj">
-            <div class="imageContainer">
-                <a data-bind="click: $parent.setSelectedResult">
-                    <img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
-                </a>
+	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data) }">
+        <div class="resultOuterContainer">
+            <div class="imageContainer resultIconContainer">
+                <img class="resultIcon" data-bind="click: $parent.setSelectedResult, urlToFileTypeIcon: url"/>
             </div>
             <div class="resultContentContainer" data-bind="click: $parent.navigateToResult">
                 <div class="resultTitleContainer">
@@ -36,14 +36,3 @@
         </a>
     </div>
 </footer>
-
-<style type="text/css">    
-    .resultIcon {
-        float: left;
-    }
-    .resultTitle {
-        display: inline-block;
-        font-size: 1em;
-        margin: .45em 0 0 .75em;
-    }    
-</style>

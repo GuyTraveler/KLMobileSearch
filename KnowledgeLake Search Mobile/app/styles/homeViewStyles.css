@@ -29,22 +29,6 @@ div.itemContainer {
     height: 2em;
 }
 
-div.imageContainer {
-    float: left;
-}
-
-div.resultContentContainer {
-    float: left;
-}
-
-div.resultTitleContainer {
-    width: 100%;
-}
-
-div.resultLastModifiedContainer {
-    width: 100%;
-}
-	
 	div.site {		
 	    position: absolute;
 	    width: 100%;
@@ -111,7 +95,4 @@ div.resultLastModifiedContainer {
 				right: 1%;
 			}
 
-img.resultIcon {
-    float: left;
-    height: 1.88em;
-}
+

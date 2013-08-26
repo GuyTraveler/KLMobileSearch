@@ -230,7 +230,10 @@ define([], function () {
                             char = hour;
                         break;
                     case "mm":
-                        char = minute;
+						if(minute < 10)
+                            char = "0" + minute.toString();
+                        else
+                            char = minute;
                         break;
                     case "M":
                         char = month;
