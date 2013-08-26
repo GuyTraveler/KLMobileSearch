@@ -12,23 +12,34 @@ define(["knockout",
         self.resultDataSource = ko.observableArray(); 
         
         self.selectedResult = null;
-        self.navBarVisible = ko.observable(false);
-            
+        
+		self.navBarVisible = ko.observable(false);
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
         });
+		
+		self.isBusy = ko.observable(false);
+		self.isBusy.subscribe(function (newValue) {
+			if (newValue == true) {
+				window.App.showLoading();
+            }
+			else {
+				window.App.hideLoading();
+            }
+        });
         
         self.SetDataSource = function (results) {
+			self.resultDataSource([]);
+			
             if(results)
-            {               
-                self.resultDataSource([]);
+            {                               
                 self.resultDataSource(results);
             }
         }
         
-        /*self.init = function (e) {
-            system.logVerbose("resultsViewModel init");
-        }*/
+        self.init = function (e) {
+            
+        }
         
         self.beforeShow = function (e) {
             system.logVerbose("resultsViewModel beforeShow");            
@@ -43,11 +54,11 @@ define(["knockout",
         
         self.afterShow = function (e) {
             system.logVerbose("resultsViewModel afterShow");
-        }
+        }*/
         
         self.hide = function (e) {
-            system.logVerbose("resultsViewModel hide");
-        }*/
+            self.SetDataSource([]);
+        }
         
         self.setSelectedResult = function (selection) {
             if(self.selectedResult === selection)
@@ -120,7 +131,7 @@ define(["knockout",
                 logonService;
             
             window.App.loading = "<h1>" + system.strings.searching + "</h1>";
-            window.App.showLoading();
+            self.isBusy(true);
             
             service = new QueryService(searchSite.url);
             logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
@@ -135,20 +146,20 @@ define(["knockout",
                     
                     dfd.resolve(true);
                     
-                    window.App.hideLoading();
+                    self.isBusy(false);
                 });
                 
                 searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                     dfd.reject(errorThrown);
                     
-                    window.App.hideLoading();
+                    self.isBusy(false);
                 });
             });
             
             logonPromise.fail(function (error) {
                 dfd.reject(error);
                 
-                window.App.hideLoading();
+                self.isBusy(false);
             });
             
             return dfd.promise();

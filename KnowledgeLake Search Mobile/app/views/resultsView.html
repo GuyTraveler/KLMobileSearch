@@ -8,8 +8,8 @@
     </div>
 </header>
 
-<h3 data-bind="if: resultDataSource().length === 0">No results found...</h3>
-
+<h3 data-bind="visible: (resultDataSource().length === 0 && !isBusy()), text: system.strings.noResultsFound"></h3>
+<h3 data-bind="visible: isBusy, text: system.strings.searching"></h3>
 
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data) }">
@@ -28,11 +28,3 @@
         </div>
 	</li>
 </ul>
-
-<footer data-role="footer">
-    <div data-role="tabstrip">
-        <a href="#home" data-icon="home">
-            <span data-bind="text: system.strings.homeLinkText"></span>
-        </a>
-    </div>
-</footer>

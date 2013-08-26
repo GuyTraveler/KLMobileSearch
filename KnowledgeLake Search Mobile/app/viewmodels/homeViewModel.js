@@ -99,10 +99,16 @@ define(["knockout",
             }
 			
 			self.mainGripClick = function (data, event) {
+				if (event)
+					event.stopImmediatePropagation();
+				
 				self.showKeywordSearch(event.currentTarget.parentElement.parentElement);
             }
 			
 			self.keywordGripClick = function (data, event) {
+				if (event)
+					event.stopImmediatePropagation();
+				
 				self.hideKeywordSearch(event.currentTarget.parentElement.parentElement);
             }
             
@@ -133,10 +139,12 @@ define(["knockout",
                 });
             }
             
-            self.setSelectedSite = function (selection) {
+            self.setSelectedSite = function (selection, event) {
+				if (event)
+					event.stopImmediatePropagation();
+				
                 if(self.selectedSite === selection)
                     self.selectedSite = null;
-                
                 else
                     self.selectedSite = selection;
                 
@@ -150,10 +158,20 @@ define(["knockout",
                 return false;
             }
             
+			self.onItemClick = function (selection, args) {
+				self.selectedSite = selection;
+				self.editSite();
+            }
+			
             self.onAddClick = function () {
                 self.selectedSite = null;
                 self.navBarVisible(false);
                 window.App.navigate(configureSiteUrl); 
+            }
+			
+			self.onSearchKeyUp = function (selection, event) {
+				if (event.keyCode === 13)
+					self.search(selection);
             }
             
             self.search = function (selection) {

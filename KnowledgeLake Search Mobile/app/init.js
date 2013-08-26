@@ -44,7 +44,8 @@ require(["config"], function (config) {
     });
 });
 
-function onLastViewModelLoaded() {
+//global pollution
+function globalLastViewModelLoaded() {
     if (!window.App) {
         window.App = new kendo.mobile.Application(document.body, {
             transition: 'slide',
@@ -54,4 +55,8 @@ function onLastViewModelLoaded() {
         
         window.AppLoaded(true);
     }
+}
+
+function globalAddClick() {
+	window.homeViewModel.onAddClick();
 }

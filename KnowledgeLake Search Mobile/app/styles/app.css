@@ -3,6 +3,11 @@ body {
 }
 
 
+.km-ios input[type=search].text-border {
+	border: solid 1px #C4CCD5!important;
+	border-radius: 15px;
+}
+
 div.imageContainer {
     float: left;
 }
@@ -36,6 +41,10 @@ p.list-view-input {
 
 .full-width {
     width: 100%;
+}
+
+.km-ios input[type=search] {
+	border: 1px solid black;
 }
 
 .opaque {
