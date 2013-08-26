@@ -3,8 +3,11 @@ define(["jquery",
 		"system",
 		"ISiteDataService",
 		//uncaught depends
-		"extensions"], 
-	function ($, ntlm, system, siteDataService) {
+        "domain/promiseResponse/promiseResolveResponse", 
+        "domain/promiseResponse/promiseRejectResponse", 
+        "domain/promiseResponse/logonResponse",
+        "extensions"], 
+	function ($, ntlm, system, siteDataService, PromiseResolveResponse, PromiseRejectResponse, logonResponse) {
 		var ntlmLogonService = function (siteUrl) {
 			var self = this,
 				getAuthUrl = function () {
@@ -13,23 +16,24 @@ define(["jquery",
 		            if (!authUrl.endsWith('/')) {
 		                authUrl += "/";
 		            }
-		            
+		             
 		            return authUrl + "_vti_bin/copy.asmx";  
 		        };
                 
-			self.logon = function (domain, userName, password) {
+			self.logon = function (domain, userName, password, documentUrl) {
 				var dfd = $.Deferred(),
-					ntlmAuthUrl = getAuthUrl();
+					ntlmAuthUrl = documentUrl ? documentUrl : getAuthUrl();
 				
 				ntlm.setCredentials(domain, userName, password);
                     
                 if (ntlm.authenticate(ntlmAuthUrl)) {
 					system.logVerbose("NTLM authenticate success");
-					dfd.resolve(true);
+                    
+					dfd.resolve(new PromiseResolveResponse(logonResponse.LogonSucceeded));
 				}
 				else {
 					system.logVerbose("NTLM authenticate failed");
-					dfd.reject(false);	
+					dfd.reject(new PromiseRejectResponse(logonResponse.LogonFailed, null));	
                 }	
 				
 				return dfd.promise();

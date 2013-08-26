@@ -33,7 +33,7 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
             
             //assert
             QUnit.equal(service.parseItemId(testFileLeafRef), testItemId);
@@ -44,7 +44,7 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
             
             //assert
             QUnit.equal(service.parseItemId("dfdaffdsf"), -1);
@@ -55,7 +55,7 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
             
             //assert
             QUnit.equal(service.parseItemId(null), -1);
@@ -67,7 +67,7 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
             relUrl = service.getServerRelativeUrl();
 			
             //assert
@@ -80,7 +80,7 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(siteUrl, "kjhkhjk");
+            service = new documentService("kjhkhjk");
 			relUrl = service.getServerRelativeUrl();
             
             //assert
@@ -93,7 +93,7 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(siteUrl, "Asdfasfd");
+            service = new documentService(docUrl);
             relUrl = service.getServerRelativeUrl(docUrl);
 			
             //assert
@@ -106,20 +106,33 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService("Adsfsfasdfas");
 			relUrl = service.getServerRelativeUrl("Adsfsfasdfas");
             
             //assert
             QUnit.equal(relUrl, "");
         });
-		
+        
+        QUnit.test("Test can documentService.getServerRelativeUrl returns empty with no url 1 (no args)", function () {
+            //arrange
+            var service,
+				relUrl;
+            
+            //act
+            service = new documentService();
+			relUrl = service.getServerRelativeUrl();
+            
+            //assert
+            QUnit.equal(relUrl, "");
+        });
+        
 		QUnit.asyncTest("Test documentService.getListID returns expected value with good args", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -143,41 +156,13 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getListID fails gracefully with bad siteUrl", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService("dsfasdf", docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getListID()
-					.done(function (result) {
-						QUnit.ok(false, "getListID should have failed");
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getListID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-		
 		QUnit.asyncTest("Test documentService.getListID fails gracefully with bad docUrl", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, "asdfsafds");
+            service = new documentService("asdfsafds");
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -205,7 +190,7 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -229,71 +214,13 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getRootFolderUrl with bad siteUrl fails gracefully", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService("asdfasdfs", docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getRootFolderUrl()
-					.done(function (result) {
-						QUnit.ok(false, "getRootFolderUrl should have failed");
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getRootFolderUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-		
-		QUnit.asyncTest("Test documentService.getRootFolderUrl with bad docUrl fails gracefully", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService(siteUrl, "dfasdfsdfasfas");
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getRootFolderUrl()
-					.done(function (result) {
-						QUnit.ok(false, "getRootFolderUrl should have failed");
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getRootFolderUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-		
 		QUnit.asyncTest("Test documentService.getListItemID returns expected value with good args", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -317,42 +244,13 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getListItemID with bad siteUrl fails gracefully", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService("asdfasdfs", docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getListItemID()
-					.done(function (result) {
-						QUnit.ok(false, "getListItemID should have failed");
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getListItemID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-		
 		QUnit.asyncTest("Test documentService.getListItemID with bad docUrl fails gracefully", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, "dfasdfsdfasfas");
+            service = new documentService("dfasdfsdfasfas");
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -383,7 +281,7 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, docUrl);
+            service = new documentService(docUrl);
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -408,13 +306,13 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad siteUrl fails gracefully", function () {
+		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad docUrl fails gracefully", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService("asdfasdfs", docUrl);
+            service = new documentService("dfasdfsdfasfas");
 			logonService = new ntlmLogonService(siteUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 						
@@ -436,26 +334,26 @@ define(["services/documentService",
 				QUnit.start();	
 			});
         });
-		
-		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad docUrl fails gracefully", function () {
+        
+        QUnit.asyncTest("Test documentService.getSiteUrl", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(siteUrl, "dfasdfsdfasfas");
+            service = new documentService(docUrl);
 			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword, docUrl);
 						
             //assert
             logonPromise.done(function () {
-				service.getDisplayFormUrl()
+				service.getSiteUrl()
 					.done(function (result) {
-						QUnit.ok(false, "getDisplayFormUrl should have failed");
+						QUnit.ok(true);
 						QUnit.start();
                     })
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
+						QUnit.ok(false, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
 						QUnit.start();	
 					});
             });

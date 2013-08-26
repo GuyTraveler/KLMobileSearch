@@ -120,6 +120,8 @@ define(["knockout",
                             self.errorMessage(system.strings.errorWritingSiteData);
                         }
                     });
+                    
+                    return updateSitePromise;
                 }
                 
                 else
@@ -144,6 +146,8 @@ define(["knockout",
                             self.errorMessage(system.strings.errorWritingSiteData);
                         }
                     });
+                    
+                    return addSitePromise;
                 }
             }
             
@@ -361,8 +365,8 @@ define(["knockout",
                 self.siteUserName(selectedSite.credential.userName);
                 self.sitePassword(selectedSite.credential.password);
                 self.siteDomain(selectedSite.credential.domain);
-                
-                self.setValidUrl(self.url);
+
+                self.setValidUrl(self.siteCredentialType());
             }
 			
 			self.beforeShow = function (e) {

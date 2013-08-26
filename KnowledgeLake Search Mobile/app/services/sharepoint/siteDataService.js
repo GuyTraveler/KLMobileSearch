@@ -9,7 +9,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         
         self.GetSiteUrl = function (url) {
             var parameters = [
-                new keyValuePair("Url", url)
+                new keyValuePair("Url", encodeURI(url))
             ];
             
             return self.executeSoapMethod("GetSiteUrl", parameters);
@@ -17,7 +17,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 		
 		self.GetURLSegments = function (strURL) {
 			var parameters = [
-				new keyValuePair("strURL", strURL)
+				new keyValuePair("strURL", encodeURI(strURL))
 			];
 			
 			return self.executeSoapMethod("GetURLSegments", parameters);

@@ -1,8 +1,11 @@
-define(["knockout", 
+define(["knockout",
+        "jquery", 
         "IQueryService", 
         "domain/keywordConjunction", 
-        "factory/logonServiceFactory"], 
-    function (ko, QueryService, keywordConjunction, LogonServiceFactory) {
+        "factory/logonServiceFactory", 
+        "IDocumentService",
+		"ISiteDataService"], 
+    function (ko, $, QueryService, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this;
         
@@ -23,19 +26,18 @@ define(["knockout",
             }
         }
         
-        self.init = function (e) {
+        /*self.init = function (e) {
             system.logVerbose("resultsViewModel init");
-        }
+        }*/
         
         self.beforeShow = function (e) {
-            system.logVerbose("resultsViewModel beforeShow");
-            
+            system.logVerbose("resultsViewModel beforeShow");            
             
             if(homeViewModel.selectedSite)  
                 self.keywordSearch(homeViewModel.selectedSite);
         }
         
-        self.show = function (e) {
+        /*self.show = function (e) {
             system.logVerbose("resultsViewModel show");
         }
         
@@ -45,7 +47,7 @@ define(["knockout",
         
         self.hide = function (e) {
             system.logVerbose("resultsViewModel hide");
-        }
+        }*/
         
         self.setSelectedResult = function (selection) {
             if(self.selectedResult === selection)
@@ -60,6 +62,8 @@ define(["knockout",
         self.isSelectedResult = function (result) {
 			if (self.navBarVisible())
 				return (self.selectedResult === result);
+            
+            return false;
         }
         
         self.editProperties = function () {
@@ -69,42 +73,85 @@ define(["knockout",
             }
         }
         
-        self.navigateToResult = function (result) {
-            // /Forms/DispForm.aspx?ID=
-            if(result)
-            {                
-                window.open(result.url, "_blank");
+        self.navigateToResult = function (selection) {
+            var dfd = $.Deferred();
+            
+            if(selection && homeViewModel.selectedSite)
+            {
+                window.App.loading = "<h1>" + system.strings.loading + "</h1>";
+                window.App.showLoading();
+                
+                var service = new documentService(selection.url);
+        
+                var logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
+
+                logonPromise = logonService.logon(homeViewModel.selectedSite.credential.domain, 
+                                                  homeViewModel.selectedSite.credential.userName, 
+                                                  homeViewModel.selectedSite.credential.password,
+                                                  selection.url);
+            
+                logonPromise.done(function (result) {
+                    getDisplayFormUrlPromise = service.getDisplayFormUrl();
+                
+                    getDisplayFormUrlPromise.done(function (result) {                    
+                        window.App.hideLoading();
+                        
+                        window.open(result, "_blank");
+                    });
+                    
+                    getDisplayFormUrlPromise.fail(function (error) {
+                        window.App.hideLoading();
+                    });
+                });
+                
+                logonPromise.fail(function (error) {
+                    window.App.hideLoading();
+                    
+                    dfd.reject(error);
+                });
             }
+            
+            return dfd.promise();
         }
         
-        self.keywordSearch = function (searchSite) {          
+        self.keywordSearch = function (searchSite) {
+            var dfd = $.Deferred(),
+                service,
+                logonService;
+            
             window.App.loading = "<h1>" + system.strings.searching + "</h1>";
             window.App.showLoading();
             
             service = new QueryService(searchSite.url);
-            logonService = LogonServiceFactory.createLogonService(searchSite);
+            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
             
             logonPromise = logonService.logon(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
-            logonPromise.done(function () {                
-                searchPromise = service.keywordSearch(searchSite.keyword, keywordConjunction.and, true);                
+            logonPromise.done(function (result) {
+                searchPromise = service.keywordSearch(searchSite.keyword, keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
                     self.SetDataSource(result);
+                    
+                    dfd.resolve(true);
                     
                     window.App.hideLoading();
                 });
                 
                 searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
-                    // search failed
+                    dfd.reject(errorThrown);
+                    
                     window.App.hideLoading();
                 });
             });
             
-            logonPromise.fail(function () {
-                // failed to login
+            logonPromise.fail(function (error) {
+                dfd.reject(error);
+                
                 window.App.hideLoading();
             });
+            
+            return dfd.promise();
         }
             
         return self;

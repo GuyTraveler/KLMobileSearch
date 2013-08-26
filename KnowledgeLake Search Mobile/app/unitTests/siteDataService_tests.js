@@ -145,7 +145,6 @@ define(["services/sharepoint/siteDataService",
 	                QUnit.ok(true, "GetURLSegments was successful");
 					QUnit.ok(result);
 					QUnit.ok(result.GetURLSegmentsResult);
-					QUnit.ok(result.GetURLSegmentsResult);
 					QUnit.ok(result.strItemID);
 					QUnit.ok(result.strListID);
 					
