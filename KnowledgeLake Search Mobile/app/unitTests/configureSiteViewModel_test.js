@@ -4,8 +4,7 @@ define(["system",
 		"domain/site", 
 		"domain/credential", 
 		"domain/credentialType",
-		"domain/authenticationMode"],
-    
+		"domain/authenticationMode"],    
 	function (system, configureSiteViewModel, homeViewModel, site, credential, credentialType, authenticationMode) {
 		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
 			adfsTestUrl = "https://kl.sharepoint.com/sites/devtesting",
@@ -500,24 +499,28 @@ define(["system",
 		
 		QUnit.test("test configureSiteViewModel.saveSiteSettings won't save invalid site", function () {
 			//arrange
-			var vm,
+			var vm,                
 				saveSettingsPromise;
+            
+			vm = new configureSiteViewModel();            
+            window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			vm = new configureSiteViewModel();
 			saveSettingsPromise = vm.saveSiteSettings();
 						
 			//assert
 			QUnit.ok(!saveSettingsPromise);
 		});
-		
-		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid site", function () {
+        
+        QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid site with selectedSite null", function () {
 			//arrange
 			var vm,
 				saveSettingsPromise;
+            
+			vm = new configureSiteViewModel();            
+            window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			vm = new configureSiteViewModel();
 			vm.url(ntlmTestUrl);
 			vm.setValidUrl();
 			vm.siteTitle("dfdsfds");
@@ -526,7 +529,39 @@ define(["system",
 						
 			//assert
 			QUnit.equal(vm.validateAll(), true);
-			QUnit.ok(saveSettingsPromise);
+			
+			saveSettingsPromise.done(function () {
+				QUnit.equal(window.App.currentUrl, homeUrl);
+				QUnit.start();
+            });
+			
+			saveSettingsPromise.fail(function () {
+				QUnit.ok(false, "saveSiteSettings failed when it should have succeeded");
+				QUnit.start();
+            });
+        });
+		
+		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid site", function () {
+			//arrange
+			var vm,
+                homeVM,
+				saveSettingsPromise;
+            
+            homeVM = new homeViewModel();
+			vm = new configureSiteViewModel();
+            homeVM.selectedSite = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            
+            window.homeViewModel = homeVM;
+			
+			//act
+			vm.url(ntlmTestUrl);
+			vm.setValidUrl();
+			vm.siteTitle("dfdsfds");
+			vm.isCredentialsValid(true);
+			saveSettingsPromise = vm.saveSiteSettings();
+						
+			//assert
+			QUnit.equal(vm.validateAll(), true);
 			
 			saveSettingsPromise.done(function () {
 				QUnit.equal(window.App.currentUrl, homeUrl);
@@ -542,7 +577,7 @@ define(["system",
         QUnit.test("test configureSiteViewModel clearPopulatedConfigureSiteViewModel", function () {
             //arrange
             var configureSiteVM;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
                         
             configureSiteVM = new configureSiteViewModel();            
             configureSiteVM.populateConfigureSiteViewModel(siteData);
@@ -563,7 +598,7 @@ define(["system",
         QUnit.test("test configureSiteViewModel populateConfigureSiteViewModel", function () {
             //arrange
             var configureSiteVM;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
                         
             configureSiteVM = new configureSiteViewModel();
             

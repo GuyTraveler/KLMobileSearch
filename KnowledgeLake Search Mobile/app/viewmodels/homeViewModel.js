@@ -145,7 +145,9 @@ define(["knockout",
             
             self.isSelectedSite = function (item) {
 				if (self.navBarVisible())
-					return (self.selectedSite == item);
+					return (self.selectedSite === item);
+                
+                return false;
             }
             
             self.onAddClick = function () {

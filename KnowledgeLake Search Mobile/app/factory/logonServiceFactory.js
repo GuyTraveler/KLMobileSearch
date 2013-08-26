@@ -7,14 +7,14 @@ define(["services/ntlmLogonService",
         var logonServiceFactory = function () {   
             var self = this;
             
-            self.createLogonService = function (site) {
+            self.createLogonService = function (url, credential) {
                 var logonService;
                 
-                if (site.credential.credentialType === credentialType.claimsOrForms) {
-                    logonService = new claimsLogonService(site.url);
+                if (credential === credentialType.claimsOrForms) {
+                    logonService = new claimsLogonService(url);
                 }
         		else {
-                    logonService = new ntlmLogonService(site.url);        			
+                    logonService = new ntlmLogonService(url);        			
                 }
                 
                 return logonService;
