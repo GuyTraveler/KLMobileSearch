@@ -6,7 +6,7 @@ define(["jquery",
         "services/soapParsingService"], 
     function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
         
-        var kqlQueryService = function (siteUrl) {
+        var soapQueryService = function (siteUrl) {
             var self = this,
                 buildKeywordClause,
                 maxResults = 5000,
@@ -45,7 +45,7 @@ define(["jquery",
                 if (typeof keywordPhrases === 'string') {
                     system.logVerbose("keywordPhrases is string: " + keywordPhrases);
                     
-                    keywordClause = "\"" + escape(keywordPhrases.encodeXML()) + "\"";
+                    keywordClause = "\"" + keywordPhrases.encodeXML() + "\"";
                 }
                 else if (Object.prototype.toString.call(keywordPhrases) === '[object Array]') {
                     system.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);
@@ -70,5 +70,5 @@ define(["jquery",
             return self;
         };
                 
-        return kqlQueryService;
+        return soapQueryService;
     });

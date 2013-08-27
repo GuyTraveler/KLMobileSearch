@@ -3,12 +3,13 @@ define(['require',
         'jquery',
         'knockout',
         'viewmodels/resultsViewModel',
+        'viewmodels/homeViewModel',
         "domain/result",
         "domain/site",
         "domain/credential",
         "domain/credentialType",
         "domain/promiseResponse/logonResponse"],
-    function (require, $, ko, resultsViewModel, result, site, credential, credentialType, logonResponse) {
+    function (require, $, ko, resultsViewModel, homeViewModel, result, site, credential, credentialType, logonResponse) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -54,55 +55,25 @@ define(['require',
             QUnit.ok(vm);
             QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
-        });               
+        });         
         
-        /*QUnit.test("test resultsViewModel init", function () {
+        QUnit.test("test resultsViewModel beforeShow", function () {
             //arrange
-            var vm;
+            var vm,
+                homeVM;
             
-            //act 
-            vm = new resultsViewModel();
-            vm.init();
+            homeVM = new homeViewModel();
+			vm = new resultsViewModel();
+            homeVM.selectedSite = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"), "ryan");
+            
+            window.homeViewModel = homeVM;
+            
+            //act
+            vm.beforeShow();
                         
             //assert
             QUnit.ok(vm);
         });
-        
-        QUnit.test("test resultsViewModel show", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new resultsViewModel();
-            vm.show();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test resultsViewModel afterShow", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new resultsViewModel();
-            vm.afterShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test resultsViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new resultsViewModel();
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        });*/
         
         QUnit.test("test resultsViewModel setSelectedResult if selectedResult is null", function () {
             //arrange
@@ -196,18 +167,36 @@ define(['require',
             QUnit.ok(vm);
         });
         
-        QUnit.test("test resultsViewModel navigateToResult", function () {
+        QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
-                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"});    
+                homeVM,
+                resultData = new result("http://prodsp2010.dev.local/sites/team5/Simulation Library/2013022000028SIMSR101.TIF", {"title":"Invoice"});   
             
-            vm = new resultsViewModel();
+            homeVM = new homeViewModel();
+			vm = new resultsViewModel();
+            homeVM.selectedSite = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            
+            window.homeViewModel = homeVM;      
             
             //act
-            vm.navigateToResult(resultData);
+            var navigatePromise = vm.navigateToResult(resultData);    
                         
             //assert
-            QUnit.ok(vm);
+            navigatePromise.done(function (result) {
+                QUnit.ok(true);
+                
+                if (vm.windowRef) {
+					vm.windowRef.close();
+                }
+                
+                QUnit.start();
+            });
+            
+            navigatePromise.fail(function (error) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
         });
         
         QUnit.asyncTest("test resultsViewModel keywordSearch bad credentials", function () {

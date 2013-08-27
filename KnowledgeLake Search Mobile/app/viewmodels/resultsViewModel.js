@@ -12,13 +12,14 @@ define(["knockout",
         self.resultDataSource = ko.observableArray(); 
         
         self.selectedResult = null;
-        
-		self.navBarVisible = ko.observable(false);
+        self.windowRef = null;      
+        self.navBarVisible = ko.observable(false);
+            
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
         });
-		
-		self.isBusy = ko.observable(false);
+
+        self.isBusy = ko.observable(false);
 		self.isBusy.subscribe(function (newValue) {
 			if (newValue == true) {
 				window.App.showLoading();
@@ -28,17 +29,17 @@ define(["knockout",
             }
         });
         
-        self.SetDataSource = function (results) {
-			self.resultDataSource([]);
-			
+        self.SetDataSource = function (results) {               
+            self.resultDataSource([]);
+
             if(results)
-            {                               
+            {
                 self.resultDataSource(results);
             }
         }
         
         self.init = function (e) {
-            
+
         }
         
         self.beforeShow = function (e) {
@@ -47,14 +48,6 @@ define(["knockout",
             if(homeViewModel.selectedSite)  
                 self.keywordSearch(homeViewModel.selectedSite);
         }
-        
-        /*self.show = function (e) {
-            system.logVerbose("resultsViewModel show");
-        }
-        
-        self.afterShow = function (e) {
-            system.logVerbose("resultsViewModel afterShow");
-        }*/
         
         self.hide = function (e) {
             self.SetDataSource([]);
@@ -85,15 +78,16 @@ define(["knockout",
         }
         
         self.navigateToResult = function (selection) {
-            var dfd = $.Deferred();
+            var dfd = $.Deferred(), 
+                service,
+                logonService;
             
             if(selection && homeViewModel.selectedSite)
             {
                 window.App.loading = "<h1>" + system.strings.loading + "</h1>";
-                window.App.showLoading();
+                self.isBusy(true);
                 
-                var service = new documentService(selection.url);
-        
+                var service = new documentService(selection.url);        
                 var logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
 
                 logonPromise = logonService.logon(homeViewModel.selectedSite.credential.domain, 
@@ -105,18 +99,20 @@ define(["knockout",
                     getDisplayFormUrlPromise = service.getDisplayFormUrl();
                 
                     getDisplayFormUrlPromise.done(function (result) {                    
-                        window.App.hideLoading();
+                        self.isBusy(false);
                         
                         window.open(result, "_blank");
                     });
                     
                     getDisplayFormUrlPromise.fail(function (error) {
-                        window.App.hideLoading();
+                        self.isBusy(false);
+                        
+                        dfd.reject(error);
                     });
                 });
                 
                 logonPromise.fail(function (error) {
-                    window.App.hideLoading();
+                    self.isBusy(false);
                     
                     dfd.reject(error);
                 });
