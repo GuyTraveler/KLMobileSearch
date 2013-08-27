@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = false, 
+    var isUnitTesting = true, 
 	    loggingLevel = logLevel.Verbose;
 	 
 	var config = {           
@@ -33,7 +33,7 @@ define(["framework/logLevel"], function(logLevel) {
 		   '*': {
                //factory
 			   'kendo': 'factory/kendoFactory',
-			   'FileManagement': 'factory/fileManagementFactory',		   
+			   'FileManagement': 'factory/fileManagementFactory',
                
                //framework
 			   'system': 'framework/system',
@@ -49,8 +49,7 @@ define(["framework/logLevel"], function(logLevel) {
 			   'IListsService': 'services/sharepoint/listsService',
                
                //ours
-			   'ISiteDataCachingService': 'services/siteDataCachingService',
-               'IQueryService': 'services/soapQueryService',               
+			   'ISiteDataCachingService': 'services/siteDataCachingService',             
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService',
 			   'IDocumentService': 'services/documentService'

@@ -6,12 +6,12 @@ define(["jquery",
         "services/soapParsingService"], 
     function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
         
-        var soapQueryService = function (siteUrl) {
+        var kqlQueryService = function (siteUrl) {
             var self = this,
                 buildKeywordClause,
                 maxResults = 5000,
                 //v0.1:  only returns Title, LastModifiedTime and Path right now.  We don't need any else!
-                keywordTemplate = "<QueryPacket><Query><Context><QueryText type=\"MSSQLFT\"><![CDATA[SELECT \"Title\",\"LastModifiedTime\",\"Path\" FROM SCOPE() WHERE (CONTAINS('{clause}') AND IsDocument = TRUE) ]]></QueryText></Context><Range><Count>{maxResults}</Count></Range><TrimDuplicates>{trimDuplicates}</TrimDuplicates></Query></QueryPacket>";
+                keywordTemplate = "<Request AddExpandoFieldTypeSuffix=\"true\" SchemaVersion=\"15.0.0.0\" LibraryVersion=\"15.0.0.0\" ApplicationName=\".NET Library\" xmlns=\"http://schemas.microsoft.com/sharepoint/clientquery/2009\"><Actions><SetProperty Id=\"137\" ObjectPathId=\"134\" Name=\"QueryText\"><Parameter Type=\"String\"> (({clause}) AND IsDocument=\"TRUE\") </Parameter></SetProperty><ObjectPath Id=\"139\" ObjectPathId=\"138\" /><Method Name=\"Add\" Id=\"140\" ObjectPathId=\"138\"><Parameters><Parameter Type=\"String\">Title</Parameter></Parameters></Method><Method Name=\"Add\" Id=\"141\" ObjectPathId=\"138\"><Parameters><Parameter Type=\"String\">LastModifiedTime</Parameter></Parameters></Method><Method Name=\"Add\" Id=\"142\" ObjectPathId=\"138\"><Parameters><Parameter Type=\"String\">path</Parameter></Parameters></Method><ObjectPath Id=\"144\" ObjectPathId=\"143\" /><Method Name=\"ExecuteQuery\" Id=\"145\" ObjectPathId=\"143\"><Parameters><Parameter ObjectPathId=\"134\" /></Parameters></Method></Actions><ObjectPaths><Constructor Id=\"134\" TypeId=\"{80173281-fffd-47b6-9a49-312e06ff8428}\" /><Property Id=\"138\" ParentId=\"134\" Name=\"SelectProperties\" /><Constructor Id=\"143\" TypeId=\"{8d2ac302-db2f-46fe-9015-872b35f15098}\" /></ObjectPaths></Request>";
             
             self.keywordSearch = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),
@@ -70,5 +70,5 @@ define(["jquery",
             return self;
         };
                 
-        return soapQueryService;
+        return kqlQueryService;
     });

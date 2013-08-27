@@ -27,7 +27,7 @@ require(["config"], function (config) {
 						  testRootPath + "claimsLogonService_tests",
                           testRootPath + "FileManagement_tests",
                           testRootPath + "searchService_tests",
-                          testRootPath + "soapQueryService_tests",
+                          testRootPath + "sqlQueryService_tests",
                           testRootPath + "resultsViewModel_tests",
 						  testRootPath + "soapParsingService_tests",
 						  testRootPath + "listsService_tests",
