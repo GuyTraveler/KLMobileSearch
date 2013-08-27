@@ -6,6 +6,7 @@ body {
 .km-ios input[type=search].text-border {
 	border: solid 1px #C4CCD5!important;
 	border-radius: 15px;
+	margin-top: -20px;
 }
 
 div.imageContainer {

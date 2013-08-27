@@ -152,10 +152,7 @@ define(["knockout",
             }
             
             self.isSelectedSite = function (item) {
-				if (self.navBarVisible())
-					return (self.selectedSite === item);
-                
-                return false;
+				return self.navBarVisible() && self.selectedSite === item;
             }
             
 			self.onItemClick = function (selection, args) {

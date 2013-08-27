@@ -24,14 +24,14 @@
 		
 		<div data-role="layout" data-id="main">
 			<footer data-role="footer">
-			    <div data-role="tabstrip">
+			    <div data-role="tabstrip" data-select="globalTabSelect">
 			        <a href="#home" data-icon="home">
 			            <span data-bind="text: system.strings.homeLinkText"></span>
 			        </a>
 					<a href="#results" data-icon="organize">
 			            <span data-bind="text: system.strings.resultsPageTitle"></span>
 			        </a>
-					<a data-bind="click: globalAddClick" data-icon="add">
+					<a id="addSiteButton" data-icon="add">
 			            <span data-bind="text: system.strings.addSiteLinkText"></span>
 			        </a>
 			    </div>

@@ -14,6 +14,7 @@ define({
     siteUrl: "Url",
     siteTitle: "Title",
     validate: "Validate",
+	keywordsWatermark: "Keywords",
     loading: "Loading...",
     searching: "Searching...",
     credentialType: "Type",
