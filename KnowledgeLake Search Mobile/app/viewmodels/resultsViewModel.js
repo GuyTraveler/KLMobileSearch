@@ -12,6 +12,7 @@ define(["knockout",
         self.resultDataSource = ko.observableArray(); 
         
         self.selectedResult = null;
+        self.windowRef = null;
         self.navBarVisible = ko.observable(false);
             
         self.navBarVisible.subscribe(function (newValue) {
@@ -26,28 +27,12 @@ define(["knockout",
             }
         }
         
-        /*self.init = function (e) {
-            system.logVerbose("resultsViewModel init");
-        }*/
-        
         self.beforeShow = function (e) {
             system.logVerbose("resultsViewModel beforeShow");            
             
             if(homeViewModel.selectedSite)  
                 self.keywordSearch(homeViewModel.selectedSite);
         }
-        
-        /*self.show = function (e) {
-            system.logVerbose("resultsViewModel show");
-        }
-        
-        self.afterShow = function (e) {
-            system.logVerbose("resultsViewModel afterShow");
-        }
-        
-        self.hide = function (e) {
-            system.logVerbose("resultsViewModel hide");
-        }*/
         
         self.setSelectedResult = function (selection) {
             if(self.selectedResult === selection)
@@ -74,16 +59,17 @@ define(["knockout",
         }
         
         self.navigateToResult = function (selection) {
-            var dfd = $.Deferred();
+            var dfd = $.Deferred(), 
+                service,
+                logonService;
             
             if(selection && homeViewModel.selectedSite)
             {
                 window.App.loading = "<h1>" + system.strings.loading + "</h1>";
                 window.App.showLoading();
                 
-                var service = new documentService(selection.url);
-        
-                var logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
+                service = new documentService(selection.url);        
+                logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
 
                 logonPromise = logonService.logon(homeViewModel.selectedSite.credential.domain, 
                                                   homeViewModel.selectedSite.credential.userName, 
@@ -96,11 +82,15 @@ define(["knockout",
                     getDisplayFormUrlPromise.done(function (result) {                    
                         window.App.hideLoading();
                         
-                        window.open(result, "_blank");
+                        self.windowRef = window.open(result, "_blank");
+                        
+                        dfd.resolve(result);
                     });
                     
                     getDisplayFormUrlPromise.fail(function (error) {
                         window.App.hideLoading();
+                        
+                        dfd.reject(error);
                     });
                 });
                 

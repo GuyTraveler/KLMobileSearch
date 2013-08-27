@@ -39,7 +39,7 @@
 					<div class="grip-bottom"></div>
                 </div>
 				
-				<input class="keyword" type="text" data-bind="value: keyword" />
+				<input class="keyword" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', style: { color: true ? 'red' : 'black' }" />
 				<button class="searchButton" data-bind="click: $parent.search">Search</button>
             </div>
 	    </div>

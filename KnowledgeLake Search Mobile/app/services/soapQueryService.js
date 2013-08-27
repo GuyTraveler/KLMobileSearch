@@ -45,7 +45,7 @@ define(["jquery",
                 if (typeof keywordPhrases === 'string') {
                     system.logVerbose("keywordPhrases is string: " + keywordPhrases);
                     
-                    keywordClause = "\"" + escape(keywordPhrases.encodeXML()) + "\"";
+                    keywordClause = "\"" + keywordPhrases.encodeXML() + "\"";
                 }
                 else if (Object.prototype.toString.call(keywordPhrases) === '[object Array]') {
                     system.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);
