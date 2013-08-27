@@ -26,7 +26,7 @@ define([], function () {
                 {
                     var extension = urlComponents[urlComponents.length-1].toUpperCase();
                     
-                    if (fileTypes.indexOf(extension) != -1)
+                    if (fileTypes.indexOf(extension) !== -1)
                         return "app/images/icons/IC" + extension + ".png";
                 }
             }

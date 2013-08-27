@@ -32,7 +32,8 @@ require(["config"], function (config) {
 						  testRootPath + "soapParsingService_tests",
 						  testRootPath + "listsService_tests",
 						  testRootPath + "siteDataService_tests",
-						  testRootPath + "documentService_tests"
+						  testRootPath + "documentService_tests",
+                          testRootPath + "validationService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
