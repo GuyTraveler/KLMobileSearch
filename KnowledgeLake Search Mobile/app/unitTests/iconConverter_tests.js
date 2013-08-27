@@ -365,29 +365,5 @@ define(["services/iconConverter",
                         
             //assert
             QUnit.equal(result, expected);
-        });
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+        });         
 });
