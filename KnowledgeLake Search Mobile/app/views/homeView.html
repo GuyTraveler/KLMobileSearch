@@ -15,8 +15,9 @@
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedSite($data) }">
-	    <div class="itemContainer">
-	        <div class="site">
+		<div class="itemContainer">			
+			<!-- TODO: we will want to change this handler once clicking the item actually loads saved searches -->
+	        <div data-bind="click: $parent.onItemClick" class="site">
 				<div class="imageContainer">
 	                <a data-bind="click: $parent.setSelectedSite">
 	                    <img class="siteIcon" width="32" data-bind="majorVersionToSiteIcon: majorVersion"/>
@@ -39,20 +40,13 @@
 					<div class="grip-bottom"></div>
                 </div>
 				
-				<input class="keyword" type="text" data-bind="value: keyword, valueUpdate: 'afterkeydown', style: { color: true ? 'red' : 'black' }" />
-				<button class="searchButton" data-bind="click: $parent.search">Search</button>
+				<input class="keyword text-border" type="search"
+					   data-bind="value: keyword, event: { keyup: $parent.onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }" />
+				
+				<button class="searchButton" data-bind="click: $parent.search">
+					<span data-bind="text: system.strings.search"></span>					
+                </button>
             </div>
 	    </div>
 	</li>
 </ul>
-
-<footer data-role="footer">
-    <div data-role="tabstrip">
-        <a href="#home" data-icon="home">
-            <span data-bind="text: system.strings.homeLinkText"></span>
-        </a>
-        <a data-icon="add" data-bind="click: onAddClick">
-            <span data-bind="text: system.strings.addSiteLinkText"></span>
-        </a>
-    </div>
-</footer> 

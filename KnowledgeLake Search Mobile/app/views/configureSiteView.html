@@ -16,66 +16,68 @@
     <span data-bind="text: statusMessage" />
 </div>
 
-<ul data-role="listview" data-style="inset">
-    <li>
-        <label>            
-            <p class="list-view-label">
-                <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
-                <span data-bind="text: system.strings.siteUrl" />
-            </p>
-            <input type="url" data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" class="list-view-input" />            
-        </label>    
-    </li>
-    <li>
-        <label>            
-            <p class="list-view-label">
-                <span data-bind="text: system.strings.siteTitle" />
-            </p>
-            <input type="text" data-bind="value: siteTitle" class="list-view-input" />            
-        </label>    
-    </li>
-    
-    <li>
-        <label>
-            <p class="list-view-label">
-                <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                <span data-bind="text: system.strings.credentialType" />
-            </p>
-            <select id="credentialTypeDropDown" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
-        </label>
-    </li>       
-</ul>    
-
-<div data-bind="css: { 'opaque': isWindowsCredential, 'fade-out': isClaimsFormsCredential }">
-    <h3 data-bind="text: system.strings.windowsCredentials" />
-    
-    <ul data-role="listview" data-style="inset">
-        <li>
-            <label>
-                <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.userName" />
-                </p>
-                <input type="text" data-bind="value: siteUserName, event: { blur: logon }" class="list-view-input" />            
-            </label>
-        </li>        
-        <li>
-            <label>
-                <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.password" />
-                </p>
-                <input type="password" data-bind="value: sitePassword, event: { blur: logon }" class="list-view-input" />            
-            </label>
-        </li>
-        <li>
-            <label>
-                <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.domain" />
-                </p>
-                <input type="text" data-bind="value: siteDomain, event: { blur: logon }" class="list-view-input" />            
-            </label>
-        </li>
-    </ul>
-</div>
+<form id="siteForm">
+	<ul data-role="listview" data-style="inset">
+	    <li>
+	        <label>            
+	            <p class="list-view-label">
+	                <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+	                <span data-bind="text: system.strings.siteUrl" />
+	            </p>
+	            <input type="text" data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" class="list-view-input" />            
+	        </label>    
+	    </li>
+	    <li>
+	        <label>            
+	            <p class="list-view-label">
+	                <span data-bind="text: system.strings.siteTitle" />
+	            </p>
+	            <input type="text" data-bind="value: siteTitle" class="list-view-input" />            
+	        </label>    
+	    </li>
+	    
+	    <li>
+	        <label>
+	            <p class="list-view-label">
+	                <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+	                <span data-bind="text: system.strings.credentialType" />
+	            </p>
+	            <select id="credentialTypeDropDown" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
+	        </label>
+	    </li>       
+	</ul>    
+	
+	<div data-bind="css: { 'opaque': isWindowsCredential, 'fade-out': isClaimsFormsCredential }">
+	    <h3 data-bind="text: system.strings.windowsCredentials" />
+	    
+	    <ul data-role="listview" data-style="inset">
+	        <li>
+	            <label>
+	                <p class="list-view-label">
+	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+	                    <span data-bind="text: system.strings.userName" />
+	                </p>
+	                <input type="text" data-bind="value: siteUserName, event: { blur: logon }" class="list-view-input" />            
+	            </label>
+	        </li>        
+	        <li>
+	            <label>
+	                <p class="list-view-label">
+	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+	                    <span data-bind="text: system.strings.password" />
+	                </p>
+	                <input type="password" data-bind="value: sitePassword, event: { blur: logon }" class="list-view-input" />            
+	            </label>
+	        </li>
+	        <li>
+	            <label>
+	                <p class="list-view-label">
+	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+	                    <span data-bind="text: system.strings.domain" />
+	                </p>
+	                <input type="text" data-bind="value: siteDomain, event: { blur: logon }" class="list-view-input" />            
+	            </label>
+	        </li>
+	    </ul>
+	</div>
+</form>

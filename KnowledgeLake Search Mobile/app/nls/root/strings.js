@@ -9,10 +9,12 @@ define({
     editSite: "Edit",
     editProperties: "Edit",
     deleteSite: "Delete",
+	search: "Search",
     download: "Download",
     siteUrl: "Url",
     siteTitle: "Title",
     validate: "Validate",
+	keywordsWatermark: "Keywords",
     loading: "Loading...",
     searching: "Searching...",
     credentialType: "Type",
@@ -29,5 +31,7 @@ define({
     logonSuccess:" Logon to SharePoint succeeded",
     siteAlreadyConfigured: "Site has already been added",
     errorWritingSiteData: "Error saving site data to the file system",
-    siteTitleRequired: "Site title is required"
+    siteTitleRequired: "Site title is required",
+	noResultsFound: "No results found...",
+	searching: "Searching..."
 });

@@ -13,13 +13,29 @@
 		<link href="app/styles/resultsViewStyles.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': system.strings.appTitle, 'data-role': 'view' }">            
+        <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': system.strings.appTitle, 'data-role': 'view' }" data-layout="main">            
         </div>
      
         <div data-bind="kendoView: { id: 'configureSite' }, attr: { 'data-title': system.strings.configureSitePageTitle, 'data-role': 'view' }" data-transition="overlay:up">
         </div>
         
-        <div data-bind="kendoView: { id: 'results', loaded: 'onLastViewModelLoaded' }, attr: { 'data-title': system.strings.resultsPageTitle, 'data-role': 'view' }">            
-        </div>        
+        <div data-bind="kendoView: { id: 'results', loaded: 'globalLastViewModelLoaded' }, attr: { 'data-title': system.strings.resultsPageTitle, 'data-role': 'view' }" data-layout="main">            
+        </div>   
+		
+		<div data-role="layout" data-id="main">
+			<footer data-role="footer">
+			    <div data-role="tabstrip" data-select="globalTabSelect">
+			        <a href="#home" data-icon="home">
+			            <span data-bind="text: system.strings.homeLinkText"></span>
+			        </a>
+					<a href="#results" data-icon="organize">
+			            <span data-bind="text: system.strings.resultsPageTitle"></span>
+			        </a>
+					<a id="addSiteButton" data-icon="add">
+			            <span data-bind="text: system.strings.addSiteLinkText"></span>
+			        </a>
+			    </div>
+			</footer>
+		</div>
     </body>
 </html>

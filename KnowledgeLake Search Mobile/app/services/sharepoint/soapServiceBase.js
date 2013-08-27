@@ -24,7 +24,7 @@ define(["jquery",
 			
 			self.loadSoapTemplate(methodName)
                 .done(function (template) {
-                    var $soap = template,
+                    var $soap = typeof template === 'string' ? template : (new XMLSerializer()).serializeToString(template),
                         parm,
                         postData,
 						parmValue;
