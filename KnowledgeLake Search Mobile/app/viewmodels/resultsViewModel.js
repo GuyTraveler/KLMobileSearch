@@ -87,8 +87,8 @@ define(["knockout",
                 window.App.loading = "<h1>" + system.strings.loading + "</h1>";
                 self.isBusy(true);
                 
-                var service = new documentService(selection.url);        
-                var logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
+                service = new documentService(selection.url);        
+                logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
 
                 logonPromise = logonService.logon(homeViewModel.selectedSite.credential.domain, 
                                                   homeViewModel.selectedSite.credential.userName, 
