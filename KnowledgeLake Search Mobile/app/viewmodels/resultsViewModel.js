@@ -1,11 +1,11 @@
 define(["knockout",
         "jquery", 
-        "IQueryService", 
+        "factory/queryServiceFactory", 
         "domain/keywordConjunction", 
         "factory/logonServiceFactory", 
         "IDocumentService",
 		"ISiteDataService"], 
-    function (ko, $, QueryService, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
+    function (ko, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this;
         
@@ -101,7 +101,8 @@ define(["knockout",
                     getDisplayFormUrlPromise.done(function (result) {                    
                         self.isBusy(false);
                         
-                        window.open(result, "_blank");
+                        self.windowRef = window.open(result, "_blank");
+						dfd.resolve();
                     });
                     
                     getDisplayFormUrlPromise.fail(function (error) {
@@ -129,7 +130,7 @@ define(["knockout",
             window.App.loading = "<h1>" + system.strings.searching + "</h1>";
             self.isBusy(true);
             
-            service = new QueryService(searchSite.url);
+            service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
             logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
             
             logonPromise = logonService.logon(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);

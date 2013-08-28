@@ -6,12 +6,10 @@ define(["jquery",
         "services/soapParsingService"], 
     function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
         
-        var soapQueryService = function (siteUrl) {
+        var soapQueryServiceBase = function (siteUrl, keywordTemplate) {
             var self = this,
                 buildKeywordClause,
-                maxResults = 5000,
-                //v0.1:  only returns Title, LastModifiedTime and Path right now.  We don't need any else!
-                keywordTemplate = "<QueryPacket><Query><Context><QueryText type=\"MSSQLFT\"><![CDATA[SELECT \"Title\",\"LastModifiedTime\",\"Path\" FROM SCOPE() WHERE (CONTAINS('{clause}') AND IsDocument = TRUE) ]]></QueryText></Context><Range><Count>{maxResults}</Count></Range><TrimDuplicates>{trimDuplicates}</TrimDuplicates></Query></QueryPacket>";
+                maxResults = 500;
             
             self.keywordSearch = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),
@@ -70,5 +68,5 @@ define(["jquery",
             return self;
         };
                 
-        return soapQueryService;
+        return soapQueryServiceBase;
     });

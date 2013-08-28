@@ -1,9 +1,9 @@
 /*global QUnit*/
 //explicit request to queryService
-define(["services/soapQueryService",
+define(["services/sqlQueryService",
         "INtlmLogonService",
         "domain/keywordConjunction"],
-    function (soapQueryService, ntlmLogonService, keywordConjunction) {
+    function (sqlQueryService, ntlmLogonService, keywordConjunction) {
         var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
 			ntlmTestUser = "spadmin",
 			ntlmTestPassword = "password",
@@ -18,7 +18,7 @@ define(["services/soapQueryService",
             var service;
             
             //act
-            service = new soapQueryService("");
+            service = new sqlQueryService("");
             
             //assert
             QUnit.ok(service);
@@ -94,7 +94,7 @@ define(["services/soapQueryService",
             //act
             shouldFail = shouldFail && shouldFail !== false;
             
-            service = new soapQueryService(ntlmTestUrl);
+            service = new sqlQueryService(ntlmTestUrl);
             logonService = new ntlmLogonService(ntlmTestUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 			
@@ -126,7 +126,7 @@ define(["services/soapQueryService",
 		
     
         
-        QUnit.module("Test soapQueryService known Invalid chars all fail gracefully");
+        QUnit.module("Test sqlQueryService known Invalid chars all fail gracefully");
     
         
         QUnit.asyncTest("test (!)", function () {
@@ -461,7 +461,7 @@ define(["services/soapQueryService",
 				logonPromise;
             
             //act
-            service = new soapQueryService(ntlmTestUrl);
+            service = new sqlQueryService(ntlmTestUrl);
 			logonService = new ntlmLogonService(ntlmTestUrl);
 			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
 			
