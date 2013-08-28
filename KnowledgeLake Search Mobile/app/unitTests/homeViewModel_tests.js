@@ -168,7 +168,15 @@ define(['require',
             vm = new homeViewModel();
             
             //act 
-            vm.mainGripClick(siteData, {"currentTarget":{"parentElement":{"parentElement":"<div/>"}}});
+            vm.mainGripClick(siteData,
+				{
+					"currentTarget": {
+						"parentElement": {
+							"parentElement": "<div/>"
+						}
+					},
+					stopImmediatePropagation: function () { QUnit.ok(true, "stopImmediatePropagation called"); }
+				});
                         
             //assert
             QUnit.ok(vm);
@@ -182,7 +190,15 @@ define(['require',
             vm = new homeViewModel();
 
             //act 
-            vm.keywordGripClick(siteData, {"currentTarget":{"parentElement":{"parentElement":"<div/>"}}});
+            vm.keywordGripClick(siteData,
+				{
+					"currentTarget": {
+						"parentElement": {
+							"parentElement": "<div/>"
+						}
+					},
+					stopImmediatePropagation: function () { QUnit.ok(true, "stopImmediatePropagation called"); }
+				});
                         
             //assert
             QUnit.ok(vm);

@@ -101,7 +101,8 @@ define(["knockout",
                     getDisplayFormUrlPromise.done(function (result) {                    
                         self.isBusy(false);
                         
-                        window.open(result, "_blank");
+                        self.windowRef = window.open(result, "_blank");
+						dfd.resolve();
                     });
                     
                     getDisplayFormUrlPromise.fail(function (error) {
