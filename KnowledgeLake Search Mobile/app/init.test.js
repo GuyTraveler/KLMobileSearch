@@ -22,13 +22,13 @@ require(["config"], function (config) {
                           testRootPath + "websService_tests",
                           testRootPath + "authenticationService_tests",
 						  testRootPath + "configureSiteViewModel_test",
-						  testRootPath + "siteDataCachingService_test",
-						  testRootPath + "ntlmLogonService_tests",
+						  testRootPath + "siteDataCachingService_test",*/
+						  testRootPath + "ntlmLogonService_tests"/*,
 						  testRootPath + "claimsLogonService_tests",
                           testRootPath + "FileManagement_tests",
-                          testRootPath + "searchService_tests",*/
+                          testRootPath + "searchService_tests",
                           testRootPath + "sqlQueryService_tests",
-						  testRootPath + "kqlQueryService_tests"/*,
+						  testRootPath + "kqlQueryService_tests",
                           testRootPath + "resultsViewModel_tests",
 						  testRootPath + "soapParsingService_tests",
 						  testRootPath + "listsService_tests",

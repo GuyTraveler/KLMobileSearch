@@ -51,6 +51,7 @@ define(["jquery",
                         data: postData,
                         dataType: "xml",
                         xhrFields: { withCredentials: true },
+						timeout: system.ajaxTimeout,
                         success: function (result, textStatus, jqXHR) {
                             var resultJson;
                             
