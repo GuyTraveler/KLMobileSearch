@@ -43,7 +43,7 @@ define(["jquery",
 					
                     $.ajax({
                         url: self.serviceUrl,
-                        async: true,
+                        async: false,
                         type: "POST",
                         cache: false,
                         processData: false,
