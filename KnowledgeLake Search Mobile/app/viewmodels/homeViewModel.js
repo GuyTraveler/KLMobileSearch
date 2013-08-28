@@ -3,8 +3,9 @@ define(["knockout",
         "jquery", 
         "ISiteDataCachingService", 
         "domain/promiseResponse/fileSystemResponse", 
-        "domain/promiseResponse/cachingServiceResponse"], 
-    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse) {
+        "domain/promiseResponse/cachingServiceResponse",
+        "viewmodels/sitesViewModel"], 
+    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse, sitesViewModel) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",
@@ -23,7 +24,7 @@ define(["knockout",
                 if(sites)
                 {
                     self.siteDataSource([]);
-                    self.siteDataSource(sites);
+                    self.siteDataSource(new sitesViewModel(sites).sites);
                     
                     //TODO: these kendo methods need to be factored out to knockout bindings so 
                     //we don't pollute the viewModels with kendo code lest it will be worthless with regular web apps
