@@ -9,6 +9,10 @@ body {
 	margin-top: -20px;
 }
 
+input[type=search].invalid {
+    color: red!important;
+}
+
 div.imageContainer {
     float: left;
 }

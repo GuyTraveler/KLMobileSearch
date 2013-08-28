@@ -65,7 +65,6 @@ div.itemContainer {
 			div.grip-main div,
 			div.grip-keyword div {
 				position: absolute;
-
 				height: 0.25em;
 				width: 1.5em;
 				background-color: Gray;
