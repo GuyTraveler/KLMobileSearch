@@ -57,7 +57,9 @@ function globalLastViewModelLoaded() {
     }
 }
 
-function globalTabSelect (e) {
-	if (e.item[0].id == "addSiteButton")
+function globalTabSelect (e) {    
+    if(e.item[0].id === "resultsButton")
+        window.homeViewModel.onResultsClick();
+	else if (e.item[0].id === "addSiteButton")
 		window.homeViewModel.onAddClick();
 }

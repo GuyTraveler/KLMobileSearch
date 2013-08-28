@@ -165,6 +165,12 @@ define(["knockout",
                 self.selectedSite = null;
                 self.navBarVisible(false);
                 window.App.navigate(configureSiteUrl); 
+            }          
+			
+            self.onResultsClick = function () {
+                self.selectedSite = null;
+                self.navBarVisible(false);
+                window.App.navigate(resultsUrl); 
             }
 			
 			self.onSearchKeyUp = function (selection, event) {
