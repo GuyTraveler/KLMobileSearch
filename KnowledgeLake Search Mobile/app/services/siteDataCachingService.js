@@ -22,7 +22,7 @@ define(["jquery",
                     var readPromise = File.Read(siteDataFileName);
                     
                     readPromise.done(function (result) {
-                        self.sites = JSON.parse(result.response);
+                        self.sites = self.decodePasswords(JSON.parse(result.response));
                         dfd.resolve(new PromiseResolveResponse(self.sites)); 
                     });
                     
@@ -49,7 +49,7 @@ define(["jquery",
             {            
 				if(!self.SiteExists(site.url))
                 {
-                    self.sites.push(site);                    
+                    self.sites.push(site);
 					self.WriteSiteData(dfd);
 				}
                 else
@@ -154,9 +154,43 @@ define(["jquery",
             
             return -1; 
         }
+        
+        self.encodePasswords = function (sites) {
+            var encodedSites = [];
+            
+            if(sites)
+            {
+                for(var i = 0; i < sites.length; i++)
+                {
+                    if(window.btoa)                    
+                        sites[i].credential.password = window.btoa(sites[i].credential.password);
+                }
+                
+                encodedSites = sites;
+            }
+            
+            return encodedSites;
+        }
+        
+        self.decodePasswords = function (sites) {
+            var decodedSites = [];
+            
+            if(sites)
+            {
+                for(var i = 0; i < sites.length; i++)
+                {
+                    if(window.atob)                    
+                        sites[i].credential.password = window.atob(sites[i].credential.password);
+                }
+                
+                decodedSites = sites;
+            }
+            
+            return decodedSites;
+        }
   
 		self.WriteSiteData = function (dfd) {
-			var writePromise = File.Write(siteDataFileName, self.sites);
+			var writePromise = File.Write(siteDataFileName, self.encodePasswords($.extend({}, self.sites)));
                   
 			writePromise.done(function (result) {
 				dfd.resolve(result);
