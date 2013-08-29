@@ -11,6 +11,10 @@
 <h3 data-bind="visible: (resultDataSource().length === 0 && !isBusy()), text: system.strings.noResultsFound"></h3>
 <h3 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h3>
 
+<div data-bind="css: { 'error-message': true, 'opaque': showError, 'fade-out': !showError() }">
+    <span data-bind="text: errorMessage" />
+</div>
+
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data) }">
         <div class="resultOuterContainer">

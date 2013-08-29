@@ -24,6 +24,8 @@ define(["jquery",
 				var dfd = $.Deferred(),
 					ntlmAuthUrl = documentUrl ? documentUrl : getAuthUrl();
 				
+				ntlmAuthUrl = encodeURI(ntlmAuthUrl);
+				
 				ntlm.setCredentials(domain, userName, password);
                     
                 if (ntlm.authenticate(ntlmAuthUrl)) {

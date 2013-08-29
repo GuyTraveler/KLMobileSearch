@@ -15,8 +15,6 @@ define(["knockout",
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
-                messageFadeoutTime = 1000, //should match fade-out transition time in app.css
-                messageDisplayTime = 5000,
                 defaultUrlText = "http://",			
                 homeUrl = "#home",
                 questionImageUrl = "app/images/question.png",
@@ -68,8 +66,8 @@ define(["knockout",
                         
                         setTimeout(function () {
                             self.statusMessage("");
-                        }, messageFadeoutTime);
-                    }, messageDisplayTime);
+                        }, system.messageFadeoutTime);
+                    }, system.messageDisplayTime);
                 }
             });
        
@@ -82,8 +80,8 @@ define(["knockout",
                         
                         setTimeout(function () {
                             self.errorMessage("");
-                        }, messageFadeoutTime);
-                    }, messageDisplayTime);
+                        }, system.messageFadeoutTime);
+                    }, system.messageDisplayTime);
                 }
             });
                          

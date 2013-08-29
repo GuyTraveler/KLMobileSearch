@@ -1,26 +1,45 @@
 define(["knockout",
+		"system",
         "jquery", 
         "factory/queryServiceFactory", 
         "domain/keywordConjunction", 
         "factory/logonServiceFactory", 
         "IDocumentService",
 		"ISiteDataService"], 
-    function (ko, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
+    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this;
         
+		self.errorMessage = ko.observable("");
+		self.errorMessage.subscribe(function (newValue) {
+			if (newValue) {
+                self.showError(true);
+                
+                setTimeout(function () {
+                    self.showError(false);
+                    
+                    setTimeout(function () {
+                        self.errorMessage("");
+                    }, system.messageFadeoutTime);
+                }, system.messageDisplayTime);
+            }
+        });
+		
+		self.showError = ko.observable(false);
         self.resultDataSource = ko.observableArray(); 
         
         self.selectedResult = null;
-        self.windowRef = null;      
+        self.windowRef = null; 
+		
         self.navBarVisible = ko.observable(false);
-            
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
         });
 
         self.isBusy = ko.observable(false);
 		self.isBusy.subscribe(function (newValue) {
+			system.logVerbose("reusltsViewModel.isBusy is " + newValue);
+			
 			if (newValue == true) {
 				window.App.showLoading();
             }
@@ -102,15 +121,22 @@ define(["knockout",
                 logonPromise.done(function (result) {
                     getDisplayFormUrlPromise = service.getDisplayFormUrl();
                 
-                    getDisplayFormUrlPromise.done(function (result) {                    
-                        self.isBusy(false);
+                    getDisplayFormUrlPromise.done(function (result) {  
+						self.isBusy(false);
+						
+						result = encodeURI(result);
+						
+						system.logVerbose("display form obtained at: " + result);
                         
-                        self.windowRef = window.open(result, "_blank");
+                        self.windowRef = window.open(result, "_system");
 						dfd.resolve();
                     });
                     
                     getDisplayFormUrlPromise.fail(function (error) {
                         self.isBusy(false);
+						
+						system.logVerbose("display form could not be obtained: " + error);
+						self.errorMessage(system.strings.unauthorized);
                         
                         dfd.reject(error);
                     });
@@ -118,6 +144,9 @@ define(["knockout",
                 
                 logonPromise.fail(function (error) {
                     self.isBusy(false);
+					
+					system.logVerbose("could not navigate to result. logon failed.");
+					self.errorMessage(system.strings.unauthorized);
                     
                     dfd.reject(error);
                 });
