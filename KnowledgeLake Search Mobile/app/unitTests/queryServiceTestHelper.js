@@ -444,6 +444,32 @@ define(["INtlmLogonService",
 	        QUnit.asyncTest("test (¸mobility)", function () {
 	           invalidCharTest("¸mobility", false);
 	        });
+	        
+            
+            
+	        QUnit.asyncTest("test (& mobility)", function () {
+	           invalidCharTest("& mobility", true);
+	        });
+            
+            QUnit.asyncTest("test (& &$mobility)", function () {
+	           invalidCharTest("& &$mobility", true);
+	        });        
+            
+            QUnit.asyncTest("test (mobility &)", function () {
+	           invalidCharTest("mobility &", true);
+	        });
+            
+            QUnit.asyncTest("test (&$mobility &)", function () {
+	           invalidCharTest("&$mobility &", true);
+	        });
+            
+            QUnit.asyncTest("test (mobility test &)", function () {
+	           invalidCharTest("mobility test &", true);
+	        });
+            
+            QUnit.asyncTest("test (&$mobility test &)", function () {
+	           invalidCharTest("&$mobility test &", true);
+	        });
 	     
 	        invalidCharTest = function (searchString, shouldFail) {
 	            //arrange

@@ -169,7 +169,8 @@ define(["knockout",
             logonPromise = logonService.logon(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
             logonPromise.done(function (result) {
-                searchPromise = service.keywordSearch(searchSite.keyword(), keywordConjunction.and, true);
+                
+                searchPromise = service.keywordSearch(searchSite.keyword().split(" "), keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
                     self.SetDataSource(result);

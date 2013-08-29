@@ -9,7 +9,8 @@ define(["framework/logLevel"], function(logLevel) {
 		   //lib
 	       jquery: 'lib/jquery',
 	       kendoMain: 'lib/kendo.mobile.min',
-	       knockout: 'lib/knockout',	       
+	       knockout: 'lib/knockout',
+           knockoutMapping: 'lib/knockout.mapping',
 	       ntlm: 'lib/ntlm',
 	       i18n: 'lib/i18n',
 		   jsUri: 'lib/jsUri'
