@@ -72,7 +72,8 @@ define(["knockout",
                 self.keywordSearch(homeViewModel.selectedSite);
         }
         
-        self.hide = function (e) {
+        self.hide = function (e) {            
+            self.setSelectedResult(null);
             self.SetDataSource([]);
         }
         
