@@ -147,7 +147,7 @@ define(["knockout",
             }
             
             self.validateSiteUrl = function () {
-                var dataService;
+                var dataService = new authenticationService(self.url());
                 
                 system.logVerbose("validateSiteUrl called");
 				
@@ -156,7 +156,6 @@ define(["knockout",
                 self.isUrlValid(false);
                 self.isCredentialsValid(false);
                 
-                dataService = new authenticationService(self.url());
                 dataService.Mode(self.url())
 					.done(self.onSiteUrlValidated)
 					.fail(self.onSiteUrlFailed); 
@@ -248,7 +247,8 @@ define(["knockout",
             
             
             self.logon = function () {
-				var logonService = self.getLogonService(),
+				var service = new websService(self.url()),
+					logonService = self.getLogonService(),
 					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
 					getWebDfd = $.Deferred();
 				
@@ -258,8 +258,7 @@ define(["knockout",
                 }
 				
 				logonPromise.done(function () {
-					var service = new websService(self.url());
-                	
+					
                     service.GetWeb(self.url())
                         .done(function (result, textStatus, xhr) {
                             var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
