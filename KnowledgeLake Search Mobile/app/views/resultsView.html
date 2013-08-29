@@ -9,7 +9,7 @@
 </header>
 
 <h3 data-bind="visible: (resultDataSource().length === 0 && !isBusy()), text: system.strings.noResultsFound"></h3>
-<h3 data-bind="visible: isBusy, text: system.strings.searching"></h3>
+<h3 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h3>
 
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data) }">
