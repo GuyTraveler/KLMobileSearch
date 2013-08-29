@@ -14,6 +14,7 @@ define([], function() {
        GetFileFailure: "Failed to get file entry.",
        GetFileInstanceFailure: "Failed to get file instance.",
        CreateFileFailure: "Unable to create file.",
-       CreateDirectoryFailure: "Unable to create file directory."
+       CreateDirectoryFailure: "Unable to create file directory.",
+       AccessDirectoryFailure: "Unable to access file directory."
    };
 });
