@@ -4,12 +4,13 @@ define(['require',
         'knockout',
         'viewmodels/resultsViewModel',
         'viewmodels/homeViewModel',
+        "viewmodels/siteViewModel",
         "domain/result",
         "domain/site",
         "domain/credential",
         "domain/credentialType",
         "domain/promiseResponse/logonResponse"],
-    function (require, $, ko, resultsViewModel, homeViewModel, result, site, credential, credentialType, logonResponse) {
+    function (require, $, ko, resultsViewModel, homeViewModel, siteViewModel, result, site, credential, credentialType, logonResponse) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -229,7 +230,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act
-            var keywordSearchPromise = vm.keywordSearch(siteData);
+            var keywordSearchPromise = vm.keywordSearch(new siteViewModel(siteData));
             
             //assert
             keywordSearchPromise.done(function (result) {
