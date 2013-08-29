@@ -34,7 +34,6 @@ define(["system",
 			QUnit.equal(vm.url(), "http://");
 			QUnit.equal(vm.siteTitle(), "");
 			QUnit.equal(vm.sharePointVersion(), 0);
-			QUnit.equal(vm.ntlmAuthUrl(), "http://_vti_bin/copy.asmx");
 			QUnit.equal(vm.siteCredentialType(), credentialType.ntlm);
 			QUnit.equal(vm.siteUserName(), "");
 			QUnit.equal(vm.sitePassword(), "");

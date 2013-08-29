@@ -4,6 +4,7 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
         strings: strings,
 		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
 		sharePointDelimiter: ";#",
+		ajaxTimeout: 15000,
 		setLogLevel: function (level) {
             this.logLevel = level;
         },

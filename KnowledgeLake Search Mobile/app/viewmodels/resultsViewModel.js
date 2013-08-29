@@ -43,9 +43,13 @@ define(["knockout",
         }
         
         self.beforeShow = function (e) {
-            system.logVerbose("resultsViewModel beforeShow");            
-            
-            if(homeViewModel.selectedSite)  
+            system.logVerbose("resultsViewModel beforeShow");                                   
+        }
+		
+		self.show = function (e) {
+			system.logVerbose("resultsViewModel show");
+			
+			if(homeViewModel.selectedSite)  
                 self.keywordSearch(homeViewModel.selectedSite);
         }
         

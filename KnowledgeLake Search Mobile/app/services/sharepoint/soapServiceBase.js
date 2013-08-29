@@ -43,7 +43,7 @@ define(["jquery",
 					
                     $.ajax({
                         url: self.serviceUrl,
-                        async: true,
+                        async: false,
                         type: "POST",
                         cache: false,
                         processData: false,
@@ -51,6 +51,7 @@ define(["jquery",
                         data: postData,
                         dataType: "xml",
                         xhrFields: { withCredentials: true },
+						timeout: system.ajaxTimeout,
                         success: function (result, textStatus, jqXHR) {
                             var resultJson;
                             

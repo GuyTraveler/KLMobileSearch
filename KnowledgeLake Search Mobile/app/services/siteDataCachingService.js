@@ -45,7 +45,7 @@ define(["jquery",
 		self.AddSite = function (site) {
             var dfd = $.Deferred();
             
-            if(self.sites)
+            if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {            
 				if(!self.SiteExists(site.url))
                 {
@@ -71,7 +71,7 @@ define(["jquery",
         self.UpdateSite = function (site) {
             var dfd = $.Deferred();
             
-            if(self.sites)
+            if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {
 				if(self.SiteExists(site.url))
                 {
@@ -108,7 +108,7 @@ define(["jquery",
         self.RemoveSite = function (site) {
             var dfd = $.Deferred(); 
             
-            if(self.sites)
+            if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {
                 if(self.SiteExists(site.url))
                 {
@@ -127,7 +127,7 @@ define(["jquery",
         }
         
         self.SiteExists = function (url) {
-            if(self.sites)
+            if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {
                 var filtered = $(self.sites).filter(function () {
                     return this.url === url;
@@ -143,7 +143,7 @@ define(["jquery",
         }
         
         self.IndexOfSite = function (url) {
-            if(self.sites)
+            if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {
                 for(var i = 0; i < self.sites.length; i++)
                 {
@@ -158,7 +158,7 @@ define(["jquery",
         self.encodePasswords = function (sites) {
             var encodedSites = [];
             
-            if(sites)
+            if(sites && Object.prototype.toString.call(sites) === '[object Array]')
             {
                 for(var i = 0; i < sites.length; i++)
                 {
@@ -175,7 +175,7 @@ define(["jquery",
         self.decodePasswords = function (sites) {
             var decodedSites = [];
             
-            if(sites)
+            if(sites && Object.prototype.toString.call(sites) === '[object Array]')
             {
                 for(var i = 0; i < sites.length; i++)
                 {
@@ -183,15 +183,17 @@ define(["jquery",
                         sites[i].credential.password = window.atob(sites[i].credential.password);
                 }
                 
-                decodedSites = sites;
+                decodedSites = sites; 
             }
             
             return decodedSites;
         }
   
 		self.WriteSiteData = function (dfd) {
-            var data = JSON.parse(JSON.stringify(self.sites)),
-			    writePromise = File.Write(siteDataFileName, self.encodePasswords(data));
+			
+            var sites = self.encodePasswords(JSON.parse(JSON.stringify(self.sites))),
+				data = JSON.stringify(sites),
+			    writePromise = File.Write(siteDataFileName, data);
             
 			writePromise.done(function (result) {
 				dfd.resolve(result);
