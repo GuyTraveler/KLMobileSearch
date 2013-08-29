@@ -15,8 +15,6 @@ define(["knockout",
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
-                messageFadeoutTime = 1000, //should match fade-out transition time in app.css
-                messageDisplayTime = 5000,
                 defaultUrlText = "http://",			
                 homeUrl = "#home",
                 questionImageUrl = "app/images/question.png",
@@ -68,8 +66,8 @@ define(["knockout",
                         
                         setTimeout(function () {
                             self.statusMessage("");
-                        }, messageFadeoutTime);
-                    }, messageDisplayTime);
+                        }, system.messageFadeoutTime);
+                    }, system.messageDisplayTime);
                 }
             });
        
@@ -82,8 +80,8 @@ define(["knockout",
                         
                         setTimeout(function () {
                             self.errorMessage("");
-                        }, messageFadeoutTime);
-                    }, messageDisplayTime);
+                        }, system.messageFadeoutTime);
+                    }, system.messageDisplayTime);
                 }
             });
                          
@@ -149,7 +147,7 @@ define(["knockout",
             }
             
             self.validateSiteUrl = function () {
-                var dataService;
+                var dataService = new authenticationService(self.url());
                 
                 system.logVerbose("validateSiteUrl called");
 				
@@ -158,7 +156,6 @@ define(["knockout",
                 self.isUrlValid(false);
                 self.isCredentialsValid(false);
                 
-                dataService = new authenticationService(self.url());
                 dataService.Mode(self.url())
 					.done(self.onSiteUrlValidated)
 					.fail(self.onSiteUrlFailed); 
@@ -250,7 +247,8 @@ define(["knockout",
             
             
             self.logon = function () {
-				var logonService = self.getLogonService(),
+				var service = new websService(self.url()),
+					logonService = self.getLogonService(),
 					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
 					getWebDfd = $.Deferred();
 				
@@ -260,8 +258,7 @@ define(["knockout",
                 }
 				
 				logonPromise.done(function () {
-					var service = new websService(self.url());
-                	
+					
                     service.GetWeb(self.url())
                         .done(function (result, textStatus, xhr) {
                             var spVersion = xhr.getResponseHeader(sharepointVersionHeader);

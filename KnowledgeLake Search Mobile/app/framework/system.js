@@ -5,6 +5,8 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
 		sharePointDelimiter: ";#",
 		ajaxTimeout: 15000,
+		messageFadeoutTime: 1000, //should match fade-out transition time in app.css
+        messageDisplayTime: 3000,
 		setLogLevel: function (level) {
             this.logLevel = level;
         },

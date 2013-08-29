@@ -18,9 +18,24 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 		self.GetURLSegments = function (strURL) {
 			var parameters = [
 				new keyValuePair("strURL", encodeURI(strURL))
-			];
+			],
+			dfd = $.Deferred(),
+			promise = self.executeSoapMethod("GetURLSegments", parameters);
 			
-			return self.executeSoapMethod("GetURLSegments", parameters);
+			promise.done(function (result) {
+				if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false") {
+					dfd.reject(null, "Unknown error", null);					
+                }
+				else {
+					dfd.resolve(result);
+                }
+            });
+			
+			promise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+            });
+			
+			return dfd.promise();
         }
         
         return self;

@@ -63,7 +63,7 @@
 	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
 	                    <span data-bind="text: system.strings.userName" />
 	                </p>
-	                <input type="text" data-bind="value: siteUserName, event: { blur: logon }" class="list-view-input" />            
+	                <input type="text" data-bind="value: siteUserName, event: { blur: validateSiteUrl }" class="list-view-input" />            
 	            </label>
 	        </li>        
 	        <li>
@@ -72,7 +72,7 @@
 	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
 	                    <span data-bind="text: system.strings.password" />
 	                </p>
-	                <input type="password" data-bind="value: sitePassword, event: { blur: logon }" class="list-view-input" />            
+	                <input type="password" data-bind="value: sitePassword, event: { blur: validateSiteUrl }" class="list-view-input" />            
 	            </label>
 	        </li>
 	        <li>
@@ -81,7 +81,7 @@
 	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
 	                    <span data-bind="text: system.strings.domain" />
 	                </p>
-	                <input type="text" data-bind="value: siteDomain, event: { blur: logon }" class="list-view-input" />            
+	                <input type="text" data-bind="value: siteDomain, event: { blur: validateSiteUrl }" class="list-view-input" />            
 	            </label>
 	        </li>
 	    </ul>
