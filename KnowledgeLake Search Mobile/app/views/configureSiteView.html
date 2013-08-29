@@ -24,7 +24,13 @@
 	                <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
 	                <span data-bind="text: system.strings.siteUrl" />
 	            </p>
-	            <input type="text" data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" class="list-view-input" />            
+				<!-- android works better with 'text' types and iOS works better with 'url' types -->
+				<!--<input class="list-view-input" type="url"
+					   data-bind="if: (!window.App || window.App.os.ios), value: url, event: { blur: validateSiteUrl }, enable: enableUrl" /> -->           
+				
+	            <input class="list-view-input" type="text"
+					   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" />            
+				
 	        </label>    
 	    </li>
 	    <li>

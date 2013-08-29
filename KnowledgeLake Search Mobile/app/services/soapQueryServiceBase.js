@@ -9,7 +9,7 @@ define(["jquery",
         var soapQueryServiceBase = function (siteUrl, keywordTemplate) {
             var self = this,
                 buildKeywordClause,
-                maxResults = 500;
+                maxResults = 100;  //TODO: change this to something higher once we have dynamic paging
             
             self.keywordSearch = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),

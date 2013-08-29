@@ -36,15 +36,7 @@ define(["knockout",
             self.enableUrl = ko.observable(true);
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
-            self.ntlmAuthUrl = ko.computed(function () {
-                var authUrl = self.url();
-                
-                if (!authUrl.endsWith('/')) {
-                    authUrl += "/";
-                }
-                
-                return authUrl + "_vti_bin/copy.asmx";                
-            });
+
             self.siteCredentialType = ko.observable(credentialType.ntlm);
             self.siteUserName = ko.observable("");
             self.sitePassword = ko.observable("");
@@ -227,7 +219,6 @@ define(["knockout",
             
             self.setInvalidUrl = function () {
                 self.isUrlValid(false);
-				self.clearTitle();
 				self.sharePointVersion(0);
                 
                 self.urlValidationImageSrc(invalidImageUrl);  
@@ -284,8 +275,7 @@ define(["knockout",
                         })
                         .fail(function () {  //fail, invalidate our creds
                             self.isCredentialsValid(false);
-                            self.credValidationImageSrc(invalidImageUrl);                            
-                            self.clearTitle();    
+                            self.credValidationImageSrc(invalidImageUrl);                               
                             self.sharePointVersion(0);
 
 							getWebDfd.reject();							
@@ -294,8 +284,7 @@ define(["knockout",
 				
 				logonPromise.fail(function () {
 					self.isCredentialsValid(false);
-                    self.credValidationImageSrc(invalidImageUrl);                    
-                    self.clearTitle();
+                    self.credValidationImageSrc(invalidImageUrl);                                       
                     self.sharePointVersion(0);
 
 					getWebDfd.reject();		
