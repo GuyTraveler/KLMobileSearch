@@ -190,8 +190,9 @@ define(["jquery",
         }
   
 		self.WriteSiteData = function (dfd) {
-			var writePromise = File.Write(siteDataFileName, self.encodePasswords($.extend({}, self.sites)));
-                  
+            var data = JSON.parse(JSON.stringify(self.sites)),
+			    writePromise = File.Write(siteDataFileName, self.encodePasswords(data));
+            
 			writePromise.done(function (result) {
 				dfd.resolve(result);
 			});
