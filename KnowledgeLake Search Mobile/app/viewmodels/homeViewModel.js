@@ -18,6 +18,7 @@ define(["knockout",
             self.navigateBack = false;           
 
             self.onBackKey = function () {
+				system.logVerbose("homeViewModel.onBackKey");
                 self.navigateBack = true;
                 
                 history.back();

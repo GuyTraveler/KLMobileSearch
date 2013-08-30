@@ -34,5 +34,6 @@ define({
     errorWritingSiteData: "Error saving site data to the file system",
     siteTitleRequired: "Site title is required",
 	noResultsFound: "No results found...",
-	searching: "Searching..."
+	searching: "Searching...",
+	back: "Back"
 });

@@ -1,5 +1,8 @@
 <header data-role="header">
-    <div data-role="navbar">        
+    <div data-role="navbar">       
+		<button data-bind="click: onBackKey" data-role="backbutton" data-align="left">
+			<span data-bind="text: system.strings.back"></span>
+        </button>
         <button class="nav-button" data-align="right"
 				data-role="button" data-icon="compose" 
 				data-bind="click: editProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
@@ -16,7 +19,7 @@
 </div>
 
 <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data) }">
+	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }">
         <div class="resultOuterContainer">
             <div class="imageContainer resultIconContainer">
 				<!-- TODO: add this back in once we do something with the action bar

@@ -54,15 +54,34 @@ define(["knockout",
             if(results)
             {
                 self.resultDataSource(results);
+				
+				$(".resultItem").kendoTouch({
+	                enableSwipe: true,
+	                swipe: self.swipe 
+	            });
             }
+        }
+		
+		self.onBackKey = function (e) {
+			system.logWarning("resultsViewModel.onBackKey");
+			window.homeViewModel.navigateBack = true;
         }
         
         self.init = function (e) {
-
+			
+        }
+		
+		self.swipe = function (e) {
+			system.logVerbose("results listview swiped");
+			if(e.direction == "right")
+            {
+                self.onBackKey();
+				window.App.navigate("#:back");
+            }
         }
         
         self.beforeShow = function (e) {
-            system.logVerbose("resultsViewModel beforeShow");                                   
+            system.logVerbose("resultsViewModel beforeShow");   			
         }
 		
 		self.show = function (e) {
