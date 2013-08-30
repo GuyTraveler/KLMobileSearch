@@ -24,7 +24,7 @@ define(["knockout",
                 history.back();
             }
             
-            document.addEventListener("backbutton", self.onBackKey, true);
+            document.addEventListener("backbutton", self.onBackKey, false);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();

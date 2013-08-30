@@ -339,6 +339,8 @@ define(["knockout",
                 self.siteUserName("");
                 self.sitePassword("");
                 self.siteDomain("");
+                
+                self.resetUrlValidation();
             }
             
             self.populateConfigureSiteViewModel = function (selectedSite) {
