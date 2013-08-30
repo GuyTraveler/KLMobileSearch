@@ -49,6 +49,20 @@ define(['require',
             QUnit.deepEqual(mapping.toJS(vm.siteDataSource()), mapping.toJS(expected));
         });
         
+        QUnit.test("test homeViewModel onBackKey", function () {
+            //arrange
+            var vm = new homeViewModel();
+            
+            window.history = {"back" : null};            
+            window.history.back = function () {};
+            
+            //act 
+            vm.onBackKey();
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
         QUnit.test("test homeViewModel ctor", function () {
             //arrange
             var vm;

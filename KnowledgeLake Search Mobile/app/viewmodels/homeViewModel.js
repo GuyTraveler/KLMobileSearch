@@ -15,6 +15,15 @@ define(["knockout",
             
             self.selectedSite = null;
             self.navBarVisible = ko.observable(false);
+            self.navigateBack = false;           
+
+            self.onBackKey = function () {
+                self.navigateBack = true;
+                
+                history.back();
+            }
+            
+            document.addEventListener("backbutton", self.onBackKey, true);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
@@ -79,8 +88,11 @@ define(["knockout",
             self.beforeShow = function (e) {
                 system.logVerbose("homeViewModel beforeShow");  
                 
-                if(window.App)
+                if(window.App && !self.navigateBack)
                     self.LoadSiteData();
+                
+                else if(window.App)
+                    self.navigateBack = false;                
             }
             
             self.show = function (e) {
