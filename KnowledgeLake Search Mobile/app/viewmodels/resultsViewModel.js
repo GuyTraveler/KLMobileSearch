@@ -54,11 +54,6 @@ define(["knockout",
             if(results)
             {
                 self.resultDataSource(results);
-				
-				$(".resultItem").kendoTouch({
-	                enableSwipe: true,
-	                swipe: self.swipe 
-	            });
             }
         }
 		
@@ -68,7 +63,10 @@ define(["knockout",
         }
         
         self.init = function (e) {
-			
+			$(".km-content").kendoTouch({
+                enableSwipe: true,
+                swipe: self.swipe 
+            });
         }
 		
 		self.swipe = function (e) {
