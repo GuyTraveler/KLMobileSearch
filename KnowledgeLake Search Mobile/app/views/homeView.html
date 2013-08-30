@@ -16,10 +16,9 @@
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedSite($data) }">
 		<div class="itemContainer">			
-			<!-- TODO: we will want to change this handler once clicking the item actually loads saved searches -->
-	        <div data-bind="click: $parent.onItemClick" class="site">
+	        <div data-bind="click: $parent.setSelectedSite" class="site">
 				<div class="imageContainer">
-	                <a data-bind="click: $parent.setSelectedSite">
+	                <a>
 	                    <img class="siteIcon" width="32" data-bind="majorVersionToSiteIcon: majorVersion"/>
 	                </a>
 				</div>
