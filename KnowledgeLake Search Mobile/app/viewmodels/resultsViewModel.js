@@ -58,8 +58,13 @@ define(["knockout",
         }
 		
 		self.onBackKey = function (e) {
-			system.logWarning("resultsViewModel.onBackKey");
+			system.logVerbose("resultsViewModel.onBackKey");
+			
+			if (e && typeof e.preventDefault === 'function')
+				e.preventDefault();
+			
 			window.homeViewModel.navigateBack = true;
+			window.App.navigate("#:back");
         }
         
         self.init = function (e) {
@@ -73,8 +78,7 @@ define(["knockout",
 			system.logVerbose("results listview swiped");
 			if(e.direction == "right")
             {
-                self.onBackKey();
-				window.App.navigate("#:back");
+                self.onBackKey();				
             }
         }
         
