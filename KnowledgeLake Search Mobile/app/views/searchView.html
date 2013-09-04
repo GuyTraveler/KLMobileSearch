@@ -1,0 +1,8 @@
+<div>				
+    <input type="search"
+    	   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
+    
+    <button class="searchButton" data-bind="click: search, enable: isKeywordValid">
+    	<span data-bind="text: system.strings.search"></span>					
+    </button>
+</div>

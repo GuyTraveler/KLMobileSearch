@@ -16,6 +16,7 @@ require(["config"], function (config) {
              //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
              "viewmodels/homeViewModel",
              "viewmodels/configureSiteViewModel",
+             "viewmodels/searchViewModel",
              "viewmodels/resultsViewModel",
              "framework/knockout/kendoView",
              "framework/knockout/urlToFileTypeIcon",
@@ -55,11 +56,4 @@ function globalLastViewModelLoaded() {
         
         window.AppLoaded(true);
     }
-}
-
-function globalTabSelect (e) {    
-    if(e.item[0].id === "resultsButton")
-        window.homeViewModel.onResultsClick();
-	else if (e.item[0].id === "addSiteButton")
-		window.homeViewModel.onAddClick();
 }

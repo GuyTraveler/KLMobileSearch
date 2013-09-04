@@ -1,51 +1,34 @@
 <header data-role="header">
-    <div data-role="navbar">
-        <button class="nav-button" data-align="right"
-				data-role="button" data-icon="compose" 
-				data-bind="click: editSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
-			<span data-bind="text: system.strings.editSite"></span>
+    <div data-role="navbar">    
+        <button class="nav-button" data-align="left"
+            data-role="button" data-icon="add">
+            <span data-bind="text: system.strings.addSite"></span>
+        </button>
+		<button class="nav-button" data-align="right"
+			data-role="button" data-icon="compose" 
+			data-bind="click: editSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+		    <span data-bind="text: system.strings.editSite"></span>
         </button>
         <button class="nav-button" data-align="right" 
 				data-role="button" data-icon="delete" 
 				data-bind="click: deleteSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
 			<span data-bind="text: system.strings.deleteSite"></span>
         </button>
-	</div>
+    </div>
 </header>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedSite($data) }">
 		<div class="itemContainer">			
-	        <div data-bind="click: $parent.setSelectedSite" class="site">
+	        <div class="site">
 				<div class="imageContainer">
-	                <a>
+	                <a data-bind="click: $parent.setSelectedSite">
 	                    <img class="siteIcon" width="32" data-bind="majorVersionToSiteIcon: majorVersion"/>
 	                </a>
 				</div>
 	            
-				<h3 class="siteTitle" data-bind="text: title"></h3>
-				
-				<div class="grip-main" data-bind="click: $parent.mainGripClick">
-					<div data-bind="css: { 'grip-top': true, 'grip-andr-fix': window.App.os.android }"></div>
-					<div class="grip-middle"></div>
-					<div class="grip-bottom"></div>
-                </div>
-	        </div>
-			
-	        <div class="keywordSearch">
-				<div class="grip-keyword" data-bind="click: $parent.keywordGripClick">
-					<div data-bind="css: { 'grip-top': true, 'grip-andr-fix': window.App.os.android }"></div>
-					<div class="grip-middle"></div>
-					<div class="grip-bottom"></div>
-                </div>
-				
-				<input type="search"
-					   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: $parent.onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
-				
-				<button class="searchButton" data-bind="click: $parent.search, enable: isKeywordValid">
-					<span data-bind="text: system.strings.search"></span>					
-                </button>
-            </div>
+				<h3 class="siteTitle" data-bind="text: title, click: $parent.siteClick"></h3>
+	        </div>			
 	    </div>
 	</li>
 </ul>
