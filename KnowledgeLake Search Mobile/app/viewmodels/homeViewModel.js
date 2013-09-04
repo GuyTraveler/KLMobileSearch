@@ -9,7 +9,8 @@ define(["knockout",
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",
-                resultsUrl = "#results";
+                resultsUrl = "#results",
+                searchUrl = "#search";
                        
             self.siteDataSource = ko.observableArray();
             
@@ -57,7 +58,7 @@ define(["knockout",
                         var loadSitesPromise = SiteDataCachingService.LoadSites();
                       
                         loadSitesPromise.done(function (result) {
-                            if (result.response)
+                            if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
                                 self.SetDataSource(result.response);
                             
                             else
@@ -112,7 +113,7 @@ define(["knockout",
                 system.logVerbose("site list view item tapped");                
             }
 			
-			self.mainGripClick = function (data, event) {
+			/*self.mainGripClick = function (data, event) {
 				if (event)
 					event.stopImmediatePropagation();
 				
@@ -151,7 +152,7 @@ define(["knockout",
 				 .then( function () {
                     $(element).find(".keywordSearch").hide();
                 });
-            }
+            }*/
             
             self.setSelectedSite = function (selection, event) {
 				if (event)
@@ -169,33 +170,21 @@ define(["knockout",
 				return self.navBarVisible() && self.selectedSite === item;
             }
             
-			self.onItemClick = function (selection, args) {
+			/*self.onItemClick = function (selection, args) {
 				self.selectedSite = selection;
 				self.editSite();
-            }
-			
-            self.onAddClick = function () {
-                self.selectedSite = null;
-                self.navBarVisible(false);
-                window.App.navigate(configureSiteUrl); 
-            }          
-			
-            self.onResultsClick = function () {
-                self.selectedSite = null;
-                self.navBarVisible(false);
-                window.App.navigate(resultsUrl); 
             }
 			
 			self.onSearchKeyUp = function (selection, event) {
 				if (event.keyCode === 13)
 					self.search(selection);
-            }
+            }*/
             
-            self.search = function (selection) {
+            self.siteClick = function (selection) {
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;
                 
-                window.App.navigate(resultsUrl);              
+                window.App.navigate(searchUrl);              
             }
             
             self.editSite = function () {
