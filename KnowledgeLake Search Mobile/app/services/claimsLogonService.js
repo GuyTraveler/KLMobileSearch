@@ -20,7 +20,6 @@ define(["jquery",
                 self.windowRef = window.open(siteUrl, "_blank");                                    
                 
 				self.windowRef.addEventListener("loadstart", function (e) {
-					self.windowRef.currentUrl = e.url;
 					system.logVerbose("claimsLogonService.windowRef.loadstart: " + e.url);
                 });
 				
@@ -29,7 +28,9 @@ define(["jquery",
                 });
 				
                 self.windowRef.addEventListener("loadstop", function (e) {
-					self.logVerbose("claimsLogonService.windowRef.loadstop called!");
+					self.windowRef.currentUrl = e.url;
+					
+					system.logVerbose("claimsLogonService.windowRef.loadstop called!");
 					
                     if (self.isLoggedOnUrl(e.url)) {
                         system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 

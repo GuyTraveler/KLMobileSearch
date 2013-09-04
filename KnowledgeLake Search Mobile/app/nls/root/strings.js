@@ -28,6 +28,7 @@ define({
     domain: "Domain",
     windows: "Windows",
     claimsForms: "Claims/Forms",
+	saveSuccess: "Site saved successfully!",
     urlValidMessage: "The URL is valid",
     urlInvalidMessage: "The URL is not valid",
     credentialsInvalidMessage: "The site credentials are not valid",

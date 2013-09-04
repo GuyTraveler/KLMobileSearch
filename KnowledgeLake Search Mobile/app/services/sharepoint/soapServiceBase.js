@@ -40,10 +40,10 @@ define(["jquery",
 					postData = $soap;
                     
 					system.logVerbose("posting SOAP request to " + self.serviceUrl);
-					
+
                     $.ajax({
                         url: self.serviceUrl,
-                        async: false,
+                        async: !window.App.os.ios,  //TODO: how to make async on iphone?
                         type: "POST",
                         cache: false,
                         processData: false,

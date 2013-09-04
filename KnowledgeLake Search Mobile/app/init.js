@@ -52,6 +52,7 @@ function globalLastViewModelLoaded() {
             transition: 'slide',
             loading: '<h1>' + window.system.strings.loading + '</h1>'
         });
+				
         system.logVerbose("kendo application loaded");
         
         window.AppLoaded(true);
