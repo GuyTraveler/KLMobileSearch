@@ -9,22 +9,6 @@ li.highlight {
 	color: Black;
 }
 
-div div.grip-andr-fix {
-	height: 0.2em;
-}
-
-div div.grip-top {
-	top: 0em;			
-}
-
-div div.grip-middle {
-	top: 0.5em;		
-}
-
-div div.grip-bottom {
-	top: 1em;
-}
-
 div.itemContainer {
     height: 2em;
 }
@@ -33,7 +17,6 @@ div.itemContainer {
 	    position: absolute;
 	    width: 100%;
 	    height: 100%;
-	    display: block;
 	}
 	
 		img.siteIcon {
@@ -44,48 +27,6 @@ div.itemContainer {
 		    display: inline-block;
 		    font-size: 1em;
 		    margin: .45em 0 0 .75em;
-		}
-
-		div.grip-main,
- 	   div.grip-keyword {
-			position: absolute;
-			top: 0.4em;
-			height: 100%;
-			min-width: 1.5em;
-        }
-		
-		div.grip-main {			
-			right: 0.7em;			
-		}	
-		
-		div.grip-keyword {
-			left: -0.7em;
-		}	
-	 	
-			div.grip-main div,
-			div.grip-keyword div {
-				position: absolute;
-				height: 0.25em;
-				width: 1.5em;
-				background-color: Gray;
-			}				
-					
-		div.keywordSearch {  
-		    display: none;
-			position: relative;
-			height: 100%;
-		}
-
-		input.keyword {
-			position: absolute;
-			left: 1.2em;
-			top: 1.25em!important;
-			width: 60%!important;		
-		}
-
-		button.searchButton {
-			position: absolute;
-			right: 1%;
 		}
 
 

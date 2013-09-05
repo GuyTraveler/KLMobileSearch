@@ -6,12 +6,7 @@ define(["knockout", 'services/keywordValidationService'],
             self.url = site.url;
             self.title = site.title;
             self.majorVersion = site.majorVersion;
-            self.credential = site.credential;   
-            self.keyword = site.keyword ? ko.observable(site.keyword) : ko.observable("");
-            
-            self.isKeywordValid = ko.computed(function () {
-                return ValidationService.validateKeyword(self.keyword());
-            });
+            self.credential = site.credential;
             
             return self;
         };

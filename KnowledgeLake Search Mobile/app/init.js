@@ -16,7 +16,7 @@ require(["config"], function (config) {
              //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
              "viewmodels/homeViewModel",
              "viewmodels/configureSiteViewModel",
-             "viewmodels/searchViewModel",
+             "viewmodels/savedSearchViewModel",
              "viewmodels/resultsViewModel",
              "framework/knockout/kendoView",
              "framework/knockout/urlToFileTypeIcon",

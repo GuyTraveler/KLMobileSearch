@@ -8,42 +8,25 @@ define(["knockout",
     function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse, sitesViewModel) {
         var homeViewModel = function () {
             var self = this, 
-                configureSiteUrl = "#configureSite",
-                resultsUrl = "#results",
-                searchUrl = "#search";
+                configureSiteUrl = "#configureSite",                
+                searchUrl = "#savedSearch";
                        
             self.siteDataSource = ko.observableArray();
             
             self.selectedSite = null;
             self.navBarVisible = ko.observable(false);
-            self.navigateBack = false;           
-
-            self.onBackKey = function () {
-				system.logVerbose("homeViewModel.onBackKey");
-                self.navigateBack = true;
-                
-                history.back();
-            }
-            
-            document.addEventListener("backbutton", self.onBackKey, false);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
             });
             
             self.SetDataSource = function (sites) {
+                self.selectedSite = null;                
+                self.siteDataSource([]);
+                
                 if(sites)
                 {
-                    self.siteDataSource([]);
                     self.siteDataSource(new sitesViewModel(sites).sites);
-                    
-                    //TODO: these kendo methods need to be factored out to knockout bindings so 
-                    //we don't pollute the viewModels with kendo code lest it will be worthless with regular web apps
-                    $(".itemContainer").kendoTouch({
-                        enableSwipe: true,
-                        swipe: self.swipe 
-                    });
-                    $(".searchButton").kendoMobileButton();
                 }
             }
             
@@ -90,11 +73,8 @@ define(["knockout",
             self.beforeShow = function (e) {
                 system.logVerbose("homeViewModel beforeShow");  
                 
-                if(window.App && !self.navigateBack)
-                    self.LoadSiteData();
-                
-                else if(window.App)
-                    self.navigateBack = false;                
+                if(window.App)
+                    self.LoadSiteData();             
             }
             
             self.show = function (e) {
@@ -107,52 +87,9 @@ define(["knockout",
             
             self.hide = function (e) {
                 system.logVerbose("homeViewModel hide");
-            }
-            
-            self.navigate = function (e) {
-                system.logVerbose("site list view item tapped");                
-            }
-			
-			/*self.mainGripClick = function (data, event) {
-				if (event)
-					event.stopImmediatePropagation();
-				
-				self.showKeywordSearch(event.currentTarget.parentElement.parentElement);
-            }
-			
-			self.keywordGripClick = function (data, event) {
-				if (event)
-					event.stopImmediatePropagation();
-				
-				self.hideKeywordSearch(event.currentTarget.parentElement.parentElement);
-            }
-            
-            self.swipe = function (e) {
-                if(e.direction == "left") {
-                    self.showKeywordSearch(e.touch.currentTarget);
-                }
-                else if(e.direction == "right")
-                {
-                    self.hideKeywordSearch(e.touch.currentTarget);
-                }
-            }
-			
-			self.showKeywordSearch = function (element) {				
-				//clear navbar/selection before showing search
-				if (self.selectedSite)
-					self.setSelectedSite(self.selectedSite);
                 
-                kendo.fx($(element).find(".keywordSearch").css("display", "block")).tile("left", $(element).find(".site")).play();       	
+                self.navBarVisible(false);
             }
-			
-			self.hideKeywordSearch = function (element) {
-				$.when( kendo.fx($(element).find(".keywordSearch"))
-				             .tile("left", $(element).find(".site"))
-				             .reverse())
-				 .then( function () {
-                    $(element).find(".keywordSearch").hide();
-                });
-            }*/
             
             self.setSelectedSite = function (selection, event) {
 				if (event)
@@ -170,21 +107,15 @@ define(["knockout",
 				return self.navBarVisible() && self.selectedSite === item;
             }
             
-			/*self.onItemClick = function (selection, args) {
-				self.selectedSite = selection;
-				self.editSite();
-            }
-			
-			self.onSearchKeyUp = function (selection, event) {
-				if (event.keyCode === 13)
-					self.search(selection);
-            }*/
-            
             self.siteClick = function (selection) {
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;
                 
                 window.App.navigate(searchUrl);              
+            }
+            
+            self.addSite = function () {
+                window.App.navigate(configureSiteUrl);
             }
             
             self.editSite = function () {
@@ -199,11 +130,10 @@ define(["knockout",
                 {
                     // prompt before removal if yes proceed with deletion
                     var removeSitePromise = SiteDataCachingService.RemoveSite(self.selectedSite);
+                    // add the removal of associated searches ... must perform a loadsearches 
                       
                     removeSitePromise.done(function (result) {
                         self.LoadSiteData();
-                        
-                        self.setSelectedSite(null);
                     });
                   
                     removeSitePromise.fail(function (error) {

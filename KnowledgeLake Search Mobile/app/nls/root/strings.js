@@ -3,7 +3,7 @@ define({
     addSiteLinkText: "Add Site",
     appTitle: "KnowledgeLake Search Mobile",
     configureSitePageTitle: "Configure Site",
-    searchPageTitle: "Search",
+    savedSearchesPageTitle: "Saved Searches",
     searchBuilderPageTitle: "Search Builder",
     resultsPageTitle: "Search Results",
     documentPageTitle: "Document",

@@ -8,7 +8,8 @@ define(["knockout",
 		"ISiteDataService"], 
     function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
     var resultsViewModel = function () {
-        var self = this;
+        var self = this,
+            documentUrl = "#document";
         
 		self.errorMessage = ko.observable("");
 		self.errorMessage.subscribe(function (newValue) {
@@ -48,18 +49,14 @@ define(["knockout",
             }
         });
         
-        self.SetDataSource = function (results) {               
+        self.SetDataSource = function (results) {
+            self.selectedResult = null;
             self.resultDataSource([]);
 
             if(results)
             {
                 self.resultDataSource(results);
             }
-        }
-		
-		self.onBackKey = function (e) {
-			system.logWarning("resultsViewModel.onBackKey");
-			window.homeViewModel.navigateBack = true;
         }
         
         self.init = function (e) {
@@ -71,9 +68,8 @@ define(["knockout",
 		
 		self.swipe = function (e) {
 			system.logVerbose("results listview swiped");
-			if(e.direction == "right")
+			if(e.direction === "right")
             {
-                self.onBackKey();
 				window.App.navigate("#:back");
             }
         }
@@ -94,7 +90,10 @@ define(["knockout",
             self.SetDataSource([]);
         }
         
-        self.setSelectedResult = function (selection) {
+        self.setSelectedResult = function (selection, event) {
+			if (event)
+				event.stopImmediatePropagation();
+            
             if(self.selectedResult === selection)
                 self.selectedResult = null;
             
@@ -104,17 +103,14 @@ define(["knockout",
             self.navBarVisible(self.selectedResult);
         }
             
-        self.isSelectedResult = function (result) {
-			if (self.navBarVisible())
-				return (self.selectedResult === result);
-            
-            return false;
+        self.isSelectedResult = function (item) {
+			return self.navBarVisible() && self.selectedResult === item;
         }
         
         self.editProperties = function () {
             if(self.selectedResult)
             {
-                // navigate to properties page with properties from result                    
+                window.App.navigate(documentUrl);                      
             }
         }
         

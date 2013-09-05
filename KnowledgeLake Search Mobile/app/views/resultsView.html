@@ -1,16 +1,15 @@
-
-	<header data-role="header">
-	    <div data-role="navbar">       
-			<button data-bind="click: onBackKey" data-role="backbutton" data-align="left">
-				<span data-bind="text: system.strings.back"></span>
-	        </button>
-	        <button class="nav-button" data-align="right"
-					data-role="button" data-icon="compose" 
-					data-bind="click: editProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
-				<span data-bind="text: system.strings.editProperties"></span>
-	        </button>
-	    </div>
-	</header>
+<header data-role="header">
+    <div data-role="navbar">       
+		<button data-role="backbutton" data-align="left">
+			<span data-bind="text: system.strings.back"></span>
+        </button>
+        <button class="nav-button" data-align="right"
+				data-role="button" data-icon="compose" 
+				data-bind="click: editProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+			<span data-bind="text: system.strings.editProperties"></span>
+        </button>
+    </div>
+</header>
 
 <div id="resultsContainer">	
 	<h3 data-bind="visible: (resultDataSource().length === 0 && !isBusy()), text: system.strings.noResultsFound"></h3>

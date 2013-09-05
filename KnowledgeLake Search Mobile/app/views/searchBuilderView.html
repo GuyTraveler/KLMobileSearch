@@ -1,3 +1,11 @@
+<header data-role="header">
+    <div data-role="navbar">       
+		<button data-role="backbutton" data-align="left">
+			<span data-bind="text: system.strings.back"></span>
+        </button>
+    </div>
+</header>
+
 <div>				
     <input type="search"
     	   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
@@ -6,3 +14,11 @@
     	<span data-bind="text: system.strings.search"></span>					
     </button>
 </div>
+
+<footer data-role="footer">
+    <div data-role="tabstrip">
+        <a href="#home" data-icon="home">
+            <span data-bind="text: system.strings.homeLinkText"></span>
+        </a>
+    </div>
+</footer>
