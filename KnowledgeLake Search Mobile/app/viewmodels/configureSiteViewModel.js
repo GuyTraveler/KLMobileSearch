@@ -3,15 +3,14 @@ define(["knockout",
         "IAuthenticationService", 
         "IWebsService", 
         "ISiteDataCachingService", 
-		"INtlmLogonService",
-		"IClaimsLogonService",
+		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair", 
         "domain/promiseResponse/cachingServiceResponse"], 
-    function (ko, system, authenticationService, websService, SiteDataCachingService, ntlmLogonService, claimsLogonService,
+    function (ko, system, authenticationService, websService, SiteDataCachingService, LogonServiceFactory,
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
@@ -22,15 +21,9 @@ define(["knockout",
                 validImageUrl = "app/images/valid.png",
                 sharepointVersionHeader = "MicrosoftSharePointTeamServices",
 				urlValidationDfd;
-                
-			self.ntlmService = new ntlmLogonService();
-			self.claimsService = new claimsLogonService();
 			
+			self.logonService = null;
             self.url = ko.observable(defaultUrlText);
-			self.url.subscribe(function (newValue) {
-				self.ntlmService = new ntlmLogonService(newValue);
-				self.claimsService = new claimsLogonService(newValue);
-            });
             self.enableUrl = ko.observable(true);
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
@@ -46,99 +39,83 @@ define(["knockout",
                 return self.siteCredentialType() == credentialType.claimsOrForms; 
             });
             
-            self.statusMessage = ko.observable("");
-            self.showStatus = ko.observable(false);			              
-            self.errorMessage = ko.observable("");
-            self.showError = ko.observable(false);
+            self.message = ko.observable("");
             self.isUrlValid = ko.observable(false);
             self.isCredentialsValid = ko.observable(false);
             self.urlValidationImageSrc = ko.observable(questionImageUrl);
             self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
                                                        new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
-                        
-            self.statusMessage.subscribe(function (newValue) {
+              
+			self.setMessage = function (message) {
+				self.message("");
+				self.message(message);
+			};
+				
+            self.message.subscribe(function (newValue) {
                 if (newValue) {
-                    self.showStatus(true);
-                    
-                    setTimeout(function () {
-                        self.showStatus(false);
-                        
-                        setTimeout(function () {
-                            self.statusMessage("");
-                        }, system.messageFadeoutTime);
-                    }, system.messageDisplayTime);
-                }
+					system.showToast(newValue);
+				}
             });
-       
-            self.errorMessage.subscribe(function (newValue) {
-                if (newValue) {
-                    self.showError(true);
-                    
-                    setTimeout(function () {
-                        self.showError(false);
-                        
-                        setTimeout(function () {
-                            self.errorMessage("");
-                        }, system.messageFadeoutTime);
-                    }, system.messageDisplayTime);
+         
+            self.saveSiteSettings = function () { 
+				var theSite,
+					writePromise,
+					dfd = $.Deferred();
+				
+                system.logVerbose("saving site settings");
+				
+				if (!self.isUrlValid()) {
+					self.setMessage(system.strings.urlInvalidMessage);
+					dfd.reject(self.message());
+					return dfd.promise();
                 }
-            });
-                         
-            self.saveSiteSettings = function () {                
-                system.logVerbose("save site settings");
-                
-                if(homeViewModel.selectedSite)
-                {
-                    var updateSitePromise;
-                    
-                    if (!self.validateAll()) return null;
-                    
-                    updateSitePromise = SiteDataCachingService.UpdateSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
-                                            new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
-                    
-                    updateSitePromise.done(function (result) {          
-                        window.App.navigate(homeUrl);
-                    });
-                    
-                    updateSitePromise.fail(function (error) {
-                        if(error.response === CachingServiceResponse.InvalidSite) {
-                            self.errorMessage(error.response);
-                        }
-                        else {
-                            //probably no system at all (emulator), should we take some other action?
-                            self.errorMessage(system.strings.errorWritingSiteData);
-                        }
-                    });
-                    
-                    return updateSitePromise;
-                }
-                
-                else
-                {
-                    var addSitePromise;
-                    
-                    if (!self.validateAll()) return null;
-                    
-                    addSitePromise = SiteDataCachingService.AddSite(new site(self.url(), self.siteTitle(), self.sharePointVersion(),
-                                            new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain())));
-                    
-                    addSitePromise.done(function (result) {          
-                        window.App.navigate(homeUrl);
-                    });
-                    
-                    addSitePromise.fail(function (error) {
-                        if(error.response === CachingServiceResponse.SiteConnectionExists) {
-                            self.errorMessage(system.strings.siteAlreadyConfigured);
-                        }
-                        else {
-                            //probably no system at all (emulator), should we take some other action?
-                            self.errorMessage(system.strings.errorWritingSiteData);
-                        }
-                    });
-                    
-                    return addSitePromise;
-                }
+								
+                window.App.showLoading();
+				self.logon().always(function () {
+					if (self.validateAll()) {
+					
+						theSite = new site(self.url(), self.siteTitle(), self.sharePointVersion(),
+		                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
+						writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSite(theSite) : SiteDataCachingService.AddSite(theSite);
+		                    
+		                writePromise.done(function (result) { 
+							system.logVerbose("done writing site data, returning home");
+							
+							dfd.resolve(result);
+							system.showToast(system.strings.saveSuccess);							
+		                    window.App.navigate(homeUrl);
+		                });
+						
+						writePromise.fail(function (error) {
+							system.logVerbose("failed to write site data");
+							
+		                    if (error.response === CachingServiceResponse.InvalidSite) {
+		                        self.setMessage(error.response);
+		                    }
+							else if (error.response === CachingServiceResponse.SiteConnectionExists) {
+		                        self.setMessage(system.strings.siteAlreadyConfigured);
+		                    }
+		                    else {
+		                        //probably no system at all (emulator), should we take some other action?
+		                        self.setMessage(system.strings.errorWritingSiteData);
+		                    }
+							
+							system.logError(self.message());
+							
+							dfd.reject(self.message());
+		                });
+						
+						writePromise.always(function () {
+							window.App.hideLoading();
+                        });
+					}
+					else {					
+						window.App.hideLoading();
+					}
+				});
+				
+				return dfd.promise();
             }
             
             self.closeSiteSettings = function () {
@@ -149,9 +126,7 @@ define(["knockout",
             self.validateSiteUrl = function () {
                 var dataService = new authenticationService(self.url());
                 
-                system.logVerbose("validateSiteUrl called");
-				
-				window.App.showLoading();
+                system.logVerbose("validateSiteUrl called");			
                 
                 self.isUrlValid(false);
                 self.isCredentialsValid(false);
@@ -173,7 +148,6 @@ define(["knockout",
                 detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
                 self.setValidUrl(detectedCredentialType);   
                 
-                window.App.hideLoading();
 				urlValidationDfd.resolve(detectedCredentialType);
             }
             
@@ -183,7 +157,6 @@ define(["knockout",
                 system.logVerbose("site url validation failed with status: " + status);
                 
 				status = XMLHttpRequest.status;
-				window.App.hideLoading();
 				
                 if (status == 401 || status == 200) {
 					//unknown credential type in this case...
@@ -207,11 +180,10 @@ define(["knockout",
                 self.credValidationImageSrc(questionImageUrl);
                 
                 self.siteCredentialType(detectedCredType);
-                
-                self.statusMessage(system.strings.urlValidMessage);
-                self.errorMessage("");
-                
-                self.logon();
+				
+				if (detectedCredType == credentialType.claimsOrForms) {
+					self.logon();
+                }
             }
             
             self.setInvalidUrl = function () {
@@ -220,9 +192,6 @@ define(["knockout",
                 
                 self.urlValidationImageSrc(invalidImageUrl);  
                 self.credValidationImageSrc(questionImageUrl);
-                
-                self.statusMessage("");
-                self.errorMessage(system.strings.urlInvalidMessage);
             }
             
             self.resetUrlValidation = function () {
@@ -232,8 +201,7 @@ define(["knockout",
                 self.urlValidationImageSrc(questionImageUrl); 
                 self.credValidationImageSrc(questionImageUrl);
                 
-                self.statusMessage("");
-                self.errorMessage("");
+                self.message("");
             }
                         
             self.parseCredentialType =  function (spAuthenticationMode) {
@@ -248,13 +216,16 @@ define(["knockout",
             
             self.logon = function () {
 				var service = new websService(self.url()),
-					logonService = self.getLogonService(),
-					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
+					logonPromise,
 					getWebDfd = $.Deferred();
+				
+				self.logonService = LogonServiceFactory.createLogonService(self.url(), self.siteCredentialType());
+				logonPromise = self.logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword())
 				
 				//probably already logging on
 				if (!logonPromise) {
 					getWebDfd.reject(false);
+					return getWebDfd.promise();
                 }
 				
 				logonPromise.done(function () {
@@ -289,15 +260,7 @@ define(["knockout",
 				
 				return getWebDfd.promise();
             }
-             
-			self.getLogonService = function () {
-				if (self.siteCredentialType() == credentialType.claimsOrForms) {
-					return self.claimsService;					
-                }
-				
-				return self.ntlmService;
-            }
-       
+         
             self.isTitleValid = function () {
                 return (self.siteTitle() != undefined && self.siteTitle().trim() != "");
             }
@@ -314,15 +277,15 @@ define(["knockout",
             
             self.validateAll = function () {
                 if (!self.isUrlValid()) {
-                    self.errorMessage(system.strings.urlInvalidMessage);
+                    self.setMessage(system.strings.urlInvalidMessage);
                     return false;
                 }
                 else if (!self.isTitleValid()) {
-                    self.errorMessage(system.strings.siteTitleRequired);
+                    self.setMessage(system.strings.siteTitleRequired);
                     return false;
                 }
                 else if (!self.isCredentialsValid()) {
-                    self.errorMessage(system.strings.credentialsInvalidMessage);
+                    self.setMessage(system.strings.credentialsInvalidMessage);
                     return false;
                 }
                 

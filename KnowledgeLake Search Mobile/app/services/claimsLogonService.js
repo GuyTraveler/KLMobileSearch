@@ -19,8 +19,18 @@ define(["jquery",
                 self.isLoggingOn = true;                        
                 self.windowRef = window.open(siteUrl, "_blank");                                    
                 
+				self.windowRef.addEventListener("loadstart", function (e) {
+					system.logVerbose("claimsLogonService.windowRef.loadstart: " + e.url);
+                });
+				
+				self.windowRef.addEventListener("loaderror", function (e) {
+					system.logVerbose("claimsLogonService.windowRef.loaderror: " + e.message);
+                });
+				
                 self.windowRef.addEventListener("loadstop", function (e) {
-                    self.windowRef.currentUrl = e.url;
+					self.windowRef.currentUrl = e.url;
+					
+					system.logVerbose("claimsLogonService.windowRef.loadstop called!");
 					
                     if (self.isLoggedOnUrl(e.url)) {
                         system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 

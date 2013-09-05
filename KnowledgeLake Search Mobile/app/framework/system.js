@@ -1,12 +1,13 @@
 define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) {
+	var messageDisplayTime = 3000,
+		isToastUp = false;
+	
     return {
         logLevel: logLevel.Error,
         strings: strings,
 		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
 		sharePointDelimiter: ";#",
 		ajaxTimeout: 15000,
-		messageFadeoutTime: 1000, //should match fade-out transition time in app.css
-        messageDisplayTime: 3000,
 		setLogLevel: function (level) {
             this.logLevel = level;
         },
@@ -70,6 +71,25 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
             }
             
             return false;
+        },
+		showToast: function (message) {
+			var $msgbox = $("#messageBox");
+
+			message = message || "";
+			
+			$msgbox.text(message);
+			$msgbox.removeClass("fade-out");
+			$msgbox.addClass("opaque");
+			isToastUp = true;
+			
+			setTimeout(function () {
+				$msgbox.addClass("fade-out");
+				$msgbox.removeClass("opaque");
+				isToastUp = false;
+            }, messageDisplayTime);
+        },
+		isToastVisible: function() {
+			return isToastUp;
         }
     };
 });

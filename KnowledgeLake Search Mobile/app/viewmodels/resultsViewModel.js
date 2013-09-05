@@ -50,7 +50,7 @@ define(["knockout",
         });
         
         self.SetDataSource = function (results) {
-            self.selectedResult = null;
+            self.selectedResult = null;               
             self.resultDataSource([]);
 
             if(results)
@@ -68,7 +68,7 @@ define(["knockout",
 		
 		self.swipe = function (e) {
 			system.logVerbose("results listview swiped");
-			if(e.direction === "right")
+			if(e.direction == "right")
             {
 				window.App.navigate("#:back");
             }
@@ -90,10 +90,10 @@ define(["knockout",
             self.SetDataSource([]);
         }
         
-        self.setSelectedResult = function (selection, event) {
+        self.setSelectedResult = function (selection) {
 			if (event)
 				event.stopImmediatePropagation();
-            
+                
             if(self.selectedResult === selection)
                 self.selectedResult = null;
             
@@ -103,14 +103,14 @@ define(["knockout",
             self.navBarVisible(self.selectedResult);
         }
             
-        self.isSelectedResult = function (item) {
+        self.isSelectedResult = function (result) {
 			return self.navBarVisible() && self.selectedResult === item;
         }
         
         self.editProperties = function () {
             if(self.selectedResult)
             {
-                window.App.navigate(documentUrl);                      
+                window.App.navigate(documentUrl);                    
             }
         }
         

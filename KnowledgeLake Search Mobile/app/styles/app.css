@@ -67,3 +67,18 @@ p.list-view-input {
     -o-transition: opacity 1s linear;
     transition: opacity 1s linear;
 }
+
+#messageBox {
+	background-color: Black;
+	color: White;
+	position: fixed;
+	bottom: 1em;
+	left: 50%;
+	margin-left: -35%;
+	width: 70%;
+	padding: 0.5em 0em;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	text-align: center;
+	z-index: 10000;	
+}
