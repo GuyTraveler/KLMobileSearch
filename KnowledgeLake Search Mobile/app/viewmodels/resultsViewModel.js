@@ -72,8 +72,8 @@ define(["knockout",
 		self.show = function (e) {
 			system.logVerbose("resultsViewModel show");
 			
-			if(homeViewModel.selectedSite)  
-                self.keywordSearch(homeViewModel.selectedSite);
+			if(savedSearchViewModel.searchDataSource())  
+                self.keywordSearch(savedSearchViewModel.searchDataSource());
         }
         
         self.hide = function (e) {            
