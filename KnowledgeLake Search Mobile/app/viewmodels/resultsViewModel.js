@@ -40,6 +40,13 @@ define(["knockout",
             }
         });
         
+		  
+		self.setErrorMessage = function (message) {
+			self.errorMessage("");
+			self.errorMessage(message);
+		};
+				
+		
         self.SetDataSource = function (results) {
             self.selectedResult = null;               
             self.resultDataSource([]);
@@ -94,7 +101,7 @@ define(["knockout",
             self.navBarVisible(self.selectedResult);
         }
             
-        self.isSelectedResult = function (result) {
+        self.isSelectedResult = function (item) {
 			return self.navBarVisible() && self.selectedResult === item;
         }
         
@@ -141,7 +148,7 @@ define(["knockout",
                         self.isBusy(false);
 						
 						system.logVerbose("display form could not be obtained: " + error);
-						self.errorMessage(system.strings.unauthorized);
+						self.setErrorMessage(system.strings.unauthorized);
                         
                         dfd.reject(error);
                     });
@@ -151,7 +158,7 @@ define(["knockout",
                     self.isBusy(false);
 					
 					system.logVerbose("could not navigate to result. logon failed.");
-					self.errorMessage(system.strings.unauthorized);
+					self.setErrorMessage(system.strings.unauthorized);
                     
                     dfd.reject(error);
                 });
