@@ -7,6 +7,8 @@ define({
     searchBuilderPageTitle: "Search Builder",
     resultsPageTitle: "Search Results",
     documentPageTitle: "Document",
+    localSavedSearches: "Local Saved Searches",
+    serverSavedSearches: "Server Saved Searches",
     cancel: "Cancel",
     save: "Save",
     addSite: "Add",

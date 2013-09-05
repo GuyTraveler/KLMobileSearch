@@ -134,6 +134,8 @@ define(["knockout",
                       
                     removeSitePromise.done(function (result) {
                         self.LoadSiteData();
+                        
+                        self.setSelectedSite(null);
                     });
                   
                     removeSitePromise.fail(function (error) {

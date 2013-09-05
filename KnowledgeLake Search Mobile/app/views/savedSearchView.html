@@ -6,14 +6,20 @@
     </div>
 </header>
 
-<div data-bind="if: searchDataSource">
-    <h3 data-bind="text: searchDataSource.title"></h3>
+<div data-bind="if: searchDataSource()">
+    <h3 data-bind="text: searchDataSource().title"></h3>
 </div>
-<div class="keywordContainer" data-bind="if: searchDataSource">				
+<div class="keywordContainer" data-bind="if: searchDataSource()">				
     <input type="search"
-    	   data-bind="value: searchDataSource.keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
+    	   data-bind="value: searchDataSource().keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
     
-    <button class="searchButton" data-role="button" data-icon="search" data-bind="click: search, enable: searchDataSource.isKeywordValid" />
+    <button class="searchButton" data-role="button" data-icon="search" data-bind="click: search, enable: isKeywordValid" />
+</div>
+<div>
+    <h3 data-bind="text: system.strings.localSavedSearches"></h3>
+</div>
+<div>
+    <h3 data-bind="text: system.strings.serverSavedSearches"></h3>
 </div>
 
 <footer data-role="footer">
