@@ -14,19 +14,10 @@ define(["knockout",
 		self.errorMessage = ko.observable("");
 		self.errorMessage.subscribe(function (newValue) {
 			if (newValue) {
-                self.showError(true);
-                
-                setTimeout(function () {
-                    self.showError(false);
-                    
-                    setTimeout(function () {
-                        self.errorMessage("");
-                    }, system.messageFadeoutTime);
-                }, system.messageDisplayTime);
+                system.showToast(newValue);
             }
         });
 		
-		self.showError = ko.observable(false);
         self.resultDataSource = ko.observableArray(); 
         
         self.selectedResult = null;
