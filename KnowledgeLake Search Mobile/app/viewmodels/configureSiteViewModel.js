@@ -3,15 +3,14 @@ define(["knockout",
         "IAuthenticationService", 
         "IWebsService", 
         "ISiteDataCachingService", 
-		"INtlmLogonService",
-		"IClaimsLogonService",
+		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair", 
         "domain/promiseResponse/cachingServiceResponse"], 
-    function (ko, system, authenticationService, websService, SiteDataCachingService, ntlmLogonService, claimsLogonService,
+    function (ko, system, authenticationService, websService, SiteDataCachingService, LogonServiceFactory,
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
@@ -22,15 +21,9 @@ define(["knockout",
                 validImageUrl = "app/images/valid.png",
                 sharepointVersionHeader = "MicrosoftSharePointTeamServices",
 				urlValidationDfd;
-                
-			self.ntlmService = new ntlmLogonService();
-			self.claimsService = new claimsLogonService();
 			
+			self.logonService = null;
             self.url = ko.observable(defaultUrlText);
-			self.url.subscribe(function (newValue) {
-				self.ntlmService = new ntlmLogonService(newValue);
-				self.claimsService = new claimsLogonService(newValue);
-            });
             self.enableUrl = ko.observable(true);
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
@@ -53,7 +46,12 @@ define(["knockout",
             self.credValidationImageSrc = ko.observable(questionImageUrl);
             self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
                                                        new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
-                        
+              
+			self.setMessage = function (message) {
+				self.message("");
+				self.message(message);
+			};
+				
             self.message.subscribe(function (newValue) {
                 if (newValue) {
 					system.showToast(newValue);
@@ -68,7 +66,7 @@ define(["knockout",
                 system.logVerbose("saving site settings");
 				
 				if (!self.isUrlValid()) {
-					self.message(system.strings.urlInvalidMessage);
+					self.setMessage(system.strings.urlInvalidMessage);
 					dfd.reject(self.message());
 					return dfd.promise();
                 }
@@ -93,14 +91,14 @@ define(["knockout",
 							system.logVerbose("failed to write site data");
 							
 		                    if (error.response === CachingServiceResponse.InvalidSite) {
-		                        self.message(error.response);
+		                        self.setMessage(error.response);
 		                    }
 							else if (error.response === CachingServiceResponse.SiteConnectionExists) {
-		                        self.message(system.strings.siteAlreadyConfigured);
+		                        self.setMessage(system.strings.siteAlreadyConfigured);
 		                    }
 		                    else {
 		                        //probably no system at all (emulator), should we take some other action?
-		                        self.message(system.strings.errorWritingSiteData);
+		                        self.setMessage(system.strings.errorWritingSiteData);
 		                    }
 							
 							system.logError(self.message());
@@ -218,9 +216,11 @@ define(["knockout",
             
             self.logon = function () {
 				var service = new websService(self.url()),
-					logonService = self.getLogonService(),
-					logonPromise = logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword()),
+					logonPromise,
 					getWebDfd = $.Deferred();
+				
+				self.logonService = LogonServiceFactory.createLogonService(self.url(), self.siteCredentialType());
+				logonPromise = self.logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword())
 				
 				//probably already logging on
 				if (!logonPromise) {
@@ -260,15 +260,7 @@ define(["knockout",
 				
 				return getWebDfd.promise();
             }
-             
-			self.getLogonService = function () {
-				if (self.siteCredentialType() == credentialType.claimsOrForms) {
-					return self.claimsService;					
-                }
-				
-				return self.ntlmService;
-            }
-       
+         
             self.isTitleValid = function () {
                 return (self.siteTitle() != undefined && self.siteTitle().trim() != "");
             }
@@ -285,15 +277,15 @@ define(["knockout",
             
             self.validateAll = function () {
                 if (!self.isUrlValid()) {
-                    self.message(system.strings.urlInvalidMessage);
+                    self.setMessage(system.strings.urlInvalidMessage);
                     return false;
                 }
                 else if (!self.isTitleValid()) {
-                    self.message(system.strings.siteTitleRequired);
+                    self.setMessage(system.strings.siteTitleRequired);
                     return false;
                 }
                 else if (!self.isCredentialsValid()) {
-                    self.message(system.strings.credentialsInvalidMessage);
+                    self.setMessage(system.strings.credentialsInvalidMessage);
                     return false;
                 }
                 

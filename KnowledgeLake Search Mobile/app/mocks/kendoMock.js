@@ -24,6 +24,10 @@ define([], function () {
 						self.isLoading = false;
                     }
 					
+					self.os = {
+						ios: false
+                    };
+					
 					return self;
 		    	}
 			},

@@ -1,5 +1,6 @@
 define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) {
-	var messageDisplayTime = 3000;
+	var messageDisplayTime = 3000,
+		isToastUp = false;
 	
     return {
         logLevel: logLevel.Error,
@@ -79,11 +80,16 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 			$msgbox.text(message);
 			$msgbox.removeClass("fade-out");
 			$msgbox.addClass("opaque");
+			isToastUp = true;
 			
 			setTimeout(function () {
 				$msgbox.addClass("fade-out");
 				$msgbox.removeClass("opaque");
+				isToastUp = false;
             }, messageDisplayTime);
+        },
+		isToastVisible: function() {
+			return isToastUp;
         }
     };
 });
