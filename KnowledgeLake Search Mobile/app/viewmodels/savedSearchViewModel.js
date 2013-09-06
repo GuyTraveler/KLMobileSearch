@@ -1,17 +1,24 @@
-define(["knockout", "system", "viewmodels/searchViewModel", "services/searchDataCachingService", 'services/keywordValidationService'], 
-    function (ko, system, searchViewModel, SearchDataCachingService, ValidationService) {
+define(["knockout", "system", "services/searchDataCachingService", 'services/keywordValidationService'], 
+    function (ko, system, SearchDataCachingService, ValidationService) {
         var savedSearchViewModel = function () {
             var self = this,
-                resultsUrl = "#results";
+                resultsUrl = "#results";            
             
-            self.searchDataSource = ko.observable(null);
+            self.searchDataSource = ko.observableArray(null);
             
-            self.SetDataSource = function (site, searches) {               
-                self.searchDataSource(null);
+            self.site = ko.observable("");          
+            self.keyword = ko.observable("");
+            
+            self.isKeywordValid = ko.computed(function () {
+                return ValidationService.validateKeyword(self.keyword());
+            });
+            
+            self.SetDataSource = function (searches) {
+                self.SetDataSource([]);
                 
                 if(searches)
                 {
-                    self.searchDataSource(new searchViewModel(site, searches));
+                    self.searchDataSource(searches);
                 }
             }
             
@@ -20,11 +27,12 @@ define(["knockout", "system", "viewmodels/searchViewModel", "services/searchData
               
                 loadSitesPromise.done(function (result) {
                     if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
-                        self.SetDataSource(homeViewModel.selectedSite, result.response);
+                        self.SetDataSource(result.response);
                 });
               
                 loadSitesPromise.fail(function (error) {
-                    // don't know exactly how this should be handled (no saved searches, local search file not found, filesystem instance not initialized)
+                    // don't know exactly how this should be handled 
+                    // (no saved searches, local search file not found, filesystem instance not initialized)
                 });            
             }
             
@@ -36,9 +44,13 @@ define(["knockout", "system", "viewmodels/searchViewModel", "services/searchData
                 system.logVerbose("searchViewModel beforeShow");
                 
                 if(homeViewModel.selectedSite)
-                {
-                    // placeholder until search data has been loaded
-                    self.SetDataSource(homeViewModel.selectedSite, []);
+                {                    
+                    if(homeViewModel.selectedSite.url !== self.site().url)
+                    {                        
+                        self.site(homeViewModel.selectedSite);
+                        self.keyword("");
+                    }
+                    
                     self.LoadSearchData();
                 }
             }
@@ -57,16 +69,7 @@ define(["knockout", "system", "viewmodels/searchViewModel", "services/searchData
             
             self.search = function (e) {
                 window.App.navigate(resultsUrl);
-            }    
-            
-            self.isKeywordValid = ko.computed(function () {
-                if(self.searchDataSource())
-                {
-                    return ValidationService.validateKeyword(self.searchDataSource().keyword());
-                }
-                
-                return false;
-            });
+            }
             
             self.onSearchKeyUp = function (selection, event) {
 				if (event.keyCode === 13)

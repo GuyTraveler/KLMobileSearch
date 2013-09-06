@@ -72,8 +72,8 @@ define(["knockout",
 		self.show = function (e) {
 			system.logVerbose("resultsViewModel show");
 			
-			if(savedSearchViewModel.searchDataSource())  
-                self.keywordSearch(savedSearchViewModel.searchDataSource());
+			if(savedSearchViewModel.site)  
+                self.keywordSearch(savedSearchViewModel.site(), savedSearchViewModel.keyword());
         }
         
         self.hide = function (e) {            
@@ -110,17 +110,17 @@ define(["knockout",
                 service,
                 logonService;
             
-            if(selection && homeViewModel.selectedSite)
+            if(selection && savedSearchViewModel.site())
             {
                 window.App.loading = "<h1>" + system.strings.loading + "</h1>";
                 self.isBusy(true);
                 
                 service = new documentService(selection.url);        
-                logonService = LogonServiceFactory.createLogonService(homeViewModel.selectedSite.url, homeViewModel.selectedSite.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
 
-                logonPromise = logonService.logon(homeViewModel.selectedSite.credential.domain, 
-                                                  homeViewModel.selectedSite.credential.userName, 
-                                                  homeViewModel.selectedSite.credential.password,
+                logonPromise = logonService.logon(savedSearchViewModel.site().credential.domain, 
+                                                  savedSearchViewModel.site().credential.userName, 
+                                                  savedSearchViewModel.site().credential.password,
                                                   selection.url);
             
                 logonPromise.done(function (result) {
@@ -160,7 +160,7 @@ define(["knockout",
             return dfd.promise();
         }
         
-        self.keywordSearch = function (searchSite) {
+        self.keywordSearch = function (searchSite, keyword) {
             var dfd = $.Deferred(),
                 service,
                 logonService;
@@ -175,7 +175,7 @@ define(["knockout",
             
             logonPromise.done(function (result) {
                 
-                searchPromise = service.keywordSearch(searchSite.keyword().split(" "), keywordConjunction.and, true);
+                searchPromise = service.keywordSearch(keyword.split(" "), keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
                     self.SetDataSource(result);
