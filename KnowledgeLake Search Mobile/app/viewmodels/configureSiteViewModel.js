@@ -326,6 +326,10 @@ define(["knockout",
                 else                    
                     self.clearPopulatedConfigureSiteViewModel();
             }
+			
+			self.show = function (e) {
+				$("#configureSiteTitle").scrollTop();
+            }
    
             return self;
         };
