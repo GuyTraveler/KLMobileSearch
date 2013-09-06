@@ -3,9 +3,8 @@ define(["knockout",
         "jquery", 
         "ISiteDataCachingService", 
         "domain/promiseResponse/fileSystemResponse", 
-        "domain/promiseResponse/cachingServiceResponse",
-        "viewmodels/sitesViewModel"], 
-    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse, sitesViewModel) {
+        "domain/promiseResponse/cachingServiceResponse"], 
+    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
@@ -26,7 +25,7 @@ define(["knockout",
                 
                 if(sites)
                 {
-                    self.siteDataSource(new sitesViewModel(sites).sites);
+                    self.siteDataSource(sites);
                 }
             }
             
