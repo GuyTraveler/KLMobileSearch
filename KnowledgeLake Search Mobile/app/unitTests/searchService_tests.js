@@ -1,17 +1,10 @@
 /*global QUnit*/
 //explicit request to searchService
 define(["services/sharepoint/searchService",
-		"INtlmLogonService"],
-    function (searchService, ntlmLogonService) {
-		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
-			ntlmTestUser = "spadmin",
-			ntlmTestPassword = "password",
-			ntlmTestDomain = "dev.local",
-			testQueryXml = "<QueryPacket><Query><Context><QueryText type=\"MSSQLFT\"><![CDATA[SELECT \"Title\",\"LastModifiedTime\",\"Path\" FROM SCOPE() WHERE (CONTAINS('\"{value}\"') AND IsDocument = TRUE) ]]></QueryText></Context><Range><Count>5000</Count></Range><TrimDuplicates>false</TrimDuplicates></Query></QueryPacket>",
-			emptyQueryXml = "<QueryPacket><Query><Context><QueryText type='STRING'></QueryText></Context></Query></QueryPacket>",
-            invalidCharTest; 
-		
-        QUnit.module("Testing searchService");
+		"INtlmLogonService",
+		"unitTests/unitTestSettings"],
+    function (searchService, ntlmLogonService, TestSettings) {
+		QUnit.module("Testing searchService");
         
         
         QUnit.test("Test can instantiate searchService", function () {
@@ -32,9 +25,9 @@ define(["services/sharepoint/searchService",
 				logonPromise;
             
             //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new searchService(TestSettings.ntlmTestUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -82,9 +75,9 @@ define(["services/sharepoint/searchService",
 				logonPromise;
             
             //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new searchService(TestSettings.ntlmTestUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -132,13 +125,13 @@ define(["services/sharepoint/searchService",
 				logonPromise;
             
             //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new searchService(TestSettings.ntlmTestUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(testQueryXml.replace("{value}", "test"))
+				service.QueryEx(TestSettings.testQueryXml.replace("{value}", "test"))
 					.done(function (result) {
 						QUnit.ok(result && result.QueryExResult);
 						QUnit.ok(result.QueryExResult['diffgr:diffgram'].Results.RelevantResults)
@@ -166,7 +159,7 @@ define(["services/sharepoint/searchService",
             service = new searchService("http://dfdf");
 			
             //assert
-			service.QueryEx(testQueryXml)
+			service.QueryEx(TestSettings.testQueryXml)
 				.done(function (result) {
 					QUnit.ok(false, "searchService.QueryEx should have failed");
 					QUnit.start();
@@ -184,13 +177,13 @@ define(["services/sharepoint/searchService",
 				logonPromise;
             
             //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new searchService(TestSettings.ntlmTestUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(emptyQueryXml)
+				service.QueryEx(TestSettings.emptyQueryXml)
 					.done(function (result) {
 						QUnit.ok(false, "QueryEx with empty search should not succeed");
 						QUnit.start();
@@ -214,13 +207,13 @@ define(["services/sharepoint/searchService",
 				logonPromise;
             
             //act
-            service = new searchService(ntlmTestUrl);
-			logonService = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new searchService(TestSettings.ntlmTestUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
-				service.QueryEx(emptyQueryXml + "fdfd")
+				service.QueryEx(TestSettings.emptyQueryXml + "fdfd")
 					.done(function (result) {
 						QUnit.ok(false, "QueryEx with malformed search should not succeed");
 						QUnit.start();

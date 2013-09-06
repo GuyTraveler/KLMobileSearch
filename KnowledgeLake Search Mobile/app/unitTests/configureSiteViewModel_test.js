@@ -5,20 +5,10 @@ define(["system",
 		"domain/site", 
 		"domain/credential", 
 		"domain/credentialType",
-		"domain/authenticationMode"],    
-	function (system, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, credential, credentialType, authenticationMode) {
-		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
-			adfsTestUrl = "https://kl.sharepoint.com/sites/devtesting",
-            defaultUrlText = "http://",
-			ntlmTestUser = "spadmin",
-			ntlmTestPassword = "password",
-			ntlmTestDomain = "dev.local",
-			homeUrl = "#home",
-			validImageCheck = "/valid",
-			invalidImageCheck = "/invalid",
-			questionImageCheck = "/question";
-		
-        QUnit.module("Testing configureSiteViewModel");
+		"domain/authenticationMode",
+		"unitTests/unitTestSettings"],    
+	function (system, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, credential, credentialType, authenticationMode, TestSettings) {
+		QUnit.module("Testing configureSiteViewModel");
        
 		QUnit.test("configureSiteViewModel initializes propertly", function () {
 			//arrange
@@ -32,7 +22,7 @@ define(["system",
 			QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
 			
-			QUnit.equal(vm.url(), "http://");
+			QUnit.equal(vm.url(), TestSettings.defaultUrlText);
 			QUnit.equal(vm.siteTitle(), "");
 			QUnit.equal(vm.sharePointVersion(), 0);
 			QUnit.equal(vm.siteCredentialType(), credentialType.ntlm);
@@ -44,8 +34,8 @@ define(["system",
 			QUnit.equal(vm.message(), "");
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
-			QUnit.ok(vm.urlValidationImageSrc().indexOf(questionImageCheck) > -1);
-			QUnit.ok(vm.credValidationImageSrc().indexOf(questionImageCheck) > -1);
+			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
+			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			
 			QUnit.equal(vm.credentialTypes().length, 2);
 			QUnit.equal(vm.credentialTypes()[0].key, credentialType.ntlm);
@@ -175,7 +165,7 @@ define(["system",
 			vm.closeSiteSettings();
 			
 			//assert
-			QUnit.equal(window.App.currentUrl, homeUrl);
+			QUnit.equal(window.App.currentUrl, TestSettings.homeUrl);
         });
 		
 		QUnit.test("configureSiteViewModel.setInvalidUrl puts vm in error state",  function () {
@@ -188,8 +178,8 @@ define(["system",
 			
 			//assert
 			QUnit.equal(vm.isUrlValid(), false);
-			QUnit.ok(vm.urlValidationImageSrc().indexOf(invalidImageCheck) > -1);
-			QUnit.ok(vm.credValidationImageSrc().indexOf(questionImageCheck) > -1);
+			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.invalidImageCheck) > -1);
+			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			QUnit.equal(vm.sharePointVersion(), 0);
 		});
 			
@@ -199,13 +189,13 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.setValidUrl();			
 			
 			//assert
 			QUnit.ok(vm);
 			QUnit.equal(vm.isUrlValid(), true);
-			QUnit.ok(vm.urlValidationImageSrc().indexOf(validImageCheck) > -1);
+			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.validImageCheck) > -1);
 			QUnit.equal(vm.message(), "");
 		});
 		
@@ -215,14 +205,14 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.resetUrlValidation();			
 			
 			//assert
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
-			QUnit.ok(vm.urlValidationImageSrc().indexOf(questionImageCheck) > -1);
-			QUnit.ok(vm.credValidationImageSrc().indexOf(questionImageCheck) > -1);
+			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
+			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			QUnit.equal(vm.message(), "");
 		});
 			
@@ -258,7 +248,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			urlValidationPromise = vm.validateSiteUrl();
 			
 			//assert
@@ -271,7 +261,7 @@ define(["system",
 				QUnit.start();
             });
 			urlValidationPromise.fail(function (status) {
-				QUnit.ok(true, "Could not validate " + ntlmTestUrl); 
+				QUnit.ok(true, "Could not validate " + TestSettings.ntlmTestUrl); 
 				
 				QUnit.start();
             });
@@ -284,7 +274,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(adfsTestUrl);
+			vm.url(TestSettings.adfsTestUrl);
 			urlValidationPromise = vm.validateSiteUrl();
 			
 			//assert
@@ -315,7 +305,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			credValidationPromise = vm.logon();
 			
 			//assert
@@ -339,10 +329,10 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
-			vm.siteUserName(ntlmTestUser);
-			vm.sitePassword(ntlmTestPassword);
-			vm.siteDomain(ntlmTestDomain);
+			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.sitePassword(TestSettings.ntlmTestPassword);
+			vm.siteDomain(TestSettings.ntlmTestDomain);
 			credValidationPromise = vm.logon();
 			
 			//assert
@@ -390,7 +380,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.setValidUrl();
 			
 			//assert
@@ -406,7 +396,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.setValidUrl();
 			vm.siteTitle("dfdsfds");
 			
@@ -421,7 +411,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.setValidUrl();
 			vm.siteTitle("dfdsfds");
 			vm.isCredentialsValid(true);
@@ -465,10 +455,10 @@ define(["system",
             window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			if (SiteDataCachingService.SiteExists(ntlmTestUrl))
-				SiteDataCachingService.RemoveSiteData(ntlmTestUrl);
+			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl))
+				SiteDataCachingService.RemoveSiteData(TestSettings.ntlmTestUrl);
 			
-			vm.url(ntlmTestUrl);
+			vm.url(TestSettings.ntlmTestUrl);
 			vm.setValidUrl();
 			vm.siteTitle("dfdsfds");
 			vm.siteUserName("spadmin");
@@ -536,7 +526,7 @@ define(["system",
             configureSiteVM.clearPopulatedConfigureSiteViewModel();
                         
             //assert
-            QUnit.equal(configureSiteVM.url(), defaultUrlText);
+            QUnit.equal(configureSiteVM.url(), TestSettings.defaultUrlText);
             QUnit.equal(configureSiteVM.siteTitle(), "");
             QUnit.equal(configureSiteVM.sharePointVersion(), 0);
             QUnit.equal(configureSiteVM.siteCredentialType(), credentialType.ntlm);

@@ -1,7 +1,8 @@
 /*global QUnit*/
 define(["services/sharepoint/websService", 
-		"ntlm"],
-    function (websService, ntlm) {
+		"ntlm",
+		"unitTests/unitTestSettings"],
+    function (websService, ntlm, TestSettings) {
         QUnit.module("Testing websService");
         
         
@@ -41,18 +42,17 @@ define(["services/sharepoint/websService",
           
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns 401: unauthorized (NTLM)", function () {
             //arrange
-            var service,
-                url = "http://prodsp2010.dev.local/sites/team4";
+            var service;
             
             //act
-            service = new websService(url);
+            service = new websService(TestSettings.ntlmTestUrl);
             ntlm.setCredentials("ffff", "fff", "fff");
             ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(url)
+            service.GetWeb(TestSettings.ntlmTestUrl)
 				.done(function (result) {
 	                QUnit.ok(false, "GetWeb was successful when it should have been 401");
 	                QUnit.start();
@@ -67,22 +67,21 @@ define(["services/sharepoint/websService",
         QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS returns 200 (NTLM)", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new websService(url);
-            ntlm.setCredentials("dev", "spadmin", "password");
+            service = new websService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetWeb(url)
+            service.GetWeb(TestSettings.ntlmTestUrl)
 				.done(function (result) {
 	                QUnit.ok(true, "GetWeb was successful");
-	                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+	                QUnit.ok(TestSettings.ntlmTestUrl, result.GetWebResult.Web.Url, "Found URL in response");
 	                QUnit.start();
 	            })
 	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -94,22 +93,21 @@ define(["services/sharepoint/websService",
         QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4/",
                 authResult = false;
             
             //act
-            service = new websService(url);
-            ntlm.setCredentials("dev", "spadmin", "password");
+            service = new websService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetWeb(url)
+            service.GetWeb(TestSettings.ntlmTestUrl)
 				.done(function (result) {
 	                QUnit.ok(true, "GetWeb was successful");
-	                QUnit.ok(url, result.GetWebResult.Web.Url, "Found URL in response");
+	                QUnit.ok(TestSettings.ntlmTestUrl, result.GetWebResult.Web.Url, "Found URL in response");
 	                QUnit.start();
 	            })
 	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -121,17 +119,16 @@ define(["services/sharepoint/websService",
          
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {
             //arrange
-            var service,
-                url = "https://kl.sharepoint.com";
+            var service;
             
             //act
-            service = new websService(url);
+            service = new websService(TestSettings.adfsTestUrl);
             deleteAllCookies();
                         
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(url)
+            service.GetWeb(TestSettings.adfsTestUrl)
 				.done(function (result) {
 	                QUnit.ok(false, "GetWeb was successful when it should have been 401");
 	                QUnit.start();

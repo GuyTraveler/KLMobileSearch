@@ -1,11 +1,10 @@
 /*global QUnit*/
 define(["factory/queryServiceFactory",
 		"services/sqlQueryService",
-		"services/kqlQueryService"],
-    function (QueryServiceFactory, sqlQueryService, kqlQueryService) {
-		var ntlmTestUrl = "http://prodsp2010.dev.local";
-		
-        QUnit.module("Testing factory/queryServiceFactory");
+		"services/kqlQueryService",
+		"unitTests/unitTestSettings"],
+    function (QueryServiceFactory, sqlQueryService, kqlQueryService, TestSettings) {
+		QUnit.module("Testing factory/queryServiceFactory");
 
         QUnit.test("test queryServiceFactory initialized", function () {
             //arrange
@@ -21,7 +20,7 @@ define(["factory/queryServiceFactory",
             var service;
 			
             //act 
-			service = QueryServiceFactory.getQueryService(ntlmTestUrl, 14);
+			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 14);
                         
             //assert
             QUnit.ok(service);
@@ -33,7 +32,7 @@ define(["factory/queryServiceFactory",
             var service;
 			
             //act 
-			service = QueryServiceFactory.getQueryService(ntlmTestUrl, 15);
+			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 15);
                         
             //assert
             QUnit.ok(service);
@@ -45,7 +44,7 @@ define(["factory/queryServiceFactory",
             var service;
 			
             //act 
-			service = QueryServiceFactory.getQueryService(ntlmTestUrl, 16);
+			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 16);
                         
             //assert
             QUnit.ok(service);

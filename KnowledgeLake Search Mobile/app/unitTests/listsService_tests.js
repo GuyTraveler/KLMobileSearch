@@ -1,23 +1,10 @@
 /*global QUnit*/
 //explicitly request listsService
 define(["services/sharepoint/listsService", 
-		"ntlm"],
-    function (listsService, ntlm) {
-		var listName = "TestLib",
-			viewName = "",
-			query = "<Query><Where><Contains><FieldRef Name='FileRef' /><Value Type='Text'>sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif</Value></Contains></Where></Query>",
-			viewFields = "<ViewFields />",
-			rowLimit = 0,
-			queryOptions = "<QueryOptions><Folder>TestLib</Folder></QueryOptions>",
-			webID = "",
-			ntlmUser = "spadmin",
-			ntlmPassword = "password",
-			ntlmDomain = "dev",
-			testListID = "60dab558-74aa-41b3-b9ae-96ade51d60d1",  //TestLib
-			testListName = "TestLib";
-		
-		
-        QUnit.module("Testing listsService");
+		"ntlm",
+		"unitTests/unitTestSettings"],
+    function (listsService, ntlm, TestSettings) {
+		QUnit.module("Testing listsService");
        
         QUnit.test("Test can instantiate listsService", function () {
             //arrange
@@ -63,18 +50,17 @@ define(["services/sharepoint/listsService",
 		   
         QUnit.asyncTest("Test lists GOOD URL, BAD CREDS returns 401: unauthorized (NTLM)", function () {
             //arrange
-            var service,
-                url = "http://prodsp2010.dev.local/sites/team4";
+            var service;
             
             //act
-            service = new listsService(url);
+            service = new listsService(TestSettings.ntlmTestUrl);
             ntlm.setCredentials("ffff", "fff", "fff");
             ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID)
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems was successful when it should have been 401");
 	                QUnit.start();
@@ -88,19 +74,18 @@ define(["services/sharepoint/listsService",
 		QUnit.asyncTest("Test lists with valid data returns proper result", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, webID)
+            service.GetListItems(TestSettings.testListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(true, "GetListItems was successful");
 	                QUnit.ok(result);
@@ -131,14 +116,14 @@ define(["services/sharepoint/listsService",
             
             //act
             service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, "fdfd", viewFields, rowLimit, queryOptions, webID)
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, "fdfd", TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -152,19 +137,18 @@ define(["services/sharepoint/listsService",
 		QUnit.asyncTest("Test lists with invalid list name fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems("dfdfadf", viewName, query, viewFields, rowLimit, queryOptions, webID)
+            service.GetListItems("dfdfadf", TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -175,22 +159,21 @@ define(["services/sharepoint/listsService",
 	            });
         });
 				
-		QUnit.asyncTest("Test lists with invalid viewName fails gracefully", function () {
+		QUnit.asyncTest("Test lists with invalid TestSettings.testViewName fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, "ffff", query, viewFields, rowLimit, queryOptions, webID)
+            service.GetListItems(TestSettings.testListNametestListName, "ffff", TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -201,22 +184,21 @@ define(["services/sharepoint/listsService",
 	            });
         });
 				
-		QUnit.asyncTest("Test lists with invalid viewFields fails gracefully", function () {
+		QUnit.asyncTest("Test lists with invalid TestSettings.testViewFields fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, "gggg", rowLimit, queryOptions, webID)
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, "gggg", TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -227,22 +209,21 @@ define(["services/sharepoint/listsService",
 	            });
         });
 				
-		QUnit.asyncTest("Test lists with negative rowLimit fails gracefully", function () {
+		QUnit.asyncTest("Test lists with negative TestSettings.testRowLimit fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, -99, queryOptions, webID)
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, -99, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -253,7 +234,7 @@ define(["services/sharepoint/listsService",
 	            });
         });
 				
-		QUnit.asyncTest("Test lists with invalid queryOptions fails gracefully", function () {
+		QUnit.asyncTest("Test lists with invalid TestSettings.testQueryOptions fails gracefully", function () {
             //arrange
             var service,
                 url = "http://prodsp2010.dev.local/sites/team4",
@@ -261,14 +242,14 @@ define(["services/sharepoint/listsService",
             
             //act
             service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, "ffdfd", webID)
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, "ffdfd", TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -279,22 +260,21 @@ define(["services/sharepoint/listsService",
 	            });
         });
 				
-		QUnit.asyncTest("Test lists with invalid webId fails gracefully", function () {
+		QUnit.asyncTest("Test lists with invalid TestSettings.testWebID fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(listName, viewName, query, viewFields, rowLimit, queryOptions, "ggg")
+            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, "ggg")
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -309,19 +289,18 @@ define(["services/sharepoint/listsService",
 		QUnit.asyncTest("Test Lists.GetList is OK with good list ID", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetList(testListID)
+            service.GetList(TestSettings.testListId)
 				.done(function (result) {
 	                QUnit.ok(true);
 					QUnit.ok(result);
@@ -329,7 +308,7 @@ define(["services/sharepoint/listsService",
 					QUnit.ok(result.GetListResult.List);
 					QUnit.ok(result.GetListResult.List);
 					QUnit.ok(result.GetListResult.List.RootFolder);
-					QUnit.ok(result.GetListResult.List.RootFolder.indexOf(testListName) > -1);
+					QUnit.ok(result.GetListResult.List.RootFolder.indexOf(TestSettings.testListName) > -1);
 					
 					QUnit.start();
 	            })
@@ -342,12 +321,11 @@ define(["services/sharepoint/listsService",
 		QUnit.asyncTest("Test Lists.GetList with bad list ID fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
                 authResult = false;
             
             //act
-            service = new listsService(url);
-            ntlm.setCredentials(ntlmDomain, ntlmUser, ntlmPassword);
+            service = new listsService(TestSettings.ntlmTestUrl);
+            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
             authResult = ntlm.authenticate(service.serviceUrl);
             
             //assert

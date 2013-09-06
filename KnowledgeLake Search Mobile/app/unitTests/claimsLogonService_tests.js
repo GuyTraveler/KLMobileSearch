@@ -1,9 +1,8 @@
 /*global QUnit*/
-define(['services/claimsLogonService'],
-    function (claimsLogonService) {
-		var claimsTestUrl = "https://knowledgelake.sharepoint.com";
-		
-        QUnit.module("Testing claimsLogonService");
+define(['services/claimsLogonService',
+		'unitTests/unitTestSettings'],
+    function (claimsLogonService, TestSettings) {
+		QUnit.module("Testing claimsLogonService");
 
         QUnit.test("test can claimsLogonService initialize properly", function () {
             //arrange
@@ -21,10 +20,10 @@ define(['services/claimsLogonService'],
 			var service;
 			
 			//act
-			service = new claimsLogonService(claimsTestUrl);
+			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			
 			//assert
-			QUnit.equal(service.isLoggedOnUrl(claimsTestUrl + system.claimsSignInIndicators[0]), false);
+			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl + system.claimsSignInIndicators[0]), false);
         });
 			
 		QUnit.test("claimsLogonService.isLoggedOnUrl with exact url is true", function () {
@@ -32,11 +31,11 @@ define(['services/claimsLogonService'],
 			var service;
 			
 			//act
-			service = new claimsLogonService(claimsTestUrl);
+			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			
 			//assert
 			QUnit.ok(service);
-			QUnit.equal(service.isLoggedOnUrl(claimsTestUrl), true);
+			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl), true);
         });
 		
 		QUnit.test("claimsLogonService.isLoggedOnUrl: wrong url returns false", function () {
@@ -44,7 +43,7 @@ define(['services/claimsLogonService'],
 			var service;
 			
 			//act
-			service = new claimsLogonService(claimsTestUrl);
+			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			
 			//assert
 			QUnit.equal(service.isLoggedOnUrl("http://www.google.com"), false);
@@ -56,7 +55,7 @@ define(['services/claimsLogonService'],
 				logonPromise;
 			
             //act 
-			service = new claimsLogonService(claimsTestUrl);
+			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			logonPromise = service.logon();
 			
             //assert
@@ -89,7 +88,7 @@ define(['services/claimsLogonService'],
 				checkStatusPromise;
 			
             //act 
-			service = new claimsLogonService(claimsTestUrl);
+			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			logonPromise = service.logon();
 			
             //assert

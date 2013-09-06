@@ -2,19 +2,10 @@
 //explicit request to service
 define(["services/documentService",
 		"INtlmLogonService",
+		"unitTests/unitTestSettings",
 		"extensions"],
-    function (documentService, ntlmLogonService) {
-		var siteUrl = "http://prodsp2010.dev.local/sites/team4",
-			docUrl = "http://prodsp2010.dev.local/sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif",
-			testDispFormUrl = "http://prodsp2010.dev.local/sites/team4/TestLib/Forms/DispForm.aspx?ID=1498",
-			testFileLeafRef = "1498;#asdfasdfadsfsdf",
-			testListId = "{60DAB558-74AA-41B3-B9AE-96ADE51D60D1}",
-			testItemId = "1498",
-			ntlmTestUser = "spadmin",
-			ntlmTestPassword = "password",
-			ntlmTestDomain = "dev.local"; 
-		
-        QUnit.module("Testing documentService");
+    function (documentService, ntlmLogonService, TestSettings) {
+		QUnit.module("Testing documentService");
         
         
         QUnit.test("Test can instantiate documentService", function () {
@@ -33,10 +24,10 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(docUrl);
+            service = new documentService(TestSettings.docUrl);
             
             //assert
-            QUnit.equal(service.parseItemId(testFileLeafRef), testItemId);
+            QUnit.equal(service.parseItemId(TestSettings.testFileLeafRef), TestSettings.testItemId);
         });
 				
 		QUnit.test("Test can documentService.parseItemId returns -1 with bad params 1", function () {
@@ -44,7 +35,7 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(docUrl);
+            service = new documentService(TestSettings.docUrl);
             
             //assert
             QUnit.equal(service.parseItemId("dfdaffdsf"), -1);
@@ -55,7 +46,7 @@ define(["services/documentService",
             var service;
             
             //act
-            service = new documentService(docUrl);
+            service = new documentService(TestSettings.docUrl);
             
             //assert
             QUnit.equal(service.parseItemId(null), -1);
@@ -67,11 +58,11 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(docUrl);
+            service = new documentService(TestSettings.docUrl);
             relUrl = service.getServerRelativeUrl();
 			
             //assert
-            QUnit.ok(docUrl.endsWith(relUrl));
+            QUnit.ok(TestSettings.docUrl.endsWith(relUrl));
         });
 		
 		QUnit.test("Test can documentService.getServerRelativeUrl returns empty with bad url 1 (no args)", function () {
@@ -93,11 +84,11 @@ define(["services/documentService",
 				relUrl;
             
             //act
-            service = new documentService(docUrl);
-            relUrl = service.getServerRelativeUrl(docUrl);
+            service = new documentService(TestSettings.docUrl);
+            relUrl = service.getServerRelativeUrl(TestSettings.docUrl);
 			
             //assert
-            QUnit.ok(docUrl.endsWith(relUrl));
+            QUnit.ok(TestSettings.docUrl.endsWith(relUrl));
         });
 		
 		QUnit.test("Test can documentService.getServerRelativeUrl returns empty with bad url 1 (with args)", function () {
@@ -132,16 +123,16 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
 				service.getListID()
 					.done(function (result) {
 						QUnit.ok(result);
-						QUnit.equal(result, testListId);
+						QUnit.equal(result, TestSettings.testListId);
 						QUnit.start();
                     })
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -156,15 +147,15 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getListID fails gracefully with bad docUrl", function () {
+		QUnit.asyncTest("Test documentService.getListID fails gracefully with bad TestSettings.docUrl", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
             service = new documentService("asdfsafds");
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
@@ -190,16 +181,16 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
 				service.getRootFolderUrl()
 					.done(function (result) {
 						QUnit.ok(result);
-						QUnit.ok(docUrl.indexOf(result) > -1);
+						QUnit.ok(TestSettings.docUrl.indexOf(result) > -1);
 						QUnit.start();
                     })
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -220,16 +211,16 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
 				service.getListItemID()
 					.done(function (result) {
 						QUnit.ok(result);
-						QUnit.equal(result, testItemId);
+						QUnit.equal(result, TestSettings.testItemId);
 						QUnit.start();
                     })
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -244,15 +235,15 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getListItemID with bad docUrl fails gracefully", function () {
+		QUnit.asyncTest("Test documentService.getListItemID with bad TestSettings.docUrl fails gracefully", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
             service = new documentService("dfasdfsdfasfas");
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
@@ -281,16 +272,16 @@ define(["services/documentService",
 				logonPromise;
             
             //act
-            service = new documentService(docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
 				service.getDisplayFormUrl()
 					.done(function (result) {
 						QUnit.ok(result);
-						QUnit.equal(result, testDispFormUrl);
+						QUnit.equal(result, TestSettings.testDispFormUrl);
 						
 						QUnit.start();
                     })
@@ -306,15 +297,15 @@ define(["services/documentService",
 			});
         });
 		
-		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad docUrl fails gracefully", function () {
+		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad TestSettings.docUrl fails gracefully", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
             service = new documentService("dfasdfsdfasfas");
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
@@ -335,15 +326,15 @@ define(["services/documentService",
 			});
         });
         
-        QUnit.asyncTest("Test documentService.getSiteUrl", function () {
+        QUnit.asyncTest("Test documentService.getsiteUrl", function () {
             //arrange
             var service,
 				logonPromise;
             
             //act
-            service = new documentService(docUrl);
-			logonService = new ntlmLogonService(siteUrl);
-			logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword, docUrl);
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
 						
             //assert
             logonPromise.done(function () {

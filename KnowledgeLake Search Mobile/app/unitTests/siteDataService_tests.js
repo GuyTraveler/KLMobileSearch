@@ -1,12 +1,10 @@
 /*global QUnit*/
 //explicitly request siteDataService
 define(["services/sharepoint/siteDataService", 
-		"ntlm"],
-    function (siteDataService, ntlm) {
-		var testListID = "{60dab558-74aa-41b3-b9ae-96ade51d60d1}",
-			testItemID = "1498";
-		
-        QUnit.module("Testing siteDataService");
+		"ntlm",
+		"unitTests/unitTestSettings"],
+    function (siteDataService, ntlm, TestSettings) {
+		QUnit.module("Testing siteDataService");
        
         QUnit.test("Test can instantiate siteDataService", function () {
             //arrange
@@ -148,8 +146,8 @@ define(["services/sharepoint/siteDataService",
 					QUnit.ok(result.strItemID);
 					QUnit.ok(result.strListID);
 					
-					QUnit.equal(result.strItemID.value.toUpperCase(), testItemID.toUpperCase());
-					QUnit.equal(result.strListID.value.toUpperCase(), testListID.toUpperCase());
+					QUnit.equal(result.strItemID.value.toUpperCase(), TestSettings.testItemId.toUpperCase());
+					QUnit.equal(result.strListID.value.toUpperCase(), TestSettings.testListId.toUpperCase());
 	                
 	                QUnit.start();
 	            })
