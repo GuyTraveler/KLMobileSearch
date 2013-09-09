@@ -20,6 +20,14 @@ define(function () {
 		           	.replace(/"/g, '&quot;');
 		};
 	}
+    
+    if (!String.prototype.encodeXMLWithoutQuotes) {
+		String.prototype.encodeXMLWithoutQuotes = function () {
+			return this.replace(/&/g, '&amp;')
+		           	.replace(/</g, '&lt;')
+		           	.replace(/>/g, '&gt;');
+		};
+	}
 	
 	if (!String.prototype.encodeAngleBrackets) {
 		String.prototype.encodeAngleBrackets = function () {

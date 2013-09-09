@@ -1,5 +1,5 @@
-define(["knockout", "system", "services/searchDataCachingService", 'services/keywordValidationService'], 
-    function (ko, system, SearchDataCachingService, ValidationService) {
+define(["knockout", "system", "services/searchDataCachingService", 'services/keywordValidationService', "services/imaging/serverSavedSearchesService"], 
+    function (ko, system, SearchDataCachingService, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
                 resultsUrl = "#results";            
@@ -23,16 +23,16 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             }
             
             self.LoadSearchData = function () {
-                var loadSitesPromise = SearchDataCachingService.LoadSearches(homeViewModel.selectedSite);
+                var service = new serverSavedSearchesService();
+                
+                var loadServerSavedSearchesPromise = service.loadServerSavedSearches(self.site());
               
-                loadSitesPromise.done(function (result) {
-                    if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
-                        self.SetDataSource(result.response);
+                loadServerSavedSearchesPromise.done(function (result) {   
+                    self.SetDataSource(result);
                 });
               
-                loadSitesPromise.fail(function (error) {
-                    // don't know exactly how this should be handled 
-                    // (no saved searches, local search file not found, filesystem instance not initialized)
+                loadServerSavedSearchesPromise.fail(function (error) {
+                    // failed to load and parse server saved searches
                 });            
             }
             

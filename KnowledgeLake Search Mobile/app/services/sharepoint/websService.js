@@ -19,6 +19,10 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
             return self.executeSoapMethod("GetWeb", parameters);
         }
         
+        self.GetActivatedFeatures = function () {            
+            return self.executeSoapMethod("GetActivatedFeatures");
+        }
+        
         return self;
     };
     
