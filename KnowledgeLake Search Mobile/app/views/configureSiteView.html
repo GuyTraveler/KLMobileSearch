@@ -6,7 +6,7 @@
     </div>
 </header>
 
-<h3 data-bind="text: system.strings.configureSitePageTitle" />
+<h3 id="configureSiteTitle" data-bind="text: system.strings.configureSitePageTitle" />
 
 <form id="siteForm">
 	<ul data-role="listview" data-style="inset">
@@ -20,7 +20,7 @@
 				<!--<input class="list-view-input" type="url"
 					   data-bind="if: (!window.App || window.App.os.ios), value: url, event: { blur: validateSiteUrl }, enable: enableUrl" /> -->           
 				
-	            <input class="list-view-input" type="text"
+	            <input id="urlText" class="list-view-input" type="text"
 					   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" />            
 				
 	        </label>    

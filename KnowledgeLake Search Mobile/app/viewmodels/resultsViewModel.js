@@ -80,7 +80,7 @@ define(["knockout",
 			system.logVerbose("resultsViewModel show");
 			
 			if(savedSearchViewModel.site)  
-                self.keywordSearch(savedSearchViewModel.site(), savedSearchViewModel.keyword());
+                self.keywordSearch(savedSearchViewModel.site(), savedSearchViewModel.keyword());		
         }
         
         self.hide = function (e) {            
@@ -206,6 +206,14 @@ define(["knockout",
             });
             
             return dfd.promise();
+        }
+		
+		self.afterShow = function (e) {
+			var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+				
+			system.logVerbose("resultsViewModel afterShow");
+			
+			tabstrip.clear();
         }
             
         return self;

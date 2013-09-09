@@ -1,14 +1,11 @@
 /*global QUnit*/
 define(["INtlmLogonService",
-        "domain/keywordConjunction"],
-    function (ntlmLogonService, keywordConjunction) {
+        "domain/keywordConjunction",
+		"unitTests/unitTestSettings"],
+    function (ntlmLogonService, keywordConjunction, TestSettings) {
 		
 		var executeQueryServiceTests = function (queryService) {
-	        var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
-				ntlmTestUser = "spadmin",
-				ntlmTestPassword = "password",
-				ntlmTestDomain = "dev.local",
-	            keywordSearchTest;
+	        var keywordSearchTest;
 	        
 	       
 	        QUnit.test("Test can instantiate queryService", function () {
@@ -92,9 +89,9 @@ define(["INtlmLogonService",
 	            //act
 	            shouldFail = shouldFail && shouldFail !== false;
 	            
-	            service = new queryService(ntlmTestUrl);
-	            logonService = new ntlmLogonService(ntlmTestUrl);
-				logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+	            service = new queryService(TestSettings.ntlmTestUrl);
+	            logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+				logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 				
 	            //assert
 	            QUnit.ok(logonPromise);
@@ -478,9 +475,9 @@ define(["INtlmLogonService",
 					logonPromise;
 	            
 	            //act
-	            service = new queryService(ntlmTestUrl);
-				logonService = new ntlmLogonService(ntlmTestUrl);
-				logonPromise = logonService.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+	            service = new queryService(TestSettings.ntlmTestUrl);
+				logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+				logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 				
 	            //assert
 	            logonPromise.done(function (result) {

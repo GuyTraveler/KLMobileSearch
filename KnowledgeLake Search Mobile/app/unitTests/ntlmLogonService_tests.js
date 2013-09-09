@@ -1,13 +1,8 @@
 /*global QUnit*/
-define(['services/ntlmLogonService'],
-    function (ntlmLogonService) {
-		var ntlmTestUrl = "http://prodsp2010.dev.local/sites/team4",
-			claimsTestUrl = "https://kl.sharepoint.com",
-			ntlmTestUser = "spadmin",
-			ntlmTestPassword = "password",
-			ntlmTestDomain = "dev.local";
-		
-        QUnit.module("Testing ntlmLogonService");
+define(['services/ntlmLogonService',
+		'unitTests/unitTestSettings'],
+    function (ntlmLogonService, TestSettings) {
+		QUnit.module("Testing ntlmLogonService");
 
         QUnit.test("test can ntlmLogonService initializes properly", function () {
             //arrange
@@ -26,7 +21,7 @@ define(['services/ntlmLogonService'],
 				logonPromise;
 			
             //act 
-			service = new ntlmLogonService(ntlmTestUrl);
+			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
 			logonPromise = service.logon("", "", "");
                         
             //assert
@@ -52,8 +47,8 @@ define(['services/ntlmLogonService'],
 				checkLogonPromise;
 			
             //act 
-			service = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = service.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = service.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
                         
             //assert
             QUnit.ok(logonPromise);
@@ -109,7 +104,7 @@ define(['services/ntlmLogonService'],
 				logonPromise;
 			
             //act 
-			service = new ntlmLogonService(claimsTestUrl);
+			service = new ntlmLogonService(TestSettings.claimsTestUrl);
 			logonPromise = service.logon("", "", "");
                         
             //assert
@@ -132,8 +127,8 @@ define(['services/ntlmLogonService'],
 				logonPromise;
 			
             //act 
-			service = new ntlmLogonService(ntlmTestUrl);
-			logonPromise = service.logon(ntlmTestDomain, ntlmTestUser, ntlmTestPassword);
+			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = service.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
                         
             //assert
             QUnit.ok(logonPromise);
