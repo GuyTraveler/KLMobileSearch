@@ -3,12 +3,6 @@ body {
 }
 
 
-.km-ios input[type=search].text-border {
-	border: solid 1px #C4CCD5!important;
-	border-radius: 15px;
-	margin-top: -20px;
-}
-
 input[type=search].invalid {
     color: red!important;
 }
@@ -58,6 +52,7 @@ p.list-view-input {
     -moz-transition: opacity 1s linear;
     -o-transition: opacity 1s linear;
     transition: opacity 1s linear;
+	z-index: 10000;	
 }
 
 .fade-out {
@@ -66,6 +61,7 @@ p.list-view-input {
     -moz-transition: opacity 1s linear;
     -o-transition: opacity 1s linear;
     transition: opacity 1s linear;
+	z-index: -1;	
 }
 
 #messageBox {
@@ -79,6 +75,5 @@ p.list-view-input {
 	padding: 0.5em 0em;
 	border: 1px solid lightgray;
 	border-radius: 5px;
-	text-align: center;
-	z-index: 10000;	
+	text-align: center;	
 }

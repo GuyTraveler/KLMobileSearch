@@ -37,11 +37,11 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             }
             
             self.init = function (e) {
-                system.logVerbose("searchViewModel init");
+                system.logVerbose("savedSearchViewModel init");
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("searchViewModel beforeShow");
+                system.logVerbose("savedSearchViewModel beforeShow");
                 
                 if(homeViewModel.selectedSite)
                 {                    
@@ -56,15 +56,19 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             }
             
             self.show = function (e) {
-                system.logVerbose("searchViewModel show");
+                system.logVerbose("savedSearchViewModel show");
             }
             
             self.afterShow = function (e) {
-                system.logVerbose("searchViewModel afterShow");
+                var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+				
+				system.logVerbose("savedSearchViewModel afterShow");
+				
+				tabstrip.clear();
             }
             
             self.hide = function (e) {
-                system.logVerbose("searchViewModel hide");
+                system.logVerbose("savedSearchViewModel hide");
             }
             
             self.search = function (e) {

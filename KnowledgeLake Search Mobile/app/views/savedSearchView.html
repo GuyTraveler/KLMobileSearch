@@ -11,7 +11,7 @@
 </div>
 <div class="keywordContainer">				
     <input type="search"
-    	   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
+    	   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
     
     <button data-role="button" data-icon="search" data-bind="click: search, enable: isKeywordValid"/>
 </div>

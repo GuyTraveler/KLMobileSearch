@@ -6,23 +6,27 @@ define(["knockout", "system"],
             self.documentTitle = ko.observable("PDF");
             
             self.init = function (e) {
-                system.logVerbose("searchViewModel init");
+                system.logVerbose("documentViewModel init");
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("searchBuilderViewModel beforeShow");
+                system.logVerbose("documentViewModel beforeShow");
             }
             
             self.show = function (e) {
-                system.logVerbose("searchBuilderViewModel show");
+                system.logVerbose("documentViewModel show");
             }
             
             self.afterShow = function (e) {
-                system.logVerbose("searchBuilderViewModel afterShow");
+				var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+				
+                system.logVerbose("documentViewModel afterShow");
+				
+				tabstrip.clear();
             }
             
             self.hide = function (e) {
-                system.logVerbose("searchBuilderViewModel hide");
+                system.logVerbose("documentViewModel hide");
             }
             
             return self;
