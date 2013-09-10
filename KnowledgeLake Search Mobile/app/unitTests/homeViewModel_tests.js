@@ -2,14 +2,12 @@
 define(['require',
         'jquery',
         'knockout',
-        'knockoutMapping',
         'viewmodels/homeViewModel',
         "domain/site", 
 		"domain/credential", 
 		"domain/credentialType", 
-        "services/siteDataCachingService",
-        "viewmodels/sitesViewModel"],
-    function (require, $, ko, mapping, homeViewModel, site, credential, credentialType, SiteDataCachingService, sitesViewModel) {
+        "services/siteDataCachingService"],
+    function (require, $, ko, homeViewModel, site, credential, credentialType, SiteDataCachingService) {
         QUnit.module("Testing homeViewModel");
         
         QUnit.test("test SetDataSource if siteDataSource is already defined", function () {
@@ -22,45 +20,28 @@ define(['require',
             vm = new homeViewModel();
             vm.siteDataSource(["test", "data"]);
             
-            var expected = new sitesViewModel(siteData).sites;
-            
 			//act
             vm.SetDataSource(siteData);
 			
 			//assert
-            QUnit.deepEqual(mapping.toJS(vm.siteDataSource()), mapping.toJS(expected));
+            QUnit.deepEqual(vm.siteDataSource(), siteData);
         });
         
         QUnit.test("test SetDataSource if siteDataSource is empty", function () {
             //arrange
-            var vm;
-			var siteData = [];
+            var vm,
+                siteData = [];
+            
             siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             
             vm = new homeViewModel();            
             vm.siteDataSource([]);
             
-            var expected = new sitesViewModel(siteData).sites;
-            
 			//act
             vm.SetDataSource(siteData);
 			
 			//assert
-            QUnit.deepEqual(mapping.toJS(vm.siteDataSource()), mapping.toJS(expected));
-        });
-        
-        QUnit.test("test homeViewModel onBackKey", function () {
-            //arrange
-            var vm = new homeViewModel();
-            
-            window.history = {"back" : null};            
-            window.history.back = function () {};
-            
-            //act 
-            vm.onBackKey();
-                        
-            //assert
-            QUnit.ok(vm);
+            QUnit.deepEqual(vm.siteDataSource(), siteData);
         });
         
         QUnit.test("test homeViewModel ctor", function () {
@@ -99,13 +80,11 @@ define(['require',
             
             SiteDataCachingService.sites.push(siteData);
             
-            var expected = new sitesViewModel(SiteDataCachingService.sites).sites;
-            
             //act
             vm.LoadSiteData();
                         
             //assert
-            QUnit.deepEqual(mapping.toJS(vm.siteDataSource()), mapping.toJS(expected));
+            QUnit.deepEqual(vm.siteDataSource(), SiteDataCachingService.sites);
         }); 
         
         QUnit.test("test homeViewModel LoadSiteData if sites is null", function () {
@@ -166,116 +145,6 @@ define(['require',
             //act 
             vm = new homeViewModel();
             vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
-        QUnit.test("test homeViewModel navigate", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.navigate();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test homeViewModel mainGripClick", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));            
-            
-            vm = new homeViewModel();
-            
-            //act 
-            vm.mainGripClick(siteData,
-				{
-					"currentTarget": {
-						"parentElement": {
-							"parentElement": "<div/>"
-						}
-					},
-					stopImmediatePropagation: function () { QUnit.ok(true, "stopImmediatePropagation called"); }
-				});
-                        
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test homeViewModel keywordGripClick", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));            
-            
-            vm = new homeViewModel();
-
-            //act 
-            vm.keywordGripClick(siteData,
-				{
-					"currentTarget": {
-						"parentElement": {
-							"parentElement": "<div/>"
-						}
-					},
-					stopImmediatePropagation: function () { QUnit.ok(true, "stopImmediatePropagation called"); }
-				});
-                        
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test homeViewModel swipe left", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.swipe({"direction":"left", "touch":{"currentTarget":$("<div/>")}});
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test homeViewModel swipe right", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.swipe({"direction":"right", "touch":{"currentTarget":$("<div/>")}});
-                        
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test homeViewModel showKeywordSearch", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));            
-            
-            vm = new homeViewModel();
-            vm.selectedSite = siteData;
-            
-            //act 
-            vm.showKeywordSearch("<div/>");
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
-        QUnit.test("test homeViewModel hideKeywordSearch", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));            
-            
-            vm = new homeViewModel();
-            vm.selectedSite = siteData;
-            
-            //act 
-            vm.hideKeywordSearch("<div/>");
                         
             //assert
             QUnit.ok(vm);
@@ -358,61 +227,33 @@ define(['require',
             QUnit.equal(result, true);
         });
         
-        QUnit.test("test homeViewModel onAddClick", function () {
+        QUnit.test("test homeViewModel siteClick", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")),
+                searchUrl = "#savedSearch",
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            
+            vm = new homeViewModel();
+            
+            //act
+            vm.siteClick(siteData);
+                        
+            //assert
+            QUnit.equal(window.App.currentUrl, searchUrl);   
+        });
+        
+        QUnit.test("test homeViewModel addSite", function () {
+            //arrange
+            var vm,
                 configureSiteUrl = "#configureSite";
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
-            vm.navBarVisible(true);
             
             //act
-            vm.onAddClick();
+            vm.addSite();
                         
             //assert
-            QUnit.equal(vm.selectedSite, null);            
-            QUnit.equal(vm.navBarVisible(), false);
             QUnit.equal(window.App.currentUrl, configureSiteUrl);            
-        });
-        
-        QUnit.test("test homeViewModel onResultsClick", function () {
-            //arrange
-            var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")),
-                resultsUrl = "#results";
-            
-            vm = new homeViewModel();
-            vm.selectedSite = siteData;
-            vm.navBarVisible(true);
-            
-            //act
-            vm.onResultsClick();
-                        
-            //assert
-            QUnit.equal(vm.selectedSite, null);            
-            QUnit.equal(vm.navBarVisible(), false);            
-            QUnit.equal(window.App.currentUrl, resultsUrl);
-        });
-        
-        QUnit.test("test homeViewModel search", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")),                
-                homeUrl = "#home",
-                resultsUrl = "#results";
-            
-            vm = new homeViewModel();
-            
-            if(window.App)
-                window.App.navigate(homeUrl);
-            
-            //act
-            vm.search(siteData);
-                        
-            //assert
-            QUnit.equal(window.App.currentUrl, resultsUrl);
         });
         
         QUnit.test("test homeViewModel editSite if selectedSite is null", function () {
@@ -460,7 +301,6 @@ define(['require',
             window.AppLoaded(true);            
             
             SiteDataCachingService.sites.push(testData);
-            var expected = new sitesViewModel(SiteDataCachingService.sites).sites;
             SiteDataCachingService.sites.push(siteData);
             
             vm.LoadSiteData();
@@ -470,6 +310,6 @@ define(['require',
             vm.deleteSite();
                         
             //assert
-            QUnit.deepEqual(mapping.toJS(vm.siteDataSource()), mapping.toJS(expected));
+            QUnit.deepEqual(vm.siteDataSource(), SiteDataCachingService.sites);
         });
     });

@@ -10,7 +10,7 @@ define(["knockout",
                 configureSiteUrl = "#configureSite",                
                 searchUrl = "#savedSearch";
                        
-            self.siteDataSource = ko.observableArray();
+            self.siteDataSource = ko.observableArray([]);
             
             self.selectedSite = null;
             self.navBarVisible = ko.observable(false);

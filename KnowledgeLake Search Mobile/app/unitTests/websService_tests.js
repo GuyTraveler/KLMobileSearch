@@ -139,6 +139,27 @@ define(["services/sharepoint/websService",
 	            });
         });
         
+        QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {
+            //arrange
+            var service;
+            
+            //act
+            service = new websService(TestSettings.ntlmTestUrl);
+                        
+            //assert
+            QUnit.ok(service);
+            
+            service.GetActivatedFeatures()
+				.done(function (result) {
+	                QUnit.ok(true, "GetActivatedFeatures was successful");
+	                QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false, "GetActivatedFeatures failed");
+	                QUnit.start();
+	            });
+        });
+        
         
         function deleteAllCookies() {
             var cookies = document.cookie.split(";");

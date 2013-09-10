@@ -3,14 +3,13 @@ define(['require',
         'jquery',
         'knockout',
         'viewmodels/resultsViewModel',
-        'viewmodels/homeViewModel',
-        "viewmodels/siteViewModel",
+        'viewmodels/savedSearchViewModel',
         "domain/result",
         "domain/site",
         "domain/credential",
         "domain/credentialType",
         "domain/promiseResponse/logonResponse"],
-    function (require, $, ko, resultsViewModel, homeViewModel, siteViewModel, result, site, credential, credentialType, logonResponse) {
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, logonResponse) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -60,17 +59,31 @@ define(['require',
         
         QUnit.test("test resultsViewModel beforeShow", function () {
             //arrange
-            var vm,
-                homeVM;
+            var vm;
             
-            homeVM = new homeViewModel();
-			vm = new resultsViewModel();
-            homeVM.selectedSite = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"), "ryan");
-            
-            window.homeViewModel = homeVM;
+            vm = new resultsViewModel();
             
             //act
             vm.beforeShow();
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        QUnit.test("test resultsViewModel show", function () {
+            //arrange
+            var vm,
+                savedSearchVM;
+            
+            savedSearchVM = new savedSearchViewModel();
+			vm = new resultsViewModel();
+            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"), "ryan"));
+            savedSearchVM.keyword = ko.observable("ryan");
+            
+            window.savedSearchViewModel = savedSearchVM;
+            
+            //act
+            vm.show();
                         
             //assert
             QUnit.ok(vm);
@@ -171,14 +184,14 @@ define(['require',
         QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
-                homeVM,
-                resultData = new result("http://prodsp2010.dev.local/sites/team5/Simulation Library/2013022000028SIMSR101.TIF", {"title":"Invoice"});   
+                savedSearchVM,
+                resultData = new result("http://prodsp2010.dev.local/sites/team5/Simulation Library/2013022000028SIMSR101.TIF", {"title":"Invoice"}); 
             
-            homeVM = new homeViewModel();
+            savedSearchVM = new savedSearchViewModel();
 			vm = new resultsViewModel();
-            homeVM.selectedSite = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             
-            window.homeViewModel = homeVM;      
+            window.savedSearchViewModel = savedSearchVM;      
             
             //act
             var navigatePromise = vm.navigateToResult(resultData);    
@@ -203,7 +216,7 @@ define(['require',
         QUnit.asyncTest("test resultsViewModel keywordSearch bad credentials", function () {
             //arrange
             var vm,            
-                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan", "pw", "dev"), "ryan");  
+                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan", "pw", "dev"));  
             
             vm = new resultsViewModel();
             
@@ -221,6 +234,7 @@ define(['require',
                 QUnit.start();
             });
         });
+        
        /* TODO: bring this back when we're done building out the screens
         QUnit.asyncTest("test resultsViewModel keywordSearch good credentials", function () {
             //arrange

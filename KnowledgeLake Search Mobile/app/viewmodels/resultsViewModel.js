@@ -18,7 +18,7 @@ define(["knockout",
             }
         });
 		
-        self.resultDataSource = ko.observableArray(); 
+        self.resultDataSource = ko.observableArray([]); 
         
         self.selectedResult = null;
         self.windowRef = null; 
