@@ -55,7 +55,35 @@ define(['require',
             QUnit.ok(vm);
             QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
-        });         
+        });    
+        
+        QUnit.test("test resultViewModel init", function () {
+            //arrange
+            var vm;
+            
+            vm = new resultsViewModel();
+            
+            //act 
+            vm.init();
+            
+            //assert
+            QUnit.ok(vm);
+        }); 
+        
+        QUnit.test("test resultsViewModel swipe", function () {
+            //arrange
+            var vm,
+                swipeObject = {"direction":"right"};
+            
+            vm = new resultsViewModel();
+            
+            
+            //act
+            vm.swipe(swipeObject);
+                        
+            //assert
+            QUnit.ok(vm);
+        });
         
         QUnit.test("test resultsViewModel beforeShow", function () {
             //arrange
@@ -87,6 +115,20 @@ define(['require',
                         
             //assert
             QUnit.ok(vm);
+        });
+        
+        QUnit.test("test resultsViewModel hide", function () {
+            //arrange
+            var vm;
+            
+            vm = new resultsViewModel();
+            
+            //act
+            vm.hide();
+                        
+            //assert
+            QUnit.equal(vm.selectedResult, null);
+            QUnit.deepEqual(vm.resultDataSource(), []);
         });
         
         QUnit.test("test resultsViewModel setSelectedResult if selectedResult is null", function () {
@@ -233,18 +275,17 @@ define(['require',
                 QUnit.equal(error.response, logonResponse.LogonFailed);
                 QUnit.start();
             });
-        });
+        });   
         
-       /* TODO: bring this back when we're done building out the screens
         QUnit.asyncTest("test resultsViewModel keywordSearch good credentials", function () {
             //arrange
             var vm,            
-                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"), "ryan");  
+                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));  
             
             vm = new resultsViewModel();
             
             //act
-            var keywordSearchPromise = vm.keywordSearch(new siteViewModel(siteData));
+            var keywordSearchPromise = vm.keywordSearch(siteData, "ryan");
             
             //assert
             keywordSearchPromise.done(function (result) {
@@ -256,5 +297,19 @@ define(['require',
                 QUnit.ok(false);
                 QUnit.start();
             });
-        });*/
+        });
+        
+        QUnit.test("test resultViewModel afterShow", function () {
+            //arrange
+            var vm, 
+                object = {"view": {"footer": {"find": function (control) { return {"data": function(control) { return {"clear": function () {}}}}}}}};
+            
+            vm = new resultsViewModel();
+            
+            //act 
+            vm.afterShow(object);
+            
+            //assert
+            QUnit.ok(vm);
+        });
     });
