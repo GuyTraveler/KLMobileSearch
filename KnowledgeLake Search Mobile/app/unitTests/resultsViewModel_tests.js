@@ -105,7 +105,7 @@ define(['require',
             
             savedSearchVM = new savedSearchViewModel();
 			vm = new resultsViewModel();
-            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"), "ryan"));
+            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             savedSearchVM.keyword = ko.observable("ryan");
             
             window.savedSearchViewModel = savedSearchVM;

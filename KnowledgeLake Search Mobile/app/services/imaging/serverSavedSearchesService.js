@@ -18,12 +18,11 @@ define(["jquery",
             var facetSearchPromise = service.FacetSearch(search.query);
             
             facetSearchPromise.done(function (result) {
-                dfd.resolve(self.parseSearchResults(searchResult.FacetSearchResult.Data)); 
+                dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data)); 
             });
           
             facetSearchPromise.fail(function (error) {
-                // failed to complete search
-                dfd.reject();
+                dfd.reject(error);
             });        
             
             return dfd.promise();
@@ -54,20 +53,17 @@ define(["jquery",
                         });
                       
                         getQueriesForUser.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                            // failed to get queries
-                            dfd.reject();
+                            dfd.reject("failed to get queries");
                         }); 
                     });
                   
                     getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        // failed to get query user
-                        dfd.reject();
+                        dfd.reject("failed to get query user");
                     }); 
                 });
               
                 getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    // failed to get current user name
-                    dfd.reject();
+                    dfd.reject("failed to get current user name");
                 });
             });
           

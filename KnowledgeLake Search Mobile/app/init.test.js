@@ -35,7 +35,10 @@ require(["config"], function (config) {
 						  testRootPath + "siteDataService_tests",
 						  testRootPath + "documentService_tests",
                           testRootPath + "validationService_tests",
-						  testRootPath + "queryServiceFactory_tests"
+						  testRootPath + "queryServiceFactory_tests",
+						  testRootPath + "facetService_tests",
+                          testRootPath + "imagingDetService_tests",
+                          testRootPath + "serverSavedService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
