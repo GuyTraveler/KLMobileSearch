@@ -43,7 +43,7 @@ define(['require',
 			//assert
             QUnit.equal(vm.resultDataSource(), resultData);
         });
-        
+       
         QUnit.test("test resultViewModel ctor", function () {
             //arrange
             var vm;
@@ -97,11 +97,12 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });
-        
-        QUnit.test("test resultsViewModel show", function () {
+       
+        QUnit.asyncTest("test resultsViewModel show", function () {
             //arrange
             var vm,
-                savedSearchVM;
+                savedSearchVM,
+				keywordSearchPromise;
             
             savedSearchVM = new savedSearchViewModel();
 			vm = new resultsViewModel();
@@ -111,10 +112,21 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            vm.show();
+            keywordSearchPromise = vm.show();
                         
             //assert
             QUnit.ok(vm);
+			QUnit.ok(keywordSearchPromise);
+			
+			keywordSearchPromise.done(function () {
+				QUnit.ok(true);
+				QUnit.start();
+            });
+			
+			keywordSearchPromise.fail(function () {
+				QUnit.ok(false);
+				QUnit.start();
+            });
         });
         
         QUnit.test("test resultsViewModel hide", function () {
@@ -254,7 +266,7 @@ define(['require',
                 QUnit.start();
             });
         });
-        
+      
         QUnit.asyncTest("test resultsViewModel keywordSearch bad credentials", function () {
             //arrange
             var vm,            
@@ -275,7 +287,7 @@ define(['require',
                 QUnit.equal(error.response, logonResponse.LogonFailed);
                 QUnit.start();
             });
-        });   
+        });
         
         QUnit.asyncTest("test resultsViewModel keywordSearch good credentials", function () {
             //arrange
