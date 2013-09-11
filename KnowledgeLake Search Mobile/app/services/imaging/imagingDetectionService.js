@@ -12,7 +12,7 @@ define(["jquery", "IWebsService", "ntlm"], function ($, websService, ntlm) {
             
             service.GetActivatedFeatures()
 				.done(function (result) {
-                    dfd.resolve(self.identifyImagingSearchByFeatureID(result));
+                    dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
 	            })
 	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                     dfd.fail();
@@ -26,7 +26,7 @@ define(["jquery", "IWebsService", "ntlm"], function ($, websService, ntlm) {
             
             if(featureIdList)
             {
-                if(featureIdList.GetActivatedFeaturesResult.value.indexOf(searchFeatureID) !== -1)
+                if(featureIdList.indexOf(searchFeatureID) !== -1)
                     return true;
             }
             
