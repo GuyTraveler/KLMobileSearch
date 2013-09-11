@@ -44,8 +44,12 @@ define(["knockout",
 					fullSiteUrl = "https://" + fullSiteUrl;
 				else 
 					fullSiteUrl = "http://" + fullSiteUrl;
-				
+			
 				return fullSiteUrl;
+            });
+			
+			self.fullUrl.subscribe(function (newValue) {
+				self.validateSiteUrl();
             });
 			
             self.siteCredentialType = ko.observable(credentialType.ntlm);
