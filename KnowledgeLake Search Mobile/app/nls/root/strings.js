@@ -42,5 +42,10 @@ define({
     siteTitleRequired: "Site title is required",
 	noResultsFound: "No results found...",
 	searching: "Searching...",
-	back: "Back"
+	back: "Back",
+	https: "Use HTTPS",
+	urlPlaceholder: "www.server.com",
+	siteTitlePlaceholder: "Enter a title...",
+	userNamePlaceholder: "Domain\\User Name",
+	passwordPlaceholder: "Password"
 });
