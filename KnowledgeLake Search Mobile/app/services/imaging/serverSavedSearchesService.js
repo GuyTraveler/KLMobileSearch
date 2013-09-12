@@ -35,10 +35,10 @@ define(["jquery",
             var detectPromise = ImagingDetectionService.detect(site);
             
             detectPromise.done(function (result) {
-                var service = new facetQuerySearchService(site.url);
+                var service = new facetQuerySearchService(site.url);          
                 
                 ntlm.setCredentials(site.credential.domain, site.credential.userName, site.credential.password);
-                ntlm.authenticate(service.serviceUrl);   
+                ntlm.authenticate(service.serviceUrl);
                 
                 var getCurrentUserNamePromise = service.GetCurrentUserName();
                 
@@ -46,13 +46,13 @@ define(["jquery",
                     var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
                     
                     getQueryUserPromise.done(function (queryUser) {
-                        var getQueriesForUser = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                        var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
                         
-                        getQueriesForUser.done(function (queryResults) {
+                        getQueriesForUserPromise.done(function (queryResults) {
                             dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult)); 
                         });
                       
-                        getQueriesForUser.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
                             dfd.reject("failed to get queries");
                         }); 
                     });

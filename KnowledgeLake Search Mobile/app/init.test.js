@@ -38,7 +38,8 @@ require(["config"], function (config) {
 						  testRootPath + "queryServiceFactory_tests",
 						  testRootPath + "facetService_tests",
                           testRootPath + "imagingDetService_tests",
-                          testRootPath + "serverSavedService_tests"
+                          testRootPath + "serverSavedService_tests",
+                          testRootPath + "searchParsingService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];

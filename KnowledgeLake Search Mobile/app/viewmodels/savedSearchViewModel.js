@@ -14,7 +14,7 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             });
             
             self.SetDataSource = function (searches) {
-                self.SetDataSource([]);
+                self.searchDataSource([]);
                 
                 if(searches)
                 {
