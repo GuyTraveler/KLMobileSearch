@@ -22,6 +22,7 @@ define(["system",
 			QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
 			
+			QUnit.equal(vm.isHttps(), false);
 			QUnit.equal(vm.url(), TestSettings.defaultUrlText);
 			QUnit.equal(vm.siteTitle(), "");
 			QUnit.equal(vm.sharePointVersion(), 0);
@@ -44,6 +45,36 @@ define(["system",
 			QUnit.equal(vm.credentialTypes()[1].value, system.strings.claimsForms);
 			
 			QUnit.equal(vm.isTitleValid(), false);			
+        });
+		
+		QUnit.test("configureSiteViewModel fullUrl computes properly for non-https", function () {
+			//arrange
+			var vm,
+				strippedUrl = TestSettings.ntlmTestUrl.replace("http://", "").replace("https://", "");
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.isHttps(false);
+			vm.url(strippedUrl);
+			
+			//assert
+			QUnit.equal(vm.url(), strippedUrl);
+			QUnit.equal(vm.fullUrl(), TestSettings.ntlmTestUrl);
+        });
+	
+		QUnit.test("configureSiteViewModel fullUrl computes properly for https", function () {
+			//arrange
+			var vm,
+				strippedUrl = TestSettings.adfsTestUrl.replace("http://", "").replace("https://", "");
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.isHttps(true);
+			vm.url(strippedUrl);
+			
+			//assert
+			QUnit.equal(vm.url(), strippedUrl);
+			QUnit.equal(vm.fullUrl(), TestSettings.adfsTestUrl);
         });
 	
 		QUnit.test("configureSiteViewModel test invalid siteTitle shows invalid (1)", function () {
@@ -287,10 +318,13 @@ define(["system",
 				
 				//shut down the logon window
 				QUnit.ok(vm.logonService);
-				QUnit.ok(vm.logonService.windowRef);
-				vm.logonService.windowRef.close();
 				
-				QUnit.start();
+				setTimeout(function () {
+					QUnit.ok(vm.logonService.windowRef);
+					vm.logonService.windowRef.close();
+					
+					QUnit.start();
+				}, 750);
             });
 			urlValidationPromise.fail(function (status) {
 				QUnit.ok(false, "Could not validate " + TestSettings.adfsTestUrl); 
@@ -423,7 +457,7 @@ define(["system",
 			QUnit.equal(vm.message(), "");
         });
 		
-		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings won't save invalid site", function () {
+		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings won't save site with invalid site", function () {
 			//arrange
 			var vm,                
 				saveSettingsPromise;
@@ -438,12 +472,47 @@ define(["system",
 			QUnit.ok(saveSettingsPromise);
 			
 			saveSettingsPromise.done(function (result) {
-				QUnit.ok(false, "settings should not have been saved");
+				QUnit.ok(false, "saveSiteSettings should have failed with invalid URL");
 				QUnit.start();
             });
 			
 			saveSettingsPromise.fail(function() {
 				QUnit.equal(vm.message(), system.strings.urlInvalidMessage);
+				QUnit.start();
+            });
+		});
+        
+		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings won't save site with invalid credentials", function () {
+			//arrange
+			var vm,
+				saveSettingsPromise;
+            
+			vm = new configureSiteViewModel();            
+            window.homeViewModel = {"selectedSite": null};
+			
+			//act
+			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl))
+				SiteDataCachingService.RemoveSiteData(TestSettings.ntlmTestUrl);
+			
+			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteTitle("dfdsfds");
+			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.sitePassword("asfsdfsdafsd");
+			vm.siteDomain(TestSettings.ntlmTestDomain);
+			vm.setValidUrl(credentialType.ntlm);
+			
+			saveSettingsPromise = vm.saveSiteSettings();
+						
+			//assert
+			QUnit.ok(saveSettingsPromise);
+						
+			saveSettingsPromise.done(function () {
+				QUnit.ok(false, "saveSiteSettings should have failed with invalid credentials");
+				QUnit.start();
+            });
+			
+			saveSettingsPromise.fail(function () {
+				QUnit.equal(vm.message(), system.strings.credentialsInvalidMessage);
 				QUnit.start();
             });
 		});
@@ -461,11 +530,11 @@ define(["system",
 				SiteDataCachingService.RemoveSiteData(TestSettings.ntlmTestUrl);
 			
 			vm.url(TestSettings.ntlmTestUrl);
-			vm.setValidUrl(credentialType.ntlm);
 			vm.siteTitle("dfdsfds");
 			vm.siteUserName(TestSettings.ntlmTestUser);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.siteDomain(TestSettings.ntlmTestDomain);
+			vm.setValidUrl(credentialType.ntlm);
 			
 			saveSettingsPromise = vm.saveSiteSettings();
 						
@@ -497,11 +566,11 @@ define(["system",
 			
 			//act
 			vm.url(homeVM.selectedSite.url);
-			vm.setValidUrl(credentialType.ntlm);
 			vm.siteTitle("dfdsfds");
 			vm.siteUserName(TestSettings.ntlmTestUser);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.siteDomain(TestSettings.ntlmTestDomain);
+			vm.setValidUrl(credentialType.ntlm);
 			saveSettingsPromise = vm.saveSiteSettings();
 						
 			//assert
@@ -605,4 +674,5 @@ define(["system",
 			QUnit.equal(configureSiteVM.isUrlValid(), false);
 			QUnit.equal(configureSiteVM.isCredentialsValid(), false);
         });
+		
     });

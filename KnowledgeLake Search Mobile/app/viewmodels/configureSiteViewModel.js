@@ -48,10 +48,6 @@ define(["knockout",
 				return fullSiteUrl;
             });
 			
-			self.fullUrl.subscribe(function (newValue) {
-				self.validateSiteUrl();
-            });
-			
             self.siteCredentialType = ko.observable(credentialType.ntlm);
             self.siteUserName = ko.observable("");
             self.sitePassword = ko.observable("");
@@ -136,6 +132,7 @@ define(["knockout",
 					}
 					else {					
 						window.App.hideLoading();
+						dfd.reject(self.message());
 					}
 				});
 				
@@ -249,6 +246,7 @@ define(["knockout",
 				//probably already logging on
 				if (!logonPromise) {
 					getWebDfd.reject(false);
+					system.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
 					return getWebDfd.promise();
                 }
 				
@@ -330,6 +328,11 @@ define(["knockout",
                 
                 self.resetUrlValidation();
             }
+			
+			self.httpsClick = function () {
+				self.validateSiteUrl();
+				return true;
+            }
             
             self.populateConfigureSiteViewModel = function (selectedSite) {
 				var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
@@ -355,10 +358,6 @@ define(["knockout",
                     self.clearPopulatedConfigureSiteViewModel();
             }
 			
-			self.show = function (e) {
-				$("#configureSiteTitle").scrollTop();
-            }
-   
             return self;
         };
         
