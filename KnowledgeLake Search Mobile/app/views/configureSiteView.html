@@ -18,11 +18,20 @@
 	            </p>
 				<!-- android works better with 'text' types and iOS works better with 'url' types -->
 				<!--<input class="list-view-input" type="url"
-					   data-bind="if: (!window.App || window.App.os.ios), value: url, event: { blur: validateSiteUrl }, enable: enableUrl" /> -->           
+					   data-bind="if: (!window.App || window.App.os.ios), value: url, enable: enableUrl" /> -->           
 				
 	            <input id="urlText" class="list-view-input" type="text"
-					   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl" />            
+					   data-bind="value: url, enable: enableUrl, attr: { 'placeholder': system.strings.urlPlaceholder }" />            
 				
+	        </label>    
+	    </li>
+		<li>
+	        <label>            
+	            <p class="list-view-label">
+					<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+	                <span data-bind="text: system.strings.https" />
+	            </p>
+	            <input type="checkbox" data-bind="checked: isHttps, enable: enableUrl" />
 	        </label>    
 	    </li>
 	    <li>
@@ -30,7 +39,7 @@
 	            <p class="list-view-label">
 	                <span data-bind="text: system.strings.siteTitle" />
 	            </p>
-	            <input type="text" data-bind="value: siteTitle" class="list-view-input" />            
+	            <input type="text" data-bind="value: siteTitle, attr: { 'placeholder': system.strings.siteTitlePlaceholder }" class="list-view-input" />            
 	        </label>    
 	    </li>
 	    
@@ -54,7 +63,7 @@
 	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
 	                    <span data-bind="text: system.strings.userName" />
 	                </p>
-	                <input type="text" data-bind="value: siteUserName" class="list-view-input" />            
+	                <input type="text" data-bind="value: siteUserName, attr: { 'placeholder': system.strings.userNamePlaceholder }" class="list-view-input" />            
 	            </label>
 	        </li>        
 	        <li>
@@ -63,7 +72,7 @@
 	                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
 	                    <span data-bind="text: system.strings.password" />
 	                </p>
-	                <input type="password" data-bind="value: sitePassword" class="list-view-input" />            
+	                <input type="password" data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" />            
 	            </label>
 	        </li>
 	        <li>

@@ -1,4 +1,4 @@
-define(["knockout"], function (ko) {
+define(["extensions"], function () {
     var site = function(url, title, majorVersion, credential) {
         var self = this;
        
@@ -7,6 +7,23 @@ define(["knockout"], function (ko) {
         self.majorVersion = majorVersion;
         self.credential = credential;
               
+		
+		self.urlWithoutScheme = function () {
+			var fullSiteUrl = (self.url || "").toLowerCase();
+			
+			if (fullSiteUrl.startsWith("https://"))
+				return fullSiteUrl.substring(8);
+			else if (fullSiteUrl.startsWith("http://"))
+				return fullSiteUrl.substring(7);
+			else 
+				return fullSiteUrl;
+        };
+		
+		self.isHttps = function () {
+			return self.url.toLowerCase().startsWith("https");
+        };
+			
+		
         return self;
     };
     

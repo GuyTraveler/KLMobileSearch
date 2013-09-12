@@ -14,7 +14,6 @@ define(["knockout",
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
         var configureSiteViewModel = function () {
             var self = this,
-                defaultUrlText = "http://",			
                 homeUrl = "#home",
                 questionImageUrl = "app/images/question.png",
                 invalidImageUrl = "app/images/invalid.png",
@@ -23,11 +22,36 @@ define(["knockout",
 				urlValidationDfd;
 			
 			self.logonService = null;
-            self.url = ko.observable(defaultUrlText);
-            self.enableUrl = ko.observable(true);
+            self.url = ko.observable("");
+            self.enableUrl = ko.observable(true);			
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
-
+			self.isHttps = ko.observable(false);
+			self.fullUrl = ko.computed(function () {
+				var fullSiteUrl = self.url();
+				
+				fullSiteUrl = fullSiteUrl.toLowerCase();
+				
+				if (fullSiteUrl.startsWith("http"))
+					fullSiteUrl = fullSiteUrl.substring(4);
+				else if (fullSiteUrl.startsWith("https"))
+					fullSiteUrl = fullSiteUrl.substring(5);
+				
+				if (fullSiteUrl.startsWith("://"))
+					fullSiteUrl = fullSiteUrl.substring(3);
+				
+				if (self.isHttps())
+					fullSiteUrl = "https://" + fullSiteUrl;
+				else 
+					fullSiteUrl = "http://" + fullSiteUrl;
+			
+				return fullSiteUrl;
+            });
+			
+			self.fullUrl.subscribe(function (newValue) {
+				self.validateSiteUrl();
+            });
+			
             self.siteCredentialType = ko.observable(credentialType.ntlm);
             self.siteUserName = ko.observable("");
             self.sitePassword = ko.observable("");
@@ -75,7 +99,7 @@ define(["knockout",
 				self.logon().always(function () {
 					if (self.validateAll()) {
 					
-						theSite = new site(self.url(), self.siteTitle(), self.sharePointVersion(),
+						theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
 		                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
 						writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSite(theSite) : SiteDataCachingService.AddSite(theSite);
 		                    
@@ -123,15 +147,15 @@ define(["knockout",
                 window.App.navigate(homeUrl);
             }
             
-            self.validateSiteUrl = function () {
-                var dataService = new authenticationService(self.url());
+            self.validateSiteUrl = function () {				
+                var dataService = new authenticationService(self.fullUrl());
                 
                 system.logVerbose("validateSiteUrl called");			
                 
                 self.isUrlValid(false);
                 self.isCredentialsValid(false);
                 
-                dataService.Mode(self.url())
+                dataService.Mode(self.fullUrl())
 					.done(self.onSiteUrlValidated)
 					.fail(self.onSiteUrlFailed); 
 				
@@ -215,11 +239,11 @@ define(["knockout",
             
             
             self.logon = function () {
-				var service = new websService(self.url()),
+				var service = new websService(self.fullUrl()),
 					logonPromise,
 					getWebDfd = $.Deferred();
 				
-				self.logonService = LogonServiceFactory.createLogonService(self.url(), self.siteCredentialType());
+				self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType());
 				logonPromise = self.logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword())
 				
 				//probably already logging on
@@ -230,7 +254,7 @@ define(["knockout",
 				
 				logonPromise.done(function () {
 					
-                    service.GetWeb(self.url())
+                    service.GetWeb(self.fullUrl())
                         .done(function (result, textStatus, xhr) {
                             var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
 							
@@ -295,7 +319,8 @@ define(["knockout",
             self.clearPopulatedConfigureSiteViewModel = function () {
                 self.enableUrl(true);
                 
-                self.url(defaultUrlText);
+                self.url("");
+				self.isHttps(false);
                 self.siteTitle("");
                 self.sharePointVersion(0);
                 self.siteCredentialType(credentialType.ntlm);
@@ -307,15 +332,18 @@ define(["knockout",
             }
             
             self.populateConfigureSiteViewModel = function (selectedSite) {
+				var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
+				
                 self.enableUrl(false);
                 
-                self.url(selectedSite.url);
-                self.siteTitle(selectedSite.title);
-                self.sharePointVersion(selectedSite.majorVersion);
-                self.siteCredentialType(selectedSite.credential.credentialType);
-                self.siteUserName(selectedSite.credential.userName);
-                self.sitePassword(selectedSite.credential.password);
-                self.siteDomain(selectedSite.credential.domain);
+                self.url(siteObj.urlWithoutScheme());
+				self.isHttps(siteObj.isHttps());
+                self.siteTitle(siteObj.title);
+                self.sharePointVersion(siteObj.majorVersion);
+                self.siteCredentialType(siteObj.credential.credentialType);
+                self.siteUserName(siteObj.credential.userName);
+                self.sitePassword(siteObj.credential.password);
+                self.siteDomain(siteObj.credential.domain);
 
                 self.setValidUrl(self.siteCredentialType());
             }
