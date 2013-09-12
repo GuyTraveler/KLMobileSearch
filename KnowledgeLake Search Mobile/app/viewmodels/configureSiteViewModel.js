@@ -32,10 +32,10 @@ define(["knockout",
 				
 				fullSiteUrl = fullSiteUrl.toLowerCase();
 				
-				if (fullSiteUrl.startsWith("http"))
-					fullSiteUrl = fullSiteUrl.substring(4);
-				else if (fullSiteUrl.startsWith("https"))
+				if (fullSiteUrl.startsWith("https"))
 					fullSiteUrl = fullSiteUrl.substring(5);
+				else if (fullSiteUrl.startsWith("http"))
+					fullSiteUrl = fullSiteUrl.substring(4);
 				
 				if (fullSiteUrl.startsWith("://"))
 					fullSiteUrl = fullSiteUrl.substring(3);

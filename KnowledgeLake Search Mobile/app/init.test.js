@@ -15,13 +15,13 @@ require(["config"], function (config) {
              "framework/logLevel"],
     function($, ko, kendo, system, extensions, logLevel) {
         var testRootPath = 'unitTests/',
-			testsToRun = [testRootPath + "system_tests",
+			testsToRun = [/*testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                                             
                           testRootPath + "websService_tests",
-                          testRootPath + "authenticationService_tests",
-						  testRootPath + "configureSiteViewModel_test",
+                          testRootPath + "authenticationService_tests",*/
+						  testRootPath + "configureSiteViewModel_test"/*,
 						  testRootPath + "siteDataCachingService_test",
 						  testRootPath + "ntlmLogonService_tests",
 						  testRootPath + "claimsLogonService_tests",
@@ -38,7 +38,7 @@ require(["config"], function (config) {
 						  testRootPath + "queryServiceFactory_tests",
 						  testRootPath + "facetService_tests",
                           testRootPath + "imagingDetService_tests",
-                          testRootPath + "serverSavedService_tests"
+                          testRootPath + "serverSavedService_tests"*/
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
