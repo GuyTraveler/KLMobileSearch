@@ -16,6 +16,10 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase", 
 			return self.executeSoapMethod("FacetSearch", parameters);
         }
         
+        self.GetProperties = function () {
+            return self.executeSoapMethod("GetProperties");
+        }
+        
 		self.GetQueriesForUser = function (user, url) {
 			var parameters = [
 				new keyValuePair("user", user),
