@@ -1,13 +1,14 @@
 define(["services/sqlQueryService",
 		"services/kqlQueryService", 		
-		"system"],
-	function (sqlQueryService, kqlQueryService, system) {
+		"system",
+        "framework/Constants"],
+	function (sqlQueryService, kqlQueryService, system, Constants) {
 		
 		var queryServiceFactory = function () {
 			var self = this;
 			
 			self.getQueryService = function (siteUrl, majorVersion) {
-				if (majorVersion >= 15) {
+				if (majorVersion >= Constants.SharePoint2013MajorVersion) {
 					return new kqlQueryService(siteUrl);
 	            }
 				else {				

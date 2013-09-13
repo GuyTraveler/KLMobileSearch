@@ -1,11 +1,11 @@
-define([], function () {
+define(["framework/Constants"], function (Constants) {
     var iconConverter = function() {
         var self = this;
        
         self.majorVersionToSiteIcon = function (majorVersion) {
             if(majorVersion)
             {
-                if (majorVersion >= 15)
+                if (majorVersion >= Constants.SharePoint2013MajorVersion)
                     return "app/images/site13.png";
             }
             
