@@ -2,6 +2,20 @@
 define(['knockout',
         'jquery'],
     function (ko, $) {
+		var lastViewLoaded = function () {
+			if (!window.App) {
+		        window.App = new kendo.mobile.Application(document.body, {
+		            transition: 'slide',
+					skin: 'flat',
+		            loading: '<h1>' + window.system.strings.loading + '</h1>'
+		        });
+						
+		        system.logVerbose("kendo application loaded");
+		        
+		        window.AppLoaded(true);
+		    }
+        }
+		
         ko.bindingHandlers.kendoView = {
 
             init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
@@ -58,14 +72,13 @@ define(['knockout',
                                             element;
                             
                             $(container).html(data);             
-                            ko.applyBindingsToDescendants(model, element);                            
+                            ko.applyBindingsToDescendants(model, element);  														
                         });
                         
                         promiseView.always(function (data) {
-                            //check global namespace
-                           if (parameters.loaded && typeof window[parameters.loaded] === 'function') {
-                               window[parameters.loaded]();
-                           } 
+                            if (parameters.loadKendoApp) {
+								lastViewLoaded();
+                            }
                         });
                     });                    
                 } else {
