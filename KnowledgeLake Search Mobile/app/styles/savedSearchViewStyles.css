@@ -14,7 +14,8 @@ div.keywordContainer {
 	position: absolute;
 	top: 0em;
 	right: 0em;
-	width: 15%;	
+	width: 15%;
+	text-align: right;
 }
 
 input.keyword {
