@@ -16,14 +16,14 @@
 	<h3 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h3>
 	
 	<ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }">
+		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToResult">
 	        <div class="resultOuterContainer">
 	            <div class="imageContainer resultIconContainer">
 					<!-- TODO: add this back in once we do something with the action bar
 	                <img class="resultIcon" data-bind="click: $parent.setSelectedResult, urlToFileTypeIcon: url"/> -->
 					<img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
 	            </div>
-	            <div class="resultContentContainer" data-bind="click: $parent.navigateToResult">
+	            <div class="resultContentContainer">
 	                <div class="resultTitleContainer">
 	                    <h1 class="resultTitle" data-bind="text: metadata.Title"></h1>
 	                </div>
