@@ -88,7 +88,7 @@ define(["knockout",
             self.SetDataSource([]);
         }
         
-        self.setSelectedResult = function (selection) {
+        self.setSelectedResult = function (selection, event) {
 			if (event)
 				event.stopImmediatePropagation();
                 
@@ -117,6 +117,8 @@ define(["knockout",
                 service,
                 logonService;
             
+			self.setSelectedResult(selection);
+			
             if(selection && savedSearchViewModel.site())
             {
                 window.App.loading = "<h1>" + system.strings.loading + "</h1>";

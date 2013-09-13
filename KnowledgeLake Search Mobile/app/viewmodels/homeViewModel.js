@@ -107,6 +107,8 @@ define(["knockout",
             }
             
             self.siteClick = function (selection) {
+				self.setSelectedSite(selection, null);
+				
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;
                 
