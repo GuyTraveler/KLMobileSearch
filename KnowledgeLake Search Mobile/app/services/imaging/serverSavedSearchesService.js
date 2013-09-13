@@ -68,7 +68,7 @@ define(["jquery",
             });
           
             detectPromise.fail(function (error) {
-                // imaging search not activated
+                dfd.reject("imaging search not activated");
             });
             
             return dfd.promise();

@@ -13,7 +13,8 @@ define(["framework/logLevel"], function(logLevel) {
            knockoutMapping: 'lib/knockout.mapping',
 	       ntlm: 'lib/ntlm',
 	       i18n: 'lib/i18n',
-		   jsUri: 'lib/jsUri'
+		   jsUri: 'lib/jsUri',
+           CryptoJS: 'lib/aes'
        },
 	   shim: {
 	       jquery: {
@@ -28,6 +29,9 @@ define(["framework/logLevel"], function(logLevel) {
 	       },
 		   jsUri: {
 			   exports: 'jsUri'
+           },
+           CryptoJS: {
+               exports: 'CryptoJS'
            }
 	   },
 	   map: {              

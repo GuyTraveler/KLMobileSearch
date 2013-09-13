@@ -3,8 +3,9 @@ define(["jquery",
         "domain/promiseResponse/promiseResolveResponse", 
         "domain/promiseResponse/promiseRejectResponse", 
         "domain/promiseResponse/cachingServiceResponse", 
-        "domain/promiseResponse/fileSystemResponse"], 
-        function ($, File, PromiseResolveResponse, PromiseRejectResponse, CachingServiceResponse, FileSystemResponse) {
+        "domain/promiseResponse/fileSystemResponse",
+        "services/encryptionService"], 
+        function ($, File, PromiseResolveResponse, PromiseRejectResponse, CachingServiceResponse, FileSystemResponse, EncryptionService) {
     var service = function () {
         var self = this, 
             siteDataFileName = "sites.dat";
@@ -163,7 +164,7 @@ define(["jquery",
                 for(var i = 0; i < sites.length; i++)
                 {
                     if(window.btoa)                    
-                        sites[i].credential.password = window.btoa(sites[i].credential.password);
+                        sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, window.device.uuid);
                 }
                 
                 encodedSites = sites;
@@ -180,7 +181,7 @@ define(["jquery",
                 for(var i = 0; i < sites.length; i++)
                 {
                     if(window.atob)                    
-                        sites[i].credential.password = window.atob(sites[i].credential.password);
+                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, window.device.uuid);
                 }
                 
                 decodedSites = sites; 
