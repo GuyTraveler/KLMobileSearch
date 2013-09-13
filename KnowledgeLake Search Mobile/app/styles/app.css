@@ -48,20 +48,22 @@ p.list-view-input {
 
 .opaque {
     opacity: 1;
+	z-index: 10000;
+	
     -webkit-transition: opacity 1s linear;
     -moz-transition: opacity 1s linear;
     -o-transition: opacity 1s linear;
-    transition: opacity 1s linear;
-	z-index: 10000;	
+    transition: opacity 1s linear;		
 }
 
 .fade-out {
     opacity: 0;
-    -webkit-transition: opacity 1s linear;
-    -moz-transition: opacity 1s linear;
-    -o-transition: opacity 1s linear;
-    transition: opacity 1s linear;
-	z-index: -1;	
+	z-index: -1;
+	
+	-webkit-transition: all 1s linear;
+    -moz-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    transition: all 1s linear;	
 }
 
 #messageBox {

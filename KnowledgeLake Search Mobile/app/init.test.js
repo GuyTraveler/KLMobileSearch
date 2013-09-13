@@ -14,7 +14,8 @@ require(["config"], function (config) {
 			 "extensions",
              "framework/logLevel"],
     function($, ko, kendo, system, extensions, logLevel) {
-        var testRootPath = 'unitTests/',
+		var appHref = "index.html",
+			testRootPath = 'unitTests/',
 			testsToRun = [testRootPath + "system_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
@@ -48,6 +49,11 @@ require(["config"], function (config) {
         window.system = system;  
         window.AppLoaded = ko.observable(false);
         
+        if (!config.isQunit && window.location.href.indexOf(appHref) < 0) {
+            window.location.href = appHref;
+			return;
+        }
+		
         //add tests that CANNOT be run in the SIMULATOR here
         /*if (!system.isRunningInSimulator()) {
             testsToRun.push();

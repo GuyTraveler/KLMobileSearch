@@ -14,7 +14,7 @@ define({
 	siteTestUser: "spadmin",
 	siteTestPassword: "password",
 	siteTestDomain: "dev.local",
-	defaultUrlText: "http://",
+	defaultUrlText: "",
 	homeUrl: "#home",
 	validImageCheck: "/valid",
 	invalidImageCheck: "/invalid",
