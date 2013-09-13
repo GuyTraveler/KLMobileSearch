@@ -6,7 +6,6 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
         logLevel: logLevel.Error,
         strings: strings,
 		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
-		sharePointDelimiter: ";#",
 		ajaxTimeout: 15000,
 		setLogLevel: function (level) {
             this.logLevel = level;
@@ -47,7 +46,6 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
             return log;
         },
 		isRunningInSimulator: function () {
-			//TODO find Ripple emulator IDS also
             // device uuids for simulated devices
             var iPhone = "e0101010d38bde8e6740011221af335301010333";
             var iPhone5 = "e0101010d38bde8e6740011221af335301010333";

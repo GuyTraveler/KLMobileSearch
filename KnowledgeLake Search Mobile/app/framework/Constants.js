@@ -1,4 +1,5 @@
 define({
-    SharePoint2013MajorVersion: 15, 
+    sharePointDelimiter: ";#",
+    sharePoint2013MajorVersion: 15, 
     phrase: "Q2FyaGFydHQ="
 });

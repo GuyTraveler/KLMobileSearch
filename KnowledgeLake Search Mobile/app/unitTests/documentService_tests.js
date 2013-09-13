@@ -125,11 +125,11 @@ define(["services/documentService",
             //act
             service = new documentService(TestSettings.docUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getListID()
+				service.getListIDAsync()
 					.done(function (result) {
 						QUnit.ok(result);
 						QUnit.equal(result, TestSettings.testListId);
@@ -155,11 +155,11 @@ define(["services/documentService",
             //act
             service = new documentService("asdfsafds");
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getListID()
+				service.getListIDAsync()
 					.done(function (result) {
 						QUnit.ok(false, "getListID should have failed");
                     })
@@ -183,11 +183,11 @@ define(["services/documentService",
             //act
             service = new documentService(TestSettings.docUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getRootFolderUrl()
+				service.getRootFolderUrlAsync()
 					.done(function (result) {
 						QUnit.ok(result);
 						QUnit.ok(TestSettings.docUrl.indexOf(result) > -1);
@@ -213,11 +213,11 @@ define(["services/documentService",
             //act
             service = new documentService(TestSettings.docUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getListItemID()
+				service.getListItemIDAsync()
 					.done(function (result) {
 						QUnit.ok(result);
 						QUnit.equal(result, TestSettings.testItemId);
@@ -243,11 +243,11 @@ define(["services/documentService",
             //act
             service = new documentService("dfasdfsdfasfas");
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getListItemID()
+				service.getListItemIDAsync()
 					.done(function (result) {
 						QUnit.ok(false, "getListItemID should have failed");
 						QUnit.start();
@@ -274,11 +274,11 @@ define(["services/documentService",
             //act
             service = new documentService(TestSettings.docUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getDisplayFormUrl()
+				service.getDisplayFormUrlAsync()
 					.done(function (result) {
 						QUnit.ok(result);
 						QUnit.equal(result, TestSettings.testDispFormUrl);
@@ -305,11 +305,11 @@ define(["services/documentService",
             //act
             service = new documentService("dfasdfsdfasfas");
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 						
             //assert
             logonPromise.done(function () {
-				service.getDisplayFormUrl()
+				service.getDisplayFormUrlAsync()
 					.done(function (result) {
 						QUnit.ok(false, "getDisplayFormUrl should have failed");
 						QUnit.start();
@@ -334,11 +334,11 @@ define(["services/documentService",
             //act
             service = new documentService(TestSettings.docUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
 						
             //assert
             logonPromise.done(function () {
-				service.getSiteUrl()
+				service.getSiteUrlAsync()
 					.done(function (result) {
 						QUnit.ok(true);
 						QUnit.start();

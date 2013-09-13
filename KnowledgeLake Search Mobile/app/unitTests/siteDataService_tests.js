@@ -29,7 +29,7 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
                          
             service.BadMethod = function () {
-                return this.executeSoapMethod("BadMethod", null);
+                return this.executeSoapMethodAsync("BadMethod", null);
 			};
 			
 			servicePromise = service.BadMethod();
@@ -138,7 +138,7 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetURLSegments(itemUrl)
+            service.GetURLSegmentsAsync(itemUrl)
 				.done(function (result) {
 	                QUnit.ok(true, "GetURLSegments was successful");
 					QUnit.ok(result);
@@ -173,7 +173,7 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetURLSegments(itemUrl)
+            service.GetURLSegmentsAsync(itemUrl)
 				.done(function (result) {
 	                QUnit.ok(false, "GetURLSegments should have failed");					
 	                QUnit.start();

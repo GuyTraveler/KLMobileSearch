@@ -15,7 +15,7 @@ define(["services/imaging/imagingDetectionService",
                             new credential(credentialType.ntlm, TestSettings.siteTestUser, TestSettings.siteTestPassword, TestSettings.siteTestDomain));
             
             //act
-            var detectPromise = ImagingDetectionService.detect(siteData);
+            var detectPromise = ImagingDetectionService.detectAsync(siteData);
             
             //assert
             detectPromise.done(function (result) {

@@ -27,7 +27,7 @@ define(["services/sharepoint/searchService",
             //act
             service = new searchService(TestSettings.ntlmTestUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -77,7 +77,7 @@ define(["services/sharepoint/searchService",
             //act
             service = new searchService(TestSettings.ntlmTestUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -127,7 +127,7 @@ define(["services/sharepoint/searchService",
             //act
             service = new searchService(TestSettings.ntlmTestUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -179,7 +179,7 @@ define(["services/sharepoint/searchService",
             //act
             service = new searchService(TestSettings.ntlmTestUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {
@@ -209,7 +209,7 @@ define(["services/sharepoint/searchService",
             //act
             service = new searchService(TestSettings.ntlmTestUrl);
 			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 			
             //assert
             logonPromise.done(function (result) {

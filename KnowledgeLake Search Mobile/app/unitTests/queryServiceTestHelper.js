@@ -91,13 +91,13 @@ define(["INtlmLogonService",
 	            
 	            service = new queryService(TestSettings.ntlmTestUrl);
 	            logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-				logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+				logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 				
 	            //assert
 	            QUnit.ok(logonPromise);
 	            
 	            logonPromise.done(function (result) {
-					searchPromise = service.keywordSearch(keywords, conjunction, trimDuplicates);
+					searchPromise = service.keywordSearchAsync(keywords, conjunction, trimDuplicates);
 	                
 	                QUnit.ok(searchPromise);
 	                
@@ -477,11 +477,11 @@ define(["INtlmLogonService",
 	            //act
 	            service = new queryService(TestSettings.ntlmTestUrl);
 				logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-				logonPromise = logonService.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+				logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
 				
 	            //assert
 	            logonPromise.done(function (result) {
-					service.keywordSearch(searchString)
+					service.keywordSearchAsync(searchString)
 						.done(function (result) {
 							QUnit.ok(result);
 							QUnit.equal(Object.prototype.toString.call(result), '[object Array]');

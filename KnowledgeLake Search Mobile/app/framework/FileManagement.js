@@ -18,7 +18,7 @@ define(["system",
             self.deferred.reject(error);
         }
         
-        self.loadFileSystem = function () {
+        self.loadFileSystemAsync = function () {
             self.deferred = $.Deferred();
             
             if(!self.fileSystem)
@@ -29,7 +29,7 @@ define(["system",
             return self.deferred.promise();
         }
         
-        var fileSystemPromise = self.loadFileSystem();
+        var fileSystemPromise = self.loadFileSystemAsync();
         
         fileSystemPromise.done(function (fileSystem) {
             self.fileSystem = fileSystem;
@@ -41,12 +41,12 @@ define(["system",
             system.logFatal(FileResponse.LoadFileSysystemFailure + ": " + error.code);
         });
         
-        self.Exists = function (path) {
+        self.ExistsAsync = function (path) {
             var dfd = $.Deferred();
             
             if(self.fileSystem)
             {
-                var getFolderPromise = self.getFolder();
+                var getFolderPromise = self.getFolderAsync();
                 
                 getFolderPromise.done(function (result) {
                     if(result.response)
@@ -75,12 +75,12 @@ define(["system",
             return dfd.promise();
         }
         
-        self.Read = function (path) {
+        self.ReadAsync = function (path) {
             var dfd = $.Deferred();
             
             if(self.fileSystem)
             {
-                var getFolderPromise = self.getFolder();
+                var getFolderPromise = self.getFolderAsync();
                 
                 getFolderPromise.done(function (result) {
                     if(result.response)
@@ -125,12 +125,12 @@ define(["system",
             return dfd.promise();
         }
                 
-        self.Write = function (path, data) {
+        self.WriteAsync = function (path, data) {
             var dfd = $.Deferred();
             
             if(self.fileSystem)
             {
-                var getFolderPromise = self.getFolder();
+                var getFolderPromise = self.getFolderAsync();
                 
                 getFolderPromise.done(function (result) {
                     if(result.response)
@@ -172,12 +172,12 @@ define(["system",
             return dfd.promise();
         }
         
-        self.Delete = function (path) {
+        self.DeleteAsync = function (path) {
             var dfd = $.Deferred();
             
             if(self.fileSystem)
             {
-                var getFolderPromise = self.getFolder();
+                var getFolderPromise = self.getFolderAsync();
                 
                 getFolderPromise.done(function (result) {
                     if(result.response)
@@ -212,7 +212,7 @@ define(["system",
             return dfd.promise();
         } 
         
-        self.getFolder = function () {
+        self.getFolderAsync = function () {
             var dfd = $.Deferred();
             
             if(self.fileSystem)

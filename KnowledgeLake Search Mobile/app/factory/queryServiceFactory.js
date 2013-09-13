@@ -8,7 +8,7 @@ define(["services/sqlQueryService",
 			var self = this;
 			
 			self.getQueryService = function (siteUrl, majorVersion) {
-				if (majorVersion >= Constants.SharePoint2013MajorVersion) {
+				if (majorVersion >= Constants.sharePoint2013MajorVersion) {
 					return new kqlQueryService(siteUrl);
 	            }
 				else {				

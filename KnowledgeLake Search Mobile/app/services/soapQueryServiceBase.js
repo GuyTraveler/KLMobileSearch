@@ -14,7 +14,7 @@ define(["jquery",
 					return "\"" + $.trim(escape(keyword.encodeXML())) + "\""
                 };
             
-            self.keywordSearch = function (keywordPhrases, conjunction, trimDuplicates) {
+            self.keywordSearchAsync = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),
                     searchDfd = $.Deferred(),
                     service = new searchService(siteUrl), 

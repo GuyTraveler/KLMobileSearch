@@ -12,15 +12,15 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
                 new keyValuePair("Url", encodeURI(url))
             ];
             
-            return self.executeSoapMethod("GetSiteUrl", parameters);
+            return self.executeSoapMethodAsync("GetSiteUrl", parameters);
         }
 		
-		self.GetURLSegments = function (strURL) {
+		self.GetURLSegmentsAsync = function (strURL) {
 			var parameters = [
 				new keyValuePair("strURL", encodeURI(strURL))
 			],
 			dfd = $.Deferred(),
-			promise = self.executeSoapMethod("GetURLSegments", parameters);
+			promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
 			
 			promise.done(function (result) {
 				if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false") {

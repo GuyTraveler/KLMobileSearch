@@ -29,7 +29,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
                          
             service.BadMethod = function () {
-                return this.executeSoapMethod("BadMethod", null);
+                return this.executeSoapMethodAsync("BadMethod", null);
 			};
 			
 			servicePromise = service.BadMethod();

@@ -12,15 +12,15 @@ define(["jquery",
         
         self.sites = null;
         
-        self.LoadSites = function () {
+        self.LoadSitesAsync = function () {
             var dfd = $.Deferred();
             
-            var existsPromise = File.Exists(siteDataFileName);
+            var existsPromise = File.ExistsAsync(siteDataFileName);
                 
             existsPromise.done(function (result) {
                 if(result.response === FileSystemResponse.FileFound)
                 {
-                    var readPromise = File.Read(siteDataFileName);
+                    var readPromise = File.ReadAsync(siteDataFileName);
                     
                     readPromise.done(function (result) {
                         self.sites = self.decodePasswords(JSON.parse(result.response));
@@ -43,7 +43,7 @@ define(["jquery",
             return dfd.promise();
         }
         
-		self.AddSite = function (site) {
+		self.AddSiteAsync = function (site) {
             var dfd = $.Deferred();
             
             if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
@@ -69,7 +69,7 @@ define(["jquery",
             return dfd.promise();
 		}
         
-        self.UpdateSite = function (site) {
+        self.UpdateSiteAsync = function (site) {
             var dfd = $.Deferred();
             
             if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
@@ -106,7 +106,7 @@ define(["jquery",
             return dfd.promise();            
         }
         
-        self.RemoveSite = function (site) {
+        self.RemoveSiteAsync = function (site) {
             var dfd = $.Deferred(); 
             
             if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
@@ -194,7 +194,7 @@ define(["jquery",
 			
             var sites = self.encodePasswords(JSON.parse(JSON.stringify(self.sites))),
 				data = JSON.stringify(sites),
-			    writePromise = File.Write(siteDataFileName, data);
+			    writePromise = File.WriteAsync(siteDataFileName, data);
             
 			writePromise.done(function (result) {
 				dfd.resolve(result);

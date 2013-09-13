@@ -275,7 +275,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act
-            var keywordSearchPromise = vm.keywordSearch(siteData);
+            var keywordSearchPromise = vm.keywordSearchAsync(siteData);
             
             //assert
             keywordSearchPromise.done(function (result) {
@@ -297,7 +297,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act
-            var keywordSearchPromise = vm.keywordSearch(siteData, "ryan");
+            var keywordSearchPromise = vm.keywordSearchAsync(siteData, "ryan");
             
             //assert
             keywordSearchPromise.done(function (result) {

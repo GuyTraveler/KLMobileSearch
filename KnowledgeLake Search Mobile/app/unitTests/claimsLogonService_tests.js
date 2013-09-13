@@ -56,7 +56,7 @@ define(['services/claimsLogonService',
 			
             //act 
 			service = new claimsLogonService(TestSettings.claimsTestUrl);
-			logonPromise = service.logon();
+			logonPromise = service.logonAsync();
 			
             //assert
 			QUnit.ok(logonPromise);
@@ -89,7 +89,7 @@ define(['services/claimsLogonService',
 			
             //act 
 			service = new claimsLogonService(TestSettings.claimsTestUrl);
-			logonPromise = service.logon();
+			logonPromise = service.logonAsync();
 			
             //assert
 			QUnit.ok(logonPromise);
@@ -103,7 +103,7 @@ define(['services/claimsLogonService',
 			
 			logonPromise.done(function () {
 				//now check the status -- should be TRUE
-				checkStatusPromise = service.checkLogonStatus();
+				checkStatusPromise = service.checkLogonStatusAsync();
 				
 				QUnit.ok(checkStatusPromise);
 				
@@ -126,7 +126,7 @@ define(['services/claimsLogonService',
 				service.windowRef.close();
 				
 				//now check the status -- should be FALSE
-				checkStatusPromise = service.checkLogonStatus();
+				checkStatusPromise = service.checkLogonStatusAsync();
 				
 				QUnit.ok(checkStatusPromise);
 				

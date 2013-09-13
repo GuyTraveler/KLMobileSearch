@@ -2,7 +2,7 @@ define(["jquery", "IWebsService", "ntlm"], function ($, websService, ntlm) {
     var imagingDetectionService = function () {
         var self = this;
         
-		self.detect = function (site) {
+		self.detectAsync = function (site) {
             var dfd = $.Deferred();
             
             service = new websService(site.url);

@@ -11,7 +11,7 @@ define(["jquery",
         
         self.localSearches = null;
         
-        self.LoadSearches = function (site) {
+        self.LoadSearchesAsync = function (site) {
             var dfd = $.Deferred(),
                 results = [], 
                 promiseReadyToComplete = false;
@@ -24,12 +24,12 @@ define(["jquery",
             
             else
             {
-                var existsPromise = File.Exists(searchDataFileName);
+                var existsPromise = File.ExistsAsync(searchDataFileName);
                     
                 existsPromise.done(function (result) {
                     if(result.response === FileSystemResponse.FileFound)
                     {
-                        var readPromise = File.Read(searchDataFileName);
+                        var readPromise = File.ReadAsync(searchDataFileName);
                         
                         readPromise.done(function (result) {
                             self.localSearches = JSON.parse(result.response);
@@ -66,7 +66,7 @@ define(["jquery",
             return dfd.promise();
         }
         
-		self.AddSearch = function (site) {
+		self.AddSearchAsync = function (site) {
             var dfd = $.Deferred();
             
             if(self.localSearches && Object.prototype.toString.call(self.localSearches) === '[object Array]')
@@ -92,7 +92,7 @@ define(["jquery",
             return dfd.promise();
 		}
         
-        self.UpdateSearch = function (site) {
+        self.UpdateSearchAsync = function (site) {
             var dfd = $.Deferred();
             
             if(self.localSearches && Object.prototype.toString.call(self.localSearches) === '[object Array]')
@@ -129,7 +129,7 @@ define(["jquery",
             return dfd.promise();            
         }
         
-        self.RemoveSearch = function (site) {
+        self.RemoveSearchAsync = function (site) {
             var dfd = $.Deferred(); 
             
             if(self.localSearches && Object.prototype.toString.call(self.localSearches) === '[object Array]')
@@ -193,7 +193,7 @@ define(["jquery",
   
 		self.WriteSearchData = function (dfd) {			
             var data = JSON.stringify(self.localSearches),
-			    writePromise = File.Write(searchDataFileName, data);
+			    writePromise = File.WriteAsync(searchDataFileName, data);
             
 			writePromise.done(function (result) {
 				dfd.resolve(result);

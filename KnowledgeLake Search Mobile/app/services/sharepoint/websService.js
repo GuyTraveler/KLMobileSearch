@@ -20,11 +20,11 @@ define(["jquery",
 			
 			parameters.push(new keyValuePair("webUrl", webUrl));
             
-            return self.executeSoapMethod("GetWeb", parameters);
+            return self.executeSoapMethodAsync("GetWeb", parameters);
         }
         
         self.GetActivatedFeatures = function () {            
-            return self.executeSoapMethod("GetActivatedFeatures");
+            return self.executeSoapMethodAsync("GetActivatedFeatures");
         }
         
         return self;
