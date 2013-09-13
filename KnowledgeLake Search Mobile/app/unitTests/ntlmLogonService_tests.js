@@ -22,7 +22,7 @@ define(['services/ntlmLogonService',
 			
             //act 
 			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = service.logon("", "", "");
+			logonPromise = service.logonAsync("", "", "");
                         
             //assert
             QUnit.ok(logonPromise);
@@ -48,13 +48,13 @@ define(['services/ntlmLogonService',
 			
             //act 
 			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = service.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = service.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
                         
             //assert
             QUnit.ok(logonPromise);
 			
 			logonPromise.done(function () {
-				checkLogonPromise = service.checkLogonStatus();
+				checkLogonPromise = service.checkLogonStatusAsync();
 				
 				QUnit.ok(checkLogonPromise);
 				
@@ -82,7 +82,7 @@ define(['services/ntlmLogonService',
 			
             //act 
 			service = new ntlmLogonService("http://");
-			logonPromise = service.logon("", "", "");
+			logonPromise = service.logonAsync("", "", "");
                         
             //assert
             QUnit.ok(logonPromise);
@@ -105,7 +105,7 @@ define(['services/ntlmLogonService',
 			
             //act 
 			service = new ntlmLogonService(TestSettings.claimsTestUrl);
-			logonPromise = service.logon("", "", "");
+			logonPromise = service.logonAsync("", "", "");
                         
             //assert
             QUnit.ok(logonPromise);
@@ -128,7 +128,7 @@ define(['services/ntlmLogonService',
 			
             //act 
 			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = service.logon(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+			logonPromise = service.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
                         
             //assert
             QUnit.ok(logonPromise);

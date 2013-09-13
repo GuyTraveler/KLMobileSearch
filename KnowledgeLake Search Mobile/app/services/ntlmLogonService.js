@@ -20,7 +20,7 @@ define(["jquery",
 		            return authUrl + "_vti_bin/copy.asmx";  
 		        };
                 
-			self.logon = function (domain, userName, password, documentUrl) {
+			self.logonAsync = function (domain, userName, password, documentUrl) {
 				var dfd = $.Deferred(),
 					ntlmAuthUrl = documentUrl ? documentUrl : getAuthUrl();
 				
@@ -41,7 +41,7 @@ define(["jquery",
 				return dfd.promise();
             };
 			
-			self.checkLogonStatus = function () {
+			self.checkLogonStatusAsync = function () {
 				var dfd = $.Deferred(),
 					siteData = new siteDataService(siteUrl);
 				

@@ -80,7 +80,7 @@ define(["knockout",
 			system.logVerbose("resultsViewModel show");
 			
 			if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                return self.keywordSearch(savedSearchViewModel.site(), savedSearchViewModel.keyword());		
+                return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());		
         }
         
         self.hide = function (e) {            
@@ -127,13 +127,13 @@ define(["knockout",
                 service = new documentService(selection.url);        
                 logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
 
-                logonPromise = logonService.logon(savedSearchViewModel.site().credential.domain, 
+                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
                                                   savedSearchViewModel.site().credential.userName, 
                                                   savedSearchViewModel.site().credential.password,
                                                   selection.url);
             
                 logonPromise.done(function (result) {
-                    getDisplayFormUrlPromise = service.getDisplayFormUrl();
+                    getDisplayFormUrlPromise = service.getDisplayFormUrlAsync();
                 
                     getDisplayFormUrlPromise.done(function (result) {  
 						self.isBusy(false);
@@ -169,7 +169,7 @@ define(["knockout",
             return dfd.promise();
         }
         
-        self.keywordSearch = function (searchSite, keyword) {
+        self.keywordSearchAsync = function (searchSite, keyword) {
             var dfd = $.Deferred(),
                 service,
                 logonService;
@@ -180,11 +180,11 @@ define(["knockout",
             service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
             logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
             
-            logonPromise = logonService.logon(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
+            logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
             logonPromise.done(function (result) {
                 
-                searchPromise = service.keywordSearch(keyword.split(" "), keywordConjunction.and, true);
+                searchPromise = service.keywordSearchAsync(keyword.split(" "), keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
                     self.SetDataSource(result);

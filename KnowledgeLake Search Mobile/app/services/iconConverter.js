@@ -5,7 +5,7 @@ define(["framework/Constants"], function (Constants) {
         self.majorVersionToSiteIcon = function (majorVersion) {
             if(majorVersion)
             {
-                if (majorVersion >= Constants.SharePoint2013MajorVersion)
+                if (majorVersion >= Constants.sharePoint2013MajorVersion)
                     return "app/images/site13.png";
             }
             

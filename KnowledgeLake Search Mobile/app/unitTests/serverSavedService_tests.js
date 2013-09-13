@@ -22,7 +22,7 @@ define(["services/imaging/serverSavedSearchesService",
             ntlm.authenticate(service.serviceUrl);
             
             //act
-            var facetSearchPromise = service.facetSearch(searchData);            
+            var facetSearchPromise = service.facetSearchAsync(searchData);            
             
             //assert
             facetSearchPromise.done(function (result) {
@@ -45,7 +45,7 @@ define(["services/imaging/serverSavedSearchesService",
             service = new serverSavedSearchesService();
             
             //act
-            var loadPromise = service.loadServerSavedSearches(siteData);
+            var loadPromise = service.loadServerSavedSearchesAsync(siteData);
             
             //assert
             loadPromise.done(function (result) {

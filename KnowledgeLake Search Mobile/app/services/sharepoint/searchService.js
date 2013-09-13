@@ -15,12 +15,12 @@ define(["jquery",
         
 		self.Status = function () {
 			system.logVerbose("searchService.Status called");
-			return self.executeSoapMethod("Status", null);
+			return self.executeSoapMethodAsync("Status", null);
         }
 		
 		self.GetSearchMetadata = function () {
 			system.logVerbose("searchService.GetSearchMetadata called");
-			return self.executeSoapMethod("GetSearchMetadata", null);
+			return self.executeSoapMethodAsync("GetSearchMetadata", null);
         }
 		
 		self.QueryEx = function (queryXml) {
@@ -30,7 +30,7 @@ define(["jquery",
 			
 			system.logVerbose("searchService.QueryEx called");
 			
-			return self.executeSoapMethod("QueryEx", parameters);
+			return self.executeSoapMethodAsync("QueryEx", parameters);
         }
         
         return self;

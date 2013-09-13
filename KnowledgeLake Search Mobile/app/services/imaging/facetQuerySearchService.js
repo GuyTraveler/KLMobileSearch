@@ -13,11 +13,11 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase", 
                 new keyValuePair("languageName", navigator.language)
 			];
 			
-			return self.executeSoapMethod("FacetSearch", parameters);
+			return self.executeSoapMethodAsync("FacetSearch", parameters);
         }
         
         self.GetProperties = function () {
-            return self.executeSoapMethod("GetProperties");
+            return self.executeSoapMethodAsync("GetProperties");
         }
         
 		self.GetQueriesForUser = function (user, url) {
@@ -26,7 +26,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase", 
                 new keyValuePair("requestUrl", url)
 			];
 			
-			return self.executeSoapMethod("GetQueriesForUser", parameters);
+			return self.executeSoapMethodAsync("GetQueriesForUser", parameters);
         }
         
         self.GetQueryUser = function (userSid) {
@@ -34,11 +34,11 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase", 
 				new keyValuePair("userSid", userSid)
 			];
 			
-			return self.executeSoapMethod("GetQueryUser", parameters);
+			return self.executeSoapMethodAsync("GetQueryUser", parameters);
         }
         
         self.GetCurrentUserName = function () {			
-			return self.executeSoapMethod("GetCurrentUserName");
+			return self.executeSoapMethodAsync("GetCurrentUserName");
         }
         
         return self;

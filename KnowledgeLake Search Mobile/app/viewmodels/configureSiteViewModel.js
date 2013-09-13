@@ -78,7 +78,7 @@ define(["knockout",
 				}
             });
          
-            self.saveSiteSettings = function () { 
+            self.saveSiteSettingsAsync = function () { 
 				var theSite,
 					writePromise,
 					dfd = $.Deferred();
@@ -92,12 +92,12 @@ define(["knockout",
                 }
 								
                 window.App.showLoading();
-				self.logon().always(function () {
+				self.logonAsync().always(function () {
 					if (self.validateAll()) {
 					
 						theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
 		                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
-						writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSite(theSite) : SiteDataCachingService.AddSite(theSite);
+						writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 		                    
 		                writePromise.done(function (result) { 
 							system.logVerbose("done writing site data, returning home");
@@ -203,7 +203,7 @@ define(["knockout",
                 self.siteCredentialType(detectedCredType);
 				
 				if (detectedCredType == credentialType.claimsOrForms) {
-					self.logon();
+					self.logonAsync();
                 }
             }
             
@@ -235,13 +235,13 @@ define(["knockout",
             }
             
             
-            self.logon = function () {
+            self.logonAsync = function () {
 				var service = new websService(self.fullUrl()),
 					logonPromise,
 					getWebDfd = $.Deferred();
 				
 				self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType());
-				logonPromise = self.logonService.logon(self.siteDomain(), self.siteUserName(), self.sitePassword())
+				logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword())
 				
 				//probably already logging on
 				if (!logonPromise) {

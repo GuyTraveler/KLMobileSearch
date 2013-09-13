@@ -12,7 +12,7 @@ define(["domain/promiseResponse/promiseResolveResponse",
 		
 		self.fileSystem = {};
 		
-		self.Exists = function (path) {
+		self.ExistsAsync = function (path) {
 			var dfd = $.Deferred();
 						
 			if (!localStorageAvailable()) {
@@ -28,7 +28,7 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			return dfd.promise();
         }
 		
-		self.Write = function (path, data) {
+		self.WriteAsync = function (path, data) {
 			var dfd = $.Deferred(),
 				writeData = typeof data === 'string' ? data : JSON.stringify(data);
 			
@@ -43,7 +43,7 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			return dfd.promise();
 		}
 		
-		self.Read = function (path) {
+		self.ReadAsync = function (path) {
 			var dfd = $.Deferred();
 			
 			if (!localStorageAvailable()) {
@@ -59,7 +59,7 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			return dfd.promise();
         }
 		
-		self.Delete = function (path) {
+		self.DeleteAsync = function (path) {
 			var dfd = $.Deferred();
 			
 			if (!localStorageAvailable()) {

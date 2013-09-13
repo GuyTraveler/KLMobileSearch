@@ -134,7 +134,7 @@ define(["services/siteDataCachingService",
         var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var addSitePromise = SiteDataCachingService.AddSite(newSite);
+        var addSitePromise = SiteDataCachingService.AddSiteAsync(newSite);
             
         //assert
         addSitePromise.done(function (result) {
@@ -158,7 +158,7 @@ define(["services/siteDataCachingService",
         SiteDataCachingService.sites.push(newSite);
         
         //act
-        var addSitePromise = SiteDataCachingService.AddSite(newSite);
+        var addSitePromise = SiteDataCachingService.AddSiteAsync(newSite);
             
         //assert
         addSitePromise.done(function (result) {
@@ -178,7 +178,7 @@ define(["services/siteDataCachingService",
         var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var addSitePromise = SiteDataCachingService.AddSite(newSite);
+        var addSitePromise = SiteDataCachingService.AddSiteAsync(newSite);
             
         //assert
         addSitePromise.done(function (result) {
@@ -200,7 +200,7 @@ define(["services/siteDataCachingService",
         var updateSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var updateSitePromise = SiteDataCachingService.UpdateSite(updateSite);
+        var updateSitePromise = SiteDataCachingService.UpdateSiteAsync(updateSite);
             
         //assert
         updateSitePromise.done(function (result) {           
@@ -220,7 +220,7 @@ define(["services/siteDataCachingService",
         var updateSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var updateSitePromise = SiteDataCachingService.UpdateSite(updateSite);
+        var updateSitePromise = SiteDataCachingService.UpdateSiteAsync(updateSite);
             
         //assert
         updateSitePromise.done(function (result) {            
@@ -243,7 +243,7 @@ define(["services/siteDataCachingService",
         updateSite.title = "null";
         
         //act
-        var updateSitePromise = SiteDataCachingService.UpdateSite(updateSite);
+        var updateSitePromise = SiteDataCachingService.UpdateSiteAsync(updateSite);
             
         //assert
         updateSitePromise.done(function (result) {
@@ -264,7 +264,7 @@ define(["services/siteDataCachingService",
         var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var removeSitePromise = SiteDataCachingService.RemoveSite(newSite);
+        var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(newSite);
             
         //assert
         removeSitePromise.done(function (result) {
@@ -287,7 +287,7 @@ define(["services/siteDataCachingService",
         SiteDataCachingService.sites.push(newSite);
         
         //act
-        var removeSitePromise = SiteDataCachingService.RemoveSite(removeSite);
+        var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(removeSite);
             
         //assert
         removeSitePromise.done(function (result) {
@@ -310,7 +310,7 @@ define(["services/siteDataCachingService",
         SiteDataCachingService.sites.push(newSite);
         
         //act
-        var removeSitePromise = SiteDataCachingService.RemoveSite(removeSite);
+        var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(removeSite);
             
         //assert
         removeSitePromise.done(function (result) {
@@ -330,11 +330,11 @@ define(["services/siteDataCachingService",
         var siteDataFileName = "sites.dat";
         
         //act
-        var deletePromise = File.Delete(siteDataFileName);
+        var deletePromise = File.DeleteAsync(siteDataFileName);
         
         deletePromise.done(function (result) {
             //assert
-            var loadSitesPromise = SiteDataCachingService.LoadSites();
+            var loadSitesPromise = SiteDataCachingService.LoadSitesAsync();
             
             loadSitesPromise.done(function (result) {
                 QUnit.ok(false);
@@ -359,12 +359,12 @@ define(["services/siteDataCachingService",
         var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
         
         //act
-        var addSitePromise = SiteDataCachingService.AddSite(newSite);
+        var addSitePromise = SiteDataCachingService.AddSiteAsync(newSite);
             
         //assert
         addSitePromise.done(function (result) {
             //assert
-            var loadSitesPromise = SiteDataCachingService.LoadSites();
+            var loadSitesPromise = SiteDataCachingService.LoadSitesAsync();
             
             loadSitesPromise.done(function (result) {
                 QUnit.ok(true);

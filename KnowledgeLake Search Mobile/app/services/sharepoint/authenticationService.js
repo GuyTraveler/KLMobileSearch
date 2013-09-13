@@ -13,7 +13,7 @@ define(["jquery",
         
         self.Mode = function (webUrl) {
 			system.logVerbose("authenticationService.Mode called");
-            return self.executeSoapMethod("Mode", null);
+            return self.executeSoapMethodAsync("Mode", null);
         }
         
         return self;

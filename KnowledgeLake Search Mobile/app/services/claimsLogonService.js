@@ -11,7 +11,7 @@ define(["jquery",
 			self.isLoggingOn = false;
 			self.windowRef = null;
                 
-			self.logon = function () {
+			self.logonAsync = function () {
 				var dfd = $.Deferred();
                 
                 if (self.isLoggingOn) return null;
@@ -57,7 +57,7 @@ define(["jquery",
 				return dfd.promise();
             };
 			
-			self.checkLogonStatus = function () {
+			self.checkLogonStatusAsync = function () {
 				var dfd = $.Deferred(),
 					getWebPromise,
 					service = new websService(siteUrl);

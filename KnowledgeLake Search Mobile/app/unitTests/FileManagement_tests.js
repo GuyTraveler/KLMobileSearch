@@ -21,11 +21,11 @@ define(["factory/fileManagementFactory",
             var filePath = "test.txt";
             var testData = "test data";
             
-            var writePromise = File.Write(filePath, testData);
+            var writePromise = File.WriteAsync(filePath, testData);
             
             writePromise.done(function (result) {
                 //act
-                var existsPromise = File.Exists(filePath);
+                var existsPromise = File.ExistsAsync(filePath);
                 
                 //assert
                 existsPromise.done(function (result) {
@@ -48,11 +48,11 @@ define(["factory/fileManagementFactory",
             //arrange
             var filePath = "test.txt";
             
-            var deletePromise = File.Delete(filePath);
+            var deletePromise = File.DeleteAsync(filePath);
             
             deletePromise.done(function (result) {
                 //act
-                var existsPromise = File.Exists(filePath);
+                var existsPromise = File.ExistsAsync(filePath);
                 
                 //assert
                 existsPromise.done(function (result) {                    
@@ -77,13 +77,13 @@ define(["factory/fileManagementFactory",
             var filePath = "test.txt";
             var testData = "test data";
             
-            var writePromise = File.Write(filePath, testData);
+            var writePromise = File.WriteAsync(filePath, testData);
             
             writePromise.done(function (result) {
                 QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
                 
                 //act
-                var readPromise = File.Read(filePath);
+                var readPromise = File.ReadAsync(filePath);
                 
                 //assert
                 readPromise.done(function (result) {
@@ -107,11 +107,11 @@ define(["factory/fileManagementFactory",
             //arrange
             var filePath = "test.txt";
             
-            var deletePromise = File.Delete(filePath);
+            var deletePromise = File.DeleteAsync(filePath);
             
             deletePromise.done(function (result) {
                 //act
-                var readPromise = File.Read(filePath);
+                var readPromise = File.ReadAsync(filePath);
                 
                 //assert
                 readPromise.done(function (result) {
@@ -136,11 +136,11 @@ define(["factory/fileManagementFactory",
             var filePath = "test.txt";
             var testData = "test data";
             
-            var writePromise = File.Write(filePath, testData);
+            var writePromise = File.WriteAsync(filePath, testData);
             
             writePromise.done(function (result) {
                 //act
-                var deletePromise = File.Delete(filePath);
+                var deletePromise = File.DeleteAsync(filePath);
                 
                 //assert
                 deletePromise.done(function (result) {
@@ -166,7 +166,7 @@ define(["factory/fileManagementFactory",
             var filePath = "test.txt";
             File.fileSystem = null;
             //act
-            var existsPromise = File.Exists(filePath);
+            var existsPromise = File.ExistsAsync(filePath);
             //assert
             existsPromise.done(function (result) {
             QUnit.ok(false);
@@ -182,7 +182,7 @@ define(["factory/fileManagementFactory",
             var filePath = "test.txt";
             File.fileSystem = null;
             //act
-            var readPromise = File.Read(filePath);
+            var readPromise = File.ReadAsync(filePath);
             //assert
             readPromise.done(function (result) {
             QUnit.ok(false);
@@ -199,7 +199,7 @@ define(["factory/fileManagementFactory",
             var data = "test text";
             File.fileSystem = null;
             //act
-            var writePromise = File.Write(filePath, data);
+            var writePromise = File.WriteAsync(filePath, data);
             //assert
             writePromise.done(function (result) {
             QUnit.ok(false);

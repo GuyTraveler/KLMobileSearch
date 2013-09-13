@@ -12,7 +12,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 				new keyValuePair("listName", listName)
 			];
 			
-			return self.executeSoapMethod("GetList", parameters);
+			return self.executeSoapMethodAsync("GetList", parameters);
         }
 		
         self.GetListItems = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID) {
@@ -26,7 +26,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
 				new keyValuePair("webID", webID)
             ];
             
-            return self.executeSoapMethod("GetListItems", parameters);
+            return self.executeSoapMethodAsync("GetListItems", parameters);
         }
         
         return self;

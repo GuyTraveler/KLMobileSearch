@@ -341,7 +341,7 @@ define(["system",
 			//act
 			vm = new configureSiteViewModel();
 			vm.url(TestSettings.ntlmTestUrl);
-			credValidationPromise = vm.logon();
+			credValidationPromise = vm.logonAsync();
 			
 			//assert
 			QUnit.ok(credValidationPromise);
@@ -369,7 +369,7 @@ define(["system",
 			vm.siteUserName(TestSettings.ntlmTestUser);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.siteDomain(TestSettings.ntlmTestDomain);
-			credValidationPromise = vm.logon();
+			credValidationPromise = vm.logonAsync();
 			
 			//assert
 			QUnit.ok(credValidationPromise);
@@ -466,7 +466,7 @@ define(["system",
             window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			saveSettingsPromise = vm.saveSiteSettings();
+			saveSettingsPromise = vm.saveSiteSettingsAsync();
 						
 			//assert
 			QUnit.ok(saveSettingsPromise);
@@ -501,7 +501,7 @@ define(["system",
 			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
 			
-			saveSettingsPromise = vm.saveSiteSettings();
+			saveSettingsPromise = vm.saveSiteSettingsAsync();
 						
 			//assert
 			QUnit.ok(saveSettingsPromise);
@@ -536,7 +536,7 @@ define(["system",
 			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
 			
-			saveSettingsPromise = vm.saveSiteSettings();
+			saveSettingsPromise = vm.saveSiteSettingsAsync();
 						
 			//assert
 			QUnit.ok(saveSettingsPromise);
@@ -571,7 +571,7 @@ define(["system",
 			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
-			saveSettingsPromise = vm.saveSiteSettings();
+			saveSettingsPromise = vm.saveSiteSettingsAsync();
 						
 			//assert
 			saveSettingsPromise.done(function () {

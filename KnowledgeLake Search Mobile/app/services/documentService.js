@@ -1,11 +1,12 @@
 define(["jquery", 
 		"system",
+        "framework/Constants",
 		"ISiteDataService", 
 		"IListsService",
 		"Uri",
 		//uncaught depends
 		"extensions"],
-	function ($, system, SiteDataService, ListsService, Uri) {
+	function ($, system, Constants, SiteDataService, ListsService, Uri) {
 		var documentService = function (docUrl) {
 			var self = this,				
 				dispFormRelToLibrary = "/Forms/DispForm.aspx",
@@ -41,14 +42,14 @@ define(["jquery",
 				
 				if (!fileLeafRef) return -1;
 				
-				idx = fileLeafRef.indexOf(system.sharePointDelimiter);
+				idx = fileLeafRef.indexOf(Constants.sharePointDelimiter);
 				
 				if (idx < 0) return -1;
 				
 				return fileLeafRef.substring(0, idx);
             };
 			
-			self.getListID = function () {
+			self.getListIDAsync = function () {
                 var siteData,										
 					dfd = $.Deferred();
                 
@@ -57,12 +58,12 @@ define(["jquery",
 					return dfd.promise();
                 }
                 
-			    siteUrlPromise = self.getSiteUrl();
+			    siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
                     siteData = new SiteDataService(cacheSiteUrl);
                     
-                    siteData.GetURLSegments(docUrl)
+                    siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
     						cacheListId  = result.strListID.value;
     						dfd.resolve(cacheListId);
@@ -80,7 +81,7 @@ define(["jquery",
 				return dfd.promise();
             };
 			
-			self.getRootFolderUrl = function () {
+			self.getRootFolderUrlAsync = function () {
 				var lists,
 					dfd = $.Deferred();
 
@@ -89,12 +90,12 @@ define(["jquery",
 					return dfd.promise();
                 }
                 
-                siteUrlPromise = self.getSiteUrl();
+                siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
                     lists = new ListsService(cacheSiteUrl);
 			
-    				self.getListID()
+    				self.getListIDAsync()
     					.done(function (listID) {						
     						lists.GetList(listID)
     							.done(function (result) {
@@ -113,7 +114,7 @@ define(["jquery",
 				return dfd.promise();
             };
 			
-			self.getListItemID = function () {
+			self.getListItemIDAsync = function () {
 				var siteData,										
 					dfd = $.Deferred();
 				
@@ -122,12 +123,12 @@ define(["jquery",
 					return dfd.promise();
                 }
                 
-                siteUrlPromise = self.getSiteUrl();
+                siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
                     siteData = new SiteDataService(cacheSiteUrl);
                     
-                    siteData.GetURLSegments(docUrl)
+                    siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
     						cacheListItemId  = result.strItemID.value;
     						dfd.resolve(cacheListItemId);
@@ -144,7 +145,7 @@ define(["jquery",
 				return dfd.promise();
             };
 			
-			self.getDisplayFormUrl = function () {
+			self.getDisplayFormUrlAsync = function () {
 				var siteUri,
 					portPart,
 					dfd = $.Deferred();
@@ -154,15 +155,15 @@ define(["jquery",
 					return dfd.promise();
                 }
                                 
-                siteUrlPromise = self.getSiteUrl();
+                siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
                     siteUri = new Uri(cacheSiteUrl);
                     
-                    self.getRootFolderUrl()
+                    self.getRootFolderUrlAsync()
     					.done(function (listRootFolder) {
     						
-    						self.getListItemID()
+    						self.getListItemIDAsync()
     							.done(function (listItemID) {
     								
     								if (listItemID === -1) {
@@ -191,7 +192,7 @@ define(["jquery",
 				return dfd.promise();
             };
             
-            self.getSiteUrl = function () {
+            self.getSiteUrlAsync = function () {
 				var siteData = new SiteDataService(docUrl),										
 					dfd = $.Deferred();
 				

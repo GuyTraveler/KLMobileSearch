@@ -25,7 +25,7 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             self.LoadSearchData = function () {
                 var service = new serverSavedSearchesService();
                 
-                var loadServerSavedSearchesPromise = service.loadServerSavedSearches(self.site());
+                var loadServerSavedSearchesPromise = service.loadServerSavedSearchesAsync(self.site());
               
                 loadServerSavedSearchesPromise.done(function (result) {   
                     self.SetDataSource(result);

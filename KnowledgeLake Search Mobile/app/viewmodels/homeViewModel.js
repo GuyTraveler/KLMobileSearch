@@ -37,7 +37,7 @@ define(["knockout",
                     }
                     else 
                     {
-                        var loadSitesPromise = SiteDataCachingService.LoadSites();
+                        var loadSitesPromise = SiteDataCachingService.LoadSitesAsync();
                       
                         loadSitesPromise.done(function (result) {
                             if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
@@ -130,7 +130,7 @@ define(["knockout",
                 if(self.selectedSite)
                 {
                     // prompt before removal if yes proceed with deletion
-                    var removeSitePromise = SiteDataCachingService.RemoveSite(self.selectedSite);
+                    var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite);
                     // add the removal of associated searches ... must perform a loadsearches 
                       
                     removeSitePromise.done(function (result) {

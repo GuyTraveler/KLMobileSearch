@@ -4,12 +4,12 @@ define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystem
             downloadDirectory = "Download",
             knowledgelakeDirectory = "KnowledgeLake";
         
-        self.transfer = function (url) {            
+        self.transferAsync = function (url) {            
             var dfd = $.Deferred();
             
             if(url)
             {
-                var getFolderPromise = self.getFolder();
+                var getFolderPromise = self.getFolderAsync();
                 
                 getFolderPromise.done(function (folder) {
                     if (folder)
@@ -17,7 +17,7 @@ define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystem
                         var fileName = self.convertUrlToFileName(url);                        
                         var filePath = folder.fullPath + "/" + fileName;
                         
-                        var existsPromise = File.Exists(filePath); 
+                        var existsPromise = File.ExistsAsync(filePath); 
                         
                         existsPromise.done(function (result) {
                             if(result.response === FileSystemResponse.FileFound)
@@ -64,7 +64,7 @@ define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystem
             return dfd.promise();
         }
         
-        self.getFolder = function () {
+        self.getFolderAsync = function () {
             var dfd = $.Deferred();
             
             if(File.fileSystem)

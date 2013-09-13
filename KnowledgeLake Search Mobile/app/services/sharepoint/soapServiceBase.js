@@ -19,7 +19,7 @@ define(["jquery",
             return $.get(url);
         }
            
-        self.executeSoapMethod = function (methodName, parameters) {
+        self.executeSoapMethodAsync = function (methodName, parameters) {
             var soapDfd = $.Deferred();
 			
 			self.loadSoapTemplate(methodName)

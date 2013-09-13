@@ -18,7 +18,7 @@ define(["framework/FileTransfer",
             var uri = "http://www.knowledgelake.com/PublishingImages/HomepageSlides/content-out-of-chaos.jpg";
             
             //act
-            var transferPromise = FileTransfer.transfer(uri);
+            var transferPromise = FileTransfer.transferAsync(uri);
             
             transferPromise.done(function (result) {
                 QUnit.ok(result);               
@@ -36,7 +36,7 @@ define(["framework/FileTransfer",
             var knowledgelakeDirectory = "KnowledgeLake";
             
             //act
-            var getFolderPromise = FileTransfer.getFolder();
+            var getFolderPromise = FileTransfer.getFolderAsync();
             
             getFolderPromise.done(function (result) {
                 QUnit.ok(result.isDirectory);

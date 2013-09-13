@@ -11,7 +11,7 @@ define(["jquery",
     var serverSavedSearchesService = function () {
         var self = this;
         
-        self.facetSearch = function (search) {  
+        self.facetSearchAsync = function (search) {  
             var dfd = $.Deferred(),            
                 service = new facetQuerySearchService(search.siteUrl);
             
@@ -28,11 +28,11 @@ define(["jquery",
             return dfd.promise();
         }
         
-        self.loadServerSavedSearches = function (site) {
+        self.loadServerSavedSearchesAsync = function (site) {
             // detect if imaging search is installed
             var dfd = $.Deferred();
             
-            var detectPromise = ImagingDetectionService.detect(site);
+            var detectPromise = ImagingDetectionService.detectAsync(site);
             
             detectPromise.done(function (result) {
                 var service = new facetQuerySearchService(site.url);          
@@ -95,8 +95,8 @@ define(["jquery",
         
         self.parseSearchResults = function (searchResults) {
             var results = [],
-                titleProperty = "Title",
-                pathProperty = "Path";
+                pathProperty = "Path",
+                titleProperty = "Title";
                         
             if(searchResults)
             {
@@ -108,7 +108,7 @@ define(["jquery",
     					    metadata = self.buildResultMetadata(searchResults[FacetResultItem].Values);                    
                         
                         if(metadata[titleProperty])
-                            parsedResult = new result(metadata[pathProperty], metadata);                        
+                            parsedResult = new result(metadata[titleProperty], metadata);                        
                         
                         else
                             parsedResult = new result(self.convertPathToTitle(metadata[pathProperty]), metadata);
