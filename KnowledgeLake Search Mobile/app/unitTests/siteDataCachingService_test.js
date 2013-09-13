@@ -5,8 +5,9 @@ define(["services/siteDataCachingService",
 		"domain/credentialType", 
 		"FileManagement", 
         "domain/promiseResponse/cachingServiceResponse", 
-        "domain/promiseResponse/fileSystemResponse"], 
-    function (SiteDataCachingService, site, credential, credentialType, File, CachingServiceResponse, FileSystemResponse) {
+        "domain/promiseResponse/fileSystemResponse", 
+        "services/encryptionService"], 
+    function (SiteDataCachingService, site, credential, credentialType, File, CachingServiceResponse, FileSystemResponse, EncryptionService) {
     QUnit.module("Testing services/siteDataCachingService");
     
     QUnit.test("test SiteExists if the site exists", function () {
@@ -99,7 +100,6 @@ define(["services/siteDataCachingService",
         
         //assert
         QUnit.notEqual(result[0].credential.password, password);
-        QUnit.equal(result[0].credential.password, window.btoa(password));
     });
         
     QUnit.test("test decodePasswords if null", function () {
@@ -116,7 +116,7 @@ define(["services/siteDataCachingService",
         //arrange   
         var sites = [],
             password = "password",
-            newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", window.btoa(password), "dev"));
+            newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", EncryptionService.encrypt(password, window.device.uuid), "dev"));
         
         sites.push(newSite);
         
@@ -124,7 +124,7 @@ define(["services/siteDataCachingService",
         var result = SiteDataCachingService.decodePasswords(sites);
                     
         //assert
-        QUnit.notEqual(result[0].credential.password, window.atob(password));
+        QUnit.notEqual(result[0].credential.password, EncryptionService.encrypt(password, window.device.uuid));
         QUnit.equal(result[0].credential.password, password);
     });
     
