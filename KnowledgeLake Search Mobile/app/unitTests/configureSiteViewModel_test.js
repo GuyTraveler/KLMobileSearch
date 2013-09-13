@@ -6,8 +6,10 @@ define(["system",
 		"domain/credential", 
 		"domain/credentialType",
 		"domain/authenticationMode",
+		"domain/httpProtocols",
 		"unitTests/unitTestSettings"],    
-	function (system, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, credential, credentialType, authenticationMode, TestSettings) {
+	function (system, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, 
+			  credential, credentialType, authenticationMode, httpProtocols, TestSettings) {
 		QUnit.module("Testing configureSiteViewModel");
        
 		QUnit.test("configureSiteViewModel initializes propertly", function () {
@@ -22,7 +24,7 @@ define(["system",
 			QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
 			
-			QUnit.equal(vm.isHttps(), false);
+			QUnit.equal(vm.protocol(), httpProtocols.http);
 			QUnit.equal(vm.url(), TestSettings.defaultUrlText);
 			QUnit.equal(vm.siteTitle(), "");
 			QUnit.equal(vm.sharePointVersion(), 0);
@@ -54,12 +56,12 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.isHttps(false);
+			vm.protocol(httpProtocols.http);
 			vm.url(strippedUrl);
 			
 			//assert
-			QUnit.equal(vm.url(), strippedUrl);
-			QUnit.equal(vm.fullUrl(), TestSettings.ntlmTestUrl);
+			QUnit.equal(vm.url().toUpperCase(), strippedUrl.toUpperCase());
+			QUnit.equal(vm.fullUrl().toUpperCase(), TestSettings.ntlmTestUrl.toUpperCase());
         });
 	
 		QUnit.test("configureSiteViewModel fullUrl computes properly for https", function () {
@@ -69,12 +71,12 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.isHttps(true);
+			vm.protocol(httpProtocols.https);
 			vm.url(strippedUrl);
 			
 			//assert
-			QUnit.equal(vm.url(), strippedUrl);
-			QUnit.equal(vm.fullUrl(), TestSettings.adfsTestUrl);
+			QUnit.equal(vm.url().toUpperCase(), strippedUrl.toUpperCase());
+			QUnit.equal(vm.fullUrl().toUpperCase(), TestSettings.adfsTestUrl.toUpperCase());
         });
 	
 		QUnit.test("configureSiteViewModel test invalid siteTitle shows invalid (1)", function () {
@@ -305,7 +307,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.isHttps(true);
+			vm.protocol(httpProtocols.https);
 			vm.url(TestSettings.adfsTestUrl);
 			urlValidationPromise = vm.validateSiteUrl();
 			
@@ -364,7 +366,7 @@ define(["system",
 			
 			//act
 			vm = new configureSiteViewModel();
-			vm.isHttps(false);
+			vm.protocol(httpProtocols.http);
 			vm.url(TestSettings.ntlmTestUrl);			
 			vm.siteUserName(TestSettings.ntlmTestUser);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
@@ -617,8 +619,8 @@ define(["system",
             configureSiteVM.populateConfigureSiteViewModel(siteData);
                         
             //assert
-            QUnit.equal(configureSiteVM.fullUrl(), siteData.url);
-			QUnit.equal(configureSiteVM.url(), siteData.url.replace("https://", "").replace("http://", ""));
+            QUnit.equal(configureSiteVM.fullUrl().toUpperCase(), siteData.url.toUpperCase());
+			QUnit.equal(configureSiteVM.url().toUpperCase(), siteData.url.replace("https://", "").replace("http://", "").toUpperCase());
             QUnit.equal(configureSiteVM.siteTitle(), siteData.title);
             QUnit.equal(configureSiteVM.sharePointVersion(), siteData.majorVersion);
             QUnit.equal(configureSiteVM.siteCredentialType(), siteData.credential.credentialType);
@@ -641,8 +643,8 @@ define(["system",
             configureSiteVM.beforeShow();
                         
             //assert
-            QUnit.equal(configureSiteVM.fullUrl(), siteData.url);
-			QUnit.equal(configureSiteVM.url(), siteData.url.replace("https://", "").replace("http://", ""));
+            QUnit.equal(configureSiteVM.fullUrl().toUpperCase(), siteData.url.toUpperCase());
+			QUnit.equal(configureSiteVM.url().toUpperCase(), siteData.url.replace("https://", "").replace("http://", "").toUpperCase());
             QUnit.equal(configureSiteVM.siteTitle(), siteData.title);
             QUnit.equal(configureSiteVM.sharePointVersion(), siteData.majorVersion);
             QUnit.equal(configureSiteVM.siteCredentialType(), siteData.credential.credentialType);

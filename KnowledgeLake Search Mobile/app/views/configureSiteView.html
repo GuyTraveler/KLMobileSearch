@@ -9,6 +9,15 @@
 <h3 id="configureSiteTitle" data-bind="text: system.strings.configureSitePageTitle" />
 
 <ul data-role="listview" data-style="inset">
+	<li>
+        <label>            
+            <p class="list-view-label">
+				<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+                <span data-bind="text: system.strings.protocol" />
+            </p>
+            <select data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
+        </label>    
+    </li>
     <li>
         <label>            
             <p class="list-view-label">
@@ -23,16 +32,7 @@
 				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl, attr: { 'placeholder': system.strings.urlPlaceholder }" />            
 			
         </label>    
-    </li>
-	<li>
-        <label>            
-            <p class="list-view-label">
-				<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
-                <span data-bind="text: system.strings.https" />
-            </p>
-            <input type="checkbox" data-bind="checked: isHttps, enable: enableUrl, click: httpsClick" />
-        </label>    
-    </li>
+    </li>	
     <li>
         <label>            
             <p class="list-view-label">

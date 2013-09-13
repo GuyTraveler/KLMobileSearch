@@ -43,7 +43,7 @@ define({
 	noResultsFound: "No results found...",
 	searching: "Searching...",
 	back: "Back",
-	https: "Use HTTPS",
+	protocol: "Protocol",
 	urlPlaceholder: "www.server.com",
 	siteTitlePlaceholder: "Enter a title...",
 	userNamePlaceholder: "Domain\\User Name",

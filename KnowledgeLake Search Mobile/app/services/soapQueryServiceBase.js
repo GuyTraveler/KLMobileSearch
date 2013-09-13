@@ -24,7 +24,7 @@ define(["jquery",
                 trimDuplicates = (trimDuplicates && trimDuplicates !== false) ? true : false;
                 queryXml = keywordTemplate.replace("{clause}", clause).replace("{trimDuplicates}", trimDuplicates).replace("{maxResults}", maxResults);
                 
-                system.logVerbose("calling QueryEx with XML: " + queryXml);
+				system.logVerbose("calling QueryEx with XML: " + queryXml);
                 
                 service.QueryEx(queryXml)
                     .done(function (result) {

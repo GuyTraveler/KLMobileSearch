@@ -1,4 +1,4 @@
-define(["extensions"], function () {
+define(["domain/httpProtocols", "extensions"], function (httpProtocols) {
     var site = function(url, title, majorVersion, credential) {
         var self = this;
        
@@ -18,12 +18,7 @@ define(["extensions"], function () {
 			else 
 				return fullSiteUrl;
         };
-		
-		self.isHttps = function () {
-			return self.url.toLowerCase().startsWith("https");
-        };
-			
-		
+				
         return self;
     };
     

@@ -9,41 +9,43 @@ define(["knockout",
         "domain/credentialType",
         "domain/authenticationMode",
         "domain/keyValuePair", 
-        "domain/promiseResponse/cachingServiceResponse"], 
+        "domain/promiseResponse/cachingServiceResponse",
+		"domain/httpProtocols"], 
     function (ko, system, authenticationService, websService, SiteDataCachingService, LogonServiceFactory,
-		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse) {
+		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse, httpProtocols) {
         var configureSiteViewModel = function () {
             var self = this,
                 homeUrl = "#home",
                 questionImageUrl = "app/images/question.png",
                 invalidImageUrl = "app/images/invalid.png",
                 validImageUrl = "app/images/valid.png",
-                sharepointVersionHeader = "MicrosoftSharePointTeamServices",
-				urlValidationDfd;
+                sharepointVersionHeader = "MicrosoftSharePointTeamServices";
 			
+			self.urlValidationDfd = null;
 			self.logonService = null;
             self.url = ko.observable("");
             self.enableUrl = ko.observable(true);			
             self.siteTitle = ko.observable("");
             self.sharePointVersion = ko.observable(0);
-			self.isHttps = ko.observable(false);
+			self.protocols = [
+				httpProtocols.http,
+				httpProtocols.https
+			];
+			self.protocol = ko.observable(httpProtocols.http);
 			self.fullUrl = ko.computed(function () {
 				var fullSiteUrl = self.url();
 				
-				fullSiteUrl = fullSiteUrl.toLowerCase();
+				fullSiteUrl = fullSiteUrl.toUpperCase();
 				
-				if (fullSiteUrl.startsWith("https"))
+				if (fullSiteUrl.startsWith(httpProtocols.https))
 					fullSiteUrl = fullSiteUrl.substring(5);
-				else if (fullSiteUrl.startsWith("http"))
+				else if (fullSiteUrl.startsWith(httpProtocols.http))
 					fullSiteUrl = fullSiteUrl.substring(4);
 				
 				if (fullSiteUrl.startsWith("://"))
 					fullSiteUrl = fullSiteUrl.substring(3);
 				
-				if (self.isHttps())
-					fullSiteUrl = "https://" + fullSiteUrl;
-				else 
-					fullSiteUrl = "http://" + fullSiteUrl;
+				fullSiteUrl = self.protocol() + "://" + fullSiteUrl;
 			
 				return fullSiteUrl;
             });
@@ -156,9 +158,9 @@ define(["knockout",
 					.done(self.onSiteUrlValidated)
 					.fail(self.onSiteUrlFailed); 
 				
-				urlValidationDfd = $.Deferred();
+				self.urlValidationDfd = $.Deferred();
 				
-				return urlValidationDfd.promise();
+				return self.urlValidationDfd.promise();
             }
             
             self.onSiteUrlValidated = function (result) {
@@ -169,7 +171,7 @@ define(["knockout",
                 detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
                 self.setValidUrl(detectedCredentialType);   
                 
-				urlValidationDfd.resolve(detectedCredentialType);
+				self.urlValidationDfd.resolve(detectedCredentialType);
             }
             
             self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
@@ -183,11 +185,11 @@ define(["knockout",
 					//unknown credential type in this case...
 					detectedCredentialType = credentialType.ntlm;                    
                     self.setValidUrl(detectedCredentialType);   
-					urlValidationDfd.resolve(detectedCredentialType);
+					self.urlValidationDfd.resolve(detectedCredentialType);
                 }
                 else {
                     self.setInvalidUrl();
-					urlValidationDfd.reject(textStatus);
+					self.urlValidationDfd.reject(textStatus);
                 }                               							
             }
             
@@ -318,7 +320,7 @@ define(["knockout",
                 self.enableUrl(true);
                 
                 self.url("");
-				self.isHttps(false);
+				self.protocol(httpProtocols.http);
                 self.siteTitle("");
                 self.sharePointVersion(0);
                 self.siteCredentialType(credentialType.ntlm);
@@ -329,18 +331,13 @@ define(["knockout",
                 self.resetUrlValidation();
             }
 			
-			self.httpsClick = function () {
-				self.validateSiteUrl();
-				return true;
-            }
-            
             self.populateConfigureSiteViewModel = function (selectedSite) {
 				var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
 				
                 self.enableUrl(false);
                 
                 self.url(siteObj.urlWithoutScheme());
-				self.isHttps(siteObj.isHttps());
+				self.protocol(httpProtocols.parseProtocol(siteObj.url));
                 self.siteTitle(siteObj.title);
                 self.sharePointVersion(siteObj.majorVersion);
                 self.siteCredentialType(siteObj.credential.credentialType);
@@ -351,6 +348,11 @@ define(["knockout",
                 self.setValidUrl(self.siteCredentialType());
             }
 			
+			self.protocolChanged = function (newValue) {
+				self.validateSiteUrl();
+				return true;
+            };
+						
 			self.beforeShow = function (e) {
                 if(homeViewModel.selectedSite)
                     self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
