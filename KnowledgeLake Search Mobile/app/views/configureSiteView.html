@@ -71,9 +71,23 @@
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
                     <span data-bind="text: system.strings.password" />
                 </p>
-                <input type="password" data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" />            
+				
+				<span data-bind="if: !shouldShowPassword()">
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" type="password" />            
+				</span>
+				<span data-bind="if: shouldShowPassword">
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" type="text" />            
+				</span>
             </label>
         </li>
+		<!--<li>
+            <label>
+                <p>
+                    <span data-bind="text: system.strings.showPassword" />					
+                </p> 
+				<input type="checkbox" data-bind="checked: shouldShowPassword" />
+            </label>
+        </li>-->
         <li>
             <label>
                 <p class="list-view-label">

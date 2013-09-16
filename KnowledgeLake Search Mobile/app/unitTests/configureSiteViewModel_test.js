@@ -24,6 +24,7 @@ define(["system",
 			QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
 			
+			QUnit.equal(vm.shouldShowPassword(), false);
 			QUnit.equal(vm.protocol(), httpProtocols.http);
 			QUnit.equal(vm.url(), TestSettings.defaultUrlText);
 			QUnit.equal(vm.siteTitle(), "");

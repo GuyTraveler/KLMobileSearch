@@ -24,14 +24,14 @@ define(["knockout",
 			
 			self.urlValidationDfd = null;
 			self.logonService = null;
-            self.url = ko.observable("");
-            self.enableUrl = ko.observable(true);			
-            self.siteTitle = ko.observable("");
-            self.sharePointVersion = ko.observable(0);
 			self.protocols = [
 				httpProtocols.http,
 				httpProtocols.https
 			];
+            self.url = ko.observable("");
+            self.enableUrl = ko.observable(true);			
+            self.siteTitle = ko.observable("");
+            self.sharePointVersion = ko.observable(0);			
 			self.protocol = ko.observable(httpProtocols.http);
 			self.fullUrl = ko.computed(function () {
 				var fullSiteUrl = self.url();
@@ -56,6 +56,7 @@ define(["knockout",
             self.siteUserName = ko.computed(function () { 
 				return userNameParser.parseUserNameParts(self.siteFullUserName())[0];
             });
+			self.shouldShowPassword = ko.observable(false);
             self.sitePassword = ko.observable("");
             self.siteDomain = ko.computed(function () {
 				return userNameParser.parseUserNameParts(self.siteFullUserName())[1];
@@ -85,6 +86,8 @@ define(["knockout",
 					system.showToast(newValue);
 				}
             });
+			
+			
          
             self.saveSiteSettingsAsync = function () { 
 				var theSite,
