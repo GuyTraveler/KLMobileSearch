@@ -47,5 +47,6 @@ define({
 	urlPlaceholder: "www.server.com",
 	siteTitlePlaceholder: "Enter a title...",
 	userNamePlaceholder: "Domain\\User Name",
-	passwordPlaceholder: "Password"
+	passwordPlaceholder: "Password",
+	searchError: "An error occured while performing your search"
 });
