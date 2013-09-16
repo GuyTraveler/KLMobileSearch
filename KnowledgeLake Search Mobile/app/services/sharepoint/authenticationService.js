@@ -1,7 +1,7 @@
 define(["jquery", 
 		"system",
 		"domain/keyValuePair",
-		"services/sharepoint/soapServiceBase"], 
+		"services/soapServiceBase"], 
 	function ($, system, keyValuePair, soapServiceBase) {
     
     var authenticationService = function (siteUrl) {

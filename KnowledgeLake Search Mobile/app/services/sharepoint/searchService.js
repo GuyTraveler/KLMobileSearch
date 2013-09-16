@@ -1,7 +1,7 @@
 define(["jquery", 
 		"system",
 		"domain/keyValuePair",
-		"services/sharepoint/soapServiceBase",
+		"services/soapServiceBase",
 		//uncaught depends
 		"extensions"], 
 	function ($, system, keyValuePair, soapServiceBase) {
