@@ -62,7 +62,7 @@
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
                     <span data-bind="text: system.strings.userName" />
                 </p>
-                <input type="text" data-bind="value: siteUserName, attr: { 'placeholder': system.strings.userNamePlaceholder }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': system.strings.userNamePlaceholder }" class="list-view-input" />            
             </label>
         </li>        
         <li>
@@ -78,9 +78,9 @@
             <label>
                 <p class="list-view-label">
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.domain" />
-                </p>
-                <input type="text" data-bind="value: siteDomain" class="list-view-input" />            
+                    <span data-bind="text: system.strings.domain" />					
+                </p> 
+				<input data-bind="value: siteDomain" type="text" class="list-view-input" readonly="readonly" />
             </label>
         </li>
     </ul>

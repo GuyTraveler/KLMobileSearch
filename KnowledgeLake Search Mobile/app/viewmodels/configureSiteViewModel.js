@@ -3,6 +3,7 @@ define(["knockout",
         "IAuthenticationService", 
         "IWebsService", 
         "ISiteDataCachingService", 
+		"IUserNameParser",
 		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
@@ -10,8 +11,8 @@ define(["knockout",
         "domain/authenticationMode",
         "domain/keyValuePair", 
         "domain/promiseResponse/cachingServiceResponse",
-		"domain/httpProtocols"], 
-    function (ko, system, authenticationService, websService, SiteDataCachingService, LogonServiceFactory,
+		"domain/httpProtocols",], 
+    function (ko, system, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
 		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse, httpProtocols) {
         var configureSiteViewModel = function () {
             var self = this,
@@ -51,9 +52,14 @@ define(["knockout",
             });
 			
             self.siteCredentialType = ko.observable(credentialType.ntlm);
-            self.siteUserName = ko.observable("");
+			self.siteFullUserName = ko.observable("");
+            self.siteUserName = ko.computed(function () { 
+				return userNameParser.parseUserNameParts(self.siteFullUserName())[0];
+            });
             self.sitePassword = ko.observable("");
-            self.siteDomain = ko.observable("");
+            self.siteDomain = ko.computed(function () {
+				return userNameParser.parseUserNameParts(self.siteFullUserName())[1];
+            });
             self.isWindowsCredential = ko.computed(function () {
                 return self.siteCredentialType() == credentialType.ntlm; 
             });
@@ -324,9 +330,8 @@ define(["knockout",
                 self.siteTitle("");
                 self.sharePointVersion(0);
                 self.siteCredentialType(credentialType.ntlm);
-                self.siteUserName("");
+                self.siteFullUserName("");
                 self.sitePassword("");
-                self.siteDomain("");
                 
                 self.resetUrlValidation();
             }
@@ -341,9 +346,8 @@ define(["knockout",
                 self.siteTitle(siteObj.title);
                 self.sharePointVersion(siteObj.majorVersion);
                 self.siteCredentialType(siteObj.credential.credentialType);
-                self.siteUserName(siteObj.credential.userName);
+                self.siteFullUserName(userNameParser.mergeUserNameParts(siteObj.credential.userName, siteObj.credential.domain));
                 self.sitePassword(siteObj.credential.password);
-                self.siteDomain(siteObj.credential.domain);
 
                 self.setValidUrl(self.siteCredentialType());
             }

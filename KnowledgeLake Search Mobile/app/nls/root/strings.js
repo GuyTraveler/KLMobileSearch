@@ -46,7 +46,7 @@ define({
 	protocol: "Protocol",
 	urlPlaceholder: "www.server.com",
 	siteTitlePlaceholder: "Enter a title...",
-	userNamePlaceholder: "Domain\\User Name",
+	userNamePlaceholder: "UserName@Domain",
 	passwordPlaceholder: "Password",
 	searchError: "An error occured while performing your search"
 });
