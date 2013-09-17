@@ -7,7 +7,7 @@ define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function (
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-        self.GetSiteUrl = function (url) {
+        self.GetSiteUrlAsync = function (url) {
             var parameters = [
                 new keyValuePair("Url", encodeURI(url))
             ];
