@@ -1,0 +1,7 @@
+<select data-bind="options: properties, value: data.selectedProperty"></select>
+<div>
+    <select data-bind="options: data.operators(), value: data.selectedOperator"></select>
+    <div data-bind="foreach: data.choice()">        
+        <input type="radio" data-bind="attr: {value: $data}">
+    </div>
+</div>

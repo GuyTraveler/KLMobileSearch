@@ -35,4 +35,10 @@ define(function () {
 		           	.replace(/>/g, '&gt;');
 		};
 	}
+    
+    if (!String.prototype.parseBool) {
+		String.prototype.parseBool = function () {
+			return this.toUpperCase() === "TRUE";
+		};
+	}
 });

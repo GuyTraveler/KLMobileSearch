@@ -1,4 +1,4 @@
-define(["knockout"], function (ko) {
+define([], function () {
     var search = function(url, title, type, query) {
         var self = this;        
         

@@ -6,13 +6,31 @@
     </div>
 </header>
 
-<div>				
-    <input type="search"
-    	   data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'text-border': true, 'invalid' : !isKeywordValid() } " />
-    
-    <button class="searchButton" data-bind="click: search, enable: isKeywordValid">
-    	<span data-bind="text: system.strings.search"></span>					
-    </button>
+<div data-bind="if: search()">
+    <h3 data-bind="text: search().title"></h3>
+</div>
+
+<ul data-role="listview" data-style="inset">
+	<li>
+		<div class="keywordContainer">
+			<div id="keywordInputContainer">
+				<input type="search"
+    	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
+            </div>
+			
+			<div id="keywordSearchButtonContainer"> 
+				<button data-role="button" data-icon="search" data-bind="click: search, enable: isKeywordValid" class="" />
+            </div>			
+		</div>
+    </li>
+</ul>
+
+<div data-bind="foreach: searchBuilderDataSource">  
+    <div data-bind="searchPropertyBuilder: { data: $data, search: $root.search, properties: $root.propertiesName }"></div>
+</div>
+
+<div id="addPropertyButtonContainer"> 
+	<button data-role="button" data-bind="click: addProperty" class="">Add Property</button>
 </div>
 
 <footer data-role="footer">

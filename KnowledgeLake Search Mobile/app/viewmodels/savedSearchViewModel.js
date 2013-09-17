@@ -2,10 +2,12 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
     function (ko, system, SearchDataCachingService, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
+                searchBuilderUrl = "#searchBuilder",
                 resultsUrl = "#results";            
             
             self.searchDataSource = ko.observableArray(null);
             
+            self.selectedSearch = null;
             self.site = ko.observable("");          
             self.keyword = ko.observable("");
             
@@ -69,6 +71,31 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             
             self.hide = function (e) {
                 system.logVerbose("savedSearchViewModel hide");
+            }
+            
+            self.setSelectedSearch = function (selection, event) {
+				if (event)
+					event.stopImmediatePropagation();
+				
+                if(self.selectedSearch === selection)
+                    self.selectedSearch = null;
+                else
+                    self.selectedSearch = selection;
+                
+                //self.navBarVisible(self.selectedSite);
+            }
+            
+            self.isSelectedSearch = function (item) {
+				return /*self.navBarVisible() &&*/ self.selectedSite === item;
+            }
+            
+            self.searchClick = function (selection) {
+				self.setSelectedSearch(selection, null);
+				
+                if(self.selectedSite !== selection)
+                    self.selectedSite = selection;
+                
+                window.App.navigate(searchBuilderUrl);              
             }
             
             self.search = function (e) {

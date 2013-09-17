@@ -17,11 +17,13 @@ require(["config"], function (config) {
              "viewmodels/homeViewModel",
              "viewmodels/configureSiteViewModel",
              "viewmodels/savedSearchViewModel",
+             "viewmodels/searchBuilderViewModel",
              "viewmodels/resultsViewModel",
              "framework/knockout/kendoView",
              "framework/knockout/urlToFileTypeIcon",
              "framework/knockout/majorVersionToSiteIcon", 
-             "framework/knockout/dateTimeToLocaleString"], 
+             "framework/knockout/dateTimeToLocaleString", 
+             "framework/knockout/searchPropertyBuilder"], 
     function($, ko, kendo, system, extensions, logLevel, homeViewModel) {
         var testHref = "test.html?coverage=true";                
         

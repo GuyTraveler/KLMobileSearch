@@ -79,8 +79,15 @@ define(["knockout",
 		self.show = function (e) {
 			system.logVerbose("resultsViewModel show");
 			
-			if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());		
+            if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
+            {                
+			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
+                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());
+            }	
+            // add logic to handle keyword searches from both savedsearch and searchbuilder view models and
+            // add logic to handle klaml searches from the searchbuilder view model
+            /*else
+                self.propertySearchAsync(queryBuilderViewModel.blargh);*/            
         }
         
         self.hide = function (e) {            

@@ -1,0 +1,12 @@
+<div>
+    <input type="checkbox" id="switch" data-bind="checked: data.conjunction()" />
+</div>
+<select data-bind="options: properties, value: data.selectedProperty"></select>
+<div>
+    <select data-bind="options: data.operators(), value: data.selectedOperator"></select>
+    <select data-bind="options: data.choices(), value: data.value"></select>
+</div>
+
+<script>
+    var switchInstance = $("#switch").kendoMobileSwitch({ onLabel: "And", offLabel: "Or" });
+</script>
