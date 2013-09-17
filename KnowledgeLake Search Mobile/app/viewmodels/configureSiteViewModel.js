@@ -367,6 +367,20 @@ define(["knockout",
                     self.clearPopulatedConfigureSiteViewModel();
             }
 			
+			self.afterShow = function (e) {
+				if (homeViewModel.selectedSite) {
+					$("#siteTitleText").focus();	
+                }
+				else {
+					$("#siteUrlText").focus();
+				}
+				
+				//android
+				if (window.plugins && window.plugins.SoftKeyBoard) {
+					window.plugins.SoftKeyBoard.show();
+                }
+            }
+			
             return self;
         };
         

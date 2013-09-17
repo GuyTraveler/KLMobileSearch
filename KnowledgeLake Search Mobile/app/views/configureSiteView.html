@@ -28,7 +28,7 @@
 			<!--<input class="list-view-input" type="url"
 				   data-bind="if: (!window.App || window.App.os.ios), value: url, enable: enableUrl" /> -->           
 			
-            <input id="urlText" class="list-view-input" type="text"
+            <input id="siteUrlText" class="list-view-input" type="text"
 				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl, attr: { 'placeholder': system.strings.urlPlaceholder }" />            
 			
         </label>    
@@ -38,7 +38,7 @@
             <p class="list-view-label">
                 <span data-bind="text: system.strings.siteTitle" />
             </p>
-            <input type="text" data-bind="value: siteTitle, attr: { 'placeholder': system.strings.siteTitlePlaceholder }" class="list-view-input" />            
+            <input id="siteTitleText" type="text" data-bind="value: siteTitle, attr: { 'placeholder': system.strings.siteTitlePlaceholder }" class="list-view-input" />            
         </label>    
     </li>
     
