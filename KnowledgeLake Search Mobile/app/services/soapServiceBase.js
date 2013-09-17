@@ -15,7 +15,7 @@ define(["jquery",
         self.serviceUrl += "_vti_bin/" + serviceName + ".asmx";
    
         self.loadSoapTemplate = function (methodName) {
-            var url = "app/services/sharepoint/soapTemplates/" + serviceName + "/" + methodName + ".xml";
+            var url = "app/services/soapTemplates/" + serviceName + "/" + methodName + ".xml";
             return $.get(url);
         }
            

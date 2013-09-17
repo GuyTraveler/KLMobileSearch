@@ -46,7 +46,7 @@ define(["jquery",
 					siteData = new siteDataService(siteUrl);
 				
 				//lightweight SP call to verify we are authenticated
-				siteData.GetSiteUrl(siteUrl)
+				siteData.GetSiteUrlAsync(siteUrl)
 					.done(function () {
 		                dfd.resolve(true);
 		            })
