@@ -19,22 +19,29 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
                 system.logVerbose("searchViewModel init");
             }
             
-            self.SetDataSource = function (searchBuilderData) {
-                self.propertiesName([]);
+            self.SetDataSource = function (searchProperties) {
                 self.searchBuilderDataSource([]);
                 
-                if(searchBuilderData)
+                if(searchProperties)
                 {
-                    self.propertiesList = searchBuilderData.propertiesList;
-                    self.propertiesName(searchBuilderData.propertiesName);
-                    self.searchBuilderDataSource(searchBuilderData.searchProperties);
+                    self.searchBuilderDataSource(searchProperties);
                     
-                    for(var i = 0; i < searchBuilderData.searchProperties.length; i++)
+                    for(var i = 0; i < searchProperties.length; i++)
                     {
-                        searchBuilderData.searchProperties[0].selectedProperty.subscribe(self.propertyChanged);
+                       searchProperties[i].selectedProperty.subscribeChanged(self.propertyChanged);
                     }
                 }
             }
+            
+            self.SetProperties = function (propertiesList, propertiesName) {
+                self.propertiesName([]);
+                
+                if(propertiesList && propertiesName)
+                {
+                    self.propertiesList = propertiesList;
+                    self.propertiesName(propertiesName);
+                }                
+            }        
             
             self.BuildSearchProperties = function () {
                 var builderService = new searchBuilderService();
@@ -42,7 +49,8 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
                 var buildSearchPromise = builderService.buildSearchDataSourceAsync(savedSearchViewModel.site(), self.search());
                 
                 buildSearchPromise.done(function (result) {
-                    self.SetDataSource(result);
+                    self.SetProperties(result.propertiesList, result.propertiesName);
+                    self.SetDataSource(result.searchProperties);
                 });
                 
                 buildSearchPromise.fail(function (error) {                                 
@@ -74,23 +82,61 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
                 system.logVerbose("searchBuilderViewModel hide");
             }
             
-            self.propertyChanged = function (newSelection) {
-                // map newSelection to both arrays
-                // replace searchProperties array index with propertiesList array index
+            self.propertyChanged = function (newSelection, oldSelection) {     
+                self.updateSearchProperty(self.searchBuilderDataSource()[self.getIndexOfSelectionByName(self.searchBuilderDataSource(), oldSelection)],
+                                            self.propertiesList[self.getIndexOfSelectionByName(self.propertiesList, newSelection)]);
+                
+                //self.SetDataSource(self.searchBuilderDataSource());
             }
             
-            self.keywordSearch = function (e) {
+            self.updateSearchProperty = function (oldSearchProperty, newSearchProperty) {
+                oldSearchProperty.choices(newSearchProperty.choices());
+                oldSearchProperty.controlType = newSearchProperty.controlType;
+                oldSearchProperty.hidden = newSearchProperty.hidden;
+                oldSearchProperty.description = newSearchProperty.description;
+                oldSearchProperty.dataType = newSearchProperty.dataType;
+                oldSearchProperty.name = newSearchProperty.name; 
+                oldSearchProperty.id = newSearchProperty.id;
                 
+                oldSearchProperty.conjunction(newSearchProperty.conjunction());
+                oldSearchProperty.operators(newSearchProperty.operators());
+                oldSearchProperty.selectedOperator(newSearchProperty.selectedOperator());
+                oldSearchProperty.selectedProperty(newSearchProperty.selectedProperty());
+                oldSearchProperty.value(newSearchProperty.value());
             }
             
-            self.execute = function (e) {
-                
+            self.executeSearch = function (e) {
+
             }
             
             self.onSearchKeyUp = function (selection, event) {
 				if (event.keyCode === 13)
 					self.search(selection);
             }
+            
+            self.addProperty = function () {
+                
+            }
+            
+            self.getIndexOfSelectionByName = function(array, selection) {
+                for(var i = 0; i < array.length; i++)
+                {
+                    if(array[i].name === selection)
+                        return i;
+                }
+            }
+            
+            ko.subscribable.fn.subscribeChanged = function(callback) {
+                var previousValue;
+                
+                this.subscribe(function(_previousValue) {
+                    previousValue = _previousValue;
+                }, undefined, 'beforeChange');
+                
+                this.subscribe(function(latestValue) {
+                    callback(latestValue, previousValue );
+                });
+            };
             
             return self;
         };

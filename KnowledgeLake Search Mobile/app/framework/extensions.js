@@ -41,4 +41,10 @@ define(function () {
 			return this.toUpperCase() === "TRUE";
 		};
 	}
+    
+    if (!String.prototype.parseConjunctionToBool) {
+		String.prototype.parseConjunctionToBool = function () {
+			return this.toUpperCase() !== "AND";
+		};
+	}
 });

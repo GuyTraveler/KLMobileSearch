@@ -8,7 +8,8 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants"]
                 var klamlSearchFieldProperties = [],
                     nameProperty = "displayName",
                     operatorProperty = "operator",
-                    conditionProperty = "condition";
+                    conditionProperty = "condition",
+                    conjunctionProperty = "conjunction";
                 
                 if(klaml)
                 {
@@ -22,7 +23,8 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants"]
                             {
                                 klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(nameProperty), 
                                                                                         $(fields[i]).attr(operatorProperty), 
-                                                                                        $(fields[i]).attr(conditionProperty)));
+                                                                                        $(fields[i]).attr(conditionProperty), 
+                                                                                        $(fields[i]).attr(conjunctionProperty)));
                             }
                         }
                     }
