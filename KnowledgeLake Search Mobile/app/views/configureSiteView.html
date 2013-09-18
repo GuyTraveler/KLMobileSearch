@@ -10,13 +10,16 @@
 
 <ul data-role="listview" data-style="inset">
 	<li>
-        <label>            
-            <p class="list-view-label">
-				<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
-                <span data-bind="text: system.strings.protocol" />
-            </p>
-            <select data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
-        </label>    
+        <label>      
+			<div class="relative-container">
+				<p class="list-view-label">
+					<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+	                <span data-bind="text: system.strings.protocol" />
+	            </p>
+				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
+				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+            </div>  	
+        </label> 
     </li>
     <li>
         <label>            
@@ -44,10 +47,13 @@
     
     <li>
         <label>
-            <p class="list-view-label">
-                <span data-bind="text: system.strings.credentialType" />
-            </p>
-            <select id="credentialTypeDropDown" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
+			<div class="relative-container">
+	            <p class="list-view-label">
+	                <span data-bind="text: system.strings.credentialType" />
+	            </p>
+	            <select id="credentialTypeDropDown" class="list-view-input" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
+				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+			</div>
         </label>
     </li>       
 </ul>    

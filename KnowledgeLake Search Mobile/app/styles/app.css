@@ -1,7 +1,21 @@
 body {
-    font: Arial, sans-serif;
+    font: Arial, sans-serif;		
 }
 
+.webdings {
+	font-family: webdings;
+	width: 5%!important;
+}
+
+.relative-container {
+	position: relative;
+}
+
+div[data-role=content] {	
+	background-image: url('../images/swoosh-bg.jpg')!important;
+	background-repeat:no-repeat!important;
+	background-position: center center!important;
+}
 
 input[type=search].invalid {
     color: red!important;
@@ -34,8 +48,15 @@ img.margin-img {
     word-wrap: break-word
 }
 
-.list-view-input {
-    width: 65%!important;
+.transparent-button {
+    background-color: transparent!important;
+	border: none!important;
+}
+
+.list-view-right-item {
+	position: absolute; 
+	right: 0; 
+	top: -5px;
 }
 
 .full-width {
@@ -49,16 +70,18 @@ img.margin-img {
 .opaque {
     opacity: 1;
 	z-index: 10000;
+	visibility: visible;
 	
-    -webkit-transition: opacity 1s linear;
-    -moz-transition: opacity 1s linear;
-    -o-transition: opacity 1s linear;
-    transition: opacity 1s linear;		
+    -webkit-transition: all 1s linear;
+    -moz-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    transition: all 1s linear;		
 }
 
 .fade-out {
     opacity: 0;
 	z-index: -1;
+	visibility: collapse;
 	
 	-webkit-transition: all 1s linear;
     -moz-transition: all 1s linear;
