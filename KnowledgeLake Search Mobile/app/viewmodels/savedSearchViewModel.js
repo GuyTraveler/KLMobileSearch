@@ -45,6 +45,8 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             self.beforeShow = function (e) {
                 system.logVerbose("savedSearchViewModel beforeShow");
                 
+                self.searchDataSource([]);
+                
                 if(homeViewModel.selectedSite)
                 {                    
                     if(homeViewModel.selectedSite.url !== self.site().url)
