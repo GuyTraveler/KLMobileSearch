@@ -1,12 +1,14 @@
 define(["services/searchBuilderService",
         "domain/site",
+        "domain/search",
+        "domain/searchType",
         "domain/credential",
         "domain/credentialType",
         "domain/catalogPropertyControlType",
         "framework/Constants",
 		"unitTests/unitTestSettings",
         "knockoutMapping"],
-    function (searchBuilderService, site, credential, credentialType, catalogPropertyControlType, Constants, TestSettings, mapping) {
+    function (searchBuilderService, site, search, searchType, credential, credentialType, catalogPropertyControlType, Constants, TestSettings, mapping) {
 		QUnit.module("Testing searchBuilderService");
         
         
@@ -19,6 +21,28 @@ define(["services/searchBuilderService",
             
             //assert
             QUnit.ok(service);
+        });
+        
+        QUnit.asyncTest("Test buildSearchDataSourceAsync", function () {
+			//arrange
+            var buildSearchDataSourcePromise,
+                service = new searchBuilderService(),
+                searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml),
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+                       
+            //act
+			buildSearchDataSourcePromise = service.buildSearchDataSourceAsync(siteData, searchData);
+            
+            //assert
+            buildSearchDataSourcePromise.done(function (result) {				
+				QUnit.ok(true);
+				QUnit.start();		
+            });
+			
+			buildSearchDataSourcePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				QUnit.ok(false);
+				QUnit.start();	
+            });
         });
         
 		QUnit.asyncTest("Test buildSearchPropertiesAsync", function () {

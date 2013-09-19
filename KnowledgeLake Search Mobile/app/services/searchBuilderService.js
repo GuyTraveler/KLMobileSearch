@@ -41,12 +41,12 @@ define(["jquery",
                     logonService, 
                     facetService = new facetQuerySearchService(siteUrl);                
                 
-                logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(facetService.serviceUrl, site.credential.credentialType);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 
                                                        site.credential.password,
-                                                       service.serviceUrl);
+                                                       facetService.serviceUrl);
                 
                 var getPropertiesPromise = facetService.GetProperties();
                 
