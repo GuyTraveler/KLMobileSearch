@@ -88,14 +88,14 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             }
             
             self.isSelectedSearch = function (item) {
-				return /*self.navBarVisible() &&*/ self.selectedSite === item;
+				return item && item.title && self.selectedSearch && self.selectedSearch.title && self.selectedSearch.title == item.title;
             }
             
             self.searchClick = function (selection) {
 				self.setSelectedSearch(selection, null);
 				
-                if(self.selectedSite !== selection)
-                    self.selectedSite = selection;
+                if(self.selectedSearch !== selection)
+                    self.selectedSearch = selection;
                 
                 window.App.navigate(searchBuilderUrl);              
             }

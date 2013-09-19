@@ -7,7 +7,7 @@ Summary:
 KnowledgeLake Mobile Search, at the time of this writing, is a Telerik Icenium-based mobile application written in 
 javascript/HTML5/CSS3 for the Android and iOS operating systems with the goal to add more OS support later.  This
 readme will outline the 3rd party libraries used, the project architecture and foldering structure, and any helpful
-hints or gotchas that the mobile development team deems important for the readme.
+hints or gotchas that the mobile development team deams important for the readme.
 
 Source Control:
 GitHub repo (Primary): https://github.com/srd8580/KLMobileSearch.git

@@ -5,8 +5,23 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
     return {
         logLevel: logLevel.Error,
         strings: strings,
-		claimsSignInIndicators: ["wa=wsignin1.0", "_login", "Authenticate.aspx"],
 		ajaxTimeout: 15000,
+		urlContainsClaimsSignInIndicator: function (url) {
+			var claimsSignInIndicators = ["wa=wsignin1.0".toUpperCase(), 
+										  "_login".toUpperCase(), 
+										  "Authenticate.aspx".toUpperCase()];
+			if (!url) return false;
+		
+			testUrl = url.toUpperCase();
+			
+			for (var i = claimsSignInIndicators.length - 1; i >= 0; i--) {
+				var indicator = claimsSignInIndicators[i];
+				
+				if (testUrl.indexOf(indicator) > -1) return true;
+            }
+			
+			return false;
+        },
 		setLogLevel: function (level) {
             this.logLevel = level;
         },
