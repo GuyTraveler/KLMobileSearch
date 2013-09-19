@@ -37,36 +37,43 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants",
 
             self.GetSearchPropertyOperator = function(operatorToken)
             {
-                if (operatorToken === "contains")
+                if(operatorToken)
                 {
-                    return Constants.Contains;
+                    operatorToken = operatorToken.toLowerCase(); 
+                    
+                    if (operatorToken === "contains")
+                    {
+                        return system.strings.Contains;
+                    }
+        
+                    if (operatorToken === "beginswith")
+                    {
+                        return system.strings.StartsWith;
+                    }
+        
+                    if (operatorToken === "isnotnull")
+                    {
+                        return system.strings.IsNotNull;
+                    }
+        
+                    switch (operatorToken)
+                    {
+                        case "eq":
+                            return "=";
+                        case "lt":
+                            return "<";
+                        case "leq":
+                            return "<=";
+                        case "gt":
+                            return ">";
+                        case "geq":
+                            return ">=";
+                        default:
+                            return operatorToken;
+                    }
                 }
-    
-                if (operatorToken === "beginswith")
-                {
-                    return Constants.StartsWith;
-                }
-    
-                if (operatorToken === "isnotnull")
-                {
-                    return Constants.IsNotNull;
-                }
-    
-                switch (operatorToken)
-                {
-                    case "eq":
-                        return "=";
-                    case "lt":
-                        return "<";
-                    case "leq":
-                        return "<=";
-                    case "gt":
-                        return ">";
-                    case "geq":
-                        return ">=";
-                    default:
-                        return operatorToken;
-                }
+                
+                return operatorToken;
             }
 			
 			return self;
