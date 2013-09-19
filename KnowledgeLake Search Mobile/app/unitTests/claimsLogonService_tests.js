@@ -37,6 +37,30 @@ define(['services/claimsLogonService',
 			QUnit.ok(service);
 			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl), true);
         });
+			
+		QUnit.test("claimsLogonService.isLoggedOnUrl with lower cased url is true", function () {
+			//arrange
+			var service;
+			
+			//act
+			service = new claimsLogonService(TestSettings.claimsTestUrl.toLowerCase());
+			
+			//assert
+			QUnit.ok(service);
+			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl), true);
+        });
+			
+		QUnit.test("claimsLogonService.isLoggedOnUrl with upper cased url is true", function () {
+			//arrange
+			var service;
+			
+			//act
+			service = new claimsLogonService(TestSettings.claimsTestUrl.toUpperCase());
+			
+			//assert
+			QUnit.ok(service);
+			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl), true);
+        });
 		
 		QUnit.test("claimsLogonService.isLoggedOnUrl: wrong url returns false", function () {
 			//arrange

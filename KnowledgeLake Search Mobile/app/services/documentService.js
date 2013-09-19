@@ -201,7 +201,7 @@ define(["jquery",
 					return dfd.promise();
                 }
 				
-				siteData.GetSiteUrl(docUrl)
+				siteData.GetSiteUrlAsync(docUrl)
 					.done(function (result) {
 						cacheSiteUrl  = result.siteUrl.value;
 						dfd.resolve(cacheSiteUrl);

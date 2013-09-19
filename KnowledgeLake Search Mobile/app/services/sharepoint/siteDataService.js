@@ -1,4 +1,4 @@
-define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
+define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
     
     var siteDataService = function (siteUrl) {
         var self = this,
@@ -7,7 +7,7 @@ define(["jquery", "domain/keyValuePair", "services/sharepoint/soapServiceBase"],
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, siteUrl, serviceName);
         
-        self.GetSiteUrl = function (url) {
+        self.GetSiteUrlAsync = function (url) {
             var parameters = [
                 new keyValuePair("Url", encodeURI(url))
             ];

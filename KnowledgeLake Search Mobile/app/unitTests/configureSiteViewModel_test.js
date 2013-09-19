@@ -24,6 +24,7 @@ define(["system",
 			QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
 			
+			QUnit.equal(vm.shouldShowPassword(), false);
 			QUnit.equal(vm.protocol(), httpProtocols.http);
 			QUnit.equal(vm.url(), TestSettings.defaultUrlText);
 			QUnit.equal(vm.siteTitle(), "");
@@ -367,10 +368,9 @@ define(["system",
 			//act
 			vm = new configureSiteViewModel();
 			vm.protocol(httpProtocols.http);
-			vm.url(TestSettings.ntlmTestUrl);			
-			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
-			vm.siteDomain(TestSettings.ntlmTestDomain);
 			credValidationPromise = vm.logonAsync();
 			
 			//assert
@@ -498,9 +498,8 @@ define(["system",
 			
 			vm.url(TestSettings.ntlmTestUrl);
 			vm.siteTitle("dfdsfds");
-			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword("asfsdfsdafsd");
-			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
 			
 			saveSettingsPromise = vm.saveSiteSettingsAsync();
@@ -533,9 +532,8 @@ define(["system",
 			
 			vm.url(TestSettings.ntlmTestUrl);
 			vm.siteTitle("dfdsfds");
-			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
-			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
 			
 			saveSettingsPromise = vm.saveSiteSettingsAsync();
@@ -569,9 +567,8 @@ define(["system",
 			//act
 			vm.url(homeVM.selectedSite.url);
 			vm.siteTitle("dfdsfds");
-			vm.siteUserName(TestSettings.ntlmTestUser);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
-			vm.siteDomain(TestSettings.ntlmTestDomain);
 			vm.setValidUrl(credentialType.ntlm);
 			saveSettingsPromise = vm.saveSiteSettingsAsync();
 						

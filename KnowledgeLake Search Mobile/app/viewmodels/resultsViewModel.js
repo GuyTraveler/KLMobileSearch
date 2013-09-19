@@ -167,7 +167,7 @@ define(["knockout",
                     self.isBusy(false);
 					
 					system.logVerbose("could not navigate to result. logon failed.");
-					self.setErrorMessage(system.strings.unauthorized);
+					self.setErrorMessage(system.strings.logonFailed);
                     
                     dfd.reject(error);
                 });
@@ -203,6 +203,7 @@ define(["knockout",
                 
                 searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                     dfd.reject(errorThrown);
+					self.setErrorMessage(system.strings.searchError);
                     
                     self.isBusy(false);
                 });
@@ -210,6 +211,7 @@ define(["knockout",
             
             logonPromise.fail(function (error) {
                 dfd.reject(error);
+				self.setErrorMessage(system.strings.logonFailed);
                 
                 self.isBusy(false);
             });

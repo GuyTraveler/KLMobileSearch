@@ -46,18 +46,3 @@ require(["config"], function (config) {
         });
     });
 });
-
-//global pollution
-function globalLastViewModelLoaded() {
-    if (!window.App) {
-        window.App = new kendo.mobile.Application(document.body, {
-            transition: 'slide',
-			skin: 'flat',
-            loading: '<h1>' + window.system.strings.loading + '</h1>'
-        });
-				
-        system.logVerbose("kendo application loaded");
-        
-        window.AppLoaded(true);
-    }
-}

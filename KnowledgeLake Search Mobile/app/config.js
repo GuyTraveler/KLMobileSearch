@@ -57,7 +57,8 @@ define(["framework/logLevel"], function(logLevel) {
 			   'ISiteDataCachingService': 'services/siteDataCachingService',             
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService',
-			   'IDocumentService': 'services/documentService'
+			   'IDocumentService': 'services/documentService',
+			   'IUserNameParser': 'services/userNameParser'
 	       }
 	   },
 	   logLevel: loggingLevel,
