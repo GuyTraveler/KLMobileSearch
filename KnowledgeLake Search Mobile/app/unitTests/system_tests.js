@@ -85,6 +85,124 @@ define(['framework/system',
             QUnit.ok(system.logFatal("test") === true);
         }); 
 		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with wa=wsignin1.0", function () {
+			//arrange
+			var url = "http://asdfsdfswa=wsignin1.0",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with wa=wsignin1.0 (some casing diff)", function () {
+			//arrange
+			var url = "http://www.test.com?wa=WSignin1.0",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with _login", function () {
+			//arrange
+			var url = "http://asdfsdfswa=_login",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with _login (some casing diff)", function () {
+			//arrange
+			var url = "http://www.test.com?_LOgin",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with Authenticate.aspx", function () {
+			//arrange
+			var url = "http://asdfsdfs=Authenticate.aspx",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with Authenticate.aspx (some casing diff)", function () {
+			//arrange
+			var url = "http://www.test.com/aUthentiCate.aspx",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator works with multiple indicators", function () {
+			//arrange
+			var url = "http://www.test.com/aUthentiCate.aspx/_login/wa=WSignin1.0",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, true);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator fails with no indicators", function () {
+			//arrange
+			var url = "http://www.test.com",
+				containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(url);
+			
+			//assert
+			QUnit.equal(containsIndicator, false);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator fails with empty string", function () {
+			//arrange
+			var containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator("");
+			
+			//assert
+			QUnit.equal(containsIndicator, false);
+        });
+		
+		QUnit.test("test system.urlContainsClaimsSignInIndicator fails gracefully with NULL", function () {
+			//arrange
+			var containsIndicator;
+			
+			//act
+			containsIndicator = system.urlContainsClaimsSignInIndicator(null);
+			
+			//assert
+			QUnit.equal(containsIndicator, false);
+        });
+		
 		QUnit.test("test toast set valid state", function () {
 			//arrange
 			var initValue;

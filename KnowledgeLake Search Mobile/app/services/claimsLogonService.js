@@ -80,13 +80,7 @@ define(["jquery",
 				if (!url) return false;
 				if (url.toUpperCase().indexOf(siteUrl.toUpperCase()) != 0) return false;
 				
-				for (var i = system.claimsSignInIndicators.length - 1; i >= 0; i--) {
-					var indicator = system.claimsSignInIndicators[i];
-					
-					if (url.toUpperCase().indexOf(indicator.toUpperCase()) > -1) return false;
-                }
-				
-                return true;
+				return !system.urlContainsClaimsSignInIndicator(url);
             };
 			
 			return self;

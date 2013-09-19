@@ -23,7 +23,7 @@ define(['services/claimsLogonService',
 			service = new claimsLogonService(TestSettings.claimsTestUrl);
 			
 			//assert
-			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl + system.claimsSignInIndicators[0]), false);
+			QUnit.equal(service.isLoggedOnUrl(TestSettings.claimsTestUrl + "wa=wsignin1.0"), false);
         });
 			
 		QUnit.test("claimsLogonService.isLoggedOnUrl with exact url is true", function () {
