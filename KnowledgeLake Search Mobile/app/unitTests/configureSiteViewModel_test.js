@@ -587,7 +587,7 @@ define(["system",
         QUnit.test("test configureSiteViewModel clearPopulatedConfigureSiteViewModel", function () {
             //arrange
             var configureSiteVM;
-            var siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
                         
             configureSiteVM = new configureSiteViewModel();            
             configureSiteVM.populateConfigureSiteViewModel(siteData);
@@ -629,7 +629,7 @@ define(["system",
         QUnit.test("test configureSiteViewModel beforeShow (with selected site)", function () {
             //arrange
             var configureSiteVM,
-            	siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")),
+            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
 				homeVM = {
 					selectedSite: siteData
                 };
@@ -673,5 +673,37 @@ define(["system",
 			QUnit.equal(configureSiteVM.isUrlValid(), false);
 			QUnit.equal(configureSiteVM.isCredentialsValid(), false);
         });
-		
+						  
+		QUnit.test("test configureSiteViewModel.afterShow (with selected site)", function () {
+			//arrange
+            var configureSiteVM,
+            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				homeVM = {
+					selectedSite: siteData
+                };
+                        			
+            //act 
+			window.homeViewModel = homeVM;
+			configureSiteVM = new configureSiteViewModel();
+            configureSiteVM.afterShow();
+                        
+            //assert
+            QUnit.ok(configureSiteVM);
+        });
+				  
+		QUnit.test("test configureSiteViewModel.afterShow (NO selected site)", function () {
+			//arrange
+            var configureSiteVM,
+				homeVM = {
+					selectedSite: null
+                };
+                        			
+            //act 
+			window.homeViewModel = homeVM;
+			configureSiteVM = new configureSiteViewModel();
+            configureSiteVM.afterShow();
+                        
+            //assert
+            QUnit.ok(configureSiteVM);
+        });
     });
