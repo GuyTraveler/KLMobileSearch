@@ -54,8 +54,8 @@ define(["jquery",
                     dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
                 });
                 
-                getPropertiesPromise.fail(function (error) {                                 
-                    dfd.reject(error);
+                getPropertiesPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {                                 
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
                 });
                 
                 return dfd.promise();
@@ -74,7 +74,6 @@ define(["jquery",
                     propertiesName = [],
                     searchProperties = [],
                     searchBuilderResult = {};
-                
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
                 {                  
@@ -134,24 +133,31 @@ define(["jquery",
             }
             
             self.convertToControlType = function (property) {
-                switch(property.toUpperCase())
+                var defaultControlType = catalogPropertyControlType.TextBox;
+                
+                if(property)
                 {
-                    case "NUMBER":
-                        return catalogPropertyControlType.Number;
-                    case "TEXTBOX":
-                        return catalogPropertyControlType.TextBox;
-                    case "DROPDOWN":
-                        return catalogPropertyControlType.DropDown;
-                    case "CALENDAR":
-                        return catalogPropertyControlType.Calendar;
-                    case "RADIOBUTTON":
-                        return catalogPropertyControlType.RadioButton;
-                    case "COMBOBOX":
-                        return catalogPropertyControlType.ComboBox;
-                    
-                    default:
-                        return catalogPropertyControlType.TextBox;
+                    switch(property.toUpperCase())
+                    {
+                        case "NUMBER":
+                            return catalogPropertyControlType.Number;
+                        case "TEXTBOX":
+                            return catalogPropertyControlType.TextBox;
+                        case "DROPDOWN":
+                            return catalogPropertyControlType.DropDown;
+                        case "CALENDAR":
+                            return catalogPropertyControlType.Calendar;
+                        case "RADIOBUTTON":
+                            return catalogPropertyControlType.RadioButton;
+                        case "COMBOBOX":
+                            return catalogPropertyControlType.ComboBox;
+                        
+                        default:
+                            return defaultControlType;
+                    }
                 }
+                
+                return defaultControlType;
             }
             
             self.getSearchOperatorsForControlType = function (controlType) {                
