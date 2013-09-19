@@ -181,7 +181,9 @@ define(["jquery",
         self.IndexOfSearch = function (url) {
             if(self.localSearches && Object.prototype.toString.call(self.localSearches) === '[object Array]')
             {
-                for(var i = 0; i < self.localSearches.length; i++)
+                var localSearchesLength = self.localSearches.length;
+                
+                for(var i = 0; i < localSearchesLength; i++)
                 {
                     if(self.localSearches[i].url === url)
                         return i;
@@ -204,7 +206,9 @@ define(["jquery",
 		}
         
         self.RemoveSearchData = function (url) {
-            for(var i = 0; i < self.localSearches.length; i++)
+            var localSearchesLength = self.localSearches.length;
+            
+            for(var i = 0; i < localSearchesLength; i++)
             {
             	if (self.localSearches[i].url === url) 
                 {

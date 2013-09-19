@@ -146,7 +146,9 @@ define(["jquery",
         self.IndexOfSite = function (url) {
             if(self.sites && Object.prototype.toString.call(self.sites) === '[object Array]')
             {
-                for(var i = 0; i < self.sites.length; i++)
+                var sitesLength = self.sites.length;
+                
+                for(var i = 0; i < sitesLength; i++)
                 {
                     if(self.sites[i].url === url)
                         return i;
@@ -161,7 +163,9 @@ define(["jquery",
             
             if(sites && Object.prototype.toString.call(sites) === '[object Array]')
             {
-                for(var i = 0; i < sites.length; i++)
+                var sitesLength = sites.length;
+                
+                for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.btoa)                    
                         sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, window.device.uuid);
@@ -178,7 +182,9 @@ define(["jquery",
             
             if(sites && Object.prototype.toString.call(sites) === '[object Array]')
             {
-                for(var i = 0; i < sites.length; i++)
+                var sitesLength = sites.length;
+                
+                for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.atob)                    
                         sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, window.device.uuid);
@@ -205,7 +211,9 @@ define(["jquery",
 		}
         
         self.RemoveSiteData = function (url) {
-            for(var i = 0; i < self.sites.length; i++)
+            var sitesLength = self.sites.length;
+            
+            for(var i = 0; i < sitesLength; i++)
             {
             	if (self.sites[i].url === url) 
                 {

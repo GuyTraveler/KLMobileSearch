@@ -47,5 +47,13 @@ define({
 	urlPlaceholder: "www.server.com",
 	siteTitlePlaceholder: "Enter a title...",
 	userNamePlaceholder: "Domain\\User Name",
-	passwordPlaceholder: "Password"
+	passwordPlaceholder: "Password",
+    Range: "Range",
+    Contains: "Contains",
+    StartsWith: "Starts With",
+    Like: "Like",
+    IsNotNull: "Is Not Null",
+    Yes: "Yes",
+    No: "No",
+    NotSet: "Not Set"
 });

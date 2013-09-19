@@ -7,15 +7,14 @@ define({
     StartsWith: "Starts With",
     Like: "Like",
     IsNotNull: "Is Not Null",
-    Range: "Range",
+    Range: "Range",    
     
+    numberOperators: [ "=", ">", "<", ">=", "<=", system.strings.Range ],
+    textboxOperators: [ "=", system.strings.Contains, system.strings.StartsWith, system.strings.Like, system.strings.IsNotNull ],
+    dropdownOperators: [ "=", system.strings.Contains, system.strings.StartsWith, system.strings.IsNotNull ],
+    calendarOperators: [ "=", ">", "<", ">=", "<=", system.strings.Range, system.strings.IsNotNull ],
+    radiobuttonOperators: [ "=", system.strings.IsNotNull ],
+    comboboxOperators: [ "=", system.strings.Contains, system.strings.StartsWith, system.strings.IsNotNull ],
     
-    numberOperators: [ "=", ">", "<", ">=", "<=", "Range" ],
-    textboxOperators: [ "=", "Contains", "Starts With", "Like", "Is Not Null" ],
-    dropdownOperators: [ "=", "Contains", "Starts With", "Is Not Null" ],
-    calendarOperators: [ "=", ">", "<", ">=", "<=", "Range", "Is Not Null" ],
-    radiobuttonOperators: [ "=", "Is Not Null" ],
-    comboboxOperators: [ "=", "Contains", "Starts With", "Is Not Null" ],
-    
-    radiobuttonValues: [ "Yes", "No", "Not Set" ]
+    radiobuttonValues: [ system.strings.Yes, system.strings.No, system.strings.NotSet ]
 });

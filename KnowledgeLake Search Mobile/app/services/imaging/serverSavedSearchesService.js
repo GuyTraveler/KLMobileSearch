@@ -2,11 +2,12 @@ define(["jquery",
         "domain/result",
         "domain/search",
         "domain/searchType",
+        "factory/logonServiceFactory",
         "services/imaging/imagingDetectionService",
         "services/imaging/facetQuerySearchService",
         "ntlm",
         "extensions"], 
-    function ($, result, search, searchType, ImagingDetectionService, facetQuerySearchService, ntlm) {
+    function ($, result, search, searchType, LogonServiceFactory, ImagingDetectionService, facetQuerySearchService, ntlm) {
     
     var serverSavedSearchesService = function () {
         var self = this;
@@ -37,8 +38,12 @@ define(["jquery",
             detectPromise.done(function (result) {
                 var service = new facetQuerySearchService(site.url);          
                 
-                ntlm.setCredentials(site.credential.domain, site.credential.userName, site.credential.password);
-                ntlm.authenticate(service.serviceUrl);
+                logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+
+                logonPromise = logonService.logonAsync(site.credential.domain, 
+                                                       site.credential.userName, 
+                                                       site.credential.password,
+                                                       service.serviceUrl);
                 
                 var getCurrentUserNamePromise = service.GetCurrentUserName();
                 

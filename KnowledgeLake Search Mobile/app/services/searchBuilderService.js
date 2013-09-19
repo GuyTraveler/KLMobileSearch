@@ -1,5 +1,15 @@
-define(["jquery", "system", "knockout", "framework/Constants", "services/searchParsingService", "services/imaging/facetQuerySearchService", "domain/searchProperty", "domain/catalogPropertyControlType", "ntlm", "extensions"],
-        function ($, system, ko, Constants, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm) {
+define(["jquery",
+        "system",
+        "knockout",
+        "framework/Constants",
+        "factory/logonServiceFactory",
+        "services/searchParsingService",
+        "services/imaging/facetQuerySearchService",
+        "domain/searchProperty",
+        "domain/catalogPropertyControlType",
+        "ntlm",
+        "extensions"],
+        function ($, system, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm) {
         
 		var searchBuilderService = function () {
 			var self = this;
@@ -8,11 +18,11 @@ define(["jquery", "system", "knockout", "framework/Constants", "services/searchP
                 var dfd = $.Deferred(),
                     parsingService = new searchParsingService();               
                
-                var klamlSearchProperties = parsingService.getSearchFieldPropertiesFromKlaml(search.query);
+                var klamlSearchFieldProperties = parsingService.getSearchFieldPropertiesFromKlaml(search.query);
                 
-                if(klamlSearchProperties)
+                if(klamlSearchFieldProperties)
                 {
-                    var buildSearchPropertiesPromise = self.buildSearchPropertiesAsync(site, search.siteUrl, klamlSearchProperties);
+                    var buildSearchPropertiesPromise = self.buildSearchPropertiesAsync(site, search.siteUrl, klamlSearchFieldProperties);
                     
                     buildSearchPropertiesPromise.done(function (result) {
                         dfd.resolve(result);
@@ -26,27 +36,32 @@ define(["jquery", "system", "knockout", "framework/Constants", "services/searchP
                 return dfd.promise();
             }
             
-            self.buildSearchPropertiesAsync = function (site, siteUrl, klamlSearchProperties) {  
+            self.buildSearchPropertiesAsync = function (site, siteUrl, klamlSearchFieldProperties) {  
                 var dfd = $.Deferred(),
-                    facetService = new facetQuerySearchService(siteUrl);
+                    logonService, 
+                    facetService = new facetQuerySearchService(siteUrl);                
                 
-                ntlm.setCredentials(site.credential.domain, site.credential.userName, site.credential.password);
-                ntlm.authenticate(service.serviceUrl);
+                logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+
+                logonPromise = logonService.logonAsync(site.credential.domain, 
+                                                       site.credential.userName, 
+                                                       site.credential.password,
+                                                       service.serviceUrl);
                 
-                var getPropertiesService = facetService.GetProperties();
+                var getPropertiesPromise = facetService.GetProperties();
                 
-                getPropertiesService.done(function (result) {
-                    dfd.resolve(self.mapKlamlSearchPropertiesToSearchProperties(klamlSearchProperties, result));
+                getPropertiesPromise.done(function (result) {
+                    dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
                 });
                 
-                getPropertiesService.fail(function (error) {                                 
+                getPropertiesPromise.fail(function (error) {                                 
                     dfd.reject(error);
                 });
                 
                 return dfd.promise();
             }
             
-            self.mapKlamlSearchPropertiesToSearchProperties = function (klamlSearchProperties, properties) {
+            self.mapKlamlSearchFieldPropertiesToSearchProperties = function (klamlSearchFieldProperties, properties) {
                 var choicesText = "Choices", 
                     controlTypeText = "ControlType",
                     dataTypeText = "DataType",
@@ -94,15 +109,18 @@ define(["jquery", "system", "knockout", "framework/Constants", "services/searchP
                         propertiesList.push(property);
                         propertiesName.push(property.name);
                         
-                        for(var i = 0; i < klamlSearchProperties.length; i++)
+                        var klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length;
+                        
+                        for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
                         {
-                            if(klamlSearchProperties[i].name === property.name)
+                            if(klamlSearchFieldProperties[i].name === property.name)
                             {
-                                property.value(klamlSearchProperties[i].condition);
-                                property.selectedOperator(klamlSearchProperties[i].operator);
-                                property.conjunction(klamlSearchProperties[i].conjunction);
+                                property.value(klamlSearchFieldProperties[i].condition);
+                                property.selectedOperator(klamlSearchFieldProperties[i].operator);
+                                property.conjunction(klamlSearchFieldProperties[i].conjunction);
                                 
                                 searchProperties.push(property);
+                                break;
                             }
                         }
                     }                    

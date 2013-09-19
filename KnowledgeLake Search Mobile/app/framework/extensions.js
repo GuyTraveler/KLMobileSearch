@@ -44,7 +44,7 @@ define(function () {
     
     if (!String.prototype.parseConjunctionToBool) {
 		String.prototype.parseConjunctionToBool = function () {
-			return this.toUpperCase() !== "AND";
+			return this.toUpperCase() === "AND";
 		};
 	}
 });

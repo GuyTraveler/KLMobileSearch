@@ -1,14 +1,19 @@
-define(["jquery", "IWebsService", "ntlm"], function ($, websService, ntlm) {    
+define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], function ($, websService, LogonServiceFactory, ntlm) {    
     var imagingDetectionService = function () {
         var self = this;
         
 		self.detectAsync = function (site) {
-            var dfd = $.Deferred();
+            var logonService,
+                dfd = $.Deferred();
             
             service = new websService(site.url);
             
-            ntlm.setCredentials(site.credential.domain, site.credential.userName, site.credential.password);
-            ntlm.authenticate(service.serviceUrl);
+            logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+
+            logonPromise = logonService.logonAsync(site.credential.domain, 
+                                                   site.credential.userName, 
+                                                   site.credential.password,
+                                                   service.serviceUrl);
             
             service.GetActivatedFeatures()
 				.done(function (result) {

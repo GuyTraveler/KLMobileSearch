@@ -9,7 +9,9 @@ define([], function () {
             
             if(input)
             {
-                for(var i = 0; i < input.length; i++)
+                var inputLength = input.length;
+                
+                for(var i = 0; i < inputLength; i++)
                 {
                     if (invalidChars.indexOf(input[i]) === -1)
                         return true;                    
@@ -26,9 +28,10 @@ define([], function () {
                 
                 if(indexOfSpace !== -1 && indexOfSpace !== (keyword.length - 1))
                 {
-                    var keywords = keyword.split(" ");
+                    var keywords = keyword.split(" "),
+                        keywordsLength = keywords.length;
                     
-                    for(var i = 0; i < keywords.length; i++)
+                    for(var i = 0; i < keywordsLength; i++)
                     {
                         var result = self.validate(keywords[i]);
                         

@@ -168,7 +168,9 @@ define([], function () {
             
             if(formatString)
             {            
-                for(var i = 0; i < formatString.length; i++)
+                var formatStringLength = formatString.length;
+                
+                for(var i = 0; i < formatStringLength; i++)
                 {
                     if (separatorArray.indexOf(formatString[i]) === -1)                
                         part = part + formatString[i];

@@ -1,4 +1,4 @@
-define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants"],
+define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants", "extensions"],
         function ($, system, searchFieldProperty, Constants) {
         
 		var searchParsingService = function () {
@@ -17,51 +17,22 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants"]
                     
                     if(fields)
                     {
-                        for(var i = 0; i < fields.length; i++)
+                        var fieldsLength = fields.length;
+                        
+                        for(var i = 0; i < fieldsLength; i++)
                         {
                             if(fields[i])
                             {
                                 klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(nameProperty), 
-                                                                                        $(fields[i]).attr(operatorProperty), 
+                                                                                        self.GetSearchPropertyOperator($(fields[i]).attr(operatorProperty)), 
                                                                                         $(fields[i]).attr(conditionProperty), 
-                                                                                        $(fields[i]).attr(conjunctionProperty)));
+                                                                                        ($(fields[i]).attr(conjunctionProperty)).parseConjunctionToBool()));
                             }
                         }
                     }
                 }
                 
                 return klamlSearchFieldProperties;
-            }
-            
-            self.GetKlamlOperator = function(operatorToken)
-            {
-                if (operatorToken == Constants.Contains)
-                    return "contains";
-    
-                if (operatorToken == Constants.StartsWith)
-                    return "beginswith";
-    
-                if (operatorToken == Constants.Like)
-                    return "Like";
-    
-                if (operatorToken == Constants.IsNotNull)
-                    return "isnotnull";
-    
-                switch (operatorToken)
-                {
-                    case "=":
-                        return "eq";
-                    case "<":
-                        return "lt";
-                    case "<=":
-                        return "leq";
-                    case ">":
-                        return "gt";
-                    case ">=":
-                        return "geq";
-                    default:
-                        return string.Empty;
-                }
             }
 
             self.GetSearchPropertyOperator = function(operatorToken)
