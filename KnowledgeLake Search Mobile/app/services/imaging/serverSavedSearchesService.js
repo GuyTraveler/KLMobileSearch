@@ -12,19 +12,31 @@ define(["jquery",
     var serverSavedSearchesService = function () {
         var self = this;
         
-        self.facetSearchAsync = function (search) {  
+        self.facetSearchAsync = function (site, search) {  
             var dfd = $.Deferred(),            
-                service = new facetQuerySearchService(search.siteUrl);
+                service = new facetQuerySearchService(site.url);
             
-            var facetSearchPromise = service.FacetSearch(search.query);
-            
-            facetSearchPromise.done(function (result) {
-                dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data)); 
+            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+
+            logonPromise = logonService.logonAsync(site.credential.domain, 
+                                                   site.credential.userName, 
+                                                   site.credential.password,
+                                                   service.serviceUrl);
+            logonPromise.done(function (result) {            
+                var facetSearchPromise = service.FacetSearch(search.query);
+                
+                facetSearchPromise.done(function (result) {
+                    dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data)); 
+                });
+              
+                facetSearchPromise.fail(function (error) {
+                    dfd.reject(error);
+                });
             });
-          
-            facetSearchPromise.fail(function (error) {
+            
+            logonPromise.fail(function (error) {
                 dfd.reject(error);
-            });        
+            });   
             
             return dfd.promise();
         }
@@ -37,39 +49,45 @@ define(["jquery",
             
             detectPromise.done(function (result) {
                 var service = new facetQuerySearchService(site.url);          
-                
-                logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+                                
+                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 
                                                        site.credential.password,
                                                        service.serviceUrl);
                 
-                var getCurrentUserNamePromise = service.GetCurrentUserName();
+                logonPromise.done(function (result) {
+                    var getCurrentUserNamePromise = service.GetCurrentUserName();
                 
-                getCurrentUserNamePromise.done(function (currentUserName) {
-                    var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
-                    
-                    getQueryUserPromise.done(function (queryUser) {
-                        var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                    getCurrentUserNamePromise.done(function (currentUserName) {
+                        var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
                         
-                        getQueriesForUserPromise.done(function (queryResults) {
-                            dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult)); 
+                        getQueryUserPromise.done(function (queryUser) {
+                            var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                            
+                            getQueriesForUserPromise.done(function (queryResults) {
+                                dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult)); 
+                            });
+                          
+                            getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                dfd.reject("failed to get queries");
+                            }); 
                         });
                       
-                        getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                            dfd.reject("failed to get queries");
+                        getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                            dfd.reject("failed to get query user");
                         }); 
                     });
                   
-                    getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        dfd.reject("failed to get query user");
-                    }); 
+                    getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        dfd.reject("failed to get current user name");
+                    });
                 });
-              
-                getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.reject("failed to get current user name");
-                });
+                
+                logonPromise.fail(function (error) {
+                    dfd.reject(error);
+                });        
             });
           
             detectPromise.fail(function (error) {

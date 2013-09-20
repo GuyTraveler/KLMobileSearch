@@ -14,15 +14,14 @@ define(["services/imaging/serverSavedSearchesService",
         QUnit.asyncTest("Test facetSearch with good credentials", function () {
             //arrange
             var service,
+                siteData = new site(TestSettings.siteTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, 
+                            new credential(credentialType.ntlm, TestSettings.siteTestUser, TestSettings.siteTestPassword, TestSettings.siteTestDomain)),
                 searchData = new search(TestSettings.siteTestUrl, TestSettings.siteTitle, searchType.server, TestSettings.testKlaml);
             
             service = new serverSavedSearchesService();
             
-            ntlm.setCredentials(TestSettings.siteTestDomain, TestSettings.siteTestUser, TestSettings.siteTestPassword);
-            ntlm.authenticate(service.serviceUrl);
-            
             //act
-            var facetSearchPromise = service.facetSearchAsync(searchData);            
+            var facetSearchPromise = service.facetSearchAsync(siteData, searchData);            
             
             //assert
             facetSearchPromise.done(function (result) {

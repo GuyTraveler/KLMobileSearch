@@ -45,7 +45,9 @@ require(["config"], function (config) {
                           testRootPath + "encryptionService_tests",
 						  testRootPath + "httpProtocols_tests",
 						  testRootPath + "userNameParser_tests",						  
-                          testRootPath + "searchBuilderService_tests"
+                          testRootPath + "searchBuilderService_tests",
+						  testRootPath + "savedSearchViewModel_tests",
+						  testRootPath + "searchBuilderViewModel_test"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];

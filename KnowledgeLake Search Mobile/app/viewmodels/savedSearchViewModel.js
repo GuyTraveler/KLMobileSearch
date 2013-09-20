@@ -1,5 +1,5 @@
-define(["knockout", "system", "services/searchDataCachingService", 'services/keywordValidationService', "services/imaging/serverSavedSearchesService"], 
-    function (ko, system, SearchDataCachingService, ValidationService, serverSavedSearchesService) {
+define(["knockout", "system", 'services/keywordValidationService', "services/imaging/serverSavedSearchesService"], 
+    function (ko, system, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
                 searchBuilderUrl = "#searchBuilder",
@@ -96,7 +96,12 @@ define(["knockout", "system", "services/searchDataCachingService", 'services/key
             }
             
             self.isSelectedSearch = function (item) {
-				return item && item.title && self.selectedSearch && self.selectedSearch.title && self.selectedSearch.title == item.title;
+                if(item && self.selectedSearch)
+                {
+                    return item.title == self.selectedSearch.title;
+                }
+                
+				return false;
             }
             
             self.searchClick = function (selection) {
