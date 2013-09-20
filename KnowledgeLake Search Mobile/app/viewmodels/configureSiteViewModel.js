@@ -375,10 +375,7 @@ define(["knockout",
 					$("#siteUrlText").focus();
 				}
 				
-				//android
-				if (window.plugins && window.plugins.SoftKeyBoard) {
-					window.plugins.SoftKeyBoard.show();
-                }
+				system.showSoftKeyboard();
             }
 			
             return self;

@@ -99,6 +99,14 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
     			tabstrip.clear();
             }
             
+			self.clearKeyword = function () {
+				system.logVerbose("clearing keyword");
+				self.keyword("");
+				
+				$("#keywordInput").focus();
+				system.showSoftKeyboard();
+			}
+            
             /*Sself.addProperty = function () {
                 
             }
