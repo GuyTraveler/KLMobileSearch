@@ -2,9 +2,9 @@ body {
     font: Arial, sans-serif;		
 }
 
-.webdings {
-	font-family: webdings;
-	width: 5%!important;
+li.highlight {		
+	background-color: #D0E8F2!important;
+	color: Black;
 }
 
 .relative-container {
@@ -53,10 +53,22 @@ img.margin-img {
 	border: none!important;
 }
 
+.center {
+	vertical-align: middle;
+	text-align: center;
+}
+ 
+.back-button-head {
+	background-image: url('../images/kl_head_back.png')!important;
+	min-width: 56px;
+	min-height: 36px;
+	margin-top: 3px!important;
+}
+
 .list-view-right-item {
 	position: absolute; 
 	right: 0; 
-	top: -5px;
+	top: 5px;
 }
 
 .full-width {
