@@ -83,7 +83,9 @@ define(["knockout",
 				
             self.message.subscribe(function (newValue) {
                 if (newValue) {
+					system.logVerbose("showing toast: " + newValue);
 					system.showToast(newValue);
+					system.logVerbose("toast: shown");
 				}
             });
 			

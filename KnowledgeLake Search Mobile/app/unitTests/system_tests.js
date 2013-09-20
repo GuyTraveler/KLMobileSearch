@@ -1,6 +1,7 @@
 /*global QUnit*/
 define(['framework/system',
-        'framework/logLevel'],
+        'framework/logLevel',
+		'mocks/pluginsMock'],
     function (system, logLevel) {
         QUnit.module("Testing framework/system");
 
@@ -265,5 +266,16 @@ define(['framework/system',
 				QUnit.equal(system.isToastVisible(), false);
 				QUnit.start();
             }, 3005);
+        });
+		
+		QUnit.test("test that we can show keyboard with mock", function () {
+			//arrange
+			
+			//act
+			system.showSoftKeyboard();
+			
+			//assert
+			QUnit.ok(window.plugins);
+			QUnit.ok(window.plugins.SoftKeyBoard);
         });
     });

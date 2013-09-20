@@ -9,11 +9,14 @@
 			<span data-bind="text: system.strings.editProperties"></span>
         </button>
     </div>
+	
+	<div id="resultPageHeading">
+		<h4 data-bind="visible: !isBusy(), text: resultCountString"></h4>
+		<h4 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h4>
+    </div>
 </header>
 
-<div id="resultsContainer">	
-	<h3 data-bind="visible: (resultDataSource().length === 0 && !isBusy()), text: system.strings.noResultsFound"></h3>
-	<h3 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h3>
+<div id="resultsContainer">
 	
 	<ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToResult">

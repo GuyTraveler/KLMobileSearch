@@ -8,8 +8,11 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
-        "domain/promiseResponse/logonResponse"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, logonResponse) {
+        "domain/promiseResponse/logonResponse",
+		"system",
+		//uncaught
+		"extensions"],
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, logonResponse, system) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -57,6 +60,61 @@ define(['require',
 			QUnit.ok(window.App.isMock);
         });    
         
+		QUnit.test("test resultCountString reads properly for NO results", function () {
+			//arrange
+            var vm,
+				resultData = [];
+            
+            //act 
+            vm = new resultsViewModel();
+			vm.SetDataSource(resultData);
+                        
+            //assert
+			QUnit.equal(vm.resultDataSource().length, resultData.length);
+            QUnit.equal(vm.resultCountString(), system.strings.noResultsFound);
+        });
+		  
+		QUnit.test("test resultCountString reads properly for ONE result", function () {
+			//arrange
+            var vm,
+				resultData = [
+					new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"})
+				],
+				expectedMessage;
+            
+            //act 
+            vm = new resultsViewModel();
+			vm.SetDataSource(resultData);
+			
+			expectedMessage = system.strings.resultCountFormat.format(resultData.length.toString());
+			expectedMessage = expectedMessage.substring(0, expectedMessage.length - 1);
+                        
+            //assert
+            QUnit.equal(vm.resultDataSource().length, resultData.length);
+			QUnit.equal(vm.resultCountString(), expectedMessage);
+        });
+			  
+		QUnit.test("test resultCountString reads properly for MULTIPLE results", function () {
+			//arrange
+            var vm,
+				resultData = [
+					new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"}),
+					new result("http://prodsp2010.dev.local/sites/team2/RyanLib/6Page.pdf", {"title":"pdf"}),
+					new result("http://prodsp2010.dev.local/sites/team2/RyanLib/7Page.pdf", {"title":"pdf"})
+				],
+				expectedMessage;
+            
+            //act 
+            vm = new resultsViewModel();
+			vm.SetDataSource(resultData);
+			
+			expectedMessage = system.strings.resultCountFormat.format(resultData.length.toString());
+                        
+            //assert
+            QUnit.equal(vm.resultDataSource().length, resultData.length);
+			QUnit.equal(vm.resultCountString(), expectedMessage);
+        });
+		
         QUnit.test("test resultViewModel init", function () {
             //arrange
             var vm;

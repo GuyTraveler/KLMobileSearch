@@ -58,7 +58,7 @@
     </li>       
 </ul>    
 
-<div data-bind="css: { 'opaque': isWindowsCredential, 'fade-out': isClaimsFormsCredential }">
+<div data-bind="css: { 'opaque': isWindowsCredential, 'fade-out': isClaimsFormsCredential, 'visible': isWindowsCredential, 'collapse': isClaimsFormsCredential }">
     <h3 data-bind="text: system.strings.windowsCredentials" />
     
     <ul data-role="listview" data-style="inset">

@@ -5,7 +5,9 @@ define(["knockout",
         "domain/keywordConjunction", 
         "factory/logonServiceFactory", 
         "IDocumentService",
-		"ISiteDataService"], 
+		"ISiteDataService",
+		//uncaught depends
+		"extensions"], 
     function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
@@ -19,10 +21,29 @@ define(["knockout",
         });
 		
         self.resultDataSource = ko.observableArray([]); 
-        
+        self.resultCountString = ko.observable("");
+		
+		self.resultDataSource.subscribe(function (newValue) {
+			var length = self.resultDataSource && self.resultDataSource() ? self.resultDataSource().length : 0,
+				countMessage;
+			
+			if (length === 0) {
+				countMessage = system.strings.noResultsFound;
+            }
+			else {
+				countMessage = system.strings.resultCountFormat.format(length.toString());
+			
+				if (length === 1) {
+					countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
+				}
+            }	
+			
+			self.resultCountString(countMessage);
+        });
+		
         self.selectedResult = null;
         self.windowRef = null; 
-		
+				
         self.navBarVisible = ko.observable(false);
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
