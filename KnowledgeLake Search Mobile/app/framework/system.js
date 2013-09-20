@@ -101,6 +101,12 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 				isToastUp = false;
             }, messageDisplayTime);
         },
+		showSoftKeyboard: function () {
+			//android
+			if (window.plugins && window.plugins.SoftKeyBoard) {
+				window.plugins.SoftKeyBoard.show();
+            }
+        },
 		isToastVisible: function() {
 			return isToastUp;
         }

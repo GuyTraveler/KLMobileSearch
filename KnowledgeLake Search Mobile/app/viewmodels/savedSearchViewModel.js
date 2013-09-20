@@ -37,6 +37,14 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
                     // failed to load and parse server saved searches
                 });            
             }
+			
+			self.clearKeyword = function () {
+				system.logVerbose("clearing keyword");
+				self.keyword("");
+				
+				$("#keywordInput").focus();
+				system.showSoftKeyboard();
+			}
             
             self.init = function (e) {
                 system.logVerbose("savedSearchViewModel init");

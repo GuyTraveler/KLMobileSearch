@@ -67,6 +67,26 @@ img.margin-img {
 	border: 1px solid black;
 }
 
+
+div.deleteicon {
+    position: relative;
+}
+div.deleteicon a {
+    position: absolute;
+    display: block;
+    top: -12px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    background-image: url('../images/clear-text.png');
+	z-index: 9000;
+    cursor: pointer!important;
+}
+div.deleteicon input {
+    padding-right: 23px;
+}
+
+
 .opaque {
     opacity: 1;
 	z-index: 10000;
