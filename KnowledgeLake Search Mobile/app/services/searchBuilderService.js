@@ -41,21 +41,27 @@ define(["jquery",
                     logonService, 
                     facetService = new facetQuerySearchService(siteUrl);                
                 
-                logonService = LogonServiceFactory.createLogonService(facetService.serviceUrl, site.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(siteUrl, site.credential.credentialType);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 
                                                        site.credential.password,
                                                        facetService.serviceUrl);
                 
-                var getPropertiesPromise = facetService.GetProperties();
-                
-                getPropertiesPromise.done(function (result) {
-                    dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
+                logonPromise.done(function (result) {   
+                    var getPropertiesPromise = facetService.GetProperties();
+                    
+                    getPropertiesPromise.done(function (result) {
+                        dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
+                    });
+                    
+                    getPropertiesPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                    });
                 });
                 
-                getPropertiesPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {                                 
-                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                logonPromise.fail(function (error) {
+                    dfd.reject(error);
                 });
                 
                 return dfd.promise();

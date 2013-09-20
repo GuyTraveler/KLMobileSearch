@@ -36,6 +36,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }
             
             self.SetProperties = function (propertiesList, propertiesName) {
+                self.propertiesList = null;
                 self.propertiesName([]);
                 
                 if(propertiesList && propertiesName)
@@ -56,7 +57,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
                 });
                 
                 buildSearchPromise.fail(function (error) {                                 
-                    dfd.reject(error);
+                    // failed to load search properties
                 });
             }
             
@@ -88,7 +89,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             
             self.onSearchKeyUp = function (selection, event) {
 				if (event.keyCode === 13)
-					self.search(selection);
+					self.executeSearch();
             }
 		
     		self.afterShow = function (e) {

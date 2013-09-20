@@ -8,20 +8,26 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
             
             service = new websService(site.url);
             
-            logonService = LogonServiceFactory.createLogonService(service.serviceUrl, site.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
 
             logonPromise = logonService.logonAsync(site.credential.domain, 
                                                    site.credential.userName, 
                                                    site.credential.password,
                                                    service.serviceUrl);
             
-            service.GetActivatedFeatures()
-				.done(function (result) {
-                    dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
-	            })
-	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.fail();
-	            });
+            logonPromise.done(function (result) {       
+                service.GetActivatedFeatures()
+    				.done(function (result) {
+                        dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
+    	            })
+    	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        dfd.fail();
+    	            });
+            });
+            
+            logonPromise.fail(function (error) {
+                dfd.reject(error);
+            });
             
             return dfd.promise();
         }
