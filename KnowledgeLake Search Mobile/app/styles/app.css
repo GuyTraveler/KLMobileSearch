@@ -2,6 +2,30 @@ body {
     font: Arial, sans-serif;		
 }
 
+/*fix for Samsung devices to not show yellow/orange borders on inputs */
+*:active,
+*:focus,
+*:visited,
+*::active,
+*::focus,
+*::visited,
+input:active,
+input:focus,
+input:visited,
+input::active,
+input::focus,
+input::visited,
+textarea:active,
+textarea:focus,
+textarea:visited,
+textarea::active,
+textarea::focus,
+textarea::visited
+{
+	-webkit-user-modify: read-write-plaintext-only;
+}
+/*end fix for Samsung devices to not show yellow/orange borders on inputs */
+
 li.highlight {		
 	background-color: #D0E8F2!important;
 	color: Black;
