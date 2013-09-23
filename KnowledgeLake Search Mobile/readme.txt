@@ -9,6 +9,9 @@ javascript/HTML5/CSS3 for the Android and iOS operating systems with the goal to
 readme will outline the 3rd party libraries used, the project architecture and foldering structure, and any helpful
 hints or gotchas that the mobile development team deams important for the readme.
 
+Helpful Docs:
+	* https://devtfs.knowledgelake.com/sites/DefaultCollection/Mobile%20Search%20(Scrum)/Shared%20Documents/Guides/
+
 Source Control:
 GitHub repo (Primary): https://github.com/srd8580/KLMobileSearch.git
 TFS source (secondary): https://devtfs.knowledgelake.com:8081/DefaultCollection/Mobile%20Search%20(Scrum)
