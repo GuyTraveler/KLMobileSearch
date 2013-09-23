@@ -1,9 +1,8 @@
 define(["knockout", 
         "system", 
         "jquery", 
-        "ISiteDataCachingService", 
-        "domain/promiseResponse/fileSystemResponse"], 
-    function (ko, system, $, SiteDataCachingService, FileSystemResponse) {
+        "ISiteDataCachingService"], 
+    function (ko, system, $, SiteDataCachingService) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
@@ -47,12 +46,12 @@ define(["knockout",
                         });
                       
                         loadSitesPromise.fail(function (error) {
-                            if (error.response === FileSystemResponse.FileNotFound) {
+                            if (error.response === system.strings.FileNotFound) {
                                 window.App.navigate(configureSiteUrl);
                             }
                             else {
-                                // critical error reading site data
-                                // recovery options? modal dialog?
+                                self.SetDataSource();
+								system.showToast(system.strings.siteLoadError);
                             }
                         });
                     }

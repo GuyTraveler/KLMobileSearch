@@ -3,9 +3,8 @@ define(["jquery",
 		"system",
         "domain/promiseResponse/promiseResolveResponse", 
         "domain/promiseResponse/promiseRejectResponse",
-        "domain/promiseResponse/fileSystemResponse",
         "services/encryptionService"], 
-        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse, EncryptionService) {
+        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse, EncryptionService) {
     var service = function () {
         var self = this, 
             siteDataFileName = "sites.dat";
@@ -18,7 +17,7 @@ define(["jquery",
             var existsPromise = File.ExistsAsync(siteDataFileName);
                 
             existsPromise.done(function (result) {
-                if(result.response === FileSystemResponse.FileFound)
+                if(result.response === system.strings.FileFound)
                 {
                     var readPromise = File.ReadAsync(siteDataFileName);
                     

@@ -8,11 +8,10 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
-        "domain/promiseResponse/logonResponse",
 		"system",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, logonResponse, system) {
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, system) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -342,7 +341,7 @@ define(['require',
             });
             
             keywordSearchPromise.fail(function (error) {
-                QUnit.equal(error.response, logonResponse.LogonFailed);
+                QUnit.equal(error.response, system.strings.logonFailed);
                 QUnit.start();
             });
         });

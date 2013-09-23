@@ -2,9 +2,8 @@ define(["jquery",
 		"system",
 		"IWebsService",  
         "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse", 
-        "domain/promiseResponse/logonResponse"], 
-	function ($, system, websService, PromiseResolveResponse, PromiseRejectResponse, logonResponse) {
+        "domain/promiseResponse/promiseRejectResponse"], 
+	function ($, system, websService, PromiseResolveResponse, PromiseRejectResponse) {
 		var claimsLogonService = function (siteUrl) {
 			var self = this;
 			
@@ -46,11 +45,11 @@ define(["jquery",
                     
                     if (!self.isLoggedOnUrl(self.windowRef.currentUrl)) {
                         system.logVerbose(self.windowRef.currentUrl + " present when child browser closed! Cookie failed to be obtained."); 
-                        dfd.reject(new PromiseRejectResponse(logonResponse.LogonFailed, null));          
+                        dfd.reject(new PromiseRejectResponse(system.strings.logonFailed, null));          
                     }
 					else {
 						system.logVerbose("child window closed with successful result.");
-						dfd.resolve(new PromiseResolveResponse(logonResponse.LogonSucceeded));
+						dfd.resolve(new PromiseResolveResponse(system.strings.LogonSucceeded));
                     }							
                 });
 				

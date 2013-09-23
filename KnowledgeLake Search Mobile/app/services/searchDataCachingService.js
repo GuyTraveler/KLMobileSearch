@@ -2,9 +2,8 @@ define(["jquery",
         "FileManagement",  
 		"system",
         "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse", 
-        "domain/promiseResponse/fileSystemResponse"], 
-        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse) {
+        "domain/promiseResponse/promiseRejectResponse"], 
+        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse) {
     var service = function () {
         var self = this, 
             searchDataFileName = "searches.dat";
@@ -27,7 +26,7 @@ define(["jquery",
                 var existsPromise = File.ExistsAsync(searchDataFileName);
                     
                 existsPromise.done(function (result) {
-                    if(result.response === FileSystemResponse.FileFound)
+                    if(result.response === system.strings.FileFound)
                     {
                         var readPromise = File.ReadAsync(searchDataFileName);
                         

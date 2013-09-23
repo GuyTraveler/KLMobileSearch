@@ -1,4 +1,4 @@
-define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystemResponse"], function (system, $, File, FileSystemResponse) {
+define(["system", "jquery", "FileManagement"], function (system, $, File) {
     var fileTransfer = function () {
         var self = this,
             downloadDirectory = "Download",
@@ -20,7 +20,7 @@ define(["system", "jquery", "FileManagement", "domain/promiseResponse/fileSystem
                         var existsPromise = File.ExistsAsync(filePath); 
                         
                         existsPromise.done(function (result) {
-                            if(result.response === FileSystemResponse.FileFound)
+                            if(result.response === system.strings.FileFound)
                             {
                                 // pop dialog to provide unique filename
                                 // call transfer again with uniqueFileName
