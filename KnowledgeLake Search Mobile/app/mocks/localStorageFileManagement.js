@@ -1,9 +1,9 @@
 /* html5 'local storage' file management implementation */
 
-define(["domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse",
-        "domain/promiseResponse/fileSystemResponse"
-	   ], function (PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse) {
+define(["system",
+		"domain/promiseResponse/promiseResolveResponse", 
+        "domain/promiseResponse/promiseRejectResponse"
+	   ], function (system, PromiseResolveResponse, PromiseRejectResponse) {
 	var fileSystemMock = function () {
 		var self = this,
 			localStorageAvailable = function () {
@@ -16,13 +16,13 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			var dfd = $.Deferred();
 						
 			if (!localStorageAvailable()) {
-				dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+				dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
 			else if (window.localStorage[path] != null) {
-				dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileFound));
+				dfd.resolve(new PromiseResolveResponse(system.strings.FileFound));
             }
 			else {
-				dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileNotFound));
+				dfd.resolve(new PromiseResolveResponse(system.strings.FileNotFound));
 			}
 			
 			return dfd.promise();
@@ -33,11 +33,11 @@ define(["domain/promiseResponse/promiseResolveResponse",
 				writeData = typeof data === 'string' ? data : JSON.stringify(data);
 			
 			if (!localStorageAvailable()) {
-				dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+				dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
 			else {
 				window.localStorage[path] = writeData;
-				dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileWriteSuccess));
+				dfd.resolve(new PromiseResolveResponse(system.strings.FileWriteSuccess));
             }
 			
 			return dfd.promise();
@@ -47,10 +47,10 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			var dfd = $.Deferred();
 			
 			if (!localStorageAvailable()) {
-				dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+				dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
 			else if (window.localStorage[path] == null) {
-				dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileNotFound, null));
+				dfd.reject(new PromiseRejectResponse(system.strings.FileNotFound, null));
             }
 			else {
 				dfd.resolve(new PromiseResolveResponse(window.localStorage[path]));
@@ -63,14 +63,14 @@ define(["domain/promiseResponse/promiseResolveResponse",
 			var dfd = $.Deferred();
 			
 			if (!localStorageAvailable()) {
-				dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+				dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
 			else if (window.localStorage[path] != null) {
 				delete window.localStorage[path];
-				dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileDeleteSuccess));
+				dfd.resolve(new PromiseResolveResponse(system.strings.FileDeleteSuccess));
             }
 			else {
-				dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileDeleteSuccess));
+				dfd.resolve(new PromiseResolveResponse(system.strings.FileDeleteSuccess));
             }			
 			
 			return dfd.promise();

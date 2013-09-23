@@ -4,10 +4,9 @@ define(["services/siteDataCachingService",
 		"domain/credential", 
 		"domain/credentialType", 
 		"FileManagement", 
-        "domain/promiseResponse/cachingServiceResponse", 
-        "domain/promiseResponse/fileSystemResponse", 
+        "system",
         "services/encryptionService"], 
-    function (SiteDataCachingService, site, credential, credentialType, File, CachingServiceResponse, FileSystemResponse, EncryptionService) {
+    function (SiteDataCachingService, site, credential, credentialType, File, system, EncryptionService) {
     QUnit.module("Testing services/siteDataCachingService");
     
     QUnit.test("test SiteExists if the site exists", function () {
@@ -138,7 +137,7 @@ define(["services/siteDataCachingService",
             
         //assert
         addSitePromise.done(function (result) {
-            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
+            QUnit.equal(result.response, system.strings.FileWriteSuccess);
             var siteExists = SiteDataCachingService.SiteExists("http://");
             QUnit.equal(siteExists, true);
             QUnit.start();
@@ -167,7 +166,7 @@ define(["services/siteDataCachingService",
         });
         
         addSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.SiteConnectionExists);
+            QUnit.equal(error.response, system.strings.SiteConnectionExists);
             QUnit.start();
         });
     });
@@ -182,7 +181,7 @@ define(["services/siteDataCachingService",
             
         //assert
         addSitePromise.done(function (result) {
-            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);            
+            QUnit.equal(result.response, system.strings.FileWriteSuccess);            
             var siteExists = SiteDataCachingService.SiteExists("http://");
             QUnit.equal(siteExists, true);
             QUnit.start();
@@ -204,7 +203,7 @@ define(["services/siteDataCachingService",
             
         //assert
         updateSitePromise.done(function (result) {           
-            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);      
+            QUnit.equal(result.response, system.strings.FileWriteSuccess);      
             QUnit.start();
         });
         
@@ -229,7 +228,7 @@ define(["services/siteDataCachingService",
         });
         
         updateSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.InvalidSite);
+            QUnit.equal(error.response, system.strings.InvalidSite);
             QUnit.start();
         });
     });
@@ -247,7 +246,7 @@ define(["services/siteDataCachingService",
             
         //assert
         updateSitePromise.done(function (result) {
-            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
+            QUnit.equal(result.response, system.strings.FileWriteSuccess);
             QUnit.equal(SiteDataCachingService.sites[0].title, "null");
             QUnit.start();
         });
@@ -273,7 +272,7 @@ define(["services/siteDataCachingService",
         });
         
         removeSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.SiteDataEmpty);
+            QUnit.equal(error.response, system.strings.SiteDataEmpty);
             QUnit.start();
         });
     });
@@ -296,7 +295,7 @@ define(["services/siteDataCachingService",
         });
         
         removeSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.InvalidSite);
+            QUnit.equal(error.response, system.strings.InvalidSite);
             QUnit.start();
         });
     });
@@ -314,7 +313,7 @@ define(["services/siteDataCachingService",
             
         //assert
         removeSitePromise.done(function (result) {
-            QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
+            QUnit.equal(result.response, system.strings.FileWriteSuccess);
             QUnit.start();
         });
         
@@ -342,7 +341,7 @@ define(["services/siteDataCachingService",
             });
             
             loadSitesPromise.fail(function (error) {
-                QUnit.equal(error.response, FileSystemResponse.FileNotFound);
+                QUnit.equal(error.response, system.strings.FileNotFound);
                 QUnit.start();
             });
         });

@@ -1,8 +1,7 @@
 //explictly request the actual FileManagment
-define(["factory/fileManagementFactory", 
-        "domain/promiseResponse/fileSystemResponse",
+define(["factory/fileManagementFactory",
 		"system", 
-		"jquery"], function (File, FileSystemResponse, system, $) {
+		"jquery"], function (File, system, $) {
         QUnit.module("Testing framework/FileManagement");
 
         QUnit.test("test fileSystem is up and running", function () {
@@ -29,7 +28,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {
-                    QUnit.equal(result.response, FileSystemResponse.FileFound);
+                    QUnit.equal(result.response, system.strings.FileFound);
                     QUnit.start();
                 });
                 
@@ -56,7 +55,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {                    
-                    QUnit.equal(result.response, FileSystemResponse.FileNotFound);
+                    QUnit.equal(result.response, system.strings.FileNotFound);
                     QUnit.start();
                 });
                 
@@ -80,7 +79,7 @@ define(["factory/fileManagementFactory",
             var writePromise = File.WriteAsync(filePath, testData);
             
             writePromise.done(function (result) {
-                QUnit.equal(result.response, FileSystemResponse.FileWriteSuccess);
+                QUnit.equal(result.response, system.strings.FileWriteSuccess);
                 
                 //act
                 var readPromise = File.ReadAsync(filePath);
@@ -120,7 +119,7 @@ define(["factory/fileManagementFactory",
                 });
                 
                 readPromise.fail(function (error) {
-                    QUnit.equal(error.response, FileSystemResponse.FileNotFound);
+                    QUnit.equal(error.response, system.strings.FileNotFound);
                     QUnit.start();
                 });
             });
@@ -144,7 +143,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 deletePromise.done(function (result) {
-                    QUnit.equal(result.response, FileSystemResponse.FileDeleteSuccess);
+                    QUnit.equal(result.response, system.strings.FileDeleteSuccess);
                     QUnit.start();
                 });
                 

@@ -3,6 +3,11 @@ img.resultIcon {
     height: 1.88em;
 }
 
+#resultPageHeading {
+	text-align: center;
+	padding: 0.5em 0em;	
+}
+
 .resultOuterContainer {
 	width: 100%;	
 }

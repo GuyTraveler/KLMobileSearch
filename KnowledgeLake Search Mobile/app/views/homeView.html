@@ -1,9 +1,10 @@
 <header data-role="header">
-    <div data-role="navbar">    
-        <button class="nav-button" data-align="left"
-            data-role="button" data-icon="add" data-bind="click: addSite">
-            <span data-bind="text: system.strings.addSite"></span>
-        </button>
+    <div data-role="navbar"> 
+		<button class="transparent-button center" data-align="left">
+			<img src="app/images/kl_head.png" />
+        </button>	
+		<button data-align="left" data-role="button" class="transparent-button"></button>
+		        
 		<button class="nav-button" data-align="right"
 			data-role="button" data-icon="compose" 
 			data-bind="click: editSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
@@ -13,6 +14,10 @@
 				data-role="button" data-icon="delete" 
 				data-bind="click: deleteSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
 			<span data-bind="text: system.strings.deleteSite"></span>
+        </button>
+		<button class="nav-button" data-align="right"
+            data-role="button" data-icon="add" data-bind="click: addSite">
+            <span data-bind="text: system.strings.addSite"></span>
         </button>
     </div>
 </header>

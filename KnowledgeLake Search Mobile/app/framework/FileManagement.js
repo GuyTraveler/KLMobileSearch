@@ -1,9 +1,8 @@
 define(["system", 
         "jquery", 
         "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse",
-        "domain/promiseResponse/fileSystemResponse"], 
-        function (system, $, PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse) {
+        "domain/promiseResponse/promiseRejectResponse"], 
+        function (system, $, PromiseResolveResponse, PromiseRejectResponse) {
     var fileManagement = function () {
         var self = this,
             knowledgelakeDirectory = "KnowledgeLake";
@@ -53,14 +52,14 @@ define(["system",
                     {
                         result.response.getFile(path, { create: false },
                         function () {
-                            dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileFound));
+                            dfd.resolve(new PromiseResolveResponse(system.strings.FileFound));
                         },
                         function () {
-                            dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileNotFound));
+                            dfd.resolve(new PromiseResolveResponse(system.strings.FileNotFound));
                         });
                     }
                     else
-                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.AccessDirectoryFailure, null));
+                        dfd.reject(new PromiseRejectResponse(system.strings.AccessDirectoryFailure, null));
                 });
                 
                 getFolderPromise.fail(function (error) {
@@ -69,7 +68,7 @@ define(["system",
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -96,21 +95,21 @@ define(["system",
                                 }
                                 
                                 reader.onerror = function (error) {
-                                    dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileReadFailure, error));
+                                    dfd.reject(new PromiseRejectResponse(system.strings.FileReadFailure, error));
                                 }
                                 
                                 reader.readAsText(file);
                             },
                             function (error) {
-                                dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetFileFailure, error));
+                                dfd.reject(new PromiseRejectResponse(system.strings.GetFileFailure, error));
                             });
                         },
                         function (error) {
-                            dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileNotFound, error));
+                            dfd.reject(new PromiseRejectResponse(system.strings.FileNotFound, error));
                         });
                     }
                     else
-                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.AccessDirectoryFailure, null));                        
+                        dfd.reject(new PromiseRejectResponse(system.strings.AccessDirectoryFailure, null));                        
                 });
                 
                 getFolderPromise.fail(function (error) {
@@ -119,7 +118,7 @@ define(["system",
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -140,24 +139,24 @@ define(["system",
                             fileEntry.createWriter(
                             function (writer) {
                                 writer.onwrite = function (evt) {
-                                    dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileWriteSuccess));
+                                    dfd.resolve(new PromiseResolveResponse(system.strings.FileWriteSuccess));
                                 }
                                 writer.onerror = function (error) {
-                                    dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileWriteFailure, error));
+                                    dfd.reject(new PromiseRejectResponse(system.strings.FileWriteFailure, error));
                                 }
                                 
                                 writer.write(data);
                             },
                             function (error) {
-                                dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetWriterFailure, error));
+                                dfd.reject(new PromiseRejectResponse(system.strings.GetWriterFailure, error));
                             });
                         },
                         function (error) {
-                            dfd.reject(new PromiseRejectResponse(FileSystemResponse.GetFileFailure, error));
+                            dfd.reject(new PromiseRejectResponse(system.strings.GetFileFailure, error));
                         });
                     }
                     else
-                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.AccessDirectoryFailure, null));                             
+                        dfd.reject(new PromiseRejectResponse(system.strings.AccessDirectoryFailure, null));                             
                 });                
                 
                 getFolderPromise.fail(function (error) {
@@ -166,7 +165,7 @@ define(["system",
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -186,18 +185,18 @@ define(["system",
                         function (fileEntry) {
                             fileEntry.remove(
                             function () {
-                                dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileDeleteSuccess));
+                                dfd.resolve(new PromiseResolveResponse(system.strings.FileDeleteSuccess));
                             },
                             function (error) {
-                                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileDeleteFailure, error));
+                                dfd.reject(new PromiseRejectResponse(system.strings.FileDeleteFailure, error));
                             });
                         },
                         function (error) {
-                            dfd.resolve(new PromiseResolveResponse(FileSystemResponse.FileNotFound));
+                            dfd.resolve(new PromiseResolveResponse(system.strings.FileNotFound));
                         });
                     }
                     else
-                        dfd.reject(new PromiseRejectResponse(FileSystemResponse.AccessDirectoryFailure, null));                             
+                        dfd.reject(new PromiseRejectResponse(system.strings.AccessDirectoryFailure, null));                             
                 });                
                 
                 getFolderPromise.fail(function (error) {
@@ -206,7 +205,7 @@ define(["system",
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
             
             return dfd.promise();
@@ -223,12 +222,12 @@ define(["system",
                 },
                 function (error) {
                     
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.CreateDirectoryFailure, error));
+                dfd.reject(new PromiseRejectResponse(system.strings.CreateDirectoryFailure, error));
                 });
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(FileSystemResponse.FileSystemNull, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.FileSystemNull, null));
             }
             
             return dfd.promise();

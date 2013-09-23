@@ -9,11 +9,10 @@ define(["knockout",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
-        "domain/keyValuePair", 
-        "domain/promiseResponse/cachingServiceResponse",
+        "domain/keyValuePair",
 		"domain/httpProtocols",], 
     function (ko, system, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
-		      site, credential, credentialType, authenticationMode, keyValuePair, CachingServiceResponse, httpProtocols) {
+		      site, credential, credentialType, authenticationMode, keyValuePair, httpProtocols) {
         var configureSiteViewModel = function () {
             var self = this,
                 homeUrl = "#home",
@@ -83,7 +82,9 @@ define(["knockout",
 				
             self.message.subscribe(function (newValue) {
                 if (newValue) {
+					system.logVerbose("showing toast: " + newValue);
 					system.showToast(newValue);
+					system.logVerbose("toast: shown");
 				}
             });
 			
@@ -121,10 +122,10 @@ define(["knockout",
 						writePromise.fail(function (error) {
 							system.logVerbose("failed to write site data");
 							
-		                    if (error.response === CachingServiceResponse.InvalidSite) {
+		                    if (error.response === system.strings.InvalidSite) {
 		                        self.setMessage(error.response);
 		                    }
-							else if (error.response === CachingServiceResponse.SiteConnectionExists) {
+							else if (error.response === system.strings.SiteConnectionExists) {
 		                        self.setMessage(system.strings.siteAlreadyConfigured);
 		                    }
 		                    else {
