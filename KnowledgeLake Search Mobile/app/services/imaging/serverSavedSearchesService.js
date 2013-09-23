@@ -12,7 +12,7 @@ define(["jquery",
     var serverSavedSearchesService = function () {
         var self = this;
         
-        self.facetSearchAsync = function (site, search) {  
+        self.facetSearchAsync = function (site, klaml) {  
             var dfd = $.Deferred(),            
                 service = new facetQuerySearchService(site.url);
             
@@ -23,14 +23,14 @@ define(["jquery",
                                                    site.credential.password,
                                                    service.serviceUrl);
             logonPromise.done(function (result) {            
-                var facetSearchPromise = service.FacetSearch(search.query);
+                var facetSearchPromise = service.FacetSearch(klaml);
                 
                 facetSearchPromise.done(function (result) {
                     dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data)); 
                 });
               
-                facetSearchPromise.fail(function (error) {
-                    dfd.reject(error);
+                facetSearchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    dfd.reject(errorThrown);
                 });
             });
             
@@ -130,11 +130,10 @@ define(["jquery",
                         var parsedResult,                    
     					    metadata = self.buildResultMetadata(searchResults[FacetResultItem].Values);                    
                         
-                        if(metadata[titleProperty])
-                            parsedResult = new result(metadata[titleProperty], metadata);                        
+                        if(!metadata[titleProperty])
+                            metadata[titleProperty] = self.convertPathToTitle(metadata[pathProperty]);
                         
-                        else
-                            parsedResult = new result(self.convertPathToTitle(metadata[pathProperty]), metadata);
+                        parsedResult = new result(metadata[pathProperty], metadata);                        
                         
                         results.push(parsedResult);     
                     }

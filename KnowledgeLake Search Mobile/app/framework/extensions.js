@@ -47,4 +47,13 @@ define(function () {
 			return this.toUpperCase() === "AND";
 		};
 	}
+    
+    if (!Boolean.prototype.parseBoolToConjunction) {
+		Boolean.prototype.parseBoolToConjunction = function () {
+            if(this == true)
+                return "And";
+            
+            return "Or";
+		};
+	}
 });

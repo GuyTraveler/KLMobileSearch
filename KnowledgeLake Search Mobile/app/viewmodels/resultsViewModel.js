@@ -3,10 +3,11 @@ define(["knockout",
         "jquery", 
         "factory/queryServiceFactory", 
         "domain/keywordConjunction", 
-        "factory/logonServiceFactory", 
+        "factory/logonServiceFactory",
+        "services/imaging/serverSavedSearchesService", 
         "IDocumentService",
 		"ISiteDataService"], 
-    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
+    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
             documentUrl = "#document";
@@ -84,10 +85,12 @@ define(["knockout",
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
                     return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());
             }	
-            // add logic to handle keyword searches from both savedsearch and searchbuilder view models and
-            // add logic to handle klaml searches from the searchbuilder view model
-            /*else
-                self.propertySearchAsync(queryBuilderViewModel.blargh);*/            
+            
+            else if(searchBuilderViewModel.klaml)
+            {
+                if(savedSearchViewModel.site && savedSearchViewModel.site())
+                    return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
+            }
         }
         
         self.hide = function (e) {            
@@ -189,8 +192,7 @@ define(["knockout",
             
             logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
-            logonPromise.done(function (result) {
-                
+            logonPromise.done(function (result) {                
                 searchPromise = service.keywordSearchAsync(keyword.split(" "), keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
@@ -212,6 +214,35 @@ define(["knockout",
             logonPromise.fail(function (error) {
                 dfd.reject(error);
 				self.setErrorMessage(system.strings.logonFailed);
+                
+                self.isBusy(false);
+            });
+            
+            return dfd.promise();
+        }
+        
+        self.propertySearchAsync = function (searchSite, klaml) {
+            var dfd = $.Deferred(),
+                service;
+            
+            window.App.loading = "<h1>" + system.strings.searching + "</h1>";
+            self.isBusy(true);
+            
+            service = new ServerSavedSearchesService();
+                
+            searchPromise = service.facetSearchAsync(searchSite, klaml);
+            
+            searchPromise.done(function (result) {
+                self.SetDataSource(result);
+                
+                dfd.resolve(true);
+                
+                self.isBusy(false);
+            });
+            
+            searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
+                dfd.reject(errorThrown);
+				self.setErrorMessage(system.strings.searchError);
                 
                 self.isBusy(false);
             });

@@ -1,9 +1,11 @@
-define(["knockout", "system", "services/keywordValidationService", "services/searchBuilderService"], 
-    function (ko, system, ValidationService, searchBuilderService) {
+define(["knockout", "system", "services/keywordValidationService", "services/searchBuilderService", "services/klamlBuilderService"], 
+    function (ko, system, ValidationService, searchBuilderService, klamlBuilderService) {
         var searchBuilderViewModel = function () {
-            var self = this;
+            var self = this,
+                resultsUrl = "#results";
             
             self.search = ko.observable("");
+            self.klaml = null;
             
             self.propertiesList = null;
             self.propertiesName = ko.observableArray();
@@ -62,16 +64,17 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("searchBuilderViewModel beforeShow");                
-                                    
-                self.keyword("");
-                self.searchBuilderDataSource([]);
+                system.logVerbose("searchBuilderViewModel beforeShow");      
                 
-                if(savedSearchViewModel.selectedSearch)
-                {                     
-                    self.search(savedSearchViewModel.selectedSearch);
+                if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
+                {                                    
+                    self.keyword("");
+                    self.searchBuilderDataSource([]);
+                    self.klaml = null;
+                            
+                    self.search(savedSearchViewModel.selectedSearch);                
                                         
-                    self.BuildSearchProperties();
+                    self.BuildSearchProperties();                    
                 }
             }
             
@@ -84,7 +87,20 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }    
             
             self.executeSearch = function (e) {
-
+                var service = klamlBuilderService();
+                
+                var klaml = service.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.search().query);
+                
+                if(klaml)  
+                {
+                    self.klaml = klaml;
+                    
+                    window.App.navigate(resultsUrl);
+                }
+              
+                else {
+                    // failed to build klaml
+                }   
             }
             
             self.onSearchKeyUp = function (selection, event) {
@@ -108,7 +124,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
 				system.showSoftKeyboard();
 			}
             
-            /*Sself.addProperty = function () {
+            /*self.addProperty = function () {
                 
             }
             
