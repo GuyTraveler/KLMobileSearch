@@ -47,7 +47,19 @@ require(["config"], function (config) {
 						  testRootPath + "userNameParser_tests",						  
                           testRootPath + "searchBuilderService_tests",
 						  testRootPath + "savedSearchViewModel_tests",
-						  testRootPath + "searchBuilderViewModel_test"
+						  testRootPath + "searchBuilderViewModel_test",
+						  testRootPath + "promiseRejectResponse_tests",
+						  testRootPath + "promiseResolveResponse_test",
+						  testRootPath + "authenticationMode_tests",
+						  testRootPath + "catalogPropertyCtlType_test",
+					  	testRootPath + "credential_tests",
+						  testRootPath + "credentialType_tests",
+						  testRootPath + "keywordConjunction_tests",
+						  testRootPath + "result_tests",
+						  testRootPath + "search_tests",
+						  testRootPath + "searchFieldProperty_tests",
+						  testRootPath + "searchType_tests",
+						  testRootPath + "site_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
