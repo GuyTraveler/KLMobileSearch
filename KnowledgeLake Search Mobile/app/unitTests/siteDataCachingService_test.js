@@ -4,10 +4,10 @@ define(["services/siteDataCachingService",
 		"domain/credential", 
 		"domain/credentialType", 
 		"FileManagement", 
-        "domain/promiseResponse/cachingServiceResponse", 
+        "system", 
         "domain/promiseResponse/fileSystemResponse", 
         "services/encryptionService"], 
-    function (SiteDataCachingService, site, credential, credentialType, File, CachingServiceResponse, FileSystemResponse, EncryptionService) {
+    function (SiteDataCachingService, site, credential, credentialType, File, system, FileSystemResponse, EncryptionService) {
     QUnit.module("Testing services/siteDataCachingService");
     
     QUnit.test("test SiteExists if the site exists", function () {
@@ -167,7 +167,7 @@ define(["services/siteDataCachingService",
         });
         
         addSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.SiteConnectionExists);
+            QUnit.equal(error.response, system.strings.SiteConnectionExists);
             QUnit.start();
         });
     });
@@ -229,7 +229,7 @@ define(["services/siteDataCachingService",
         });
         
         updateSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.InvalidSite);
+            QUnit.equal(error.response, system.strings.InvalidSite);
             QUnit.start();
         });
     });
@@ -273,7 +273,7 @@ define(["services/siteDataCachingService",
         });
         
         removeSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.SiteDataEmpty);
+            QUnit.equal(error.response, system.strings.SiteDataEmpty);
             QUnit.start();
         });
     });
@@ -296,7 +296,7 @@ define(["services/siteDataCachingService",
         });
         
         removeSitePromise.fail(function (error) {
-            QUnit.equal(error.response, CachingServiceResponse.InvalidSite);
+            QUnit.equal(error.response, system.strings.InvalidSite);
             QUnit.start();
         });
     });

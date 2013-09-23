@@ -2,9 +2,8 @@ define(["knockout",
         "system", 
         "jquery", 
         "ISiteDataCachingService", 
-        "domain/promiseResponse/fileSystemResponse", 
-        "domain/promiseResponse/cachingServiceResponse"], 
-    function (ko, system, $, SiteDataCachingService, FileSystemResponse, CachingServiceResponse) {
+        "domain/promiseResponse/fileSystemResponse"], 
+    function (ko, system, $, SiteDataCachingService, FileSystemResponse) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
@@ -140,7 +139,7 @@ define(["knockout",
                     });
                   
                     removeSitePromise.fail(function (error) {
-                        if (error.response === CachingServiceResponse.InvalidSite) {
+                        if (error.response === system.strings.InvalidSite) {
                             // site does not exist
                         }
                         else {

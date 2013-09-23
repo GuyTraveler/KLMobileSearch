@@ -1,11 +1,11 @@
 define(["jquery", 
         "FileManagement",  
+		"system",
         "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse", 
-        "domain/promiseResponse/cachingServiceResponse", 
+        "domain/promiseResponse/promiseRejectResponse",
         "domain/promiseResponse/fileSystemResponse",
         "services/encryptionService"], 
-        function ($, File, PromiseResolveResponse, PromiseRejectResponse, CachingServiceResponse, FileSystemResponse, EncryptionService) {
+        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse, FileSystemResponse, EncryptionService) {
     var service = function () {
         var self = this, 
             siteDataFileName = "sites.dat";
@@ -55,7 +55,7 @@ define(["jquery",
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.SiteConnectionExists, null));
+                    dfd.reject(new PromiseRejectResponse(system.strings.SiteConnectionExists, null));
                 }
             }
             else
@@ -88,11 +88,11 @@ define(["jquery",
                     }
                     
                     else
-                        dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));               
+                        dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));               
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
                 }
             }
             else
@@ -117,11 +117,11 @@ define(["jquery",
                     self.WriteSiteData(dfd);
                 }
                 else
-                    dfd.reject(new PromiseRejectResponse(CachingServiceResponse.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(CachingServiceResponse.SiteDataEmpty, null));
+                dfd.reject(new PromiseRejectResponse(system.strings.SiteDataEmpty, null));
             }
             
             return dfd.promise();

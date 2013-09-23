@@ -58,5 +58,8 @@ define({
     IsNotNull: "Is Not Null",
     Yes: "Yes",
     No: "No",
-    NotSet: "Not Set"
+    NotSet: "Not Set",
+	SiteDataEmpty: "Site data has not been populated",
+	SiteConnectionExists: "Site connection already exists.",
+	InvalidSite: "Site connection does not exist."
 });
