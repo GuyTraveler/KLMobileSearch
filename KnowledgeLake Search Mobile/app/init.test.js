@@ -59,7 +59,8 @@ require(["config"], function (config) {
 						  testRootPath + "search_tests",
 						  testRootPath + "searchFieldProperty_tests",
 						  testRootPath + "searchType_tests",
-						  testRootPath + "site_tests"
+						  testRootPath + "site_tests",
+                          testRootPath + "klamlBuilderService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
