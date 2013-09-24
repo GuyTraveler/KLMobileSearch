@@ -6,13 +6,10 @@ define(["jquery",
         "services/soapParsingService"], 
     function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
         
-        var soapQueryServiceBase = function (siteUrl, keywordTemplate) {
+        var soapQueryServiceBase = function (siteUrl, keywordTemplate, fnMassageKeyword) {
             var self = this,
                 buildKeywordClause,
-                maxResults = 100,  //TODO: change this to something higher once we have dynamic paging
-				massageKeyword = function (keyword) {
-					return "\"" + $.trim(escape(keyword.encodeXML())) + "\""
-                };
+                maxResults = 100;  //TODO: change this to something higher once we have dynamic paging
             
             self.keywordSearchAsync = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),
@@ -46,7 +43,7 @@ define(["jquery",
                 if (typeof keywordPhrases === 'string') {
                     system.logVerbose("keywordPhrases is string: " + keywordPhrases);
                     
-                    keywordClause = massageKeyword(keywordPhrases);
+                    keywordClause = fnMassageKeyword(keywordPhrases);
                 }
                 else if (Object.prototype.toString.call(keywordPhrases) === '[object Array]') {
                     system.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);
@@ -54,7 +51,7 @@ define(["jquery",
                     wordCount = keywordPhrases.length;
                                         
                     for (var i = 0; i < wordCount; i++) {
-                        keywordClause = keywordClause + massageKeyword(keywordPhrases[i]) + " " + conjunction + " ";
+                        keywordClause = keywordClause + fnMassageKeyword(keywordPhrases[i]) + " " + conjunction + " ";
                     }
                     
                     keywordClause = $.trim(keywordClause);

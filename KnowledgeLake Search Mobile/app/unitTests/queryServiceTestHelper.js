@@ -48,7 +48,7 @@ define(["INtlmLogonService",
 	        });
 			 
 	        QUnit.asyncTest("Test queryService with double quote and AND", function () {
-	            keywordSearchTest(["quick\"", "word"], keywordConjunction.and, true);
+	            keywordSearchTest(["\"quick", "word"], keywordConjunction.and, true);
 	        });
 			
 	        QUnit.asyncTest("Test queryService with @ and AND", function () {
