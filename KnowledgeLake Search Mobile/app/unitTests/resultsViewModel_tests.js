@@ -4,14 +4,16 @@ define(['require',
         'knockout',
         'viewmodels/resultsViewModel',
         'viewmodels/savedSearchViewModel',
+        'viewmodels/searchBuilderViewModel',
         "domain/result",
         "domain/site",
         "domain/credential",
         "domain/credentialType",
 		"system",
+        "unitTests/unitTestSettings",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, result, site, credential, credentialType, system) {
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, system, TestSettings) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -155,7 +157,7 @@ define(['require',
             QUnit.ok(vm);
         });
        
-        QUnit.asyncTest("test resultsViewModel show", function () {
+        QUnit.asyncTest("test resultsViewModel show keywordSearchAsync", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -181,6 +183,40 @@ define(['require',
             });
 			
 			keywordSearchPromise.fail(function () {
+				QUnit.ok(false);
+				QUnit.start();
+            });
+        });
+       
+        QUnit.asyncTest("test resultsViewModel show propertySearchAsync", function () {
+            //arrange
+            var vm,
+                savedSearchVM,
+                searchBuilderVM,
+				propertySearchPromise;
+            
+            savedSearchVM = new savedSearchViewModel();
+            searchBuilderVM = new searchBuilderViewModel();
+			vm = new resultsViewModel();
+            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            searchBuilderVM.klaml = TestSettings.testKlaml;
+            
+            window.savedSearchViewModel = savedSearchVM;
+            window.searchBuilderViewModel = searchBuilderVM;
+            
+            //act
+            propertySearchPromise = vm.show();
+                        
+            //assert
+            QUnit.ok(vm);
+			QUnit.ok(propertySearchPromise);
+			
+			propertySearchPromise.done(function () {
+				QUnit.ok(true);
+				QUnit.start();
+            });
+			
+			propertySearchPromise.fail(function () {
 				QUnit.ok(false);
 				QUnit.start();
             });
@@ -363,6 +399,50 @@ define(['require',
             });
             
             keywordSearchPromise.fail(function (error) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+        });
+      
+        QUnit.asyncTest("test resultsViewModel propertySearch bad credentials", function () {
+            //arrange
+            var vm,            
+                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan", "pw", "dev"));  
+            
+            vm = new resultsViewModel();
+            
+            //act
+            var propertySearchPromise = vm.propertySearchAsync(siteData, TestSettings.testKlaml);
+            
+            //assert
+            propertySearchPromise.done(function (result) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+            
+            propertySearchPromise.fail(function (error) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
+        });
+        
+        QUnit.asyncTest("test resultsViewModel propertySearch good credentials", function () {
+            //arrange
+            var vm,            
+                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));  
+            
+            vm = new resultsViewModel();
+            
+            //act
+            var propertySearchPromise = vm.propertySearchAsync(siteData, TestSettings.testKlaml);
+            
+            //assert
+            propertySearchPromise.done(function (result) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
+            
+            propertySearchPromise.fail(function (error) {
                 QUnit.ok(false);
                 QUnit.start();
             });

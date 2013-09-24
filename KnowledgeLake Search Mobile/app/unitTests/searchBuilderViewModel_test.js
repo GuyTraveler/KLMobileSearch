@@ -46,7 +46,9 @@ define(['require',
             var vm,
                 searchProperties = [];
 
-            searchProperties.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, false, "howdy", "text", "Choice column", "7837483", TestSettings.testOperators));
+            searchProperties.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, TestSettings.testSearchPropertyHiddenFalse, 
+                                    TestSettings.testSearchPropertyDescription, TestSettings.testSearchPropertyDataType, TestSettings.testSearchPropertyName, 
+                                    TestSettings.testSearchPropertyId, TestSettings.testOperators));
             
             //act 
             vm = new searchBuilderViewModel();
@@ -86,7 +88,9 @@ define(['require',
                 propertiesList = [],
                 propertiesName = [];
 
-            propertiesList.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, false, "howdy", "text", "Choice column", "7837483", TestSettings.testOperators));
+            propertiesList.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, TestSettings.testSearchPropertyHiddenFalse, 
+                                    TestSettings.testSearchPropertyDescription, TestSettings.testSearchPropertyDataType, TestSettings.testSearchPropertyName, 
+                                    TestSettings.testSearchPropertyId, TestSettings.testOperators));
             propertiesName.push("Choice column");
             
             //act 
