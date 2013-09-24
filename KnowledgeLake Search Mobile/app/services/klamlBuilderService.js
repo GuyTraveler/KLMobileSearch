@@ -33,7 +33,8 @@ define(["jquery", "system", "framework/Constants", "extensions"],
                     
                     for(var i = 0; i < searchPropertiesLength; i++)
                     {
-                        whereClause += self.buildFieldFromSearchProperty(searchProperties[i]);
+                        if(!(searchProperties[i].hidden))
+                            whereClause += self.buildFieldFromSearchProperty(searchProperties[i]);
                     }
                 }
                 
@@ -47,16 +48,21 @@ define(["jquery", "system", "framework/Constants", "extensions"],
             }     
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
-                var field = masterMetaDataWhereTemplate;
-                                
-                // field.replace("{id}", searchProperty.id);
-                field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
-                field = field.replace("{type}", searchProperty.dataType);
-                field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
-                field = field.replace("{condition}", searchProperty.value());
-                field = field.replace("{conjunction}", (searchProperty.conjunction()).parseBoolToConjunction());
+                if(searchProperty)
+                {
+                    var field = masterMetaDataWhereTemplate;
+                                    
+                    // field.replace("{id}", searchProperty.id);
+                    field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
+                    field = field.replace("{type}", searchProperty.dataType);
+                    field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
+                    field = field.replace("{condition}", searchProperty.value());
+                    field = field.replace("{conjunction}", (searchProperty.conjunction()).parseBoolToConjunction());
+                    
+                    return field;
+                }
                 
-                return field;
+                return "";
             }
             
             self.appendIsDocument = function(searchProperties) {
@@ -76,16 +82,16 @@ define(["jquery", "system", "framework/Constants", "extensions"],
             
             self.GetKlamlOperator = function(operatorToken)
             {
-                if (operatorToken == Constants.Contains)
+                if (operatorToken == system.strings.Contains)
                     return "contains";
     
-                if (operatorToken == Constants.StartsWith)
+                if (operatorToken == system.strings.StartsWith)
                     return "beginswith";
     
-                if (operatorToken == Constants.Like)
+                if (operatorToken == system.strings.Like)
                     return "Like";
     
-                if (operatorToken == Constants.IsNotNull)
+                if (operatorToken == system.strings.IsNotNull)
                     return "isnotnull";
     
                 switch (operatorToken)
@@ -101,7 +107,7 @@ define(["jquery", "system", "framework/Constants", "extensions"],
                     case ">=":
                         return "geq";
                     default:
-                        return string.Empty;
+                        return "";
                 }
             }
 			
