@@ -60,7 +60,9 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
                     if(homeViewModel.selectedSite.url !== self.site().url)
                     {                        
                         self.site(homeViewModel.selectedSite);
+                        
                         self.keyword("");
+                        self.selectedSearch = null;
                     }
                     
                     self.LoadSearchData();

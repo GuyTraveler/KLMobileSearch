@@ -15,13 +15,12 @@ define(["services/imaging/serverSavedSearchesService",
             //arrange
             var service,
                 siteData = new site(TestSettings.siteTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, 
-                            new credential(credentialType.ntlm, TestSettings.siteTestUser, TestSettings.siteTestPassword, TestSettings.siteTestDomain)),
-                searchData = new search(TestSettings.siteTestUrl, TestSettings.siteTitle, searchType.server, TestSettings.testKlaml);
+                            new credential(credentialType.ntlm, TestSettings.siteTestUser, TestSettings.siteTestPassword, TestSettings.siteTestDomain));
             
             service = new serverSavedSearchesService();
             
             //act
-            var facetSearchPromise = service.facetSearchAsync(siteData, searchData);            
+            var facetSearchPromise = service.facetSearchAsync(siteData, TestSettings.testKlaml);            
             
             //assert
             facetSearchPromise.done(function (result) {

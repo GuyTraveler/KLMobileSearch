@@ -5,6 +5,7 @@ define([], function () {
 		self.url = url;
         self.metadata = metadata || {};
         self.title = self.metadata.Title || self.metadata.title;
+        self.LastModifiedTime = self.metadata.LastModifiedTime || self.metadata.LastModifiedTimeDateTime;
        
         return self;
     };

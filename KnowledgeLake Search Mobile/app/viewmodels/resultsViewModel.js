@@ -3,12 +3,13 @@ define(["knockout",
         "jquery", 
         "factory/queryServiceFactory", 
         "domain/keywordConjunction", 
-        "factory/logonServiceFactory", 
+        "factory/logonServiceFactory",
+        "services/imaging/serverSavedSearchesService", 
         "IDocumentService",
 		"ISiteDataService",
-		//uncaught depends
-		"extensions"], 
-    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, documentService, SiteDataService) {
+        // uncaught dependency
+        "extensions"], 
+    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
             documentUrl = "#document";
@@ -20,30 +21,32 @@ define(["knockout",
             }
         });
 		
-        self.resultDataSource = ko.observableArray([]); 
+        self.resultDataSource = ko.observableArray([]);
         self.resultCountString = ko.observable("");
-		
-		self.resultDataSource.subscribe(function (newValue) {
-			var length = self.resultDataSource && self.resultDataSource() ? self.resultDataSource().length : 0,
-				countMessage;
-			
-			if (length === 0) {
-				countMessage = system.strings.noResultsFound;
+                                
+        self.resultDataSource.subscribe(function (newValue) {
+            var length = self.resultDataSource && self.resultDataSource() ? self.resultDataSource().length : 0,
+                countMessage;
+                                                
+            if (length === 0) {
+                countMessage = system.strings.noResultsFound;
             }
-			else {
-				countMessage = system.strings.resultCountFormat.format(length.toString());
-			
-				if (length === 1) {
-					countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
-				}
-            }	
-			
-			self.resultCountString(countMessage);
+            
+            else {
+                countMessage = system.strings.resultCountFormat.format(length.toString());
+                                                
+                if (length === 1) {
+                    countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
+                }
+            }  
+                                                
+            self.resultCountString(countMessage);
         });
-		
+
+        
         self.selectedResult = null;
         self.windowRef = null; 
-				
+		
         self.navBarVisible = ko.observable(false);
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
@@ -105,10 +108,12 @@ define(["knockout",
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
                     return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());
             }	
-            // add logic to handle keyword searches from both savedsearch and searchbuilder view models and
-            // add logic to handle klaml searches from the searchbuilder view model
-            /*else
-                self.propertySearchAsync(queryBuilderViewModel.blargh);*/            
+            
+            else if(searchBuilderViewModel.klaml)
+            {
+                if(savedSearchViewModel.site && savedSearchViewModel.site())
+                    return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
+            }
         }
         
         self.hide = function (e) {            
@@ -210,8 +215,7 @@ define(["knockout",
             
             logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
-            logonPromise.done(function (result) {
-                
+            logonPromise.done(function (result) {                
                 searchPromise = service.keywordSearchAsync(keyword.split(" "), keywordConjunction.and, true);
                 
                 searchPromise.done(function (result) {
@@ -233,6 +237,35 @@ define(["knockout",
             logonPromise.fail(function (error) {
                 dfd.reject(error);
 				self.setErrorMessage(system.strings.logonFailed);
+                
+                self.isBusy(false);
+            });
+            
+            return dfd.promise();
+        }
+        
+        self.propertySearchAsync = function (searchSite, klaml) {
+            var dfd = $.Deferred(),
+                service;
+            
+            window.App.loading = "<h1>" + system.strings.searching + "</h1>";
+            self.isBusy(true);
+            
+            service = new ServerSavedSearchesService();
+                
+            searchPromise = service.facetSearchAsync(searchSite, klaml);
+            
+            searchPromise.done(function (result) {
+                self.SetDataSource(result);
+                
+                dfd.resolve(true);
+                
+                self.isBusy(false);
+            });
+            
+            searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
+                dfd.reject(errorThrown);
+				self.setErrorMessage(system.strings.searchError);
                 
                 self.isBusy(false);
             });

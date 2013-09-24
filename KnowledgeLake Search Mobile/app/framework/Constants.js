@@ -4,6 +4,7 @@ define(["system"], function (system) {
 		    sharePointDelimiter: ";#",
 		    sharePoint2013MajorVersion: 15, 
 		    phrase: "Q2FyaGFydHQ=",
+            IsDocument: "IsDocument",
 		    
 		    numberOperators: [ "=", ">", "<", ">=", "<=", system.strings.Range ],
 		    textboxOperators: [ "=", system.strings.Contains, system.strings.StartsWith, system.strings.Like, system.strings.IsNotNull ],
