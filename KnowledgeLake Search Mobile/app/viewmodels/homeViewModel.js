@@ -12,6 +12,7 @@ define(["knockout",
             
             self.selectedSite = null;
             self.navBarVisible = ko.observable(false);
+			self.hasHighlightedSite = ko.observable(false);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
@@ -86,9 +87,10 @@ define(["knockout",
                 system.logVerbose("homeViewModel hide");
                 
                 self.navBarVisible(false);
+				self.hasHighlightedSite(false);
             }
             
-            self.setSelectedSite = function (selection, event) {
+            self.setSelectedSite = function (selection, event, suppressNavbar) {
 				if (event)
 					event.stopImmediatePropagation();
 				
@@ -96,16 +98,17 @@ define(["knockout",
                     self.selectedSite = null;
                 else
                     self.selectedSite = selection;
-                
-                self.navBarVisible(self.selectedSite);
+                                
+				self.hasHighlightedSite(self.selectedSite != null);				
+				self.navBarVisible(self.selectedSite != null && !suppressNavbar);
             }
             
             self.isSelectedSite = function (item) {
-				return self.navBarVisible() && self.selectedSite === item;
+				return self.hasHighlightedSite() && self.selectedSite === item;
             }
             
             self.siteClick = function (selection) {
-				self.setSelectedSite(selection, null);
+				self.setSelectedSite(selection, null, true);
 				
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;

@@ -1,19 +1,4 @@
-div.keywordContainer {
-    width: 100%!important;
-    height: 2.4em;
-	position: relative;
-}
-
-#keywordInputContainer {
-	position: absolute;
-	left: 0em;
-	width: 85%!important;
-	top: 1.2em;
-}
-#keywordSearchButtonContainer {
-	position: absolute;
-	top: 0em;
-	right: 0em;
-	width: 15%;
-	text-align: right;
+.builder-column-heading {
+	font-weight: bold;
+	font-size: large;
 }

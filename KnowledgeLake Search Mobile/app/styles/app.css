@@ -26,10 +26,15 @@ textarea::visited
 }
 /*end fix for Samsung devices to not show yellow/orange borders on inputs */
 
+.pull-left {
+	float: left;
+}
+
 li.highlight {		
 	background-color: #D0E8F2!important;
 	color: Black;
 }
+
 
 .transparent-button {
     background-color: transparent!important;
@@ -41,7 +46,7 @@ li.highlight {
 }
 
 .relative-container {
-	position: relative;
+	position: relative!important;
 }
 
 div[data-role=content] {	

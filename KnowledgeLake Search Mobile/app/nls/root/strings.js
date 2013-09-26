@@ -78,5 +78,7 @@ define({
 	CreateFileFailure: "Unable to create file.",
 	CreateDirectoryFailure: "Unable to create file directory.",
 	AccessDirectoryFailure: "Unable to access file directory.",	
-	LogonSucceeded: "Logon succeeded."
+	LogonSucceeded: "Logon succeeded.",
+	And: "And",
+	Or: "Or"
 });

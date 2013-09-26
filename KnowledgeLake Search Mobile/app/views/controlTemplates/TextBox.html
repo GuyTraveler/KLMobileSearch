@@ -1,12 +1,7 @@
-<div>
-    <input type="checkbox" id="switch" data-bind="enable: search.type === 0" />
-</div>
-<select data-bind="options: properties, value: data.selectedProperty, enable: search.type === 0"></select>
-<div>
-    <select data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
-    <input type="text" data-bind=" value: data.value" />
+<div class="pull-left">
+    <select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
 </div>
 
-<script>
-    var switchInstance = $("#switch").kendoMobileSwitch({ onLabel: "And", offLabel: "Or" });
-</script>
+<div class="pull-left">    
+    <input type="text" data-bind=" value: data.value" />
+</div>

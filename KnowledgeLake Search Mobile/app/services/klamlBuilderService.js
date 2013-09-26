@@ -3,10 +3,10 @@ define(["jquery", "system", "framework/Constants", "extensions"],
         
 		var klamlBuilderService = function () {
 			var self = this,
-                masterQueryTemplate = "<KLQuery><Query><Where>{whereClause}</Where><OrderBy/><Select><Field displayName=\"Title\" type=\"Text\" /><Field displayName=\"LastModifiedTime\" type=\"DateTime\" /></Select></Query><Results><MaxRows num=\"5000\" /><Duplicates trim=\"True\"/><PageSize num=\"20\" /></Results></KLQuery>",
+                masterQueryTemplate = "<KLQuery><Query><Where>{whereClause}</Where><OrderBy/><Select><Field displayName=\"Title\" type=\"Text\" /><Field displayName=\"LastModifiedTime\" type=\"DateTime\" /></Select></Query><Results><MaxRows num=\"100\" /><Duplicates trim=\"True\"/><PageSize num=\"20\" /></Results></KLQuery>",
                 masterContentWhereTemplate = "<Content wordConjunction=\"And\" conjunction=\"And\"><![CDATA[{keyword}]]></Content>",
-                masterMetaDataWhereTemplate = "<Field id=\"\" displayName=\"{displayName}\" type=\"{type}\" operator=\"{operator}\" condition=\"{condition}\" conjunction=\"{conjunction}\"/>",
-                defaultQueryTemplate = "<KLQuery><Query><Where>{whereClause}</Where><OrderBy /><Select><Field displayName=\"Title\" type=\"Text\" /><Field displayName=\"LastModifiedTime\" type=\"DateTime\" /></Select></Query><Results><MaxRows num=\"5000\" /><Duplicates trim=\"True\" /><PageSize num=\"20\" /></Results></KLQuery>",
+                masterMetaDataWhereTemplate = "<Field id=\"{id}\" displayName=\"{displayName}\" type=\"{type}\" operator=\"{operator}\" condition=\"{condition}\" conjunction=\"{conjunction}\"/>",
+                defaultQueryTemplate = "<KLQuery><Query><Where>{whereClause}</Where><OrderBy /><Select><Field displayName=\"Title\" type=\"Text\" /><Field displayName=\"LastModifiedTime\" type=\"DateTime\" /></Select></Query><Results><MaxRows num=\"100\" /><Duplicates trim=\"True\" /><PageSize num=\"20\" /></Results></KLQuery>",
                 IsDocument = "<Field id=\"\" displayName=\"IsDocument\" type=\"YesNo\" operator=\"eq\" condition=\"1\" conjunction=\"And\"/>";
         
             self.buildKlamlQueryFromServerSavedQuery = function (keyword, searchProperties) {
@@ -53,6 +53,7 @@ define(["jquery", "system", "framework/Constants", "extensions"],
                     var field = masterMetaDataWhereTemplate;
                                     
                     // field.replace("{id}", searchProperty.id);
+					field = field.replace("{id}", "");
                     field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
                     field = field.replace("{type}", searchProperty.dataType);
                     field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
