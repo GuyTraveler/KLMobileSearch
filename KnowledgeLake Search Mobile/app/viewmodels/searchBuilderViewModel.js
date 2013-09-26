@@ -109,7 +109,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }
 		
     		self.afterShow = function (e) {
-    			var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+    			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
     				
     			system.logVerbose("resultsViewModel afterShow");
     			
