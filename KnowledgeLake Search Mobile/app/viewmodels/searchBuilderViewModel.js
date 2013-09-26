@@ -113,7 +113,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
     				
     			system.logVerbose("resultsViewModel afterShow");
     			
-    			tabstrip.clear();
+    			//tabstrip.clear();
             }
             
 			self.clearKeyword = function () {

@@ -278,7 +278,7 @@ define(["knockout",
 				
 			system.logVerbose("resultsViewModel afterShow");
 			
-			tabstrip.clear();
+			//tabstrip.clear();
         }
             
         return self;

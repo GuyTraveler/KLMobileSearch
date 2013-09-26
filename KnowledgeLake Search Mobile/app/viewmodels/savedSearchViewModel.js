@@ -78,7 +78,7 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
 				
 				system.logVerbose("savedSearchViewModel afterShow");
 				
-				tabstrip.clear();
+				//tabstrip.clear();
             }
             
             self.hide = function (e) {
