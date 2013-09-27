@@ -29,7 +29,7 @@ define(['require',
             QUnit.ok(vm);
             QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
-			QUnit.equal(vm.conjunction(), keywordConjunction.and);
+			QUnit.equal(vm.wordConjunction(), keywordConjunction.and);
         });
         
         QUnit.test("test searchBuilderViewModel init", function () {

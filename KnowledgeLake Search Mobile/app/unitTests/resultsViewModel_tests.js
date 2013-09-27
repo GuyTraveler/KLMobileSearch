@@ -168,7 +168,7 @@ define(['require',
 			vm = new resultsViewModel();
             savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             savedSearchVM.keyword = ko.observable("ryan");
-			savedSearchVM.conjunction = ko.observable(keywordConjunction.and);
+			savedSearchVM.wordConjunction = ko.observable(keywordConjunction.and);
             
             window.savedSearchViewModel = savedSearchVM;
             
@@ -200,7 +200,7 @@ define(['require',
 			vm = new resultsViewModel();
             savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             savedSearchVM.keyword = ko.observable("ryan");
-			savedSearchVM.conjunction = ko.observable(keywordConjunction.or);
+			savedSearchVM.wordConjunction = ko.observable(keywordConjunction.or);
             
             window.savedSearchViewModel = savedSearchVM;
             

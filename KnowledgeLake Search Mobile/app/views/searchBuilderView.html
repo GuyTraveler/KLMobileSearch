@@ -25,10 +25,10 @@
 </ul>
 
 <p class="align-right">
-	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.and, checked: conjunction" />
+	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.and, checked: wordConjunction" />
 	<span data-bind="text: system.strings.And"></span>
 	
-	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.or, checked: conjunction" />
+	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.or, checked: wordConjunction" />
 	<span data-bind="text: system.strings.Or"></span>
 </p> 
 
@@ -43,9 +43,14 @@
 		</li>
 	</ul>
 	
-	<p class="small-padding align-right">
-		<input type="checkbox" data-bind="checked: conjunction, kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
-	</p>
+	<!-- enable: $root.search.type === 0 -->
+	<p class="align-right">
+		<input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: name }, enable: $root.search.type === 0" />
+		<span data-bind="text: system.strings.And"></span>
+		
+		<input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: name }, enable: $root.search.type === 0" />
+		<span data-bind="text: system.strings.Or"></span>
+	</p> 
 </div>
 
 <!--<div id="addPropertyButtonContainer"> 

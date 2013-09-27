@@ -8,8 +8,9 @@ define(["jquery",
         "domain/searchProperty",
         "domain/catalogPropertyControlType",
         "ntlm",
+		"domain/keywordConjunction",
         "extensions"],
-        function ($, system, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm) {
+        function ($, system, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
         
 		var searchBuilderService = function () {
 			var self = this;
@@ -122,7 +123,7 @@ define(["jquery",
                             {
                                 property.value(klamlSearchFieldProperties[i].condition);
                                 property.selectedOperator(klamlSearchFieldProperties[i].operator);
-                                property.conjunction(klamlSearchFieldProperties[i].conjunction);
+                                property.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
                                 
                                 searchProperties.push(property);
                                 break;

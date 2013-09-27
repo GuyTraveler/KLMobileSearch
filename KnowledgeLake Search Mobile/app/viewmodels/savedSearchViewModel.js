@@ -10,7 +10,7 @@ define(["knockout",
                 searchBuilderUrl = "#searchBuilder",
                 resultsUrl = "#results";            
             
-			self.conjunction = ko.observable(keywordConjunction.and);
+			self.wordConjunction = ko.observable(keywordConjunction.and);
 			self.keywordConjunction = keywordConjunction;
             self.searchDataSource = ko.observableArray(null);
             

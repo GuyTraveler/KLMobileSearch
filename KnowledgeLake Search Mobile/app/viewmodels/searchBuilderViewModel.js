@@ -10,7 +10,7 @@ define(["knockout",
                 resultsUrl = "#results",
 				klamlService = new klamlBuilderService();
             
-			self.conjunction = ko.observable(keywordConjunction.and);
+			self.wordConjunction = ko.observable(keywordConjunction.and);
 			self.keywordConjunction = keywordConjunction;
             self.search = ko.observable("");
             self.klaml = null;
@@ -95,7 +95,7 @@ define(["knockout",
             }    
             
             self.executeSearch = function (e) {
-                var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.conjunction());
+                var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
                 
                 if(klaml)  
                 {

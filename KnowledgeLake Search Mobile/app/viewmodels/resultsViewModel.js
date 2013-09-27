@@ -106,7 +106,7 @@ define(["knockout",
             if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
             {                
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.conjunction());
+                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());
             }	
             
             else if(searchBuilderViewModel.klaml)
