@@ -20,11 +20,11 @@ define(["INtlmLogonService",
 	        });
 			  
 	        QUnit.asyncTest("Test queryService single keyword", function () {
-	            keywordSearchTest("word", keywordConjunction.and, true);
+	            keywordSearchTest("word", keywordConjunction.and, true, true);
 	        });
 	        
 	        QUnit.asyncTest("Test queryService with 2 AND keywords", function () {
-	            keywordSearchTest(["quick", "word"], keywordConjunction.and, true);
+	            keywordSearchTest(["quick", "word"], keywordConjunction.and, true, true);
 	        });
 			 
 	        QUnit.asyncTest("Test queryService with 3 AND keywords", function () {

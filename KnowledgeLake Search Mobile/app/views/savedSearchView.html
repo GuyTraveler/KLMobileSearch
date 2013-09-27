@@ -20,9 +20,14 @@
 			<div id="keywordSearchButtonContainer"> 
 				<button data-role="button" data-icon="search" data-bind="click: search, enable: isKeywordValid" class="" />
             </div>			
-		</div>
+		</div>			
     </li>
-</ul>           
+</ul>    
+
+<p class="align-right">
+	<input type="checkbox" data-bind="checked: keywordConjunction, kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
+</p>       
+
 <!--<div>
     <h3 data-bind="text: system.strings.localSavedSearches"></h3>
 	
@@ -30,21 +35,21 @@
 </div>-->
 
 <form>
-<div>
-    <h3 data-bind="text: system.strings.serverSavedSearches"></h3>
-    
-	<ul data-role="listview" data-bind="foreach: searchDataSource" data-style="inset">
-        <!--data-bind="checked: isHttps, enable: enableUrl, click: httpsClick"-->
-        <li data-bind="css: { 'highlight': $parent.isSelectedSearch($data) }, click: $parent.searchClick">            
-            <!--<div>
-                <input type="radio" data-bind="checked: title" />
-            </div>-->
-            <div>
-                <h3 data-bind="text: title"></h3>                  
-            </div>       
-        </li>
-    </ul>
-</div>
+	<div>
+	    <h3 data-bind="text: system.strings.serverSavedSearches"></h3>
+	    
+		<ul data-role="listview" data-bind="foreach: searchDataSource" data-style="inset">
+	        <!--data-bind="checked: isHttps, enable: enableUrl, click: httpsClick"-->
+	        <li data-bind="css: { 'highlight': $parent.isSelectedSearch($data) }, click: $parent.searchClick">            
+	            <!--<div>
+	                <input type="radio" data-bind="checked: title" />
+	            </div>-->
+	            <div>
+	                <h3 data-bind="text: title"></h3>                  
+	            </div>       
+	        </li>
+	    </ul>
+	</div>
 </form>
 
 <!--<footer data-role="footer">

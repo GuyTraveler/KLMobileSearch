@@ -1,4 +1,8 @@
-define(["knockout", "system", 'services/keywordValidationService', "services/imaging/serverSavedSearchesService"], 
+define(["knockout", 
+		"system", 
+		"services/keywordValidationService", 
+		"services/imaging/serverSavedSearchesService",
+		"framework/knockout/kendoSwitch"], 
     function (ko, system, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
@@ -10,7 +14,8 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
             self.selectedSearch = null;
             self.site = ko.observable("");          
             self.keyword = ko.observable("");
-            
+            self.keywordConjunction = ko.observable(true);
+			
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());
             });

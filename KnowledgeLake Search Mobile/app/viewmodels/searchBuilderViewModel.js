@@ -12,6 +12,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             self.searchBuilderDataSource = ko.observableArray();
             
             self.keyword = ko.observable("");
+			self.keywordConjunction = ko.observable(true);
             
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());

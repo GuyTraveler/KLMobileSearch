@@ -27,6 +27,7 @@ define(['require',
             QUnit.ok(vm);
             QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
+			QUnit.equal(vm.keywordConjunction(), true);
         });
         
         QUnit.test("test searchBuilderViewModel init", function () {

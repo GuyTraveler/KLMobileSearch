@@ -24,9 +24,8 @@
     </li>
 </ul>
 
-<p>
-	<!-- TODO: need a property to bind 'checked' to (default to AND (checked)) -->
-	<input type="checkbox" data-bind="kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
+<p class="align-right">
+	<input type="checkbox" data-bind="checked: keywordConjunction, kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
 </p>
 
 
@@ -39,7 +38,7 @@
             </label>
 		</li>
 		<li>
-			<p>
+			<p class="small-padding">
 				<input type="checkbox" data-bind="checked: conjunction, kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
 			</p>
 	    </li>

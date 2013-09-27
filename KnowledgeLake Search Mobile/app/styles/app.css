@@ -30,6 +30,18 @@ textarea::visited
 	float: left;
 }
 
+.pull-right {
+	float: right;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.small-padding {
+	padding: 2px;
+}
+
 li.highlight {		
 	background-color: #D0E8F2!important;
 	color: Black;
