@@ -106,7 +106,7 @@ define(["knockout",
             if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
             {                
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword());
+                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.conjunction());
             }	
             
             else if(searchBuilderViewModel.klaml)
@@ -202,13 +202,16 @@ define(["knockout",
             return dfd.promise();
         }
         
-        self.keywordSearchAsync = function (searchSite, keyword) {
+        self.keywordSearchAsync = function (searchSite, keyword, conjunction) {
             var dfd = $.Deferred(),
                 service,
                 logonService;
             
             window.App.loading = "<h1>" + system.strings.searching + "</h1>";
             self.isBusy(true);
+			
+			if (!conjunction)
+				conjunction = keywordConjunction.defaultConjunction;
             
             service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
             logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
@@ -216,7 +219,7 @@ define(["knockout",
             logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
             logonPromise.done(function (result) {                
-                searchPromise = service.keywordSearchAsync(keyword.split(" "), keywordConjunction.and, true);
+                searchPromise = service.keywordSearchAsync(keyword.split(" "), conjunction, true);
                 
                 searchPromise.done(function (result) {
                     self.SetDataSource(result);
@@ -274,9 +277,9 @@ define(["knockout",
         }
 		
 		self.afterShow = function (e) {
-			var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-				
 			system.logVerbose("resultsViewModel afterShow");
+			
+			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
 			
 			//tabstrip.clear();
         }

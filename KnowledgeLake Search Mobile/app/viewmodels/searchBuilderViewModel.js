@@ -1,9 +1,17 @@
-define(["knockout", "system", "services/keywordValidationService", "services/searchBuilderService", "services/klamlBuilderService"], 
-    function (ko, system, ValidationService, searchBuilderService, klamlBuilderService) {
+define(["knockout", 
+		"system", 
+		"domain/keywordConjunction",
+		"services/keywordValidationService", 
+		"services/searchBuilderService", 
+		"services/klamlBuilderService"], 
+    function (ko, system, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
         var searchBuilderViewModel = function () {
             var self = this,
-                resultsUrl = "#results";
+                resultsUrl = "#results",
+				klamlService = new klamlBuilderService();
             
+			self.conjunction = ko.observable(keywordConjunction.and);
+			self.keywordConjunction = keywordConjunction;
             self.search = ko.observable("");
             self.klaml = null;
             
@@ -12,8 +20,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             self.searchBuilderDataSource = ko.observableArray();
             
             self.keyword = ko.observable("");
-			self.keywordConjunction = ko.observable(true);
-            
+			
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());
             });
@@ -88,9 +95,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }    
             
             self.executeSearch = function (e) {
-                var service = klamlBuilderService();
-                
-                var klaml = service.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.search().query);
+                var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.conjunction());
                 
                 if(klaml)  
                 {

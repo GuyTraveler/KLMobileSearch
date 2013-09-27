@@ -3,12 +3,13 @@ define(['services/klamlBuilderService',
 		'unitTests/unitTestSettings',
         'framework/system',
         'domain/searchProperty',
-        'domain/catalogPropertyControlType'],
-    function (klamlBuilderService, TestSettings, system, searchProperty, catalogPropertyControlType) {
+        'domain/catalogPropertyControlType',
+		'domain/keywordConjunction'],
+    function (klamlBuilderService, TestSettings, system, searchProperty, catalogPropertyControlType, keywordConjunction) {
         QUnit.module("Testing klamlBuilderService");
         
         
-        QUnit.test("Test buildKlamlQueryFromServerSavedQuery with keyword", function () {
+        QUnit.test("Test buildKlamlQueryFromServerSavedQuery with keyword + AND", function () {
             //arrange
             var result,
                 service = new klamlBuilderService(),
@@ -19,10 +20,27 @@ define(['services/klamlBuilderService',
                                     TestSettings.testSearchPropertyId, TestSettings.testOperators));
                         
             //act
-            result = service.buildKlamlQueryFromServerSavedQuery(TestSettings.testSearchKeyword, searchProperties);
+            result = service.buildKlamlQueryFromServerSavedQuery(TestSettings.testSearchKeyword, searchProperties, keywordConjunction.and);
             console.log(result);
             //assert
             QUnit.equal(result, TestSettings.testBuildQuery);
+        });
+		
+		QUnit.test("Test buildKlamlQueryFromServerSavedQuery with keyword + OR", function () {
+            //arrange
+            var result,
+                service = new klamlBuilderService(),
+                searchProperties = [];
+            
+            searchProperties.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, TestSettings.testSearchPropertyHiddenFalse, 
+                                    TestSettings.testSearchPropertyDescription, TestSettings.testSearchPropertyDataType, TestSettings.testSearchPropertyName, 
+                                    TestSettings.testSearchPropertyId, TestSettings.testOperators));
+                        
+            //act
+            result = service.buildKlamlQueryFromServerSavedQuery(TestSettings.testSearchKeyword, searchProperties, keywordConjunction.or);
+            console.log(result);
+            //assert
+            QUnit.equal(result, TestSettings.testBuildQueryOr);
         });
         
         QUnit.test("Test buildKlamlQueryFromServerSavedQuery null", function () {

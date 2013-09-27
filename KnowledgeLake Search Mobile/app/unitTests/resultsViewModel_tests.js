@@ -11,9 +11,10 @@ define(['require',
         "domain/credentialType",
 		"system",
         "unitTests/unitTestSettings",
+		"domain/keywordConjunction",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, system, TestSettings) {
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, system, TestSettings, keywordConjunction) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -157,7 +158,7 @@ define(['require',
             QUnit.ok(vm);
         });
        
-        QUnit.asyncTest("test resultsViewModel show keywordSearchAsync", function () {
+        QUnit.asyncTest("test resultsViewModel show keywordSearchAsync (AND)", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -167,6 +168,39 @@ define(['require',
 			vm = new resultsViewModel();
             savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
             savedSearchVM.keyword = ko.observable("ryan");
+			savedSearchVM.conjunction = ko.observable(keywordConjunction.and);
+            
+            window.savedSearchViewModel = savedSearchVM;
+            
+            //act
+            keywordSearchPromise = vm.show();
+                        
+            //assert
+            QUnit.ok(vm);
+			QUnit.ok(keywordSearchPromise);
+			
+			keywordSearchPromise.done(function () {
+				QUnit.ok(true);
+				QUnit.start();
+            });
+			
+			keywordSearchPromise.fail(function () {
+				QUnit.ok(false);
+				QUnit.start();
+            });
+        });
+		
+		QUnit.asyncTest("test resultsViewModel show keywordSearchAsync (OR)", function () {
+            //arrange
+            var vm,
+                savedSearchVM,
+				keywordSearchPromise;
+            
+            savedSearchVM = new savedSearchViewModel();
+			vm = new resultsViewModel();
+            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            savedSearchVM.keyword = ko.observable("ryan");
+			savedSearchVM.conjunction = ko.observable(keywordConjunction.or);
             
             window.savedSearchViewModel = savedSearchVM;
             
@@ -385,7 +419,7 @@ define(['require',
         QUnit.asyncTest("test resultsViewModel keywordSearch good credentials", function () {
             //arrange
             var vm,            
-                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));  
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));  
             
             vm = new resultsViewModel();
             

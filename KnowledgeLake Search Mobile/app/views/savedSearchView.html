@@ -25,7 +25,11 @@
 </ul>    
 
 <p class="align-right">
-	<input type="checkbox" data-bind="checked: keywordConjunction, kendoSwitch: { onLabel: system.strings.And, offLabel: system.strings.Or }, enable: $root.search.type === 0" />
+	<input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.and, checked: conjunction" />
+	<span data-bind="text: system.strings.And"></span>
+	
+	<input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.or, checked: conjunction" />
+	<span data-bind="text: system.strings.Or"></span>
 </p>       
 
 <!--<div>

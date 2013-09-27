@@ -1,21 +1,23 @@
 define(["knockout", 
 		"system", 
+		"domain/keywordConjunction",
 		"services/keywordValidationService", 
 		"services/imaging/serverSavedSearchesService",
 		"framework/knockout/kendoSwitch"], 
-    function (ko, system, ValidationService, serverSavedSearchesService) {
+    function (ko, system, keywordConjunction, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
                 searchBuilderUrl = "#searchBuilder",
                 resultsUrl = "#results";            
             
+			self.conjunction = ko.observable(keywordConjunction.and);
+			self.keywordConjunction = keywordConjunction;
             self.searchDataSource = ko.observableArray(null);
             
             self.selectedSearch = null;
             self.site = ko.observable("");          
-            self.keyword = ko.observable("");
-            self.keywordConjunction = ko.observable(true);
-			
+            self.keyword = ko.observable("");            
+						
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());
             });
