@@ -68,75 +68,97 @@ define(["jquery",
                 return dfd.promise();
             }
             
+			//TODO: 9/30 - refactor this some more, get the item WITHOUT the conjunction last
             self.mapKlamlSearchFieldPropertiesToSearchProperties = function (klamlSearchFieldProperties, properties) {
-                var choicesText = "Choices", 
-                    controlTypeText = "ControlType",
+                var controlTypeText = "ControlType",
                     dataTypeText = "DataType",
                     descriptionText = "Description",
                     hiddenText = "Hidden",
                     idText = "ID",
-                    nameText = "Name";
-                
-                var propertiesList = [], 
+                    nameText = "Name",
+                	propertiesList = [], 
                     propertiesName = [],
                     searchProperties = [],
-                    searchBuilderResult = {};
+					property,
+					controlType,
+					choices,
+					klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length,
+					searchPropertiesLength;
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
                 {                  
-					if (typeof properties[ArrayOfCatalogPropertyBase] === 'object') 
-                    {                        
-                        var choices = [],
-                            controlType = self.convertToControlType(properties[ArrayOfCatalogPropertyBase][controlTypeText].value);
-                        
-                        if(controlType !== catalogPropertyControlType.RadioButton)
-                        {                        
-                            for (Choices in properties[ArrayOfCatalogPropertyBase][choicesText])
-                            {
-                                if (typeof properties[ArrayOfCatalogPropertyBase][choicesText][Choices] === 'object') 
-                                {
-                                    choices.push(properties[ArrayOfCatalogPropertyBase][choicesText][Choices].value);
-                                }
-                            }
-                        }
-                        
-                        else
-                            choices = Constants.radiobuttonValues;
-                        
-                        var property = new searchProperty(choices,
-                                                          controlType,
-                                                          (properties[ArrayOfCatalogPropertyBase][hiddenText].value).parseBool(),
-                                                          properties[ArrayOfCatalogPropertyBase][descriptionText].value,
-                                                          properties[ArrayOfCatalogPropertyBase][dataTypeText].value,
-                                                          properties[ArrayOfCatalogPropertyBase][nameText].value,
-                                                          properties[ArrayOfCatalogPropertyBase][idText].value,
-                                                          self.getSearchOperatorsForControlType(controlType));
-                        
-                        propertiesList.push(property);
-                        propertiesName.push(property.name);
-                        
-                        var klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length;
-                        
-                        for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
-                        {
-                            if(klamlSearchFieldProperties[i].name === property.name)
-                            {
-                                property.value(klamlSearchFieldProperties[i].condition);
-                                property.selectedOperator(klamlSearchFieldProperties[i].operator);
-                                property.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
-                                
-                                searchProperties.push(property);
-                                break;
-                            }
-                        }
-                    }                    
+					if (typeof properties[ArrayOfCatalogPropertyBase] !== 'object') 
+						continue;
+					
+                    controlType = self.convertToControlType(properties[ArrayOfCatalogPropertyBase][controlTypeText].value);
+					choices = self.getChoicesForSearchProperty(controlType, ArrayOfCatalogPropertyBase, properties);
+					
+					property = new searchProperty(choices,
+			                                      controlType,
+			                                      (properties[ArrayOfCatalogPropertyBase][hiddenText].value).parseBool(),
+			                                      properties[ArrayOfCatalogPropertyBase][descriptionText].value,
+			                                      properties[ArrayOfCatalogPropertyBase][dataTypeText].value,
+			                                      properties[ArrayOfCatalogPropertyBase][nameText].value,
+			                                      properties[ArrayOfCatalogPropertyBase][idText].value,
+			                                      self.getSearchOperatorsForControlType(controlType));
+                    
+                    propertiesList.push(property);
+                    propertiesName.push(property.name);                                                          
                 }
+				
+				searchPropertiesLength = propertiesList.length;
+				
+				for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
+                {
+					for (var j = 0; j < searchPropertiesLength; j++) 
+					{
+						property = propertiesList[j];
+						
+						if (property.name === klamlSearchFieldProperties[i].name)
+	                    {
+							var newSearchProperty = new searchProperty(property.choices(),
+								                                      property.controlType,
+								                                      property.hidden,
+								                                      property.description,
+								                                      property.dataType,
+								                                      property.name,
+								                                      property.id,
+								                                      property.operators());
+	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition);
+	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
+	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
+	                        
+	                        searchProperties.push(newSearchProperty);
+	                        break;
+	                    }
+                    }                    
+                }                  
                 
-                searchBuilderResult.propertiesList = propertiesList;
-                searchBuilderResult.propertiesName = propertiesName;
-                searchBuilderResult.searchProperties = searchProperties;
-                
-                return searchBuilderResult;
+                return {
+					propertiesList: propertiesList,
+					propertiesName: propertiesName,
+					searchProperties: searchProperties
+                };                
+            }
+			
+			self.getChoicesForSearchProperty = function (controlType, ArrayOfCatalogPropertyBase, properties) {
+				var choicesText = "Choices",
+					choices = Constants.radiobuttonValues;
+			
+				if (controlType !== catalogPropertyControlType.RadioButton)
+                {        
+					choices = [];
+					
+                    for (Choices in properties[ArrayOfCatalogPropertyBase][choicesText])
+                    {
+                        if (typeof properties[ArrayOfCatalogPropertyBase][choicesText][Choices] === 'object') 
+                        {
+                            choices.push(properties[ArrayOfCatalogPropertyBase][choicesText][Choices].value);
+                        }
+                    }
+                }
+				
+				return choices;
             }
             
             self.convertToControlType = function (property) {
