@@ -15,7 +15,6 @@
     <preference name="ShowSplashScreenSpinner" value="true" />
     <preference name="SuppressesIncrementalRendering" value="false" />
     <preference name="TopActivityIndicator" value="gray" />
-	<preference name="KeyboardShrinksView" value="true" />
     
     <!-- legacy preferences -->
     <!--
