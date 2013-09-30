@@ -89,4 +89,48 @@ define(["services/keywordValidationService",
             //assert
             QUnit.equal(result, true);
         });
+			    
+        QUnit.test("test keywordValidationService keyword mobi\"lity", function () {
+            //arrange
+            var keyword = "mobi\"lity";
+            
+            //act
+            var result = KeywordValidationService.validateKeyword(keyword);
+                        
+            //assert
+            QUnit.equal(result, false);
+        });
+				    
+        QUnit.test("test keywordValidationService keyword \"mobility", function () {
+            //arrange
+            var keyword = "\"mobility";
+            
+            //act
+            var result = KeywordValidationService.validateKeyword(keyword);
+                        
+            //assert
+            QUnit.equal(result, false);
+        });
+			
+		QUnit.test("test keywordValidationService keyword mobility\"", function () {
+            //arrange
+            var keyword = "mobility\"";
+            
+            //act
+            var result = KeywordValidationService.validateKeyword(keyword);
+                        
+            //assert
+            QUnit.equal(result, false);
+        });
+			
+		QUnit.test("test keywordValidationService keyword m\"obility\"", function () {
+            //arrange
+            var keyword = "m\"obility\"";
+            
+            //act
+            var result = KeywordValidationService.validateKeyword(keyword);
+                        
+            //assert
+            QUnit.equal(result, false);
+        });
 });

@@ -5,11 +5,15 @@ define([], function () {
         self.validate = function (input) {
             var invalidChars = ["!", "\"", "#", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", 
                                 "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`", "{", "}", "~", "—", "–", "¡", "¦", "|",
-                                "¨", "´", "¯", "¸"];
+                                "¨", "´", "¯", "¸"],
+				inputLength;
             
             if(input)
             {
-                var inputLength = input.length;
+				if (input.indexOf("\"") > -1)
+					return false;
+				
+                inputLength = input.length;
                 
                 for(var i = 0; i < inputLength; i++)
                 {

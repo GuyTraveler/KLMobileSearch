@@ -9,8 +9,9 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
-		"unitTests/unitTestSettings"],
-    function (require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, credentialType, TestSettings) {
+		"unitTests/unitTestSettings",
+		"domain/keywordConjunction"],
+    function (require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, credentialType, TestSettings, keywordConjunction) {
         QUnit.module("Testing savedSearchViewModel");
         
         
@@ -25,6 +26,7 @@ define(['require',
             QUnit.ok(vm);
             QUnit.ok(window.App);
 			QUnit.ok(window.App.isMock);
+			QUnit.equal(vm.conjunction(), keywordConjunction.and);
         });
         
         QUnit.test("test savedSearchViewModel init", function () {

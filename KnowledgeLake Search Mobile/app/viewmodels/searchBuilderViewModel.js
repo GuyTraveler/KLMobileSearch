@@ -1,9 +1,17 @@
-define(["knockout", "system", "services/keywordValidationService", "services/searchBuilderService", "services/klamlBuilderService"], 
-    function (ko, system, ValidationService, searchBuilderService, klamlBuilderService) {
+define(["knockout", 
+		"system", 
+		"domain/keywordConjunction",
+		"services/keywordValidationService", 
+		"services/searchBuilderService", 
+		"services/klamlBuilderService"], 
+    function (ko, system, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
         var searchBuilderViewModel = function () {
             var self = this,
-                resultsUrl = "#results";
+                resultsUrl = "#results",
+				klamlService = new klamlBuilderService();
             
+			self.wordConjunction = ko.observable(keywordConjunction.and);
+			self.keywordConjunction = keywordConjunction;
             self.search = ko.observable("");
             self.klaml = null;
             
@@ -12,7 +20,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             self.searchBuilderDataSource = ko.observableArray();
             
             self.keyword = ko.observable("");
-            
+			
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());
             });
@@ -87,9 +95,7 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }    
             
             self.executeSearch = function (e) {
-                var service = klamlBuilderService();
-                
-                var klaml = service.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.search().query);
+                var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
                 
                 if(klaml)  
                 {
@@ -109,11 +115,11 @@ define(["knockout", "system", "services/keywordValidationService", "services/sea
             }
 		
     		self.afterShow = function (e) {
-    			var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+    			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
     				
     			system.logVerbose("resultsViewModel afterShow");
     			
-    			tabstrip.clear();
+    			//tabstrip.clear();
             }
             
 			self.clearKeyword = function () {

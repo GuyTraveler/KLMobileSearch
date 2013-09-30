@@ -1,16 +1,23 @@
-define(["knockout", "system", 'services/keywordValidationService', "services/imaging/serverSavedSearchesService"], 
-    function (ko, system, ValidationService, serverSavedSearchesService) {
+define(["knockout", 
+		"system", 
+		"domain/keywordConjunction",
+		"services/keywordValidationService", 
+		"services/imaging/serverSavedSearchesService",
+		"framework/knockout/kendoSwitch"], 
+    function (ko, system, keywordConjunction, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
                 searchBuilderUrl = "#searchBuilder",
                 resultsUrl = "#results";            
             
+			self.wordConjunction = ko.observable(keywordConjunction.and);
+			self.keywordConjunction = keywordConjunction;
             self.searchDataSource = ko.observableArray(null);
             
             self.selectedSearch = null;
             self.site = ko.observable("");          
-            self.keyword = ko.observable("");
-            
+            self.keyword = ko.observable("");            
+						
             self.isKeywordValid = ko.computed(function () {
                 return ValidationService.validateKeyword(self.keyword());
             });
@@ -20,7 +27,8 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
                 
                 if(searches)
                 {
-                    self.searchDataSource(searches);
+					self.setSelectedSearch(null);  //clear selected search before reloading to make sure we don't accidentally set it again
+                    self.searchDataSource(searches);					
                 }
             }
             
@@ -34,7 +42,7 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
                 });
               
                 loadServerSavedSearchesPromise.fail(function (error) {
-                    // failed to load and parse server saved searches
+                    system.logWarning("Error loading saved searches: " + error);
                 });            
             }
 			
@@ -74,11 +82,9 @@ define(["knockout", "system", 'services/keywordValidationService', "services/ima
             }
             
             self.afterShow = function (e) {
-                var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-				
 				system.logVerbose("savedSearchViewModel afterShow");
-				
-				tabstrip.clear();
+                //var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
+				//tabstrip.clear();				
             }
             
             self.hide = function (e) {

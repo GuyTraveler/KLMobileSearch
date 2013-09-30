@@ -22,7 +22,7 @@ define(["knockout", "system"],
 				
                 system.logVerbose("documentViewModel afterShow");
 				
-				tabstrip.clear();
+				//tabstrip.clear();
             }
             
             self.hide = function (e) {

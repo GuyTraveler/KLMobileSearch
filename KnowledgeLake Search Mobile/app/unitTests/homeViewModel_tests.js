@@ -194,9 +194,27 @@ define(['require',
                         
             //assert
             QUnit.equal(vm.selectedSite, testData);
+			QUnit.equal(vm.navBarVisible(), true);
         });
         
-        QUnit.test("test homeViewModel isSelectedSite if navBarVisible false", function () {
+        QUnit.test("test homeViewModel setSelectedSite with suppressnavbar keeps navbar invisible", function () {
+            //arrange
+            var vm;
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            
+            vm = new homeViewModel();
+            vm.selectedSite = siteData;
+            
+            //act
+            vm.setSelectedSite(testData, null, true);
+                        
+            //assert
+            QUnit.equal(vm.selectedSite, testData);
+			QUnit.equal(vm.navBarVisible(), false);
+        });
+        
+        QUnit.test("test homeViewModel isSelectedSite if http://docs.kendoui.com/getting-started/mobile/switch false", function () {
             //arrange
             var vm,
                 siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
@@ -211,13 +229,13 @@ define(['require',
             QUnit.equal(result, false);
         });
         
-        QUnit.test("test homeViewModel isSelectedSite if navBarVisible true", function () {
+        QUnit.test("test homeViewModel isSelectedSite if hasHighlightedSite true", function () {
             //arrange
             var vm,
                 siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.navBarVisible(true);
+            vm.hasHighlightedSite(true);
             vm.selectedSite = siteData;
             
             //act
