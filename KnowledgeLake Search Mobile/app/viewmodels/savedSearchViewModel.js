@@ -2,8 +2,7 @@ define(["knockout",
 		"system", 
 		"domain/keywordConjunction",
 		"services/keywordValidationService", 
-		"services/imaging/serverSavedSearchesService",
-		"framework/knockout/kendoSwitch"], 
+		"services/imaging/serverSavedSearchesService"], 
     function (ko, system, keywordConjunction, ValidationService, serverSavedSearchesService) {
         var savedSearchViewModel = function () {
             var self = this,
