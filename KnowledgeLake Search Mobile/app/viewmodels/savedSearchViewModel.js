@@ -49,7 +49,7 @@ define(["knockout",
 				system.logVerbose("clearing keyword");
 				self.keyword("");
 				
-				$("#keywordInput").focus();
+				$("#savedSearchKeywordInput").focus();
 				system.showSoftKeyboard();
 			}
             
@@ -60,7 +60,7 @@ define(["knockout",
             self.beforeShow = function (e) {
                 system.logVerbose("savedSearchViewModel beforeShow");
                 
-                self.searchDataSource([]);
+            	self.searchDataSource([]);
                 
                 if(homeViewModel.selectedSite)
                 {                    
@@ -73,17 +73,15 @@ define(["knockout",
                     }
                     
                     self.LoadSearchData();
-                }
+                }    
             }
             
             self.show = function (e) {
-                system.logVerbose("savedSearchViewModel show");
+                system.logVerbose("savedSearchViewModel show");								
             }
             
             self.afterShow = function (e) {
 				system.logVerbose("savedSearchViewModel afterShow");
-                //var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-				//tabstrip.clear();				
             }
             
             self.hide = function (e) {

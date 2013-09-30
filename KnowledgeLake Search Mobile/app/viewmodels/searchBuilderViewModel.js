@@ -126,7 +126,7 @@ define(["knockout",
 				system.logVerbose("clearing keyword");
 				self.keyword("");
 				
-				$("#keywordInput").focus();
+				$("#searchBuilderKeywordInput").focus();
 				system.showSoftKeyboard();
 			}
             

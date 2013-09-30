@@ -107,6 +107,12 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 				window.plugins.SoftKeyBoard.show();
             }
         },
+		hideSoftKeyboard: function () {
+			//android
+			if (window.plugins && window.plugins.SoftKeyBoard) {
+				window.plugins.SoftKeyBoard.hide();
+            }
+        },
 		isToastVisible: function() {
 			return isToastUp;
         }
