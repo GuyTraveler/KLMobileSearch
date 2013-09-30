@@ -24,8 +24,7 @@ require(["config"], function (config) {
              "framework/knockout/majorVersionToSiteIcon", 
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
-			 "framework/knockout/kendoListView",
-			 "framework/knockout/kendoSwitch"], 
+			 "framework/knockout/kendoListView"], 
     function($, ko, kendo, system, extensions, logLevel, homeViewModel) {
         var testHref = "test.html?coverage=true";                
         
