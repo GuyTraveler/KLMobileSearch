@@ -29,6 +29,15 @@ define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function (
             return self.executeSoapMethodAsync("GetListItems", parameters);
         }
         
+        self.GetListAndView = function (listName, viewName) {
+            var parameters = [
+                new keyValuePair("listName", listName),
+				new keyValuePair("viewName", viewName)
+            ];
+            
+            return self.executeSoapMethodAsync("GetListAndView", parameters);
+        }
+        
         return self;
     };
     
