@@ -82,7 +82,7 @@ define(["jquery",
 					property,
 					controlType,
 					choices,
-					klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length,
+					klamlSearchFieldPropertiesLength = klamlSearchFieldProperties ? klamlSearchFieldProperties.length : 0,
 					searchPropertiesLength;
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
@@ -127,6 +127,7 @@ define(["jquery",
 	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition);
 	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
 	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
+							newSearchProperty.conjunctionVisible(i !== klamlSearchFieldPropertiesLength - 1);
 	                        
 	                        searchProperties.push(newSearchProperty);
 	                        break;

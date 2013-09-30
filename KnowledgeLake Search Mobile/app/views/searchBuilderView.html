@@ -43,12 +43,11 @@
 		</li>
 	</ul>
 	
-	<!-- enable: $root.search.type === 0 -->
-	<p class="align-right">
-		<input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: name }, enable: $root.search.type === 0" />
+	<p class="align-right" data-bind="visible: conjunctionVisible">
+		<input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
 		<span data-bind="text: system.strings.And"></span>
 		
-		<input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: name }, enable: $root.search.type === 0" />
+		<input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
 		<span data-bind="text: system.strings.Or"></span>
 	</p> 
 </div>

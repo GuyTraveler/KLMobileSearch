@@ -68,7 +68,7 @@ define(["jquery",
                     field = field.replace("{type}", searchProperty.dataType);
                     field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
                     field = field.replace("{condition}", searchProperty.value());
-                    field = field.replace("{conjunction}", searchProperty.conjunction());
+                    field = field.replace("{conjunction}", keywordConjunction.boolToConjunction(searchProperty.conjunction()));
                     
                     return field;
                 }

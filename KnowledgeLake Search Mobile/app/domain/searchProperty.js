@@ -15,6 +15,10 @@ define(["knockout"], function (ko) {
         self.selectedOperator = ko.observable("");
         self.selectedProperty = ko.observable(self.name);
         self.value = ko.observable("");
+		self.key = ko.computed(function () {
+			return (self.name ? self.name : "") + self.selectedOperator();
+        });
+		self.conjunctionVisible = ko.observable(true);
               
         return self;
     };
