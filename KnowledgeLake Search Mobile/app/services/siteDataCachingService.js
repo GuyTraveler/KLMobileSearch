@@ -167,7 +167,7 @@ define(["jquery",
                 for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.btoa)                    
-                        sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, window.device.uuid);
+                        sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, system.deviceUUID);
                 }
                 
                 encodedSites = sites;
@@ -186,7 +186,7 @@ define(["jquery",
                 for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.atob)                    
-                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, window.device.uuid);
+                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, system.deviceUUID);
                 }
                 
                 decodedSites = sites; 
