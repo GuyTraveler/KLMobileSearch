@@ -6,6 +6,7 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants",
         
             self.getSearchFieldPropertiesFromKlaml = function (klaml) {
                 var klamlSearchFieldProperties = [],
+					idProperty = "id",
                     nameProperty = "displayName",
                     operatorProperty = "operator",
                     conditionProperty = "condition",
@@ -23,7 +24,8 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants",
                         {
                             if(fields[i])
                             {
-                                klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(nameProperty), 
+                                klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(idProperty),
+																						$(fields[i]).attr(nameProperty), 
                                                                                         self.GetSearchPropertyOperator($(fields[i]).attr(operatorProperty)), 
                                                                                         $(fields[i]).attr(conditionProperty), 
                                                                                         ($(fields[i]).attr(conjunctionProperty)).parseConjunctionToBool()));

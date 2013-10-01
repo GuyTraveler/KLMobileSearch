@@ -13,6 +13,8 @@ define(["jquery", "domain/keyValuePair", "services/soapServiceBase", "extensions
                 new keyValuePair("languageName", navigator.language)
 			];
 			
+			system.logVerbose("Querying FacetQueryService with klaml: " + klaml);
+			
 			return self.executeSoapMethodAsync("FacetSearch", parameters);
         }
         

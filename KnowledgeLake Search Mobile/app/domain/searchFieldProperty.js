@@ -1,7 +1,8 @@
 define([], function () {
-    var searchFieldProperty = function(name, operator, condition, conjunction) {
+    var searchFieldProperty = function(id, name, operator, condition, conjunction) {
         var self = this;
         
+		self.id = id;
         self.name = name; 
         self.operator = operator;
         self.condition = condition;
