@@ -11,8 +11,8 @@
 <ul data-role="listview" data-style="inset">
 	<li>
 		<div class="keywordContainer">
-			<div id="keywordInputContainer" class="deleteicon">
-				<input id="keywordInput" type="search"
+			<div class="keywordInputContainer deleteicon">
+				<input id="searchBuilderKeywordInput" type="search"
     	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
 				<a data-bind="click: clearKeyword"></a>
             </div>

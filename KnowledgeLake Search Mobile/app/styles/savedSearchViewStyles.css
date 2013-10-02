@@ -4,7 +4,7 @@ div.keywordContainer {
 	position: relative;
 }
 
-#keywordInputContainer {
+.keywordInputContainer {
 	position: absolute;
 	left: 0em;
 	width: 85%!important;

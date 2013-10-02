@@ -3,12 +3,6 @@ body {
 }
 
 /*fix for Samsung devices to not show yellow/orange borders on inputs */
-*:active,
-*:focus,
-*:visited,
-*::active,
-*::focus,
-*::visited,
 input:active,
 input:focus,
 input:visited,

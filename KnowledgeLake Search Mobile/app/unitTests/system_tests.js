@@ -221,7 +221,7 @@ define(['framework/system',
 			//arrange
 			
 			//act
-			window.device = null;
+			system.deviceUUID = null;
 			
 			//assert
 			QUnit.equal(system.isRunningInSimulator(), true);
@@ -232,11 +232,10 @@ define(['framework/system',
 			var testDeviceId = "e0101010d38bde8e6740011221af335301010333";
 						
 			//act
-			window.device = {
-				uuid: testDeviceId
-            };
+			system.deviceUUID = testDeviceId;
 			
 			//assert
+			QUnit.equal(system.deviceUUID, testDeviceId);
 			QUnit.equal(system.isRunningInSimulator(), true);
         });
 		
@@ -245,9 +244,7 @@ define(['framework/system',
 			var testDeviceId = "e0101010d38bde8e67400301010333";
 						
 			//act
-			window.device = {
-				uuid: testDeviceId
-            };
+			system.deviceUUID = testDeviceId;
 			
 			//assert
 			QUnit.equal(system.isRunningInSimulator(), false);
@@ -277,5 +274,15 @@ define(['framework/system',
 			//assert
 			QUnit.ok(window.plugins);
 			QUnit.ok(window.plugins.SoftKeyBoard);
+        });
+		
+		QUnit.test("RESET DEVICE UUID TO DEFAULT", function () {
+			//arrange
+			
+			//act
+			system.deviceUUID = window.device.uuid;
+			
+			//assert
+			QUnit.ok(system.deviceUUID);
         });
     });

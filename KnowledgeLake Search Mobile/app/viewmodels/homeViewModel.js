@@ -69,14 +69,14 @@ define(["knockout",
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");  
-                
-                if(window.App)
-                    self.LoadSiteData();             
+                system.logVerbose("homeViewModel beforeShow");                                 
             }
             
             self.show = function (e) {
                 system.logVerbose("homeViewModel show");
+				
+				if(window.App)
+                    self.LoadSiteData();             
             }
             
             self.afterShow = function (e) {

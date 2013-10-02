@@ -2,7 +2,8 @@
 define(['domain/searchFieldProperty',
 		'unitTests/unitTestSettings'],
     function (searchFieldProperty, TestSettings) {
-		var name = "test",
+		var id = "hello",
+			name = "test",
 			operator = "Contains",
 			condition = "x eq x",
 			conjunction = "Or";
@@ -39,11 +40,12 @@ define(['domain/searchFieldProperty',
 			var s;
 			
 			//act
-			s = new searchFieldProperty(name);
+			s = new searchFieldProperty(id);
 
 			//assert
 			QUnit.ok(s);
-			QUnit.equal(s.name, name);
+			QUnit.equal(s.id, id);
+			QUnit.equal(s.name, null);
 			QUnit.equal(s.operator, null);
 			QUnit.equal(s.condition, null);
 			QUnit.equal(s.conjunction, null);
@@ -54,12 +56,13 @@ define(['domain/searchFieldProperty',
 			var s;
 			
 			//act
-			s = new searchFieldProperty(name, operator);
+			s = new searchFieldProperty(id, name);
 
 			//assert
 			QUnit.ok(s);
+			QUnit.equal(s.id, id);
 			QUnit.equal(s.name, name);
-			QUnit.equal(s.operator, operator);
+			QUnit.equal(s.operator, null);
 			QUnit.equal(s.condition, null);
 			QUnit.equal(s.conjunction, null);
         });
@@ -69,13 +72,14 @@ define(['domain/searchFieldProperty',
 			var s;
 			
 			//act
-			s = new searchFieldProperty(name, operator, condition);
+			s = new searchFieldProperty(id, name, operator);
 
 			//assert
 			QUnit.ok(s);
+			QUnit.equal(s.id, id);
 			QUnit.equal(s.name, name);
 			QUnit.equal(s.operator, operator);
-			QUnit.equal(s.condition, condition);
+			QUnit.equal(s.condition, null);
 			QUnit.equal(s.conjunction, null);
         });
 		
@@ -84,10 +88,27 @@ define(['domain/searchFieldProperty',
 			var s;
 			
 			//act
-			s = new searchFieldProperty(name, operator, condition, conjunction);
+			s = new searchFieldProperty(id, name, operator, condition);
 
 			//assert
 			QUnit.ok(s);
+			QUnit.equal(s.id, id);
+			QUnit.equal(s.name, name);
+			QUnit.equal(s.operator, operator);
+			QUnit.equal(s.condition, condition);
+			QUnit.equal(s.conjunction, null);
+        });
+		
+		QUnit.test("test searchFieldProperty instantiates properly with 5 parameters", function () {
+			//arrange
+			var s;
+			
+			//act
+			s = new searchFieldProperty(id, name, operator, condition, conjunction);
+
+			//assert
+			QUnit.ok(s);
+			QUnit.equal(s.id, id);
 			QUnit.equal(s.name, name);
 			QUnit.equal(s.operator, operator);
 			QUnit.equal(s.condition, condition);

@@ -122,7 +122,7 @@ define(["jquery",
 								                                      property.description,
 								                                      property.dataType,
 								                                      property.name,
-								                                      property.id,
+								                                      (klamlSearchFieldProperties[i].id ? klamlSearchFieldProperties[i].id : ""),
 								                                      property.operators());
 	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition);
 	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);

@@ -62,13 +62,13 @@ define(["jquery",
                 {
                     var field = masterMetaDataWhereTemplate;
                                     
-                    // field.replace("{id}", searchProperty.id);
-					field = field.replace(/{id}/g, "");
+					field = field.replace(/{id}/g, searchProperty.id);
                     field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
                     field = field.replace("{type}", searchProperty.dataType);
+					
                     field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
                     field = field.replace("{condition}", searchProperty.value());
-                    field = field.replace("{conjunction}", keywordConjunction.boolToConjunction(searchProperty.conjunction()));
+                    field = field.replace("{conjunction}", searchProperty.conjunction());
                     
                     return field;
                 }

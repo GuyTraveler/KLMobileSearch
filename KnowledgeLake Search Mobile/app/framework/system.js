@@ -1,6 +1,7 @@
 define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) {
 	var messageDisplayTime = 3000,
-		isToastUp = false;
+		isToastUp = false,
+		deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "";
 	
     return {
         logLevel: logLevel.Error,
@@ -60,6 +61,7 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
             
             return log;
         },
+		deviceUUID: deviceID,
 		isRunningInSimulator: function () {
             // device uuids for simulated devices
             var iPhone = "e0101010d38bde8e6740011221af335301010333";
@@ -69,16 +71,13 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
             var AndroidTablet = "e0101010d38bde8e6740011221af335301010333";
                       
             //for normal browsers
-			if (!window.device) return true;
-			
-			// current device uuid
-            var deviceUUID = device.uuid;
-            
-            if(deviceUUID === iPhone ||
-                deviceUUID === iPhone5 ||
-                deviceUUID === iPad ||
-                deviceUUID === Android ||
-                deviceUUID === AndroidTablet)
+			if (!this.deviceUUID) return true;
+		
+            if(this.deviceUUID === iPhone ||
+                this.deviceUUID === iPhone5 ||
+                this.deviceUUID === iPad ||
+                this.deviceUUID === Android ||
+                this.deviceUUID === AndroidTablet)
             {
                 return true;
             }
@@ -105,6 +104,12 @@ define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) 
 			//android
 			if (window.plugins && window.plugins.SoftKeyBoard) {
 				window.plugins.SoftKeyBoard.show();
+            }
+        },
+		hideSoftKeyboard: function () {
+			//android
+			if (window.plugins && window.plugins.SoftKeyBoard) {
+				window.plugins.SoftKeyBoard.hide();
             }
         },
 		isToastVisible: function() {
