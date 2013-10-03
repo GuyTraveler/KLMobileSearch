@@ -16,7 +16,7 @@ require(["config"], function (config) {
     function($, ko, kendo, system, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [testRootPath + "system_tests"/*,
+			testsToRun = [testRootPath + "system_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
                           testRootPath + "homeViewModel_tests",
@@ -61,7 +61,7 @@ require(["config"], function (config) {
 						  testRootPath + "searchType_tests",
 						  testRootPath + "site_tests",
                           testRootPath + "klamlBuilderService_tests",
-						  testRootPath + "searchProperty_tests"*/
+						  testRootPath + "searchProperty_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
