@@ -158,7 +158,7 @@ define(['require',
             QUnit.ok(vm);
         });
        
-        QUnit.asyncTest("test resultsViewModel show keywordSearchAsync (AND)", function () {
+        QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (AND)", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -173,7 +173,7 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            keywordSearchPromise = vm.show();
+            keywordSearchPromise = vm.afterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -190,7 +190,7 @@ define(['require',
             });
         });
 		
-		QUnit.asyncTest("test resultsViewModel show keywordSearchAsync (OR)", function () {
+		QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (OR)", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -205,7 +205,7 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            keywordSearchPromise = vm.show();
+            keywordSearchPromise = vm.afterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -222,7 +222,7 @@ define(['require',
             });
         });
        
-        QUnit.asyncTest("test resultsViewModel show propertySearchAsync", function () {
+        QUnit.asyncTest("test resultsViewModel afterShow propertySearchAsync", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -239,7 +239,7 @@ define(['require',
             window.searchBuilderViewModel = searchBuilderVM;
             
             //act
-            propertySearchPromise = vm.show();
+            propertySearchPromise = vm.afterShow();
                         
             //assert
             QUnit.ok(vm);

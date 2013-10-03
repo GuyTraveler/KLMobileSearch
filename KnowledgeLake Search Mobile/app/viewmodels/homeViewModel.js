@@ -40,9 +40,15 @@ define(["knockout",
                     }
                     else 
                     {
-                        var loadSitesPromise = SiteDataCachingService.LoadSitesAsync();
+                        var loadSitesPromise;
+						
+						self.isBusy(true);
+						
+						loadSitesPromise = SiteDataCachingService.LoadSitesAsync()
                       
                         loadSitesPromise.done(function (result) {
+							self.isBusy(false);
+							
                             if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
                                 self.SetDataSource(result.response);
                             
@@ -51,6 +57,8 @@ define(["knockout",
                         });
                       
                         loadSitesPromise.fail(function (error) {
+							self.isBusy(false);
+							
                             if (error.response === system.strings.FileNotFound) {
                                 window.App.navigate(configureSiteUrl);
                             }
@@ -77,10 +85,14 @@ define(["knockout",
             }
             
             self.show = function (e) {
-                system.logVerbose("homeViewModel show");
+                system.logVerbose("homeViewModel show");							   
+            }
+			
+			self.afterShow = function (e) {
+				system.logVerbose("homeViewModel.afterShow");
 				
 				if(window.App)
-                    self.LoadSiteData();             
+                    self.LoadSiteData();          	
             }
             
             self.hide = function (e) {

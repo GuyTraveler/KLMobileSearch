@@ -96,18 +96,10 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, sear
 				self.executeSearch();
         }
 	  
-        self.init = function (e) {
-            system.logVerbose("searchViewModel init");
-        }
-          
-        self.beforeShow = function (e) {
-            system.logVerbose("searchBuilderViewModel beforeShow");                  
-        }
-        
-        self.show = function (e) {
-            system.logVerbose("searchBuilderViewModel show");
+		self.afterShow = function (e) {
+			system.logVerbose("resultsViewModel afterShow");
 			
-            if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
+			if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
             {                                    
                 self.keyword("");
                 self.searchBuilderDataSource([]);
@@ -117,18 +109,6 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, sear
                                     
                 self.BuildSearchProperties();                    
             }
-        }
-        
-        self.hide = function (e) {
-            system.logVerbose("searchBuilderViewModel hide");
-        }    
-        
-		self.afterShow = function (e) {
-			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-				
-			system.logVerbose("resultsViewModel afterShow");
-			
-			//tabstrip.clear();
         }
         
 		self.clearKeyword = function () {

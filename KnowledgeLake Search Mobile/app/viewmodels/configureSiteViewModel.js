@@ -349,15 +349,15 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
 			self.validateSiteUrl();
 			return true;
         };
-					
-		self.show = function (e) {
-            if(homeViewModel.selectedSite)
+		
+		self.afterShow = function (e) {
+			system.logVerbose("configureSiteViewModel.afterShow");
+			
+			if(homeViewModel.selectedSite)
                 self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
             else                    
                 self.clearPopulatedConfigureSiteViewModel();
-        }					
-		
-		self.afterShow = function (e) {
+			
 			if (homeViewModel.selectedSite) {
 				$("#siteTitleText").focus();	
             }

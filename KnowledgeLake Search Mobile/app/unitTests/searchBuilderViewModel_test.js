@@ -136,20 +136,8 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test searchBuilderViewModel beforeShow", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new searchBuilderViewModel();
-            vm.beforeShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test searchBuilderViewModel show", function () {
+       
+        QUnit.test("test searchBuilderViewModel afterShow", function () {
             //arrange
             var vm,
                 savedSearchVM;            
@@ -162,38 +150,12 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            vm.show();
+            vm.afterShow();
                         
             //assert
             QUnit.equal(vm.search(), savedSearchVM.selectedSearch);
         });  
-        
-        QUnit.test("test searchBuilderViewModel afterShow", function () {
-            //arrange
-            var vm, 
-                object = {"view": {"footer": {"find": function (control) { return {"data": function(control) { return {"clear": function () {}}}}}}}};
-            
-            vm = new searchBuilderViewModel();
-            
-            //act
-            vm.afterShow(object);
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test searchBuilderViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new searchBuilderViewModel();
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
+       
         QUnit.test("test searchBuilderViewModel onSearchKeyUp", function () {
             //arrange
             var vm,

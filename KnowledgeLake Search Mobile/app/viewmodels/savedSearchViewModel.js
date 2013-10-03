@@ -61,15 +61,11 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, serv
 			$("#savedSearchKeywordInput").focus();
 			system.showSoftKeyboard();
 		}
-        
-        self.init = function (e) {
-            system.logVerbose("savedSearchViewModel init");
-        }
-        
-        self.beforeShow = function (e) {
-            system.logVerbose("savedSearchViewModel beforeShow");
-            
-        	self.searchDataSource([]);
+      
+        self.afterShow = function (e) {
+			system.logVerbose("savedSearchViewModel afterShow");
+			
+			self.searchDataSource([]);
             
             if(homeViewModel.selectedSite)
             {                    
@@ -83,18 +79,6 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, serv
                 
                 self.LoadSearchData();
             }    
-        }
-        
-        self.show = function (e) {
-            system.logVerbose("savedSearchViewModel show");								
-        }
-        
-        self.afterShow = function (e) {
-			system.logVerbose("savedSearchViewModel afterShow");
-        }
-        
-        self.hide = function (e) {
-            system.logVerbose("savedSearchViewModel hide");
         }
         
         self.setSelectedSearch = function (selection, event) {

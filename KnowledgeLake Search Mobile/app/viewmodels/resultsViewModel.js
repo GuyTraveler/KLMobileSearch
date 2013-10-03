@@ -81,8 +81,12 @@ define(["knockout",
 		
 		self.show = function (e) {
 			system.logVerbose("resultsViewModel show");
+        }
+        	
+		self.afterShow = function (e) {
+			system.logVerbose("resultsViewModel afterShow");
 			
-            if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
+			if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
             {                
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
                     return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());
@@ -94,7 +98,7 @@ define(["knockout",
                     return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
             }
         }
-        
+            
         self.hide = function (e) {            
             self.setSelectedResult(null);
             self.SetDataSource([]);
@@ -254,15 +258,7 @@ define(["knockout",
             
             return dfd.promise();
         }
-		
-		self.afterShow = function (e) {
-			//system.logVerbose("resultsViewModel afterShow");
-			
-			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-			
-			//tabstrip.clear();
-        }
-            
+	
         return self;
     };
     
