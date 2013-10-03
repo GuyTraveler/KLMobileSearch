@@ -86,6 +86,9 @@ define(['framework/system',
             QUnit.ok(system.logFatal("test") === true);
         }); 
 		
+		//TODO 10/3: add tests for getLogs and clearLogs
+		
+		
 		QUnit.test("test system.urlContainsClaimsSignInIndicator works with wa=wsignin1.0", function () {
 			//arrange
 			var url = "http://asdfsdfswa=wsignin1.0",
