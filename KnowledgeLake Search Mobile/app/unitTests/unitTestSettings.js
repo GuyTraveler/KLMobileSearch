@@ -83,5 +83,6 @@ define({
     testSearchGreaterThan: ">",
     testSearchGreaterThanOrEqual: ">=",
     testChoices: ["Choice 1", "Choice 2", "Choice 3"],
-    testOperators: ["=", "Like", "Starts With"]
+    testOperators: ["=", "Like", "Starts With"],
+	testMessage: "A status message"
 });

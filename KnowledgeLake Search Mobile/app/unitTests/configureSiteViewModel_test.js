@@ -626,7 +626,7 @@ define(["system",
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
         });
         
-        QUnit.test("test configureSiteViewModel beforeShow (with selected site)", function () {
+        QUnit.test("test configureSiteViewModel show (with selected site)", function () {
             //arrange
             var configureSiteVM,
             	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
@@ -637,7 +637,7 @@ define(["system",
             //act 
 			window.homeViewModel = homeVM;
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.beforeShow();
+            configureSiteVM.show();
                         
             //assert
             QUnit.equal(configureSiteVM.fullUrl().toUpperCase(), siteData.url.toUpperCase());
@@ -650,14 +650,14 @@ define(["system",
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
         });
 		
-		QUnit.test("test configureSiteViewModel beforeShow (NO selected site)", function () {
+		QUnit.test("test configureSiteViewModel show (NO selected site)", function () {
             //arrange
             var configureSiteVM;
                         			
             //act 
 			window.homeViewModel = {};
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.beforeShow();
+            configureSiteVM.show();
                         
             //assert
             QUnit.equal(configureSiteVM.url(), TestSettings.defaultUrlText);

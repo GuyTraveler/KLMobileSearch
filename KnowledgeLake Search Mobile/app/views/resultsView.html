@@ -4,13 +4,13 @@
         <button class="nav-button" data-align="right"
 				data-role="button" data-icon="compose" 
 				data-bind="click: editProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
-			<span data-bind="text: system.strings.editProperties"></span>
+			<span data-bind="text: strings().editProperties"></span>
         </button>
     </div>
 	
 	<div id="resultPageHeading">
 		<h4 data-bind="visible: !isBusy(), text: resultCountString"></h4>
-		<h4 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: system.strings.searching"></h4>
+		<h4 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: strings().searching"></h4>
     </div>
 </header>
 
@@ -40,7 +40,7 @@
 <!--<footer data-role="footer">
     <div data-role="tabstrip" data-selected-index="100">
         <a href="#home" data-icon="home">
-            <span data-bind="text: system.strings.homeLinkText"></span>
+            <span data-bind="text: strings().homeLinkText"></span>
         </a>
     </div>
 </footer>-->

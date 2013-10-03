@@ -13,7 +13,7 @@
 		<div class="keywordContainer">
 			<div class="keywordInputContainer deleteicon">
 				<input id="searchBuilderKeywordInput" type="search"
-    	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: system.strings.keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
+    	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: strings().keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
 				<a data-bind="click: clearKeyword"></a>
             </div>
 			
@@ -26,10 +26,10 @@
 
 <p class="align-right">
 	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.and, checked: wordConjunction" />
-	<span data-bind="text: system.strings.And"></span>
+	<span data-bind="text: strings().And"></span>
 	
 	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.or, checked: wordConjunction" />
-	<span data-bind="text: system.strings.Or"></span>
+	<span data-bind="text: strings().Or"></span>
 </p> 
 
 
@@ -45,10 +45,10 @@
 	
 	<p class="align-right" data-bind="visible: conjunctionVisible">
 		<input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
-		<span data-bind="text: system.strings.And"></span>
+		<span data-bind="text: strings().And"></span>
 		
 		<input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
-		<span data-bind="text: system.strings.Or"></span>
+		<span data-bind="text: strings().Or"></span>
 	</p> 
 </div>
 
@@ -59,7 +59,7 @@
 <!--<footer data-role="footer">
     <div data-role="tabstrip" data-selected-index="100">
         <a href="#home" data-icon="home">
-            <span data-bind="text: system.strings.homeLinkText"></span>
+            <span data-bind="text: strings().homeLinkText"></span>
         </a>
     </div>
 </footer>-->

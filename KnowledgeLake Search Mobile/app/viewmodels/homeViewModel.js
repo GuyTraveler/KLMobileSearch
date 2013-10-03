@@ -1,13 +1,17 @@
 define(["knockout", 
         "system", 
         "jquery", 
+		"viewmodels/viewModelBase",
         "ISiteDataCachingService"], 
-    function (ko, system, $, SiteDataCachingService) {
+    function (ko, system, $, viewModelBase, SiteDataCachingService) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
                 searchUrl = "#savedSearch";
                        
+			self.prototype = Object.create(viewModelBase.prototype);
+        	viewModelBase.call(self);
+			
             self.siteDataSource = ko.observableArray([]);
             
             self.selectedSite = null;
@@ -60,8 +64,8 @@ define(["knockout",
             }
             
             self.init = function (e) {
-                system.logVerbose("homeViewModel init");
-                
+				system.logVerbose("homeViewModel.init");
+				
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
                         self.LoadSiteData();
@@ -77,10 +81,6 @@ define(["knockout",
 				
 				if(window.App)
                     self.LoadSiteData();             
-            }
-            
-            self.afterShow = function (e) {
-                system.logVerbose("homeViewModel afterShow");
             }
             
             self.hide = function (e) {
@@ -133,22 +133,26 @@ define(["knockout",
                     // prompt before removal if yes proceed with deletion
                     var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite);
                     // add the removal of associated searches ... must perform a loadsearches 
-                      
-                    removeSitePromise.done(function (result) {
+                    
+					removeSitePromise.done(function () {
+						system.showToast(system.strings.DeleteSiteSuccess);
+                    });
+					
+                    removeSitePromise.fail(function (error) {
+                        if (error.response === system.strings.InvalidSite) {
+                            system.showToast(system.strings.InvalidSite);
+                        }
+                        else {
+                            system.showToast(system.strings.DeleteSiteFailed);
+                        }
+                    });
+					  
+                    removeSitePromise.always(function (result) {
                         self.LoadSiteData();
                         
                         self.setSelectedSite(null);
                     });
                   
-                    removeSitePromise.fail(function (error) {
-                        if (error.response === system.strings.InvalidSite) {
-                            // site does not exist
-                        }
-                        else {
-                            // critical error removing site data
-                            // recovery options? modal dialog?
-                        }
-                    });
                 }
             }
             

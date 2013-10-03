@@ -14,6 +14,7 @@ require(["config"], function (config) {
 			 "extensions",
              "framework/logLevel",
              //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
+			 "viewmodels/rootViewModel",
              "viewmodels/homeViewModel",
              "viewmodels/configureSiteViewModel",
              "viewmodels/savedSearchViewModel",
@@ -25,7 +26,7 @@ require(["config"], function (config) {
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
 			 "framework/knockout/kendoListView"], 
-    function($, ko, kendo, system, extensions, logLevel, homeViewModel) {
+    function($, ko, kendo, system, extensions, logLevel, rootViewModel) {
         var testHref = "test.html?coverage=true";                
         
         if (config.isQunit && window.location.href.indexOf(testHref) < 0) {
@@ -33,10 +34,9 @@ require(["config"], function (config) {
         }
            
         system.setLogLevel(config.logLevel);
-        window.system = system;   
         window.AppLoaded = ko.observable(false);
           
-        ko.applyBindings(null, document.body);
+        ko.applyBindings(new rootViewModel(), document.body);
                 
         $(document).ready(function () {
             system.logVerbose("DOM is ready - waiting for device"); 
