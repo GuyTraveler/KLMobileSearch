@@ -5,11 +5,11 @@ define(["domain/keyValuePair",
 		var messageDisplayTime = 3000,
 			isToastUp = false,
 			deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "",
-			logs = [],
-			maxLogSize = 1000;
+			logs = [];
 		
 	    return {
 	        logLevel: logLevel.Error,
+			maxLogSize: 1000,
 	        strings: strings,
 			ajaxTimeout: 15000,
 			urlContainsClaimsSignInIndicator: function (url) {
@@ -43,7 +43,7 @@ define(["domain/keyValuePair",
 	            if (shouldLog) {
 					console.log(msg);	
 					logs.push(new keyValuePair(logLevel.Verbose, msg));
-					logs.splice(0, logs.length - maxLogSize);
+					logs.splice(0, logs.length - this.maxLogSize);
 					
 	            }
 	            
@@ -55,7 +55,7 @@ define(["domain/keyValuePair",
 	            if (shouldLog) {
 					console.debug(msg);
 					logs.push(new keyValuePair(logLevel.Debug, msg));
-					logs.splice(0, logs.length - maxLogSize);
+					logs.splice(0, logs.length - this.maxLogSize);
 				}
 	            
 	            return shouldLog;
@@ -66,7 +66,7 @@ define(["domain/keyValuePair",
 	            if (shouldLog) {
 					console.warn(msg);
 					logs.push(new keyValuePair(logLevel.Warn, msg));
-					logs.splice(0, logs.length - maxLogSize);
+					logs.splice(0, logs.length - this.maxLogSize);
 				}
 	            
 	            return shouldLog;  
@@ -77,6 +77,7 @@ define(["domain/keyValuePair",
 	            if (shouldLog) {
 					console.error(msg);
 					logs.push(new keyValuePair(logLevel.Error, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
 				}
 	            
 	            return shouldLog;
@@ -87,7 +88,7 @@ define(["domain/keyValuePair",
 	            if (shouldLog) {
 					console.error(msg);
 					logs.push(new keyValuePair(logLevel.Fatal, msg));
-					logs.splice(0, logs.length - maxLogSize);
+					logs.splice(0, logs.length - this.maxLogSize);
 				}
 	            
 	            return shouldLog;
