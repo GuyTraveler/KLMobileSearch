@@ -1,9 +1,9 @@
 define(["services/ntlmLogonService", 
 		"services/claimsLogonService",
         "domain/credentialType",
-		"system", 
+		"application", 
         "jquery"],
-	function (ntlmLogonService, claimsLogonService, credentialType, system, $) {		
+	function (ntlmLogonService, claimsLogonService, credentialType, application, $) {		
         var logonServiceFactory = function () {   
             var self = this;
             

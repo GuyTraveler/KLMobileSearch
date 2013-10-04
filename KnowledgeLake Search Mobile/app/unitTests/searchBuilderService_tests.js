@@ -5,7 +5,7 @@ define(["services/searchBuilderService",
         "domain/credential",
         "domain/credentialType",
         "domain/catalogPropertyControlType",
-        "framework/Constants",
+        "domain/Constants",
 		"unitTests/unitTestSettings",
         "knockoutMapping"],
     function (searchBuilderService, site, search, searchType, credential, credentialType, catalogPropertyControlType, Constants, TestSettings, mapping) {

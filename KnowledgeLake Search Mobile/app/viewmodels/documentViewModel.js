@@ -1,7 +1,8 @@
 define(["knockout", 
-		"system",
+		"application",
+		"logger",
 		"viewmodels/viewModelBase"], 
-function (ko, system, viewModelBase) {
+function (ko, application, logger, viewModelBase) {
     var documentViewModel = function () {
         var self = this;
                    
@@ -11,27 +12,27 @@ function (ko, system, viewModelBase) {
         self.documentTitle = ko.observable("PDF");
         
         self.init = function (e) {
-            system.logVerbose("documentViewModel init");
+            logger.logVerbose("documentViewModel init");
         }
         
         self.beforeShow = function (e) {
-            system.logVerbose("documentViewModel beforeShow");
+            logger.logVerbose("documentViewModel beforeShow");
         }
         
         self.show = function (e) {
-            system.logVerbose("documentViewModel show");
+            logger.logVerbose("documentViewModel show");
         }
         
         self.afterShow = function (e) {
 			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
 			
-            system.logVerbose("documentViewModel afterShow");
+            logger.logVerbose("documentViewModel afterShow");
 			
 			//tabstrip.clear();
         }
         
         self.hide = function (e) {
-            system.logVerbose("documentViewModel hide");
+            logger.logVerbose("documentViewModel hide");
         }
         
         return self;

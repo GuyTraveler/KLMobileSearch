@@ -36,13 +36,18 @@ define(["framework/logLevel"], function(logLevel) {
 	   },
 	   map: {              
 		   '*': {
+			   //domain
+			   'application': 'domain/application',
+			   
                //factory
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',
                
                //framework
-			   'system': 'framework/system',
+			   'keyValuePair': 'framework/keyValuePair',
+			   'logLevel': 'framework/logLevel',
 			   'extensions': 'framework/extensions',
+			   'logger': 'framework/logger',
 			   'Uri': 'jsUri',
 			   
                //service locations               

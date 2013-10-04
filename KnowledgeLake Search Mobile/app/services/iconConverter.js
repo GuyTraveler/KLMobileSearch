@@ -1,4 +1,4 @@
-define(["framework/Constants"], function (Constants) {
+define(["domain/Constants"], function (Constants) {
     var iconConverter = function() {
         var self = this;
        

@@ -1,4 +1,5 @@
-define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
+define(["jquery", "keyValuePair", "services/soapServiceBase"], 
+function ($, keyValuePair, soapServiceBase) {
     
     var listsService = function (siteUrl) {
         var self = this,

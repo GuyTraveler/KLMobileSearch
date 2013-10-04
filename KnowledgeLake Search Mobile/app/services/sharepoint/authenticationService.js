@@ -1,8 +1,9 @@
 define(["jquery", 
-		"system",
-		"domain/keyValuePair",
+		"application",
+		"logger",
+		"keyValuePair",
 		"services/soapServiceBase"], 
-	function ($, system, keyValuePair, soapServiceBase) {
+	function ($, application, logger, keyValuePair, soapServiceBase) {
     
     var authenticationService = function (siteUrl) {
         var self = this,
@@ -12,7 +13,7 @@ define(["jquery",
         soapServiceBase.call(self, siteUrl, serviceName);
         
         self.Mode = function (webUrl) {
-			system.logVerbose("authenticationService.Mode called");
+			logger.logVerbose("authenticationService.Mode called");
             return self.executeSoapMethodAsync("Mode", null);
         }
         

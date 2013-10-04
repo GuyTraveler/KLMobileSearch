@@ -1,5 +1,5 @@
-define(["jquery", "system", "domain/result"],
-    function ($, system, result) {
+define(["jquery", "application", "logger", "domain/result"],
+    function ($, application, logger, result) {
 		
 		var soapParsingService = function () {
 			var self = this,
@@ -51,7 +51,7 @@ define(["jquery", "system", "domain/result"],
 			
 			getResultRoot = function (json) {
 				if (!json || !json.QueryExResult || !json.QueryExResult['diffgr:diffgram']) {
-					system.logDebug("results Root not found on JSON object");
+					logger.logDebug("results Root not found on JSON object");
 					return null;
 				}
 				

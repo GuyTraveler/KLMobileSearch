@@ -1,5 +1,5 @@
 /*global QUnit*/
-define(['domain/promiseResponse/promiseResolveResponse'],
+define(['framework/promiseResponse/promiseResolveResponse'],
     function (promiseResolveResponse) {
         QUnit.module("Testing promiseResolveResponse");
 		

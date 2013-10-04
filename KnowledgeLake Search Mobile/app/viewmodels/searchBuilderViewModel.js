@@ -1,11 +1,12 @@
 define(["knockout", 
-		"system", 
+		"application", 
+		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
 		"services/keywordValidationService", 
 		"services/searchBuilderService", 
 		"services/klamlBuilderService"], 
-function (ko, system, viewModelBase, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
+function (ko, application, logger, viewModelBase, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
     var searchBuilderViewModel = function () {
         var self = this,
             resultsUrl = "#results",
@@ -72,7 +73,7 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, sear
             
             buildSearchPromise.fail(function (error) {   
 				self.isBusy(false);
-                system.logError("Error building search properties: " + error);
+                logger.logError("Error building search properties: " + error);
             });
         }
       
@@ -97,7 +98,7 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, sear
         }
 	  
 		self.afterShow = function (e) {
-			system.logVerbose("resultsViewModel afterShow");
+			logger.logVerbose("resultsViewModel afterShow");
 			
 			if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
             {                                    
@@ -112,11 +113,11 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, sear
         }
         
 		self.clearKeyword = function () {
-			system.logVerbose("clearing keyword");
+			logger.logVerbose("clearing keyword");
 			self.keyword("");
 			
 			$("#searchBuilderKeywordInput").focus();
-			system.showSoftKeyboard();
+			application.showSoftKeyboard();
 		}
         
         /*self.addProperty = function () {

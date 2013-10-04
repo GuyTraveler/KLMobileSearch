@@ -1,6 +1,5 @@
 define(["services/encryptionService", 
-		"system", 
-		"jquery"], function (EncryptionService, system, $) {
+		"jquery"], function (EncryptionService, $) {
         QUnit.module("services/encryptionService");
 
         QUnit.test("test encrypt", function () {

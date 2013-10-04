@@ -9,13 +9,15 @@ require(["config"], function (config) {
     require(["jquery", 
              "knockout", 
              "kendo",
-             "system", 
+             "application",
+			 "logger",
 			 "extensions",
              "framework/logLevel"],
-    function($, ko, kendo, system, extensions, logLevel) {
+    function($, ko, kendo, application, logger, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [testRootPath + "system_tests",
+			testsToRun = [testRootPath + "application_tests",
+						  testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
 						  testRootPath + "rootViewModel_tests",
@@ -67,7 +69,6 @@ require(["config"], function (config) {
                           //ADDITIONAL TESTS GO HERE
                          ];
         
-        window.system = system;  
         window.AppLoaded = ko.observable(false);
         
         if (!config.isQunit && window.location.href.indexOf(appHref) < 0) {
@@ -76,12 +77,12 @@ require(["config"], function (config) {
         }
 		
         //add tests that CANNOT be run in the SIMULATOR here
-        /*if (!system.isRunningInSimulator()) {
+        /*if (!application.isRunningInSimulator()) {
             testsToRun.push();
         }*/
         
         QUnit.moduleStart(function (details) {
-            window.system.setLogLevel(logLevel.Verbose); 
+            logger.setLogLevel(logLevel.Verbose); 
         });
         
         require(testsToRun, function() {           

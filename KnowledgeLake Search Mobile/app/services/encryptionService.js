@@ -1,4 +1,4 @@
-define(["CryptoJS", "framework/Constants"], 
+define(["CryptoJS", "domain/Constants"], 
     function (CryptoJS, Constants) {
         
     var encryptionService = function() {

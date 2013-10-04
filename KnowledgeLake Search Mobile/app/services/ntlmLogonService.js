@@ -1,12 +1,13 @@
 define(["jquery", 
 		"ntlm", 
-		"system",
+		"application",
+		"logger",
 		"ISiteDataService",
 		//uncaught depends
-        "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse",
+        "framework/promiseResponse/promiseResolveResponse", 
+        "framework/promiseResponse/promiseRejectResponse",
         "extensions"], 
-	function ($, ntlm, system, siteDataService, PromiseResolveResponse, PromiseRejectResponse) {
+	function ($, ntlm, application, logger, siteDataService, PromiseResolveResponse, PromiseRejectResponse) {
 		var ntlmLogonService = function (siteUrl) {
 			var self = this,
 				getAuthUrl = function () {
@@ -28,13 +29,13 @@ define(["jquery",
 				ntlm.setCredentials(domain, userName, password);
                     
                 if (ntlm.authenticate(ntlmAuthUrl)) {
-					system.logVerbose("NTLM authenticate success");
+					logger.logVerbose("NTLM authenticate success");
                     
-					dfd.resolve(new PromiseResolveResponse(system.strings.LogonSucceeded));
+					dfd.resolve(new PromiseResolveResponse(application.strings.LogonSucceeded));
 				}
 				else {
-					system.logVerbose("NTLM authenticate failed");
-					dfd.reject(new PromiseRejectResponse(system.strings.logonFailed, null));	
+					logger.logVerbose("NTLM authenticate failed");
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, null));	
                 }	
 				
 				return dfd.promise();

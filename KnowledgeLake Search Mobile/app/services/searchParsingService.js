@@ -1,5 +1,5 @@
-define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants", "extensions"],
-        function ($, system, searchFieldProperty, Constants) {
+define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants", "extensions"],
+        function ($, application, searchFieldProperty, Constants) {
         
 		var searchParsingService = function () {
 			var self = this;
@@ -45,17 +45,17 @@ define(["jquery", "system", "domain/searchFieldProperty", "framework/Constants",
                     
                     if (operatorToken === "contains")
                     {
-                        return system.strings.Contains;
+                        return application.strings.Contains;
                     }
         
                     if (operatorToken === "beginswith")
                     {
-                        return system.strings.StartsWith;
+                        return application.strings.StartsWith;
                     }
         
                     if (operatorToken === "isnotnull")
                     {
-                        return system.strings.IsNotNull;
+                        return application.strings.IsNotNull;
                     }
         
                     switch (operatorToken)

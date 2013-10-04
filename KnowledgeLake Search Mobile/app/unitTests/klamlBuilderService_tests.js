@@ -1,11 +1,11 @@
 /*global QUnit*/
 define(['services/klamlBuilderService',
 		'unitTests/unitTestSettings',
-        'framework/system',
+        'application',
         'domain/searchProperty',
         'domain/catalogPropertyControlType',
 		'domain/keywordConjunction'],
-    function (klamlBuilderService, TestSettings, system, searchProperty, catalogPropertyControlType, keywordConjunction) {
+    function (klamlBuilderService, TestSettings, application, searchProperty, catalogPropertyControlType, keywordConjunction) {
         QUnit.module("Testing klamlBuilderService");
         
         
@@ -133,7 +133,7 @@ define(['services/klamlBuilderService',
                 service = new klamlBuilderService();
             
             //act
-            result = service.GetKlamlOperator(system.strings.Contains);
+            result = service.GetKlamlOperator(application.strings.Contains);
             
             //assert
             QUnit.equal(result, TestSettings.testKlamlContains);
@@ -145,7 +145,7 @@ define(['services/klamlBuilderService',
                 service = new klamlBuilderService();
             
             //act
-            result = service.GetKlamlOperator(system.strings.StartsWith);
+            result = service.GetKlamlOperator(application.strings.StartsWith);
             
             //assert
             QUnit.equal(result, TestSettings.testKlamlBeginsWith);
@@ -157,7 +157,7 @@ define(['services/klamlBuilderService',
                 service = new klamlBuilderService();
             
             //act
-            result = service.GetKlamlOperator(system.strings.Like);
+            result = service.GetKlamlOperator(application.strings.Like);
             
             //assert
             QUnit.equal(result, TestSettings.testKlamlLike);
@@ -169,7 +169,7 @@ define(['services/klamlBuilderService',
                 service = new klamlBuilderService();
             
             //act
-            result = service.GetKlamlOperator(system.strings.IsNotNull);
+            result = service.GetKlamlOperator(application.strings.IsNotNull);
             
             //assert
             QUnit.equal(result, TestSettings.testKlamlIsNotNull);

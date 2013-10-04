@@ -1,6 +1,5 @@
 define(["services/iconConverter", 
-		"system", 
-		"jquery"], function (IconConverter, system, $) {
+		"jquery"], function (IconConverter, $) {
         QUnit.module("services/iconConverter");
 
         QUnit.test("test iconConverter majorVersionToSiteIcon null", function () {

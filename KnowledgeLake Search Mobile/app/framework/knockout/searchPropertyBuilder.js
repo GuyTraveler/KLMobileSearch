@@ -1,5 +1,5 @@
-define(['knockout', 'jquery', 'system'],
-    function (ko, $, system) {
+define(['knockout', 'logger', 'jquery', 'application'],
+    function (ko, logger, $, application) {
 		var loadTemplate = function (element, valueAccessor) {
 			var searchPropertyBuilderOptions = ko.unwrap(valueAccessor());
                 
@@ -15,7 +15,7 @@ define(['knockout', 'jquery', 'system'],
                 });
               
                 getTemplatePromise.fail(function (error) {
-                    system.logError("Failed to load search control template: " + error);
+                    logger.logError("Failed to load search control template: " + error);
                 });
             }
         };

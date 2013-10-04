@@ -1,5 +1,6 @@
 define(["knockout",
-		"system",
+		"application",
+		"logger",
         "jquery",
 		"viewmodels/viewModelBase", 
         "factory/queryServiceFactory", 
@@ -10,7 +11,7 @@ define(["knockout",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
-    function (ko, system, $, viewModelBase, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
+    function (ko, application, logger, $, viewModelBase, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
             documentUrl = "#document";
@@ -26,11 +27,11 @@ define(["knockout",
                 countMessage;
                                                 
             if (length === 0) {
-                countMessage = system.strings.noResultsFound;
+                countMessage = application.strings.noResultsFound;
             }
             
             else {
-                countMessage = system.strings.resultCountFormat.format(length.toString());
+                countMessage = application.strings.resultCountFormat.format(length.toString());
                                                 
                 if (length === 1) {
                     countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
@@ -68,7 +69,7 @@ define(["knockout",
         }
 		
 		self.swipe = function (e) {
-			system.logVerbose("results listview swiped");
+			logger.logVerbose("results listview swiped");
 			if(e.direction == "right")
             {
 				window.App.navigate("#:back");
@@ -76,15 +77,15 @@ define(["knockout",
         }
         
         self.beforeShow = function (e) {
-            system.logVerbose("resultsViewModel beforeShow");   			
+            logger.logVerbose("resultsViewModel beforeShow");   			
         }
 		
 		self.show = function (e) {
-			system.logVerbose("resultsViewModel show");
+			logger.logVerbose("resultsViewModel show");
         }
         	
 		self.afterShow = function (e) {
-			system.logVerbose("resultsViewModel afterShow");
+			logger.logVerbose("resultsViewModel afterShow");
 			
 			if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
             {                
@@ -137,7 +138,7 @@ define(["knockout",
 			
             if(selection && savedSearchViewModel.site())
             {
-                window.App.loading = "<h1>" + system.strings.loading + "</h1>";
+                window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
                 service = new documentService(selection.url);        
@@ -156,7 +157,7 @@ define(["knockout",
 						
 						result = encodeURI(result);
 						
-						system.logVerbose("display form obtained at: " + result);
+						logger.logVerbose("display form obtained at: " + result);
                         
                         self.windowRef = window.open(result, "_system");
 						dfd.resolve();
@@ -165,8 +166,8 @@ define(["knockout",
                     getDisplayFormUrlPromise.fail(function (error) {
                         self.isBusy(false);
 						
-						system.logVerbose("display form could not be obtained: " + error);
-						self.setMessage(system.strings.unauthorized);
+						logger.logVerbose("display form could not be obtained: " + error);
+						self.setMessage(application.strings.unauthorized);
                         
                         dfd.reject(error);
                     });
@@ -175,8 +176,8 @@ define(["knockout",
                 logonPromise.fail(function (error) {
                     self.isBusy(false);
 					
-					system.logVerbose("could not navigate to result. logon failed.");
-					self.setMessage(system.strings.logonFailed);
+					logger.logVerbose("could not navigate to result. logon failed.");
+					self.setMessage(application.strings.logonFailed);
                     
                     dfd.reject(error);
                 });
@@ -190,7 +191,7 @@ define(["knockout",
                 service,
                 logonService;
             
-            window.App.loading = "<h1>" + system.strings.searching + "</h1>";
+            window.App.loading = "<h1>" + application.strings.searching + "</h1>";
             self.isBusy(true);
 			
 			if (!conjunction)
@@ -214,7 +215,7 @@ define(["knockout",
                 
                 searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                     dfd.reject(errorThrown);
-					self.setMessage(system.strings.searchError);
+					self.setMessage(application.strings.searchError);
                     
                     self.isBusy(false);
                 });
@@ -222,7 +223,7 @@ define(["knockout",
             
             logonPromise.fail(function (error) {
                 dfd.reject(error);
-				self.setMessage(system.strings.logonFailed);
+				self.setMessage(application.strings.logonFailed);
                 
                 self.isBusy(false);
             });
@@ -234,7 +235,7 @@ define(["knockout",
             var dfd = $.Deferred(),
                 service;
             
-            window.App.loading = "<h1>" + system.strings.searching + "</h1>";
+            window.App.loading = "<h1>" + application.strings.searching + "</h1>";
             self.isBusy(true);
             
             service = new ServerSavedSearchesService();
@@ -251,7 +252,7 @@ define(["knockout",
             
             searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                 dfd.reject(errorThrown);
-				self.setMessage(system.strings.searchError);
+				self.setMessage(application.strings.searchError);
                 
                 self.isBusy(false);
             });

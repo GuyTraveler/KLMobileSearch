@@ -1,8 +1,9 @@
 define(["jquery", 
-		"system",
+		"application",
+		"logger",
 		//uncaught depends
 		"extensions"], 
-	function ($, system) {
+	function ($, application, logger) {
     var soapServiceBase = function (siteUrl, serviceName) {
         var self = this,
             jsonTextPropertyName = "value";
@@ -40,7 +41,7 @@ define(["jquery",
                     
 					postData = $soap;
                     
-					system.logVerbose("posting SOAP request to " + self.serviceUrl);
+					logger.logVerbose("posting SOAP request to " + self.serviceUrl);
 
                     $.ajax({
                         url: self.serviceUrl,
@@ -52,40 +53,40 @@ define(["jquery",
                         data: postData,
                         dataType: "xml",
                         xhrFields: { withCredentials: true },
-						timeout: system.ajaxTimeout,
+						timeout: application.ajaxTimeout,
                         success: function (result, textStatus, jqXHR) {
                             var resultJson;
                             
-                            system.logVerbose("Successful ajax service call: " + serviceName + "." + methodName);
+                            logger.logVerbose("Successful ajax service call: " + serviceName + "." + methodName);
                             
                             resultJson = self.soapToJson(methodName, result);
                             
                             soapDfd.resolve(resultJson, textStatus, jqXHR);
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            system.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
-                            system.logVerbose("Error status :" + textStatus);  
-                            system.logVerbose("Error type :" + errorThrown);  
-                            system.logVerbose("Error message :" + XMLHttpRequest.responseXML); 
-                            system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
-                            system.logVerbose("Error request status :" + XMLHttpRequest.status); 
+                            logger.logWarning("Failed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
+                            logger.logVerbose("Error status :" + textStatus);  
+                            logger.logVerbose("Error type :" + errorThrown);  
+                            logger.logVerbose("Error message :" + XMLHttpRequest.responseXML); 
+                            logger.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
+                            logger.logVerbose("Error request status :" + XMLHttpRequest.status); 
                             
                             soapDfd.reject(XMLHttpRequest, $soap, errorThrown);
                         },
                         complete: function (jqXHR, textStatus) {
-                            system.logVerbose("Completed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
+                            logger.logVerbose("Completed ajax service call: " + serviceName + "." + methodName + " with status: " + textStatus);
                         }
                     });
                 })
                 .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                     var message = "Failed to acquire SOAP template for " + serviceName + "." + methodName;
                     
-                    system.logWarning(message);
-                    system.logVerbose("Error status :" + textStatus);  
-                    system.logVerbose("Error type :" + errorThrown);  
-                    system.logVerbose("Error message :" + XMLHttpRequest.responseXML); 
-                    system.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
-                    system.logVerbose("Error request status :" + XMLHttpRequest.status); 
+                    logger.logWarning(message);
+                    logger.logVerbose("Error status :" + textStatus);  
+                    logger.logVerbose("Error type :" + errorThrown);  
+                    logger.logVerbose("Error message :" + XMLHttpRequest.responseXML); 
+                    logger.logVerbose("Error statustext :" + XMLHttpRequest.statusText); 
+                    logger.logVerbose("Error request status :" + XMLHttpRequest.status); 
                     
 					soapDfd.reject(XMLHttpRequest, textStatus + " " + message, errorThrown);                 
                 });
@@ -106,7 +107,7 @@ define(["jquery",
                 });            
             });
             
-            system.logVerbose("FULLY PARSED JSON OBJECT: " + JSON.stringify(responseJson));
+            logger.logVerbose("FULLY PARSED JSON OBJECT: " + JSON.stringify(responseJson));
             
             return responseJson;
         }

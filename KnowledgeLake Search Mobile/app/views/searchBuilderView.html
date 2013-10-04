@@ -45,10 +45,10 @@
 	
 	<p class="align-right" data-bind="visible: conjunctionVisible">
 		<input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
-		<span data-bind="text: strings().And"></span>
+		<span data-bind="text: $root.strings().And"></span>
 		
 		<input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
-		<span data-bind="text: strings().Or"></span>
+		<span data-bind="text: $root.strings().Or"></span>
 	</p> 
 </div>
 

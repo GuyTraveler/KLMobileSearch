@@ -1,7 +1,6 @@
 define(["jquery",
-        "system",
         "knockout",
-        "framework/Constants",
+        "domain/Constants",
         "factory/logonServiceFactory",
         "services/searchParsingService",
         "services/imaging/facetQuerySearchService",
@@ -10,7 +9,7 @@ define(["jquery",
         "ntlm",
 		"domain/keywordConjunction",
         "extensions"],
-        function ($, system, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
+        function ($, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
         
 		var searchBuilderService = function () {
 			var self = this;

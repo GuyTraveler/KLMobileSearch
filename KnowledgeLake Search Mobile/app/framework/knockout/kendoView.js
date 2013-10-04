@@ -1,17 +1,18 @@
 ///This is a knockout plugin to give key bindings to the view model
 define(['knockout',
         'jquery',
-		'system'],
-    function (ko, $, system) {
+		'application',
+		'logger'],
+    function (ko, $, application, logger) {
 		var lastViewLoaded = function () {
 			if (!window.App) {
 		        window.App = new kendo.mobile.Application(document.body, {
 		            transition: 'slide',
 					skin: 'flat',
-		            loading: '<h1>' + system.strings.loading + '</h1>'
+		            loading: '<h1>' + application.strings.loading + '</h1>'
 		        });
 						
-		        system.logVerbose("kendo application loaded");
+		        logger.logVerbose("kendo application loaded");
 		        
 		        window.AppLoaded(true);
 		    }
@@ -83,7 +84,7 @@ define(['knockout',
                         });
                     });                    
                 } else {
-                    console.log('Invalid view binding format.\nFunction does not exist: ' + name + '\n' + element.outerHTML);
+                    logger.logError('Invalid view binding format.\nFunction does not exist: ' + name + '\n' + element.outerHTML);
                 }
                 return { controlsDescendantBindings: true };
             },

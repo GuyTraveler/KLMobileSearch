@@ -1,12 +1,12 @@
 define(["jquery", 
-		"system",
-        "framework/Constants",
+		"application",
+        "domain/Constants",
 		"ISiteDataService", 
 		"IListsService",
 		"Uri",
 		//uncaught depends
 		"extensions"],
-	function ($, system, Constants, SiteDataService, ListsService, Uri) {
+	function ($, application, Constants, SiteDataService, ListsService, Uri) {
 		var documentService = function (docUrl) {
 			var self = this,				
 				dispFormRelToLibrary = "/Forms/DispForm.aspx",

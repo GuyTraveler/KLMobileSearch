@@ -1,8 +1,7 @@
 /*global QUnit*/
-define(['framework/system',
-        'services/userNameParser',
+define(['services/userNameParser',
 		'unitTests/unitTestSettings'],
-    function (system, userNameParser, TestSettings) {
+    function (userNameParser, TestSettings) {
         QUnit.module("Testing services/userNameParser");
 
         QUnit.test("test userNameParser is available", function () {

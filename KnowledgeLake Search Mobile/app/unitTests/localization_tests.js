@@ -1,10 +1,10 @@
 /*global QUnit*/
 //explictly request localized string modules
 define(['require',
-        'i18n!nls/strings',
-        'nls/root/strings',
-        'nls/de/strings',
-        'nls/es/strings'],
+        'i18n!domain/nls/strings',
+        'domain/nls/root/strings',
+        'domain/nls/de/strings',
+        'domain/nls/es/strings'],
     function (require, localizedStrings, enStrings, deStrings, esStrings) {
         QUnit.module("Testing localization");
         

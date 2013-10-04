@@ -2,7 +2,7 @@
 define(['domain/httpProtocols',
 		'unitTests/unitTestSettings'],
     function (httpProtocols, TestSettings) {
-        QUnit.module("Testing framework/system");
+        QUnit.module("Testing domain/httpProtocols");
 
 		QUnit.test("test httpProtocols initializes properly", function () {
 			//arrange

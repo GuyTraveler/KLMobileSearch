@@ -1,10 +1,11 @@
 define(["jquery", 
-		"system",
-		"domain/keyValuePair",
+		"application",
+		"logger",
+		"keyValuePair",
 		"services/soapServiceBase",
 		//uncaught depends
 		"extensions"], 
-	function ($, system, keyValuePair, soapServiceBase) {
+	function ($, application, logger, keyValuePair, soapServiceBase) {
     
     var searchService = function (siteUrl) {
         var self = this,
@@ -14,12 +15,12 @@ define(["jquery",
         soapServiceBase.call(self, siteUrl, serviceName);
         
 		self.Status = function () {
-			system.logVerbose("searchService.Status called");
+			logger.logVerbose("searchService.Status called");
 			return self.executeSoapMethodAsync("Status", null);
         }
 		
 		self.GetSearchMetadata = function () {
-			system.logVerbose("searchService.GetSearchMetadata called");
+			logger.logVerbose("searchService.GetSearchMetadata called");
 			return self.executeSoapMethodAsync("GetSearchMetadata", null);
         }
 		
@@ -28,7 +29,7 @@ define(["jquery",
 					new keyValuePair("queryXml", queryXml.encodeAngleBrackets())
 				];
 			
-			system.logVerbose("searchService.QueryEx called");
+			logger.logVerbose("searchService.QueryEx called");
 			
 			return self.executeSoapMethodAsync("QueryEx", parameters);
         }

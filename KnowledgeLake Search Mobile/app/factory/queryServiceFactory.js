@@ -1,8 +1,8 @@
 define(["services/sqlQueryService",
 		"services/kqlQueryService", 		
-		"system",
-        "framework/Constants"],
-	function (sqlQueryService, kqlQueryService, system, Constants) {
+		"application",
+        "domain/Constants"],
+	function (sqlQueryService, kqlQueryService, application, Constants) {
 		
 		var queryServiceFactory = function () {
 			var self = this;

@@ -1,7 +1,7 @@
 //explictly request the actual FileManagment
 define(["factory/fileManagementFactory",
-		"system", 
-		"jquery"], function (File, system, $) {
+		"application", 
+		"jquery"], function (File, application, $) {
         QUnit.module("Testing framework/FileManagement");
 
         QUnit.test("test fileSystem is up and running", function () {
@@ -28,7 +28,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {
-                    QUnit.equal(result.response, system.strings.FileFound);
+                    QUnit.equal(result.response, application.strings.FileFound);
                     QUnit.start();
                 });
                 
@@ -55,7 +55,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {                    
-                    QUnit.equal(result.response, system.strings.FileNotFound);
+                    QUnit.equal(result.response, application.strings.FileNotFound);
                     QUnit.start();
                 });
                 
@@ -79,7 +79,7 @@ define(["factory/fileManagementFactory",
             var writePromise = File.WriteAsync(filePath, testData);
             
             writePromise.done(function (result) {
-                QUnit.equal(result.response, system.strings.FileWriteSuccess);
+                QUnit.equal(result.response, application.strings.FileWriteSuccess);
                 
                 //act
                 var readPromise = File.ReadAsync(filePath);
@@ -119,7 +119,7 @@ define(["factory/fileManagementFactory",
                 });
                 
                 readPromise.fail(function (error) {
-                    QUnit.equal(error.response, system.strings.FileNotFound);
+                    QUnit.equal(error.response, application.strings.FileNotFound);
                     QUnit.start();
                 });
             });
@@ -143,7 +143,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 deletePromise.done(function (result) {
-                    QUnit.equal(result.response, system.strings.FileDeleteSuccess);
+                    QUnit.equal(result.response, application.strings.FileDeleteSuccess);
                     QUnit.start();
                 });
                 
