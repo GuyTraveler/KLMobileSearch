@@ -1,8 +1,7 @@
 //globals:
 //**require**//
 var App,
-    AppLoaded,
-    system;
+    AppLoaded;
 
 require(["config"], function (config) {
     require.config(config);
@@ -19,6 +18,8 @@ require(["config"], function (config) {
 			testsToRun = [testRootPath + "system_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
+						  testRootPath + "rootViewModel_tests",
+						  testRootPath + "viewModelBase_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                                             
                           testRootPath + "websService_tests",

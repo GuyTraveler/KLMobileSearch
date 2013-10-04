@@ -1,13 +1,14 @@
 ///This is a knockout plugin to give key bindings to the view model
 define(['knockout',
-        'jquery'],
-    function (ko, $) {
+        'jquery',
+		'system'],
+    function (ko, $, system) {
 		var lastViewLoaded = function () {
 			if (!window.App) {
 		        window.App = new kendo.mobile.Application(document.body, {
 		            transition: 'slide',
 					skin: 'flat',
-		            loading: '<h1>' + window.system.strings.loading + '</h1>'
+		            loading: '<h1>' + system.strings.loading + '</h1>'
 		        });
 						
 		        system.logVerbose("kendo application loaded");

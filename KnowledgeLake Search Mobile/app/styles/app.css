@@ -92,22 +92,27 @@ img.margin-img {
     word-wrap: break-word
 }
 
-.center {
-	vertical-align: middle;
-	text-align: center;
+.center-head {
+	position: absolute;
+	top: 50%;
+	margin-top: -1.6em;
+}
+
+.head-button {
+	position: relative;
 }
  
 .back-button-head {
 	background-image: url('../images/kl_head_back.png')!important;
 	min-width: 56px;
 	min-height: 36px;
-	margin-top: 3px!important;
+	margin-top: 4px!important;
 }
 
 .list-view-right-item {
 	position: absolute; 
 	right: 0; 
-	top: 5px;
+	top: -0.5em;
 }
 
 .full-width {

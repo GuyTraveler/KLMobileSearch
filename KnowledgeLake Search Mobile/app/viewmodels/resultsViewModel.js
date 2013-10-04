@@ -1,6 +1,7 @@
 define(["knockout",
 		"system",
-        "jquery", 
+        "jquery",
+		"viewmodels/viewModelBase", 
         "factory/queryServiceFactory", 
         "domain/keywordConjunction", 
         "factory/logonServiceFactory",
@@ -9,18 +10,14 @@ define(["knockout",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
-    function (ko, system, $, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
+    function (ko, system, $, viewModelBase, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
             documentUrl = "#document";
-        
-		self.errorMessage = ko.observable("");
-		self.errorMessage.subscribe(function (newValue) {
-			if (newValue) {
-                system.showToast(newValue);
-            }
-        });
-		
+                   
+		self.prototype = Object.create(viewModelBase.prototype);
+    	viewModelBase.call(self);
+	
         self.resultDataSource = ko.observableArray([]);
         self.resultCountString = ko.observable("");
                                 
@@ -51,25 +48,7 @@ define(["knockout",
         self.navBarVisible.subscribe(function (newValue) {
 			$(".nav-button").kendoMobileButton();
         });
-
-        self.isBusy = ko.observable(false);
-		self.isBusy.subscribe(function (newValue) {
-			system.logVerbose("reusltsViewModel.isBusy is " + newValue);
-			
-			if (newValue == true) {
-				window.App.showLoading();
-            }
-			else {
-				window.App.hideLoading();
-            }
-        });
-        
-		  
-		self.setErrorMessage = function (message) {
-			self.errorMessage("");
-			self.errorMessage(message);
-		};
-				
+	
 		
         self.SetDataSource = function (results) {
             self.selectedResult = null;               
@@ -102,8 +81,12 @@ define(["knockout",
 		
 		self.show = function (e) {
 			system.logVerbose("resultsViewModel show");
+        }
+        	
+		self.afterShow = function (e) {
+			system.logVerbose("resultsViewModel afterShow");
 			
-            if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
+			if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
             {                
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
                     return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());
@@ -115,7 +98,7 @@ define(["knockout",
                     return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
             }
         }
-        
+            
         self.hide = function (e) {            
             self.setSelectedResult(null);
             self.SetDataSource([]);
@@ -227,7 +210,7 @@ define(["knockout",
                         self.isBusy(false);
 						
 						system.logVerbose("display form could not be obtained: " + error);
-						self.setErrorMessage(system.strings.unauthorized);
+						self.setMessage(system.strings.unauthorized);
                         
                         dfd.reject(error);
                     });
@@ -237,7 +220,7 @@ define(["knockout",
                     self.isBusy(false);
 					
 					system.logVerbose("could not navigate to result. logon failed.");
-					self.setErrorMessage(system.strings.logonFailed);
+					self.setMessage(system.strings.logonFailed);
                     
                     dfd.reject(error);
                 });
@@ -275,7 +258,7 @@ define(["knockout",
                 
                 searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                     dfd.reject(errorThrown);
-					self.setErrorMessage(system.strings.searchError);
+					self.setMessage(system.strings.searchError);
                     
                     self.isBusy(false);
                 });
@@ -283,7 +266,7 @@ define(["knockout",
             
             logonPromise.fail(function (error) {
                 dfd.reject(error);
-				self.setErrorMessage(system.strings.logonFailed);
+				self.setMessage(system.strings.logonFailed);
                 
                 self.isBusy(false);
             });
@@ -312,22 +295,14 @@ define(["knockout",
             
             searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
                 dfd.reject(errorThrown);
-				self.setErrorMessage(system.strings.searchError);
+				self.setMessage(system.strings.searchError);
                 
                 self.isBusy(false);
             });
             
             return dfd.promise();
         }
-		
-		self.afterShow = function (e) {
-			system.logVerbose("resultsViewModel afterShow");
-			
-			//var tabstrip = e.view.footer.find(".km-tabstrip").data("kendoMobileTabStrip");
-			
-			//tabstrip.clear();
-        }
-            
+	
         return self;
     };
     

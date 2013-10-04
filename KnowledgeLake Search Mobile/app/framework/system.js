@@ -1,119 +1,151 @@
-define(["framework/logLevel", "i18n!nls/strings"], function (logLevel, strings) {
-	var messageDisplayTime = 3000,
-		isToastUp = false,
-		deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "";
-	
-    return {
-        logLevel: logLevel.Error,
-        strings: strings,
-		ajaxTimeout: 15000,
-		urlContainsClaimsSignInIndicator: function (url) {
-			var claimsSignInIndicators = ["wa=wsignin1.0".toUpperCase(), 
-										  "_login".toUpperCase(), 
-										  "Authenticate.aspx".toUpperCase()];
-			if (!url) return false;
+define(["domain/keyValuePair",
+		"framework/logLevel", 
+		"i18n!nls/strings"], 
+	function (keyValuePair, logLevel, strings) {
+		var messageDisplayTime = 3000,
+			isToastUp = false,
+			deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "",
+			logs = [];
 		
-			testUrl = url.toUpperCase();
+	    return {
+	        logLevel: logLevel.Error,
+			maxLogSize: 1000,
+	        strings: strings,
+			ajaxTimeout: 15000,
+			urlContainsClaimsSignInIndicator: function (url) {
+				var claimsSignInIndicators = ["wa=wsignin1.0".toUpperCase(), 
+											  "_login".toUpperCase(), 
+											  "Authenticate.aspx".toUpperCase()];
+				if (!url) return false;
 			
-			for (var i = claimsSignInIndicators.length - 1; i >= 0; i--) {
-				var indicator = claimsSignInIndicators[i];
+				testUrl = url.toUpperCase();
 				
-				if (testUrl.indexOf(indicator) > -1) return true;
-            }
+				for (var i = claimsSignInIndicators.length - 1; i >= 0; i--) {
+					var indicator = claimsSignInIndicators[i];
+					
+					if (testUrl.indexOf(indicator) > -1) return true;
+	            }
+				
+				return false;
+	        },
+			setLogLevel: function (level) {
+	            this.logLevel = level;
+	        },
+			getLogs: function () {
+				return logs;
+            },
+			clearLogs: function () {
+				logs = [];
+            },
+			logVerbose: function (msg) {
+	            var shouldLog = this.logLevel <= logLevel.Verbose;
+	            
+	            if (shouldLog) {
+					console.log(msg);	
+					logs.push(new keyValuePair(logLevel.Verbose, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
+					
+	            }
+	            
+	            return shouldLog;
+	        },
+	        logDebug: function (msg) {
+	            var shouldLog = this.logLevel <= logLevel.Debug;
+	            
+	            if (shouldLog) {
+					console.debug(msg);
+					logs.push(new keyValuePair(logLevel.Debug, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
+				}
+	            
+	            return shouldLog;
+	        },
+	        logWarning: function (msg) {
+	            var shouldLog = this.logLevel <= logLevel.Warn;
+	            
+	            if (shouldLog) {
+					console.warn(msg);
+					logs.push(new keyValuePair(logLevel.Warn, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
+				}
+	            
+	            return shouldLog;  
+	        },
+	        logError: function (msg) {
+	            var shouldLog = this.logLevel <= logLevel.Error;
+	            
+	            if (shouldLog) {
+					console.error(msg);
+					logs.push(new keyValuePair(logLevel.Error, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
+				}
+	            
+	            return shouldLog;
+	        },
+	        logFatal: function (msg) {
+	            var shouldLog = this.logLevel <= logLevel.Fatal;
+	            
+	            if (shouldLog) {
+					console.error(msg);
+					logs.push(new keyValuePair(logLevel.Fatal, msg));
+					logs.splice(0, logs.length - this.maxLogSize);
+				}
+	            
+	            return shouldLog;
+	        },
+			deviceUUID: deviceID,
+			isRunningInSimulator: function () {
+	            // device uuids for simulated devices
+	            var iPhone = "e0101010d38bde8e6740011221af335301010333";
+	            var iPhone5 = "e0101010d38bde8e6740011221af335301010333";
+	            var iPad = "e0101010d38bde8e6740011221af335301010333";
+	            var Android = "e0908060g38bde8e6740011221af335301010333";
+	            var AndroidTablet = "e0101010d38bde8e6740011221af335301010333";
+	                      
+	            //for normal browsers
+				if (!this.deviceUUID) return true;
 			
-			return false;
-        },
-		setLogLevel: function (level) {
-            this.logLevel = level;
-        },
-		logVerbose: function (msg) {
-            var log = this.logLevel <= logLevel.Verbose;
-            
-            if (log) console.log(msg);
-            
-            return log;
-        },
-        logDebug: function (msg) {
-            var log = this.logLevel <= logLevel.Debug;
-            
-            if (log) console.debug(msg);
-            
-            return log;
-        },
-        logWarning: function (msg) {
-            var log = this.logLevel <= logLevel.Warn;
-            
-            if (log) console.warn(msg);
-            
-            return log;  
-        },
-        logError: function (msg) {
-            var log = this.logLevel <= logLevel.Error;
-            
-            if (log) console.error(msg);
-            
-            return log;
-        },
-        logFatal: function (msg) {
-            var log = this.logLevel <= logLevel.Fatal;
-            
-            if (log) console.error(msg);
-            
-            return log;
-        },
-		deviceUUID: deviceID,
-		isRunningInSimulator: function () {
-            // device uuids for simulated devices
-            var iPhone = "e0101010d38bde8e6740011221af335301010333";
-            var iPhone5 = "e0101010d38bde8e6740011221af335301010333";
-            var iPad = "e0101010d38bde8e6740011221af335301010333";
-            var Android = "e0908060g38bde8e6740011221af335301010333";
-            var AndroidTablet = "e0101010d38bde8e6740011221af335301010333";
-                      
-            //for normal browsers
-			if (!this.deviceUUID) return true;
-		
-            if(this.deviceUUID === iPhone ||
-                this.deviceUUID === iPhone5 ||
-                this.deviceUUID === iPad ||
-                this.deviceUUID === Android ||
-                this.deviceUUID === AndroidTablet)
-            {
-                return true;
-            }
-            
-            return false;
-        },
-		showToast: function (message) {
-			var $msgbox = $("#messageBox");
+	            if(this.deviceUUID === iPhone ||
+	                this.deviceUUID === iPhone5 ||
+	                this.deviceUUID === iPad ||
+	                this.deviceUUID === Android ||
+	                this.deviceUUID === AndroidTablet)
+	            {
+	                return true;
+	            }
+	            
+	            return false;
+	        },
+			showToast: function (message) {
+				var $msgbox = $("#messageBox");
 
-			message = message || "";
-			
-			$msgbox.text(message);
-			$msgbox.removeClass("fade-out");
-			$msgbox.addClass("opaque");
-			isToastUp = true;
-			
-			setTimeout(function () {
-				$msgbox.addClass("fade-out");
-				$msgbox.removeClass("opaque");
-				isToastUp = false;
-            }, messageDisplayTime);
-        },
-		showSoftKeyboard: function () {
-			//android
-			if (window.plugins && window.plugins.SoftKeyBoard) {
-				window.plugins.SoftKeyBoard.show();
-            }
-        },
-		hideSoftKeyboard: function () {
-			//android
-			if (window.plugins && window.plugins.SoftKeyBoard) {
-				window.plugins.SoftKeyBoard.hide();
-            }
-        },
-		isToastVisible: function() {
-			return isToastUp;
-        }
-    };
-});
+				message = message || "";
+				
+				$msgbox.text(message);
+				$msgbox.removeClass("fade-out");
+				$msgbox.addClass("opaque");
+				isToastUp = true;
+				
+				setTimeout(function () {
+					$msgbox.addClass("fade-out");
+					$msgbox.removeClass("opaque");
+					isToastUp = false;
+	            }, messageDisplayTime);
+	        },
+			showSoftKeyboard: function () {
+				//android
+				if (window.plugins && window.plugins.SoftKeyBoard) {
+					window.plugins.SoftKeyBoard.show();
+	            }
+	        },
+			hideSoftKeyboard: function () {
+				//android
+				if (window.plugins && window.plugins.SoftKeyBoard) {
+					window.plugins.SoftKeyBoard.hide();
+	            }
+	        },
+			isToastVisible: function() {
+				return isToastUp;
+	        }
+	    };
+	});

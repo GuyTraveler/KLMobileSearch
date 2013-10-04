@@ -1,19 +1,19 @@
 
 <header data-role="header">
     <div data-role="navbar"> 
-		<button class="transparent-button center" data-align="left">
-			<img src="app/images/kl_head.png" />
+		<button class="transparent-button head-button" data-align="left">
+			<img class="center-head" src="app/images/kl_head.png" />
         </button>	
 		
 		<button data-align="left" data-role="button" class="transparent-button"></button>
 		
-        <button class="nav-button" data-align="right" data-role="button" data-bind="click: saveSiteSettingsAsync, text: system.strings.save"></button>
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: saveSiteSettingsAsync, text: strings().save"></button>
         
-        <button class="nav-button" data-align="right" data-role="button" data-bind="click: closeSiteSettings, text: system.strings.cancel"></button>
+        <button class="nav-button" data-align="right" data-role="button" data-bind="click: closeSiteSettings, text: strings().cancel"></button>
     </div>
 </header>
 
-<h3 id="configureSiteTitle" data-bind="text: system.strings.configureSitePageTitle" />
+<h3 id="configureSiteTitle" data-bind="text: strings().configureSitePageTitle" />
 
 <ul data-role="listview" data-style="inset">
 	<li>
@@ -21,7 +21,7 @@
 			<div class="relative-container">
 				<p class="list-view-label">
 					<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
-	                <span data-bind="text: system.strings.protocol" />
+	                <span data-bind="text: strings().protocol" />
 	            </p>
 				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
 				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
@@ -32,23 +32,23 @@
         <label>            
             <p class="list-view-label">
                 <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
-                <span data-bind="text: system.strings.siteUrl" />
+                <span data-bind="text: strings().siteUrl" />
             </p>
 			<!-- android works better with 'text' types and iOS works better with 'url' types -->
 			<!--<input class="list-view-input" type="url"
 				   data-bind="if: (!window.App || window.App.os.ios), value: url, enable: enableUrl" /> -->           
 			
             <input id="siteUrlText" class="list-view-input" type="text"
-				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl, attr: { 'placeholder': system.strings.urlPlaceholder }" />            
+				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl, attr: { 'placeholder': strings().urlPlaceholder }" />            
 			
         </label>    
     </li>	
     <li>
         <label>            
             <p class="list-view-label">
-                <span data-bind="text: system.strings.siteTitle" />
+                <span data-bind="text: strings().siteTitle" />
             </p>
-            <input id="siteTitleText" type="text" data-bind="value: siteTitle, attr: { 'placeholder': system.strings.siteTitlePlaceholder }" class="list-view-input" />            
+            <input id="siteTitleText" type="text" data-bind="value: siteTitle, attr: { 'placeholder': strings().siteTitlePlaceholder }" class="list-view-input" />            
         </label>    
     </li>
     
@@ -56,7 +56,7 @@
         <label>
 			<div class="relative-container">
 	            <p class="list-view-label">
-	                <span data-bind="text: system.strings.credentialType" />
+	                <span data-bind="text: strings().credentialType" />
 	            </p>
 	            <select id="credentialTypeDropDown" class="list-view-input" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
 				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
@@ -66,37 +66,37 @@
 </ul>    
 
 <div data-bind="css: { 'opaque': isWindowsCredential, 'fade-out': isClaimsFormsCredential, 'visible': isWindowsCredential, 'collapse': isClaimsFormsCredential }">
-    <h3 data-bind="text: system.strings.windowsCredentials" />
+    <h3 data-bind="text: strings().windowsCredentials" />
     
     <ul data-role="listview" data-style="inset">
         <li>
             <label>
                 <p class="list-view-label">
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.userName" />
+                    <span data-bind="text: strings().userName" />
                 </p>
-                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': system.strings.userNamePlaceholder }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" />            
             </label>
         </li>        
         <li>
             <label>
                 <p class="list-view-label">
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.password" />
+                    <span data-bind="text: strings().password" />
                 </p>
 				
 				<span data-bind="if: !shouldShowPassword()">
-                	<input data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" type="password" />            
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="password" />            
 				</span>
 				<span data-bind="if: shouldShowPassword">
-                	<input data-bind="value: sitePassword, attr: { 'placeholder': system.strings.passwordPlaceholder }" class="list-view-input" type="text" />            
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="text" />            
 				</span>
             </label>
         </li>
 		<!--<li>
             <label>
                 <p>
-                    <span data-bind="text: system.strings.showPassword" />					
+                    <span data-bind="text: strings().showPassword" />					
                 </p> 
 				<input type="checkbox" data-bind="checked: shouldShowPassword" />
             </label>
@@ -105,7 +105,7 @@
             <label>
                 <p class="list-view-label">
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
-                    <span data-bind="text: system.strings.domain" />					
+                    <span data-bind="text: strings().domain" />					
                 </p> 
 				<input data-bind="value: siteDomain" type="text" class="list-view-input" readonly="readonly" />
             </label>

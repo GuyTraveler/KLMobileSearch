@@ -17,22 +17,22 @@
 		<link href="app/styles/queryBuilderViewStyles.css" rel="stylesheet" />
     </head>
     <body>
-        <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': system.strings.appTitle, 'data-role': 'view' }">            
+        <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': strings().appTitle, 'data-role': 'view' }">            
         </div>
      
-        <div data-bind="kendoView: { id: 'configureSite' }, attr: { 'data-title': system.strings.configureSitePageTitle, 'data-role': 'view' }" data-use-native-scrolling="true" data-transition="overlay:up">
+        <div data-bind="kendoView: { id: 'configureSite' }, attr: { 'data-title': strings().configureSitePageTitle, 'data-role': 'view' }" data-use-native-scrolling="true" data-transition="overlay:up">
         </div>
         
-        <div data-bind="kendoView: { id: 'savedSearch' }, attr: { 'data-title': system.strings.savedSearchesPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
+        <div data-bind="kendoView: { id: 'savedSearch' }, attr: { 'data-title': strings().savedSearchesPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
         </div>
         
-        <div data-bind="kendoView: { id: 'searchBuilder' }, attr: { 'data-title': system.strings.searchBuilderPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
+        <div data-bind="kendoView: { id: 'searchBuilder' }, attr: { 'data-title': strings().searchBuilderPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
         </div>
         
-        <div data-bind="kendoView: { id: 'results' }, attr: { 'data-title': system.strings.resultsPageTitle, 'data-role': 'view' }" data-use-native-scrolling="false">            
+        <div data-bind="kendoView: { id: 'results' }, attr: { 'data-title': strings().resultsPageTitle, 'data-role': 'view' }" data-use-native-scrolling="false">            
         </div>   
 		
-		<div data-bind="kendoView: { id: 'document', loadKendoApp: true }, attr: { 'data-title': system.strings.documentPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
+		<div data-bind="kendoView: { id: 'document', loadKendoApp: true }, attr: { 'data-title': strings().documentPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
         </div>
 		
 		

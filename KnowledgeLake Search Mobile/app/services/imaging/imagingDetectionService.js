@@ -21,7 +21,7 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
                         dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
     	            })
     	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        dfd.fail();
+                        dfd.reject();
     	            });
             });
             

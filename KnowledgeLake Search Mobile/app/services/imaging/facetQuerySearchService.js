@@ -1,4 +1,9 @@
-define(["jquery", "domain/keyValuePair", "services/soapServiceBase", "extensions"], function ($, keyValuePair, soapServiceBase) {
+define(["jquery", 
+		"system",
+		"domain/keyValuePair", 
+		"services/soapServiceBase", 
+		"extensions"], 
+function ($, system, keyValuePair, soapServiceBase) {
     
     var facetQuerySearchService = function (siteUrl) {
         var self = this,

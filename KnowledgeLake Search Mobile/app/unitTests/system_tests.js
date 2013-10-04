@@ -86,6 +86,75 @@ define(['framework/system',
             QUnit.ok(system.logFatal("test") === true);
         }); 
 		
+		QUnit.test("test system.clearLogs works", function () {
+			//arrange
+			var logs;
+            
+            //act
+			system.setLogLevel(logLevel.Verbose);
+            system.logVerbose("test");
+			system.clearLogs();
+			logs = system.getLogs();
+            
+            //assert
+            QUnit.ok(logs);
+			QUnit.equal(logs.length, 0);
+        });	
+		
+		QUnit.test("test system.getLogs", function () {
+			//arrange
+			var logs;
+            
+            //act
+			system.setLogLevel(logLevel.Verbose);
+            system.logVerbose("test");
+			logs = system.getLogs();
+            
+            //assert
+            QUnit.ok(logs);
+			QUnit.notEqual(logs.length, 0);
+        });	
+		
+		QUnit.test("test system.getLogs returns correct value", function () {
+			//arrange
+			var value = "test",
+				logs;
+            
+            //act
+			system.setLogLevel(logLevel.Verbose);
+            system.clearLogs();
+			system.logVerbose(value);
+			logs = system.getLogs();
+            
+            //assert
+            QUnit.ok(logs);
+			QUnit.equal(logs.length, 1);
+			QUnit.equal(logs[0].key, logLevel.Verbose);
+			QUnit.equal(logs[0].value, value);
+        });	
+		
+		
+		QUnit.test("test system logger maxes out at 1000", function () {
+			//arrange
+			var value = "test",
+				logs;
+            
+            //act
+			system.setLogLevel(logLevel.Verbose);
+            system.clearLogs();
+			
+			for (var i = 0; i < system.maxLogSize + 10; i++) {
+				system.logVerbose(value);	
+            }
+			
+			logs = system.getLogs();
+            
+            //assert
+            QUnit.ok(logs);
+			QUnit.equal(logs.length, system.maxLogSize);
+        });	
+		
+		
 		QUnit.test("test system.urlContainsClaimsSignInIndicator works with wa=wsignin1.0", function () {
 			//arrange
 			var url = "http://asdfsdfswa=wsignin1.0",

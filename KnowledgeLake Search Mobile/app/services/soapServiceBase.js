@@ -1,7 +1,8 @@
 define(["jquery", 
+		"system",
 		//uncaught depends
 		"extensions"], 
-	function ($) {
+	function ($, system) {
     var soapServiceBase = function (siteUrl, serviceName) {
         var self = this,
             jsonTextPropertyName = "value";
