@@ -138,11 +138,55 @@ define(["knockout",
 			return self.navBarVisible() && self.selectedResult === item;
         }
         
-        self.editProperties = function () {
-            if(self.selectedResult)
+        self.viewProperties = function () {
+            var dfd = $.Deferred(), 
+                service,
+                logonService;
+            
+            if(self.selectedResult && savedSearchViewModel.site())
             {
-                window.App.navigate(documentUrl);                    
-            }
+                window.App.loading = "<h1>" + system.strings.loading + "</h1>";
+                self.isBusy(true);
+                
+                service = new documentService(self.selectedResult.url);        
+                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
+
+                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
+                                                  savedSearchViewModel.site().credential.userName, 
+                                                  savedSearchViewModel.site().credential.password,
+                                                  self.selectedResult.url);
+            
+                logonPromise.done(function (result) {
+                    var getDocumentPropertiesPromise = service.getDocumentPropertiesAsync();
+                    
+                    getDocumentPropertiesPromise.done(function (documentProperties) {
+                        self.isBusy(false);
+                        
+						window.App.navigate(documentUrl);   
+						dfd.resolve();
+                    });
+                    
+                    getDocumentPropertiesPromise.fail(function (error) {
+                        self.isBusy(false);
+						
+						system.logVerbose("display form could not be obtained: " + error);
+						self.setErrorMessage(system.strings.unauthorized);
+                        
+                        dfd.reject(error);
+                    });
+                });
+                
+                logonPromise.fail(function (error) {
+                    self.isBusy(false);
+					
+					system.logVerbose("could not navigate to result. logon failed.");
+					self.setErrorMessage(system.strings.logonFailed);
+                    
+                    dfd.reject(error);
+                });
+            }     
+            
+            return dfd.promise();
         }
         
         self.navigateToResult = function (selection) {

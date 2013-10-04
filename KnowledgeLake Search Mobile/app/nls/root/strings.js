@@ -14,6 +14,7 @@ define({
     addSite: "Add",
     editSite: "Edit",
     editProperties: "Edit",
+    viewProperties: "View",
     deleteSite: "Delete",
 	search: "Search",
     download: "Download",

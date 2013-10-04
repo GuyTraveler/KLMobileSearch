@@ -3,4 +3,8 @@
 </div>
 <div class="pull-left">
     <input type="date" data-bind=" value: data.value" />
+    <div data-bind="if: data.selectedOperator == 'Range'">
+        <label>To</label>
+        <input type="date" data-bind=" value: data.value" />
+    </div>
 </div>

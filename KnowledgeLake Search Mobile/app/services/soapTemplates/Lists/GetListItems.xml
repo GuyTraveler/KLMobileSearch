@@ -7,7 +7,7 @@
 			<query>{query}</query>
 			<viewFields>{viewFields}</viewFields>
 			<rowLimit>{rowLimit}</rowLimit>
-			<queryOptions>{queryOptions}</queryOptions>
+			<QueryOptions>{queryOptions}</QueryOptions>
 			<webID>{webID}</webID>
 		</GetListItems>
 	</soap:Body>

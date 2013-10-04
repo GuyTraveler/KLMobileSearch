@@ -15,7 +15,7 @@ define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function (
 			return self.executeSoapMethodAsync("GetList", parameters);
         }
 		
-        self.GetListItems = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID) {
+        self.GetListItemsAsync = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID) {
             var parameters = [
                 new keyValuePair("listName", listName),
 				new keyValuePair("viewName", viewName),
@@ -27,6 +27,15 @@ define(["jquery", "domain/keyValuePair", "services/soapServiceBase"], function (
             ];
             
             return self.executeSoapMethodAsync("GetListItems", parameters);
+        }
+        
+        self.GetListContentTypeAsync = function (listName, contentTypeId) {
+            var parameters = [
+                new keyValuePair("listName", listName),
+				new keyValuePair("contentTypeId", contentTypeId)
+            ];
+            
+            return self.executeSoapMethodAsync("GetListContentType", parameters);
         }
         
         self.GetListAndView = function (listName, viewName) {

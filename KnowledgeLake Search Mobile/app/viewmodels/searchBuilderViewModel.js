@@ -95,6 +95,7 @@ define(["knockout",
             }    
             
             self.executeSearch = function (e) {
+                // validate each number type columns
                 var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
                 
                 if(klaml)  
