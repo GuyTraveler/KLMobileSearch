@@ -346,7 +346,7 @@ define(['require',
             //assert
             QUnit.equal(product, true);
         });
-        
+        /*
         QUnit.test("test resultsViewModel editProperties", function () {
             //arrange
             var vm,
@@ -361,7 +361,7 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });
-        
+        */
         QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
