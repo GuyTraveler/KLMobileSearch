@@ -84,5 +84,8 @@ define({
     testSearchGreaterThanOrEqual: ">=",
     testChoices: ["Choice 1", "Choice 2", "Choice 3"],
     testOperators: ["=", "Like", "Starts With"],
+    testDocumentPropertyName: "Title",
+    testDocumentPropertyDisplayName: "Title",
+    testDocumentPropertyValue: "Document title", 
 	testMessage: "A status message"
 });
