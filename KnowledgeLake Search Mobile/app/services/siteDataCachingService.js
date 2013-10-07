@@ -1,10 +1,10 @@
 define(["jquery", 
         "FileManagement",  
-		"system",
-        "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse",
+		"application",
+        "framework/promiseResponse/promiseResolveResponse", 
+        "framework/promiseResponse/promiseRejectResponse",
         "services/encryptionService"], 
-        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse, EncryptionService) {
+        function ($, File, application, PromiseResolveResponse, PromiseRejectResponse, EncryptionService) {
     var service = function () {
         var self = this, 
             siteDataFileName = "sites.dat";
@@ -17,7 +17,7 @@ define(["jquery",
             var existsPromise = File.ExistsAsync(siteDataFileName);
                 
             existsPromise.done(function (result) {
-                if(result.response === system.strings.FileFound)
+                if(result.response === application.strings.FileFound)
                 {
                     var readPromise = File.ReadAsync(siteDataFileName);
                     
@@ -54,7 +54,7 @@ define(["jquery",
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(system.strings.SiteConnectionExists, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.SiteConnectionExists, null));
                 }
             }
             else
@@ -87,11 +87,11 @@ define(["jquery",
                     }
                     
                     else
-                        dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));               
+                        dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));               
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));
                 }
             }
             else
@@ -116,11 +116,11 @@ define(["jquery",
                     self.WriteSiteData(dfd);
                 }
                 else
-                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(system.strings.SiteDataEmpty, null));
+                dfd.reject(new PromiseRejectResponse(application.strings.SiteDataEmpty, null));
             }
             
             return dfd.promise();
@@ -167,7 +167,7 @@ define(["jquery",
                 for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.btoa)                    
-                        sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, system.deviceUUID);
+                        sites[i].credential.password = EncryptionService.encrypt(sites[i].credential.password, application.deviceUUID);
                 }
                 
                 encodedSites = sites;
@@ -186,7 +186,7 @@ define(["jquery",
                 for(var i = 0; i < sitesLength; i++)
                 {
                     if(window.atob)                    
-                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, system.deviceUUID);
+                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, application.deviceUUID);
                 }
                 
                 decodedSites = sites; 

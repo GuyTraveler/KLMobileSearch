@@ -1,9 +1,10 @@
 define(["knockout", 
-        "system", 
+        "application", 
+		"logger",
         "jquery", 
 		"viewmodels/viewModelBase",
         "ISiteDataCachingService"], 
-    function (ko, system, $, viewModelBase, SiteDataCachingService) {
+    function (ko, application, logger, $, viewModelBase, SiteDataCachingService) {
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
@@ -59,12 +60,12 @@ define(["knockout",
                         loadSitesPromise.fail(function (error) {
 							self.isBusy(false);
 							
-                            if (error.response === system.strings.FileNotFound) {
+                            if (error.response === application.strings.FileNotFound) {
                                 window.App.navigate(configureSiteUrl);
                             }
                             else {
                                 self.SetDataSource();
-								system.showToast(system.strings.siteLoadError);
+								application.showToast(application.strings.siteLoadError);
                             }
                         });
                     }
@@ -72,7 +73,7 @@ define(["knockout",
             }
             
             self.init = function (e) {
-				system.logVerbose("homeViewModel.init");
+				logger.logVerbose("homeViewModel.init");
 				
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
@@ -81,22 +82,22 @@ define(["knockout",
             }
             
             self.beforeShow = function (e) {
-                system.logVerbose("homeViewModel beforeShow");                                 
+                logger.logVerbose("homeViewModel beforeShow");                                 
             }
             
             self.show = function (e) {
-                system.logVerbose("homeViewModel show");							   
+                logger.logVerbose("homeViewModel show");							   
             }
 			
 			self.afterShow = function (e) {
-				system.logVerbose("homeViewModel.afterShow");
+				logger.logVerbose("homeViewModel.afterShow");
 				
 				if(window.App)
                     self.LoadSiteData();          	
             }
             
             self.hide = function (e) {
-                system.logVerbose("homeViewModel hide");
+                logger.logVerbose("homeViewModel hide");
                 
                 self.navBarVisible(false);
 				self.hasHighlightedSite(false);
@@ -147,15 +148,15 @@ define(["knockout",
                     // add the removal of associated searches ... must perform a loadsearches 
                     
 					removeSitePromise.done(function () {
-						system.showToast(system.strings.DeleteSiteSuccess);
+						application.showToast(application.strings.DeleteSiteSuccess);
                     });
 					
                     removeSitePromise.fail(function (error) {
-                        if (error.response === system.strings.InvalidSite) {
-                            system.showToast(system.strings.InvalidSite);
+                        if (error.response === application.strings.InvalidSite) {
+                            application.showToast(application.strings.InvalidSite);
                         }
                         else {
-                            system.showToast(system.strings.DeleteSiteFailed);
+                            application.showToast(application.strings.DeleteSiteFailed);
                         }
                     });
 					  

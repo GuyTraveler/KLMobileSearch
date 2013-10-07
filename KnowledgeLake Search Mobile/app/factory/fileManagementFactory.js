@@ -1,10 +1,10 @@
 define(["framework/FileManagement", 
 		"mocks/localStorageFileManagement",
-		"system"],
-	function (File, localStorageFile, system) {
+		"application"],
+	function (File, localStorageFile, application) {
 		
 		//on device means use Cordova APIs for device storage
-		if (!system.isRunningInSimulator()) {
+		if (!application.isRunningInSimulator()) {
 			return new File();			
         }
 		//HTML5 localStorage available, use that

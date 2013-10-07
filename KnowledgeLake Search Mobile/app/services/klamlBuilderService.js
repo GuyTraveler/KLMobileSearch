@@ -1,9 +1,9 @@
 define(["jquery", 
-		"system", 
+		"application", 
 		"domain/keywordConjunction",
-		"framework/Constants", 
+		"domain/Constants", 
 		"extensions"],
-        function ($, system, keywordConjunction, Constants) {
+        function ($, application, keywordConjunction, Constants) {
         
 		var klamlBuilderService = function () {
 			var self = this,
@@ -93,16 +93,16 @@ define(["jquery",
             
             self.GetKlamlOperator = function(operatorToken)
             {
-                if (operatorToken == system.strings.Contains)
+                if (operatorToken == application.strings.Contains)
                     return "contains";
     
-                if (operatorToken == system.strings.StartsWith)
+                if (operatorToken == application.strings.StartsWith)
                     return "beginswith";
     
-                if (operatorToken == system.strings.Like)
+                if (operatorToken == application.strings.Like)
                     return "Like";
     
-                if (operatorToken == system.strings.IsNotNull)
+                if (operatorToken == application.strings.IsNotNull)
                     return "isnotnull";
     
                 switch (operatorToken)

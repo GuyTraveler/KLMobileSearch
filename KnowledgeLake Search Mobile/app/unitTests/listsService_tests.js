@@ -60,7 +60,7 @@ define(["services/sharepoint/listsService",
             //assert
             QUnit.ok(service);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems was successful when it should have been 401");
 	                QUnit.start();
@@ -85,7 +85,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(true, "GetListItems was successful");
 	                QUnit.ok(result);
@@ -123,7 +123,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, "fdfd", TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, "fdfd", TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -148,7 +148,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems("dfdfadf", TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync("dfdfadf", TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -173,7 +173,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, "ffff", TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, "ffff", TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -198,7 +198,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, "gggg", TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, "gggg", TestSettings.testRowLimit, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -223,7 +223,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, -99, TestSettings.testQueryOptions, TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, -99, TestSettings.testQueryOptions, TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -249,7 +249,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, "ffdfd", TestSettings.testWebID)
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, "ffdfd", TestSettings.testWebID)
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();
@@ -274,7 +274,7 @@ define(["services/sharepoint/listsService",
             QUnit.ok(service);
             QUnit.ok(authResult);
             
-            service.GetListItems(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, "ggg")
+            service.GetListItemsAsync(TestSettings.testListNametestListName, TestSettings.testViewName, TestSettings.testListsQuery, TestSettings.testViewFields, TestSettings.testRowLimit, TestSettings.testQueryOptions, "ggg")
 				.done(function (result) {
 	                QUnit.ok(false, "GetListItems should have failed");                
 					QUnit.start();

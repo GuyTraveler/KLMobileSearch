@@ -1,8 +1,11 @@
-define(["system"], function (system) {
+define(["logger"], function (logger) {
 	var plugins = {
 		SoftKeyBoard: {
 			show: function () {
-				system.logDebug("SoftKeyBoard.show called");
+				logger.logDebug("SoftKeyBoard.show called");
+            },
+			hide: function () {
+				logger.logDebug("SoftKeyBoard.hide called");
             }
         }	
     };

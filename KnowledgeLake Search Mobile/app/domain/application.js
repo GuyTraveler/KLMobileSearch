@@ -1,15 +1,10 @@
-define(["domain/keyValuePair",
-		"framework/logLevel", 
-		"i18n!nls/strings"], 
-	function (keyValuePair, logLevel, strings) {
+define(["i18n!domain/nls/strings"], 
+	function (strings) {
 		var messageDisplayTime = 3000,
 			isToastUp = false,
-			deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "",
-			logs = [];
+			deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "";
 		
 	    return {
-	        logLevel: logLevel.Error,
-			maxLogSize: 1000,
 	        strings: strings,
 			ajaxTimeout: 15000,
 			urlContainsClaimsSignInIndicator: function (url) {
@@ -27,71 +22,6 @@ define(["domain/keyValuePair",
 	            }
 				
 				return false;
-	        },
-			setLogLevel: function (level) {
-	            this.logLevel = level;
-	        },
-			getLogs: function () {
-				return logs;
-            },
-			clearLogs: function () {
-				logs = [];
-            },
-			logVerbose: function (msg) {
-	            var shouldLog = this.logLevel <= logLevel.Verbose;
-	            
-	            if (shouldLog) {
-					console.log(msg);	
-					logs.push(new keyValuePair(logLevel.Verbose, msg));
-					logs.splice(0, logs.length - this.maxLogSize);
-					
-	            }
-	            
-	            return shouldLog;
-	        },
-	        logDebug: function (msg) {
-	            var shouldLog = this.logLevel <= logLevel.Debug;
-	            
-	            if (shouldLog) {
-					console.debug(msg);
-					logs.push(new keyValuePair(logLevel.Debug, msg));
-					logs.splice(0, logs.length - this.maxLogSize);
-				}
-	            
-	            return shouldLog;
-	        },
-	        logWarning: function (msg) {
-	            var shouldLog = this.logLevel <= logLevel.Warn;
-	            
-	            if (shouldLog) {
-					console.warn(msg);
-					logs.push(new keyValuePair(logLevel.Warn, msg));
-					logs.splice(0, logs.length - this.maxLogSize);
-				}
-	            
-	            return shouldLog;  
-	        },
-	        logError: function (msg) {
-	            var shouldLog = this.logLevel <= logLevel.Error;
-	            
-	            if (shouldLog) {
-					console.error(msg);
-					logs.push(new keyValuePair(logLevel.Error, msg));
-					logs.splice(0, logs.length - this.maxLogSize);
-				}
-	            
-	            return shouldLog;
-	        },
-	        logFatal: function (msg) {
-	            var shouldLog = this.logLevel <= logLevel.Fatal;
-	            
-	            if (shouldLog) {
-					console.error(msg);
-					logs.push(new keyValuePair(logLevel.Fatal, msg));
-					logs.splice(0, logs.length - this.maxLogSize);
-				}
-	            
-	            return shouldLog;
 	        },
 			deviceUUID: deviceID,
 			isRunningInSimulator: function () {

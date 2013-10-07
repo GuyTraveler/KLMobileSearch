@@ -1,7 +1,6 @@
 //not currently used
-define(["framework/FileTransfer", 
-		"system", 
-		"jquery"], function (FileTransfer, system, $) {
+define(["framework/FileTransfer",
+		"jquery"], function (FileTransfer, $) {
         QUnit.module("Testing framework/FileTransfer");
 
         QUnit.test("test fileTransfer is up and running", function () {

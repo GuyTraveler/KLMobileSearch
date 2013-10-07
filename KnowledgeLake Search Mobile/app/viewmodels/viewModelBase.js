@@ -1,18 +1,19 @@
 define(["knockout", 
-        "system"],
-function (ko, system) {
+        "application",
+		"logger"],
+function (ko, application, logger) {
 	var viewModelBase = function () {
 		var self = this;
 		
 		self.strings = function () {
-			return system.strings;
+			return application.strings;
 		};
 		
 		self.message = ko.observable("");
         self.isBusy = ko.observable(false);
 		
 		self.isBusy.subscribe(function (newValue) {
-			system.logVerbose("viewModelBase.isBusy set to " + newValue);
+			logger.logVerbose("viewModelBase.isBusy set to " + newValue);
 			
 			if (window.App) {
 				if (newValue == true) {
@@ -31,29 +32,29 @@ function (ko, system) {
 			
         self.message.subscribe(function (newValue) {
             if (newValue) {
-				system.showToast(newValue);
+				application.showToast(newValue);
 			}
         });
 		
     
 		self.init = function (e) {
-			system.logVerbose("base class viewModelBase.init called");
+			logger.logVerbose("base class viewModelBase.init called");
         } 
 				
 		self.beforeShow = function (e) {
-			system.logVerbose("base class viewModelBase.beforeShow called");
+			logger.logVerbose("base class viewModelBase.beforeShow called");
         } 
 		
 		self.show = function (e) {
-			system.logVerbose("base class viewModelBase.show called");
+			logger.logVerbose("base class viewModelBase.show called");
         } 
 			
 		self.afterShow = function (e) {
-			system.logVerbose("base class viewModelBase.afterShow called");
+			logger.logVerbose("base class viewModelBase.afterShow called");
         } 
 			
 		self.hide = function (e) {
-			system.logVerbose("base class viewModelBase.hide called");
+			logger.logVerbose("base class viewModelBase.hide called");
         } 
 	
 		return self;

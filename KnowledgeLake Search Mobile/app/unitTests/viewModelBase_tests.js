@@ -2,11 +2,11 @@
 define(['require',
         'jquery',
         'knockout',
-		'system',
+		'application',
 		'kendo',
         'viewmodels/viewModelBase',
 		'unitTests/unitTestSettings'],
-    function (require, $, ko, system, kendo, viewModelBase, TestSettings) {
+    function (require, $, ko, application, kendo, viewModelBase, TestSettings) {
         QUnit.module("Testing viewModelBase");
         
         QUnit.test("test viewModelBase ok", function () {
@@ -57,7 +57,7 @@ define(['require',
 			
 			//assert
 			QUnit.equal(message, TestSettings.testMessage); 
-			QUnit.equal(system.isToastVisible(), true);
+			QUnit.equal(application.isToastVisible(), true);
 		});
 		
 		QUnit.test("test viewModelBase.isBusy changes isBusy and shows app loading", function () {

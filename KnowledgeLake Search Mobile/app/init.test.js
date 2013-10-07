@@ -9,13 +9,15 @@ require(["config"], function (config) {
     require(["jquery", 
              "knockout", 
              "kendo",
-             "system", 
+             "application",
+             "logger",
 			 "extensions",
              "framework/logLevel"],
-    function($, ko, kendo, system, extensions, logLevel) {
+    function($, ko, kendo, application, logger, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [/*testRootPath + "system_tests",
+			testsToRun = [testRootPath + "application_tests",
+                          testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
 						  testRootPath + "rootViewModel_tests",
@@ -62,13 +64,12 @@ require(["config"], function (config) {
 						  testRootPath + "searchType_tests",
 						  testRootPath + "site_tests",
                           testRootPath + "klamlBuilderService_tests",
-						  testRootPath + "searchProperty_tests",*/
+						  testRootPath + "searchProperty_tests",
                           testRootPath + "documentViewModel_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
         
-        window.system = system;  
         window.AppLoaded = ko.observable(false);
         
         if (!config.isQunit && window.location.href.indexOf(appHref) < 0) {
@@ -82,7 +83,7 @@ require(["config"], function (config) {
         }*/
         
         QUnit.moduleStart(function (details) {
-            window.system.setLogLevel(logLevel.Verbose); 
+            logger.setLogLevel(logLevel.Verbose); 
         });
         
         require(testsToRun, function() {           

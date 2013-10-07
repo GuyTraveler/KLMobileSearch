@@ -1,5 +1,6 @@
 define(["knockout", 
-        "system", 
+        "application", 
+		"logger",
 		"viewmodels/viewModelBase",
         "IAuthenticationService", 
         "IWebsService", 
@@ -10,9 +11,9 @@ define(["knockout",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
-        "domain/keyValuePair",
+        "keyValuePair",
 		"domain/httpProtocols",], 
-function (ko, system, viewModelBase, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
+function (ko, application, logger, viewModelBase, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
 	      site, credential, credentialType, authenticationMode, keyValuePair, httpProtocols) {
     var configureSiteViewModel = function () {
         var self = this,
@@ -75,8 +76,8 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         self.isCredentialsValid = ko.observable(false);
         self.urlValidationImageSrc = ko.observable(questionImageUrl);
         self.credValidationImageSrc = ko.observable(questionImageUrl);
-        self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, system.strings.windows), 
-                                                   new keyValuePair(credentialType.claimsOrForms, system.strings.claimsForms)]);
+        self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, application.strings.windows), 
+                                                   new keyValuePair(credentialType.claimsOrForms, application.strings.claimsForms)]);
         		
      
         self.saveSiteSettingsAsync = function () { 
@@ -84,10 +85,10 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
 				writePromise,
 				dfd = $.Deferred();
 			
-            system.logVerbose("saving site settings");
+            logger.logVerbose("saving site settings");
 			
 			if (!self.isUrlValid()) {
-				self.setMessage(system.strings.urlInvalidMessage);
+				self.setMessage(application.strings.urlInvalidMessage);
 				dfd.reject(self.message());
 				return dfd.promise();
             }
@@ -101,28 +102,28 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
 					writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 	                    
 	                writePromise.done(function (result) { 
-						system.logVerbose("done writing site data, returning home");
+						logger.logVerbose("done writing site data, returning home");
 						
 						dfd.resolve(result);
-						system.showToast(system.strings.saveSuccess);							
+						application.showToast(application.strings.saveSuccess);							
 	                    window.App.navigate(homeUrl);
 	                });
 					
 					writePromise.fail(function (error) {
-						system.logVerbose("failed to write site data");
+						logger.logVerbose("failed to write site data");
 						
-	                    if (error.response === system.strings.InvalidSite) {
+	                    if (error.response === application.strings.InvalidSite) {
 	                        self.setMessage(error.response);
 	                    }
-						else if (error.response === system.strings.SiteConnectionExists) {
-	                        self.setMessage(system.strings.siteAlreadyConfigured);
+						else if (error.response === application.strings.SiteConnectionExists) {
+	                        self.setMessage(application.strings.siteAlreadyConfigured);
 	                    }
 	                    else {
 	                        //probably no system at all (emulator), should we take some other action?
-	                        self.setMessage(system.strings.errorWritingSiteData);
+	                        self.setMessage(application.strings.errorWritingSiteData);
 	                    }
 						
-						system.logError(self.message());
+						logger.logError(self.message());
 						
 						dfd.reject(self.message());
 	                });
@@ -141,14 +142,14 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         }
         
         self.closeSiteSettings = function () {
-            system.logVerbose("closing site settings");
+            logger.logVerbose("closing site settings");
             window.App.navigate(homeUrl);
         }
         
         self.validateSiteUrl = function () {				
             var dataService = new authenticationService(self.fullUrl());
             
-            system.logVerbose("validateSiteUrl called");			
+            logger.logVerbose("validateSiteUrl called");			
             
             self.isUrlValid(false);
             self.isCredentialsValid(false);
@@ -165,7 +166,7 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         self.onSiteUrlValidated = function (result) {
             var detectedCredentialType;
             
-            system.logVerbose("site url validation success");
+            logger.logVerbose("site url validation success");
             
             detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
             self.setValidUrl(detectedCredentialType);   
@@ -176,7 +177,7 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         self.onSiteUrlFailed = function (XMLHttpRequest, textStatus, errorThrown) {
             var status,
 				detectedCredentialType;
-            system.logVerbose("site url validation failed with status: " + status);
+            logger.logVerbose("site url validation failed with status: " + status);
             
 			status = XMLHttpRequest.status;
 			
@@ -247,7 +248,7 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
 			//probably already logging on
 			if (!logonPromise) {
 				getWebDfd.reject(false);
-				system.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
+				logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
 				return getWebDfd.promise();
             }
 			
@@ -300,15 +301,15 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         
         self.validateAll = function () {
             if (!self.isUrlValid()) {
-                self.setMessage(system.strings.urlInvalidMessage);
+                self.setMessage(application.strings.urlInvalidMessage);
                 return false;
             }
             else if (!self.isTitleValid()) {
-                self.setMessage(system.strings.siteTitleRequired);
+                self.setMessage(application.strings.siteTitleRequired);
                 return false;
             }
             else if (!self.isCredentialsValid()) {
-                self.setMessage(system.strings.credentialsInvalidMessage);
+                self.setMessage(application.strings.credentialsInvalidMessage);
                 return false;
             }
             
@@ -351,7 +352,7 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
         };
 		
 		self.afterShow = function (e) {
-			system.logVerbose("configureSiteViewModel.afterShow");
+			logger.logVerbose("configureSiteViewModel.afterShow");
 			
 			if(homeViewModel.selectedSite)
                 self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
@@ -365,7 +366,7 @@ function (ko, system, viewModelBase, authenticationService, websService, SiteDat
 				$("#siteUrlText").focus();
 			}
 			
-			system.showSoftKeyboard();
+			application.showSoftKeyboard();
         }
 		
         return self;

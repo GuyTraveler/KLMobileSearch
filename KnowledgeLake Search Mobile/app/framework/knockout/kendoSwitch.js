@@ -1,5 +1,5 @@
-define(['knockout', 'jquery', 'system'],
-    function (ko, $, system) {
+define(['knockout', 'jquery'],
+    function (ko, $) {
 		ko.bindingHandlers.kendoSwitch = {
             init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
 				var settings = valueAccessor();

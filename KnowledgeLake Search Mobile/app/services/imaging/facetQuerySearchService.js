@@ -1,9 +1,10 @@
 define(["jquery", 
-		"system",
-		"domain/keyValuePair", 
+		"application",
+		"logger",
+		"keyValuePair", 
 		"services/soapServiceBase", 
 		"extensions"], 
-function ($, system, keyValuePair, soapServiceBase) {
+function ($, application, logger, keyValuePair, soapServiceBase) {
     
     var facetQuerySearchService = function (siteUrl) {
         var self = this,
@@ -18,7 +19,7 @@ function ($, system, keyValuePair, soapServiceBase) {
                 new keyValuePair("languageName", navigator.language)
 			];
 			
-			system.logVerbose("Querying FacetQueryService with klaml: " + klaml);
+			logger.logVerbose("Querying FacetQueryService with klaml: " + klaml);
 			
 			return self.executeSoapMethodAsync("FacetSearch", parameters);
         }

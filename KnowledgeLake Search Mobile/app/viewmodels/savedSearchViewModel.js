@@ -1,10 +1,11 @@
 define(["knockout", 
-		"system", 
+		"application", 
+		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
 		"services/keywordValidationService", 
 		"services/imaging/serverSavedSearchesService"], 
-function (ko, system, viewModelBase, keywordConjunction, ValidationService, serverSavedSearchesService) {
+function (ko, application, logger, viewModelBase, keywordConjunction, ValidationService, serverSavedSearchesService) {
     var savedSearchViewModel = function () {
         var self = this,
             searchBuilderUrl = "#searchBuilder",
@@ -50,20 +51,20 @@ function (ko, system, viewModelBase, keywordConjunction, ValidationService, serv
           
             loadServerSavedSearchesPromise.fail(function (error) {
 				self.isBusy(false);
-                system.logWarning("Error loading saved searches: " + error);
+                logger.logWarning("Error loading saved searches: " + error);
             });            
         }
 		
 		self.clearKeyword = function () {
-			system.logVerbose("clearing keyword");
+			logger.logVerbose("clearing keyword");
 			self.keyword("");
 			
 			$("#savedSearchKeywordInput").focus();
-			system.showSoftKeyboard();
+			application.showSoftKeyboard();
 		}
       
         self.afterShow = function (e) {
-			system.logVerbose("savedSearchViewModel afterShow");
+			logger.logVerbose("savedSearchViewModel afterShow");
 			
 			self.searchDataSource([]);
             

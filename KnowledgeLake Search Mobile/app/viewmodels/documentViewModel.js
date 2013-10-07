@@ -1,9 +1,10 @@
 define(["knockout", 
-		"system",
         "services/documentService",
         "factory/logonServiceFactory",
+        "application",
+        "logger",
 		"viewmodels/viewModelBase"], 
-function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
+function (ko, documentService, LogonServiceFactory, application, logger, viewModelBase) {
     var documentViewModel = function () {
         var self = this;
                    
@@ -23,19 +24,19 @@ function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
         }
         
         self.init = function (e) {
-            system.logVerbose("documentViewModel init");
+            logger.logVerbose("documentViewModel init");
         }
         
         self.beforeShow = function (e) {
-            system.logVerbose("documentViewModel beforeShow");
+            logger.logVerbose("documentViewModel beforeShow");
         }
         
         self.show = function (e) {
-            system.logVerbose("documentViewModel show");
+            logger.logVerbose("documentViewModel show");
         }
         
         self.afterShow = function (e) {			
-            system.logVerbose("documentViewModel afterShow");
+            logger.logVerbose("documentViewModel afterShow");
             
             if(resultsViewModel && resultsViewModel.selectedResult)
             {       
@@ -46,7 +47,7 @@ function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
         }
         
         self.hide = function (e) {
-            system.logVerbose("documentViewModel hide");
+            logger.logVerbose("documentViewModel hide");
         }
         
         self.getDocumentProperties = function () {
@@ -56,7 +57,7 @@ function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
             
             if(resultsViewModel.selectedResult && savedSearchViewModel.site())
             {
-                window.App.loading = "<h1>" + system.strings.loading + "</h1>";
+                window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
                 service = new documentService(resultsViewModel.selectedResult.url);        
@@ -81,8 +82,8 @@ function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
                     getDocumentPropertiesPromise.fail(function (error) {
                         self.isBusy(false);
 						
-						system.logVerbose("document properties could not be obtained: " + error);
-						self.setErrorMessage(system.strings.unauthorized);
+						logger.logVerbose("document properties could not be obtained: " + error);
+						self.setMessage(application.strings.unauthorized);
                         
                         dfd.reject(error);
                     });
@@ -91,8 +92,8 @@ function (ko, system, documentService, LogonServiceFactory, viewModelBase) {
                 logonPromise.fail(function (error) {
                     self.isBusy(false);
 					
-					system.logVerbose("could not navigate to result. logon failed.");
-					self.setErrorMessage(system.strings.logonFailed);
+					logger.logVerbose("could not navigate to result. logon failed.");
+					self.setMessage(application.strings.logonFailed);
                     
                     dfd.reject(error);
                 });

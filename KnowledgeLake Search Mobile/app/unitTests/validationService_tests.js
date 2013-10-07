@@ -1,6 +1,5 @@
-define(["services/keywordValidationService", 
-		"system", 
-		"jquery"], function (KeywordValidationService, system, $) {
+define(["services/keywordValidationService",
+		"jquery"], function (KeywordValidationService, $) {
         QUnit.module("services/keywordValidationService");
 
         QUnit.test("test keywordValidationService keyword &", function () {

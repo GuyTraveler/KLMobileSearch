@@ -1,10 +1,11 @@
 define(["jquery",
         "knockout",
-        "system",
+        "application",
+		"logger",
         "domain/keywordConjunction",
         "ISearchService", 
         "services/soapParsingService"], 
-    function ($, ko, system, keywordConjunction, searchService, SoapParsingService) {
+    function ($, ko, application, logger, keywordConjunction, searchService, SoapParsingService) {
         
         var soapQueryServiceBase = function (siteUrl, keywordTemplate, fnMassageKeyword) {
             var self = this,
@@ -21,7 +22,7 @@ define(["jquery",
                 trimDuplicates = (trimDuplicates && trimDuplicates !== false) ? true : false;
                 queryXml = keywordTemplate.replace("{clause}", clause).replace("{trimDuplicates}", trimDuplicates).replace("{maxResults}", maxResults);
                 
-				system.logVerbose("calling QueryEx with XML: " + queryXml);
+				logger.logVerbose("calling QueryEx with XML: " + queryXml);
                 
                 service.QueryEx(queryXml)
                     .done(function (result) {
@@ -41,12 +42,12 @@ define(["jquery",
                     wordCount;
                 
                 if (typeof keywordPhrases === 'string') {
-                    system.logVerbose("keywordPhrases is string: " + keywordPhrases);
+                    logger.logVerbose("keywordPhrases is string: " + keywordPhrases);
                     
                     keywordClause = fnMassageKeyword(keywordPhrases);
                 }
                 else if (Object.prototype.toString.call(keywordPhrases) === '[object Array]') {
-                    system.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);
+                    logger.logVerbose("keywordPhrases is array of length: " + keywordPhrases.length);
                     
                     wordCount = keywordPhrases.length;
                                         
@@ -59,7 +60,7 @@ define(["jquery",
                     keywordClause = $.trim(keywordClause);                                       
                 }
                 
-                system.logVerbose("keywordPhrases parsed to: " + keywordClause);
+                logger.logVerbose("keywordPhrases parsed to: " + keywordClause);
                 
                 return keywordClause;
             };

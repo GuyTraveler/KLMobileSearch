@@ -1,9 +1,10 @@
 define(["jquery", 
-		"system",
+		"application",
+		"logger",
 		"IWebsService",  
-        "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse"], 
-	function ($, system, websService, PromiseResolveResponse, PromiseRejectResponse) {
+        "framework/promiseResponse/promiseResolveResponse", 
+        "framework/promiseResponse/promiseRejectResponse"], 
+	function ($, application, logger, websService, PromiseResolveResponse, PromiseRejectResponse) {
 		var claimsLogonService = function (siteUrl) {
 			var self = this;
 			
@@ -19,24 +20,24 @@ define(["jquery",
                 self.windowRef = window.open(siteUrl, "_blank");                                    
                 
 				self.windowRef.addEventListener("loadstart", function (e) {
-					system.logVerbose("claimsLogonService.windowRef.loadstart: " + e.url);
+					logger.logVerbose("claimsLogonService.windowRef.loadstart: " + e.url);
                 });
 				
 				self.windowRef.addEventListener("loaderror", function (e) {
-					system.logVerbose("claimsLogonService.windowRef.loaderror: " + e.message);
+					logger.logVerbose("claimsLogonService.windowRef.loaderror: " + e.message);
                 });
 				
                 self.windowRef.addEventListener("loadstop", function (e) {
 					self.windowRef.currentUrl = e.url;
 					
-					system.logVerbose("claimsLogonService.windowRef.loadstop called!");
+					logger.logVerbose("claimsLogonService.windowRef.loadstop called!");
 					
                     if (self.isLoggedOnUrl(e.url)) {
-                        system.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
+                        logger.logVerbose(e.url + " successfully loaded in child window! Cookie should be obtained, closing child window."); 
                         self.windowRef.close();
                     }
                     else {
-                        system.logVerbose(e.url + " loaded in child window...");
+                        logger.logVerbose(e.url + " loaded in child window...");
                     }
                 });
                 
@@ -44,12 +45,12 @@ define(["jquery",
                     self.isLoggingOn = false;
                     
                     if (!self.isLoggedOnUrl(self.windowRef.currentUrl)) {
-                        system.logVerbose(self.windowRef.currentUrl + " present when child browser closed! Cookie failed to be obtained."); 
-                        dfd.reject(new PromiseRejectResponse(system.strings.logonFailed, null));          
+                        logger.logVerbose(self.windowRef.currentUrl + " present when child browser closed! Cookie failed to be obtained."); 
+                        dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, null));          
                     }
 					else {
-						system.logVerbose("child window closed with successful result.");
-						dfd.resolve(new PromiseResolveResponse(system.strings.LogonSucceeded));
+						logger.logVerbose("child window closed with successful result.");
+						dfd.resolve(new PromiseResolveResponse(application.strings.LogonSucceeded));
                     }							
                 });
 				
@@ -79,7 +80,7 @@ define(["jquery",
 				if (!url) return false;
 				if (url.toUpperCase().indexOf(siteUrl.toUpperCase()) != 0) return false;
 				
-				return !system.urlContainsClaimsSignInIndicator(url);
+				return !application.urlContainsClaimsSignInIndicator(url);
             };
 			
 			return self;

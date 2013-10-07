@@ -9,12 +9,12 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
-		"system",
+		"application",
         "unitTests/unitTestSettings",
 		"domain/keywordConjunction",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, system, TestSettings, keywordConjunction) {
+    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, application, TestSettings, keywordConjunction) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -73,7 +73,7 @@ define(['require',
                         
             //assert
 			QUnit.equal(vm.resultDataSource().length, resultData.length);
-            QUnit.equal(vm.resultCountString(), system.strings.noResultsFound);
+            QUnit.equal(vm.resultCountString(), application.strings.noResultsFound);
         });
 		  
 		QUnit.test("test resultCountString reads properly for ONE result", function () {
@@ -88,7 +88,7 @@ define(['require',
             vm = new resultsViewModel();
 			vm.SetDataSource(resultData);
 			
-			expectedMessage = system.strings.resultCountFormat.format(resultData.length.toString());
+			expectedMessage = application.strings.resultCountFormat.format(resultData.length.toString());
 			expectedMessage = expectedMessage.substring(0, expectedMessage.length - 1);
                         
             //assert
@@ -110,7 +110,7 @@ define(['require',
             vm = new resultsViewModel();
 			vm.SetDataSource(resultData);
 			
-			expectedMessage = system.strings.resultCountFormat.format(resultData.length.toString());
+			expectedMessage = application.strings.resultCountFormat.format(resultData.length.toString());
                         
             //assert
             QUnit.equal(vm.resultDataSource().length, resultData.length);
@@ -346,7 +346,7 @@ define(['require',
             //assert
             QUnit.equal(product, true);
         });
-        
+        /*
         QUnit.test("test resultsViewModel editProperties", function () {
             //arrange
             var vm,
@@ -361,7 +361,7 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });
-        
+        */
         QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
@@ -411,7 +411,7 @@ define(['require',
             });
             
             keywordSearchPromise.fail(function (error) {
-                QUnit.equal(error.response, system.strings.logonFailed);
+                QUnit.equal(error.response, application.strings.logonFailed);
                 QUnit.start();
             });
         });

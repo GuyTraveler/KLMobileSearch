@@ -1,5 +1,5 @@
 define(["jquery", 
-		"domain/keyValuePair", 
+		"keyValuePair", 
 		"services/soapServiceBase",
 		//uncaught depends
 		"extensions"], 

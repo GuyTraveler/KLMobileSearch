@@ -1,5 +1,5 @@
-define(['knockout', 'jquery', 'system'],
-    function (ko, $, system) {
+define(['knockout', 'jquery'],
+    function (ko, $) {
 		ko.bindingHandlers.kendoListView = {
             init: function(element, valueAccessor) {
                 $(element).kendoMobileListView(valueAccessor());

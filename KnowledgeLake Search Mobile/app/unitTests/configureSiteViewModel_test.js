@@ -1,4 +1,4 @@
-define(["system", 
+define(["application", 
 		"ISiteDataCachingService",
 		"viewmodels/configureSiteViewModel",
         'viewmodels/homeViewModel', 
@@ -8,7 +8,7 @@ define(["system",
 		"domain/authenticationMode",
 		"domain/httpProtocols",
 		"unitTests/unitTestSettings"],    
-	function (system, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, 
+	function (application, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, 
 			  credential, credentialType, authenticationMode, httpProtocols, TestSettings) {
 		QUnit.module("Testing configureSiteViewModel");
        
@@ -43,9 +43,9 @@ define(["system",
 			
 			QUnit.equal(vm.credentialTypes().length, 2);
 			QUnit.equal(vm.credentialTypes()[0].key, credentialType.ntlm);
-			QUnit.equal(vm.credentialTypes()[0].value, system.strings.windows);
+			QUnit.equal(vm.credentialTypes()[0].value, application.strings.windows);
 			QUnit.equal(vm.credentialTypes()[1].key, credentialType.claimsOrForms);
-			QUnit.equal(vm.credentialTypes()[1].value, system.strings.claimsForms);
+			QUnit.equal(vm.credentialTypes()[1].value, application.strings.claimsForms);
 			
 			QUnit.equal(vm.isTitleValid(), false);			
         });
@@ -409,7 +409,7 @@ define(["system",
 			
 			//assert
 			QUnit.equal(vm.validateAll(), false);
-			QUnit.equal(vm.message(), system.strings.urlInvalidMessage);
+			QUnit.equal(vm.message(), application.strings.urlInvalidMessage);
         });
 		
 		QUnit.test("test configureSiteViewModel.validateAll validates bad site title", function () {
@@ -425,7 +425,7 @@ define(["system",
 			QUnit.ok(vm);
 			
 			QUnit.equal(vm.validateAll(), false);
-			QUnit.equal(vm.message(), system.strings.siteTitleRequired);
+			QUnit.equal(vm.message(), application.strings.siteTitleRequired);
         });
 		
 		QUnit.test("test configureSiteViewModel.validateAll validates bad credentials", function () {
@@ -440,7 +440,7 @@ define(["system",
 			
 			//assert
 			QUnit.equal(vm.validateAll(), false);
-			QUnit.equal(vm.message(), system.strings.credentialsInvalidMessage);
+			QUnit.equal(vm.message(), application.strings.credentialsInvalidMessage);
         });
 		
 		QUnit.test("test configureSiteViewModel.validateAll validates all good", function () {
@@ -479,7 +479,7 @@ define(["system",
             });
 			
 			saveSettingsPromise.fail(function() {
-				QUnit.equal(vm.message(), system.strings.urlInvalidMessage);
+				QUnit.equal(vm.message(), application.strings.urlInvalidMessage);
 				QUnit.start();
             });
 		});
@@ -513,7 +513,7 @@ define(["system",
             });
 			
 			saveSettingsPromise.fail(function () {
-				QUnit.equal(vm.message(), system.strings.credentialsInvalidMessage);
+				QUnit.equal(vm.message(), application.strings.credentialsInvalidMessage);
 				QUnit.start();
             });
 		});

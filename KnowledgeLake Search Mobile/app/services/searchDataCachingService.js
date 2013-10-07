@@ -1,9 +1,9 @@
 define(["jquery", 
         "FileManagement",  
-		"system",
-        "domain/promiseResponse/promiseResolveResponse", 
-        "domain/promiseResponse/promiseRejectResponse"], 
-        function ($, File, system, PromiseResolveResponse, PromiseRejectResponse) {
+		"application",
+        "framework/promiseResponse/promiseResolveResponse", 
+        "framework/promiseResponse/promiseRejectResponse"], 
+        function ($, File, application, PromiseResolveResponse, PromiseRejectResponse) {
     var service = function () {
         var self = this, 
             searchDataFileName = "searches.dat";
@@ -26,7 +26,7 @@ define(["jquery",
                 var existsPromise = File.ExistsAsync(searchDataFileName);
                     
                 existsPromise.done(function (result) {
-                    if(result.response === system.strings.FileFound)
+                    if(result.response === application.strings.FileFound)
                     {
                         var readPromise = File.ReadAsync(searchDataFileName);
                         
@@ -77,7 +77,7 @@ define(["jquery",
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(system.strings.SiteConnectionExists, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.SiteConnectionExists, null));
                 }
             }
             else
@@ -110,11 +110,11 @@ define(["jquery",
                     }
                     
                     else
-                        dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));               
+                        dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));               
 				}
                 else
                 {
-                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));
                 }
             }
             else
@@ -139,11 +139,11 @@ define(["jquery",
                     self.WriteSearchData(dfd);
                 }
                 else
-                    dfd.reject(new PromiseRejectResponse(system.strings.InvalidSite, null));
+                    dfd.reject(new PromiseRejectResponse(application.strings.InvalidSite, null));
             }
             else
             {
-                dfd.reject(new PromiseRejectResponse(system.strings.SiteDataEmpty, null));
+                dfd.reject(new PromiseRejectResponse(application.strings.SiteDataEmpty, null));
             }
             
             return dfd.promise();

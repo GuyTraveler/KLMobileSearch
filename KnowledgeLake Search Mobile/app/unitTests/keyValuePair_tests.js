@@ -1,5 +1,5 @@
 /*global QUnit*/
-define(["domain/keyValuePair"],
+define(["keyValuePair"],
     function (keyValuePair) {
         QUnit.module("Testing keyValuePair");
         

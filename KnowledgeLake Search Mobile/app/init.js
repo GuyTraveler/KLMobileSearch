@@ -2,7 +2,7 @@
 //**require**//
 var App,
     AppLoaded,
-    system;
+    application;
 
 require(["config"], function (config) {
     require.config(config);
@@ -10,7 +10,8 @@ require(["config"], function (config) {
     require(["jquery", 
              "knockout", 
              "kendo", 
-             "system", 
+             "application", 
+			 "logger",
 			 "extensions",
              "framework/logLevel",
              //load viewModel REFERENCES early here so that we don't get goofy styling issues later...
@@ -26,23 +27,23 @@ require(["config"], function (config) {
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
 			 "framework/knockout/kendoListView"], 
-    function($, ko, kendo, system, extensions, logLevel, rootViewModel) {
+    function($, ko, kendo, application, logger, extensions, logLevel, rootViewModel) {
         var testHref = "test.html?coverage=true";                
         
         if (config.isQunit && window.location.href.indexOf(testHref) < 0) {
             window.location.href = testHref;
         }
            
-        system.setLogLevel(config.logLevel);
+        logger.setLogLevel(config.logLevel);
         window.AppLoaded = ko.observable(false);
           
         ko.applyBindings(new rootViewModel(), document.body);
                 
         $(document).ready(function () {
-            system.logVerbose("DOM is ready - waiting for device"); 
+            logger.logVerbose("DOM is ready - waiting for device"); 
        
             document.addEventListener("deviceready", function () {
-                system.logVerbose("device ready!");
+                logger.logVerbose("device ready!");
             }, false);  
         });
     });
