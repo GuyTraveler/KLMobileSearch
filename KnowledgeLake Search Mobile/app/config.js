@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = true, 
+    var isUnitTesting = false, 
 	    loggingLevel = logLevel.Verbose;
 	 
 	var config = {           
@@ -14,7 +14,8 @@ define(["framework/logLevel"], function(logLevel) {
 	       ntlm: 'lib/ntlm',
 	       i18n: 'lib/i18n',
 		   jsUri: 'lib/jsUri',
-           CryptoJS: 'lib/aes'
+           CryptoJS: 'lib/aes',
+		   moment: 'lib/moment'
        },
 	   shim: {
 	       jquery: {
@@ -32,6 +33,9 @@ define(["framework/logLevel"], function(logLevel) {
            },
            CryptoJS: {
                exports: 'CryptoJS'
+           },
+		   moment: {
+			   exports: 'moment'
            }
 	   },
 	   map: {              
@@ -48,7 +52,8 @@ define(["framework/logLevel"], function(logLevel) {
 			   'logLevel': 'framework/logLevel',
 			   'extensions': 'framework/extensions',
 			   'logger': 'framework/logger',
-			   'Uri': 'jsUri',
+			   'guid': 'framework/guid',
+			   'Uri': 'jsUri',			   
 			   
                //service locations               
                //sharepoint wrappers

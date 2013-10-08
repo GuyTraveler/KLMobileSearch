@@ -6,7 +6,11 @@ define({
     currentUserName: "0#.w|dev\\spadmin",    
 	claimsTestUrl: "https://knowledgelake.sharepoint.com",
 	claimsTestUser: "office365dev1@knowledgelake.onmicrosoft.com",
+	claimsTestUserOnly: "office365dev1",
+	claimsTestDomainOnly: "knowledgelake.onmicrosoft.com",
 	claimsTestPassword: "Cloud750",
+	claimsValidXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Test />",
+	claimsFaultXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><S:Envelope xmlns:S=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:wst=\"http://schemas.xmlsoap.org/ws/2005/02/trust\" xmlns:psf=\"http://schemas.microsoft.com/Passport/SoapServices/SOAPFault\"><S:Body><S:Fault><S:Code><S:Value>S:Sender</S:Value><S:Subcode><S:Value>wst:FailedAuthentication</S:Value></S:Subcode></S:Code><S:Reason><S:Text xml:lang=\"en-US\">Authentication Failure</S:Text></S:Reason><S:Detail><psf:error><psf:value>0x80048821</psf:value><psf:internalerror><psf:code>0x80041034</psf:code><psf:text>The specified member name is either invalid or empty.&#x000D;&#x000A;</psf:text></psf:internalerror></psf:error></S:Detail></S:Fault></S:Body></S:Envelope>",
 	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
     siteTitle: "ProdSp2010",
@@ -84,5 +88,5 @@ define({
     testSearchGreaterThanOrEqual: ">=",
     testChoices: ["Choice 1", "Choice 2", "Choice 3"],
     testOperators: ["=", "Like", "Starts With"],
-	testMessage: "A status message"
+	testMessage: "A status message"	
 });
