@@ -1,12 +1,13 @@
 define(["jquery", 
 		"application",
         "domain/Constants",
+        "domain/documentProperty",
 		"ISiteDataService", 
 		"IListsService",
 		"Uri",
 		//uncaught depends
 		"extensions"],
-	function ($, application, Constants, SiteDataService, ListsService, Uri) {
+	function ($, application, Constants, documentProperty, SiteDataService, ListsService, Uri) {
 		var documentService = function (docUrl) {
 			var self = this,				
 				dispFormRelToLibrary = "/Forms/DispForm.aspx",
@@ -230,7 +231,7 @@ define(["jquery",
                         getContentTypeIdPromise.done(function (listItem) {   
                             var getListContentTypePromise = self.GetListContentTypeAsync(self.parseContentTypeIdFromListItem(listItem));
                             
-                            getListContentTypePromise.done(function (contentType) {  
+                            getListContentTypePromise.done(function (contentType) {
                                 var viewProperties = self.parseViewPropertiesFromContentType(contentType);
                                 var viewFields = self.buildViewFieldsFromViewProperties(viewProperties);
                                 
@@ -434,6 +435,8 @@ define(["jquery",
             }
             
             self.getDocumentPropertiesFromListItemValues = function (viewProperties, listItemValues) {
+                console.log("viewProperties: " + JSON.stringify(viewProperties));
+                console.log("listItemValues: " + JSON.stringify(listItemValues));
                 var values = self.parseRowFromListItem(listItemValues);
                 
                 if(values && viewProperties)

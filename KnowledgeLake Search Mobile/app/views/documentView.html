@@ -4,7 +4,14 @@
     </div>
 </header>
 
-<span data-bind="text: documentTitle"></span>
+<h3 data-bind="text: documentTitle"></h3>
+<div data-bind="foreach: documentDataSource">
+    <div data-bind="ifnot: hidden">
+        <span data-bind="text: displayName"></span>
+        <span>: </span>
+        <span data-bind="text: value"></span>
+    </div>
+</div>
 
 <!--<footer data-role="footer">
     <div data-role="tabstrip" data-selected-index="100">

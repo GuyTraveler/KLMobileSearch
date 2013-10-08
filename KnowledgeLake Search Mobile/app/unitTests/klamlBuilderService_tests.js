@@ -21,7 +21,7 @@ define(['services/klamlBuilderService',
                         
             //act
             result = service.buildKlamlQueryFromServerSavedQuery(TestSettings.testSearchKeyword, searchProperties, keywordConjunction.and);
-            console.log(result);
+            
             //assert
             QUnit.equal(result, TestSettings.testBuildQuery);
         });
@@ -38,7 +38,7 @@ define(['services/klamlBuilderService',
                         
             //act
             result = service.buildKlamlQueryFromServerSavedQuery(TestSettings.testSearchKeyword, searchProperties, keywordConjunction.or);
-            console.log(result);
+            
             //assert
             QUnit.equal(result, TestSettings.testBuildQueryOr);
         });

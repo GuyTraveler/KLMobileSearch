@@ -354,4 +354,166 @@ define(["services/documentService",
 				QUnit.start();	
 			});
         });
+        
+        
+        
+        
+        
+        
+        QUnit.asyncTest("Test documentService.getDocumentPropertiesAsync", function () {
+            //arrange
+            var service,
+				logonPromise;
+            
+            //act
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+						
+            //assert
+            logonPromise.done(function () {
+				service.getDocumentPropertiesAsync()
+					.done(function (result) {
+						QUnit.ok(true);
+						QUnit.start();
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						QUnit.ok(false, "getDocumentProperties failed with status " + XMLHttpRequest.status);
+						QUnit.start();	
+					});
+            });
+			
+			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				QUnit.ok(false, "logon failed for documentService");
+				QUnit.start();	
+			});
+        });
+        
+        QUnit.asyncTest("Test documentService.getListItemsAsync", function () {
+            //arrange
+            var service,
+				logonPromise;
+            
+            //act
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+						
+            //assert
+            logonPromise.done(function () {
+				service.getListItemsAsync(TestSettings.testDocumentListID, null, TestSettings.testDocumentQuery, TestSettings.testDocumentViewFields, 0)
+					.done(function (result) {
+						QUnit.ok(true);
+						QUnit.start();
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
+						QUnit.start();	
+					});
+            });
+			
+			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				QUnit.ok(false, "logon failed for documentService");
+				QUnit.start();	
+			});
+        });   
+        
+        QUnit.asyncTest("Test documentService.GetListContentTypeAsync", function () {
+            //arrange
+            var service,
+				logonPromise;
+            
+            //act
+            service = new documentService(TestSettings.docUrl);
+			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
+			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+						
+            //assert
+            logonPromise.done(function () {
+				service.GetListContentTypeAsync(TestSettings.testDocumentContentTypeID)
+					.done(function (result) {
+						QUnit.ok(true);
+						QUnit.start();
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
+						QUnit.start();	
+					});
+            });
+			
+			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				QUnit.ok(false, "logon failed for documentService");
+				QUnit.start();	
+			});
+        });   
+        
+        QUnit.test("Test documentService.parseContentTypeIdFromListItem", function () {
+            //arrange
+            var service,
+                expected = TestSettings.testDocumentContentTypeID;
+            
+            service = new documentService(TestSettings.docUrl);
+            
+            //act
+			var result = service.parseContentTypeIdFromListItem(TestSettings.testDocumentContentTypeIDListItem);
+						
+            //assert
+            QUnit.equal(expected, result);
+        });
+        
+        QUnit.test("Test documentService.parseRowFromListItem", function () {
+            //arrange
+            var service,
+                expected = TestSettings.testDocumentParsedRow;
+            
+            service = new documentService(TestSettings.docUrl);
+            
+            //act
+			var result = service.parseRowFromListItem(TestSettings.testDocumentContentTypeIDListItem);
+						
+            //assert
+            QUnit.deepEqual(expected, result);
+        });
+        
+        QUnit.test("Test documentService.parseViewPropertiesFromContentType", function () {
+            //arrange
+            var service,
+                expected = TestSettings.testDocumentParsedViewProperties;
+            
+            service = new documentService(TestSettings.docUrl);
+            
+            //act
+			var result = service.parseViewPropertiesFromContentType(TestSettings.testDocumentContentType);
+            
+            //assert
+            QUnit.equal(JSON.stringify(expected), JSON.stringify(result));
+        });
+        
+        QUnit.test("Test documentService.buildViewFieldsFromViewProperties", function () {
+            //arrange
+            var service,
+                expected = TestSettings.testDocumentBuildViewFields;
+            
+            service = new documentService(TestSettings.docUrl);
+            
+            //act
+			var result = service.buildViewFieldsFromViewProperties(TestSettings.testDocumentParsedViewProperties);
+            
+            //assert
+            QUnit.equal(expected, result);
+        });
+        
+        QUnit.test("Test documentService.getDocumentPropertiesFromListItemValues", function () {
+            //arrange
+            var service,
+                expected = TestSettings.testDocumentParsedProperties;
+            
+            service = new documentService(TestSettings.docUrl);
+            
+            //act
+			var result = service.getDocumentPropertiesFromListItemValues(TestSettings.testDocumentParsedViewProperties, TestSettings.testDocumentListItemValues);
+
+            //assert
+            QUnit.deepEqual(expected, result);
+        });
 	});
