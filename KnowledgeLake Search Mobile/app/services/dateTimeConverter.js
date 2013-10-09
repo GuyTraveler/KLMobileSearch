@@ -161,9 +161,33 @@ define([], function () {
             return localeString;
         };
         
+        self.toDateString = function (dateTime) {
+            var date = dateTime ? new Date(dateTime) : new Date();
+            
+            return self.formatDate(date, "yyyy-MM-dd");
+        }
+        
+        self.convertToKlamlDateTime = function (start, end) {
+            var klamlDateTimeFormat = "MM/dd/yyyy HH:mm:ss",
+                startDate = self.getUTCDate(start),
+                endDate = self.getUTCDate(end, true);
+            
+            return {
+                startDate: self.formatDate(startDate, klamlDateTimeFormat),
+                endDate: self.formatDate(endDate, klamlDateTimeFormat)
+            };
+        }        
+        
+        self.getUTCDate = function (date, endingDay) {
+            var gmtDate = date ? new Date(date) : new Date();
+            var dayEnd = endingDay ? 86399999 : 0; 
+            
+            return (new Date(gmtDate.valueOf() + gmtDate.getTimezoneOffset() * 60000 + dayEnd));
+        }
+        
         self.formatStringParser = function (formatString) {
             var formatArray = [],
-                separatorArray = ["/", " ", ":", ".", "-"],
+                separatorArray = ["/", " ", ":", ".", "-", "T", "Z"],
                 part = "";
             
             if(formatString)
@@ -204,7 +228,8 @@ define([], function () {
             var year = dateTime.getFullYear(); // xxxx
             
             var hour = dateTime.getHours(); // 0-23 (if greater than 12 do -12 and pm)
-            var minute = dateTime.getMinutes(); // 0-59            
+            var minute = dateTime.getMinutes(); // 0-59       
+            var second = dateTime.getSeconds();
             
             for(i = 0; i < formatArray.length; i++)
             {                
@@ -258,6 +283,12 @@ define([], function () {
                         break;
                     case "tt":
                         char = self.calculatePeriod(hour);
+                        break;
+                    case "ss":
+                        if(second < 10)
+                            char = "0" + second.toString();
+                        else
+                            char = second;
                         break;
                     default:
                         char = formatArray[i];                    

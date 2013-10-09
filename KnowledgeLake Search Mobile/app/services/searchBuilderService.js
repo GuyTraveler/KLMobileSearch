@@ -1,15 +1,17 @@
 define(["jquery",
         "knockout",
+        "domain/application",
         "domain/Constants",
         "factory/logonServiceFactory",
         "services/searchParsingService",
         "services/imaging/facetQuerySearchService",
+        "services/dateTimeConverter",
         "domain/searchProperty",
         "domain/catalogPropertyControlType",
         "ntlm",
 		"domain/keywordConjunction",
         "extensions"],
-        function ($, ko, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
+        function ($, ko, application, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, DateTimeConverter, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
         
 		var searchBuilderService = function () {
 			var self = this;
@@ -81,7 +83,7 @@ define(["jquery",
 					property,
 					controlType,
 					choices,
-					klamlSearchFieldPropertiesLength = klamlSearchFieldProperties ? klamlSearchFieldProperties.length : 0,
+					klamlSearchFieldPropertiesLength,
 					searchPropertiesLength;
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
@@ -104,43 +106,61 @@ define(["jquery",
                     propertiesList.push(property);
                     propertiesName.push(property.name);                                                          
                 }
-				
-				searchPropertiesLength = propertiesList.length;
-				
-				for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
-                {
-					for (var j = 0; j < searchPropertiesLength; j++) 
-					{
-						property = propertiesList[j];
-						
-						if (property.name === klamlSearchFieldProperties[i].name)
-	                    {
-							var newSearchProperty = new searchProperty(property.choices(),
-								                                      property.controlType,
-								                                      property.hidden,
-								                                      property.description,
-								                                      property.dataType,
-								                                      property.name,
-								                                      (klamlSearchFieldProperties[i].id ? klamlSearchFieldProperties[i].id : ""),
-								                                      property.operators());
-	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition);
-	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
-	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
-							newSearchProperty.conjunctionVisible(i !== klamlSearchFieldPropertiesLength - 1);
-	                        
-	                        searchProperties.push(newSearchProperty);
-	                        break;
-	                    }
-                    }                    
-                }                  
+                
+                if(klamlSearchFieldProperties)
+                {				
+                    //klamlSearchFieldProperties = self.trimDuplicateRangeProperties(klamlSearchFieldProperties);
+                    
+    				searchPropertiesLength = propertiesList.length;
+                    klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length;
+    				
+    				for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
+                    {
+    					for (var j = 0; j < searchPropertiesLength; j++) 
+    					{
+    						property = propertiesList[j];
+    						
+    						if (property.name === klamlSearchFieldProperties[i].name)
+    	                    {
+    							var newSearchProperty = new searchProperty(property.choices(),
+    								                                      property.controlType,
+    								                                      property.hidden,
+    								                                      property.description,
+    								                                      property.dataType,
+    								                                      property.name,
+    								                                      (klamlSearchFieldProperties[i].id ? klamlSearchFieldProperties[i].id : ""),
+    								                                      property.operators());
+                                
+                                if(newSearchProperty.controlType === catalogPropertyControlType.Calendar)
+                                {
+                                    newSearchProperty.value(DateTimeConverter.toDateString(klamlSearchFieldProperties[i].condition1));
+                                    newSearchProperty.secondaryValue(DateTimeConverter.toDateString(klamlSearchFieldProperties[i].condition2));
+                                }
+                                
+                                else
+                                {                                    
+        	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition1);
+                                    newSearchProperty.secondaryValue(klamlSearchFieldProperties[i].condition2);
+                                }
+                                
+    	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
+    	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
+    							newSearchProperty.conjunctionVisible(i !== klamlSearchFieldPropertiesLength - 1);
+    	                        
+    	                        searchProperties.push(newSearchProperty);
+    	                        break;
+    	                    }
+                        }                    
+                    }  
+                }
                 
                 return {
 					propertiesList: propertiesList,
 					propertiesName: propertiesName,
 					searchProperties: searchProperties
                 };                
-            }
-			
+            }    
+            
 			self.getChoicesForSearchProperty = function (controlType, ArrayOfCatalogPropertyBase, properties) {
 				var choicesText = "Choices",
 					choices = Constants.radiobuttonValues;

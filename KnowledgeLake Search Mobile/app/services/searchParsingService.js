@@ -24,17 +24,50 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                         {
                             if(fields[i])
                             {
-                                klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(idProperty),
-																						$(fields[i]).attr(nameProperty), 
-                                                                                        self.GetSearchPropertyOperator($(fields[i]).attr(operatorProperty)), 
-                                                                                        $(fields[i]).attr(conditionProperty), 
-                                                                                        ($(fields[i]).attr(conjunctionProperty)).parseConjunctionToBool()));
+                                var duplicateFieldIndex = self.checkForDuplicateFieldProperty(klamlSearchFieldProperties, $(fields[i]).attr(idProperty));
+                                
+                                if(duplicateFieldIndex === -1)
+                                {
+                                    klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(idProperty),
+    																						$(fields[i]).attr(nameProperty), 
+                                                                                            self.GetSearchPropertyOperator($(fields[i]).attr(operatorProperty)), 
+                                                                                            $(fields[i]).attr(conditionProperty), 
+                                                                                            "",
+                                                                                            ($(fields[i]).attr(conjunctionProperty)).parseConjunctionToBool()));
+                                }
+                                
+                                else
+                                {
+                                    klamlSearchFieldProperties[duplicateFieldIndex].operator = application.strings.Range;
+                                    klamlSearchFieldProperties[duplicateFieldIndex].condition2 = $(fields[i]).attr(conditionProperty);
+                                }
                             }
                         }
                     }
                 }
                 
                 return klamlSearchFieldProperties;
+            }
+            
+            self.checkForDuplicateFieldProperty = function (searchProperties, id) {
+                var index = -1;
+                
+                if(searchProperties)
+                {
+                    for(var i = searchProperties.length - 1; i >= 0; i--)
+                    {
+                        if(searchProperties[i].id && searchProperties[i].id !== "")
+                        {
+                            if(searchProperties[i].id === id)
+                            {
+                                index = i; 
+                                break;
+                            }    
+                        }                            
+                    }                    
+                }                
+                
+                return index;
             }
 
             self.GetSearchPropertyOperator = function(operatorToken)

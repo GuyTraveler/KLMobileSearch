@@ -9,7 +9,9 @@ require(["config"], function (config) {
     
     require(["jquery", 
              "knockout", 
-             "kendo", 
+             "kendo", /*
+             "kendoCore",
+             "kendoCalendar",   */         
              "application", 
 			 "logger",
 			 "extensions",
@@ -27,7 +29,7 @@ require(["config"], function (config) {
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
 			 "framework/knockout/kendoListView"], 
-    function($, ko, kendo, application, logger, extensions, logLevel, rootViewModel) {
+    function($, ko, kendo, /*kendoCore, kendoCalendar,*/ application, logger, extensions, logLevel, rootViewModel) {
         var testHref = "test.html?coverage=true";                
         
         if (config.isQunit && window.location.href.indexOf(testHref) < 0) {

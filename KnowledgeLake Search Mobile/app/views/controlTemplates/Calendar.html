@@ -2,9 +2,15 @@
     <select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
 </div>
 <div class="pull-left">
-    <input type="date" data-bind=" value: data.value" />
-    <div data-bind="if: data.selectedOperator == 'Range'">
+    <input id="datepicker" type="date" data-bind=" value: data.value" />
+    <div data-bind="if: data.isRange">
         <label>To</label>
-        <input type="date" data-bind=" value: data.value" />
+        <input id="datepicker" type="date" data-bind=" value: data.secondaryValue" />
     </div>
 </div>
+<script>
+    /*$(document).ready(function() {
+        // create DatePicker from input HTML element
+        $("#datepicker").kendoDatePicker();                
+    });*/
+</script>

@@ -78,6 +78,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
         }
       
         self.executeSearch = function (e) {
+            // add validation 
             var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
             
             if(klaml)  

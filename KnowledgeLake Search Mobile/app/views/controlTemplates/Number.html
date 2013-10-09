@@ -4,8 +4,8 @@
 
 <div class="pull-left">    
     <input type="number" data-bind=" value: data.value" />
-    <div data-bind="if: data.selectedOperator == 'Range'">
+    <div data-bind="if: data.isRange">
         <label>To</label>
-        <input type="number" data-bind=" value: data.value" />
+        <input type="number" data-bind=" value: data.secondaryValue" />
     </div>
 </div>

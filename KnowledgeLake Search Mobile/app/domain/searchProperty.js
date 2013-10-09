@@ -1,4 +1,4 @@
-define(["knockout"], function (ko) {
+define(["knockout", "application"], function (ko, application) {
     var searchProperty = function(choices, controlType, hidden, description, dataType, name, id, operators) {
         var self = this;        
         
@@ -15,9 +15,15 @@ define(["knockout"], function (ko) {
         self.selectedOperator = ko.observable("");
         self.selectedProperty = ko.observable(self.name);
         self.value = ko.observable("");
+        self.secondaryValue = ko.observable("");
+        
 		self.key = ko.computed(function () {
 			return (self.name ? self.name : "") + self.selectedOperator();
         });
+        self.isRange = ko.computed(function () {
+            return self.selectedOperator() === application.strings.Range;
+        });
+        
 		self.conjunctionVisible = ko.observable(true);
               
         return self;
