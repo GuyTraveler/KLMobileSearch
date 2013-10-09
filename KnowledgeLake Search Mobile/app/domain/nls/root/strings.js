@@ -25,7 +25,7 @@ define({
     loading: "Loading...",
     searching: "Searching...",
     credentialType: "Type",
-    windowsCredentials: "Windows Credentials",
+    credentials: "Credentials",
     userName: "User",
     password: "Password",
     domain: "Domain",

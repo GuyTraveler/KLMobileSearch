@@ -1,9 +1,10 @@
 define(["services/ntlmLogonService", 
 		"services/claimsLogonService",
+		"services/office365LogonService",
         "domain/credentialType",
 		"application", 
         "jquery"],
-	function (ntlmLogonService, claimsLogonService, credentialType, application, $) {		
+	function (ntlmLogonService, claimsLogonService, office365LogonService, credentialType, application, $) {		
         var logonServiceFactory = function () {   
             var self = this;
             
@@ -11,7 +12,7 @@ define(["services/ntlmLogonService",
                 var logonService;
                 
                 if (credential === credentialType.claimsOrForms) {
-                    logonService = new claimsLogonService(url);
+                    logonService = new office365LogonService(url);
                 }
         		else {
                     logonService = new ntlmLogonService(url);        			
