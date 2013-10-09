@@ -172,6 +172,8 @@ define([], function () {
                 startDate = self.getUTCDate(start),
                 endDate = self.getUTCDate(end, true);
             
+            var blank = self.formatDate(endDate, "yyyy-MM-ddTHH:mm:ssZ");
+            
             return {
                 startDate: self.formatDate(startDate, klamlDateTimeFormat),
                 endDate: self.formatDate(endDate, klamlDateTimeFormat)
