@@ -18,19 +18,22 @@
 	
 	<ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
 		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToResult">
-	        <div class="resultOuterContainer">
-	            <div class="imageContainer resultIconContainer">
+	        <div class="itemContainer">
+	            <div class="pull-left itemIconContainer">
 					<!-- TODO: add this back in once we do something with the action bar
-	                <img class="resultIcon" data-bind="click: $parent.setSelectedResult, urlToFileTypeIcon: url"/> -->
-					<img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
+	                <img class="resultIcon" width="48" data-bind="click: $parent.setSelectedResult, urlToFileTypeIcon: url"/> -->
+					<p>
+						<img class="itemIcon" data-bind="urlToFileTypeIcon: url"/>
+					</p>
 	            </div>
-	            <div class="resultContentContainer">
-	                <div class="resultTitleContainer">
-	                    <h1 class="resultTitle" data-bind="text: metadata.Title"></h1>
-	                </div>
-	                <div class="resultLastModifiedContainer">
-	                    <span data-bind="dateTimeToLocaleString: LastModifiedTime"></span>
-	                </div>
+	            <div class="pull-left itemContentContainer">
+	                <div class="itemTitle">
+						<div data-bind="text: metadata.Title"></div>
+                    </div>
+					
+	                <div class="itemSubtext">
+						<div data-bind="dateTimeToLocaleString: LastModifiedTime"></div>
+                    </div>
 	            </div>
 	        </div>
 		</li>
