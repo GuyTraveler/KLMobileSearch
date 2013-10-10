@@ -23,17 +23,16 @@
 </header>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
-	<!--<li data-bind="css: { 'item': window.App.os.android, 'highlight': $parent.isSelectedSite($data) }">-->
 	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }, click: $parent.siteClick">
 		<div class="itemContainer">			
 	        <div class="site">
-				<div class="imageContainer">
-	                <a data-bind="click: $parent.setSelectedSite">
-	                    <img class="siteIcon" width="32" data-bind="majorVersionToSiteIcon: majorVersion"/>
-	                </a>
+				<div data-bind="click: $parent.setSelectedSite" class="imageContainer siteIconContainer">
+	                <img class="siteIcon" width="48" data-bind="majorVersionToSiteIcon: majorVersion"/>
 				</div>
 	            
-				<h3 class="siteTitle" data-bind="text: title"></h3>
+				<div class="siteTitleContainer">
+					<h3 class="siteTitle" data-bind="text: title"></h3>
+                </div>				
 	        </div>			
 	    </div>
 	</li>

@@ -5,7 +5,7 @@ li.item {
 }
 
 div.itemContainer {
-    height: 2em;
+    height: 3.8em;
 }
 
 	div.site {		
@@ -13,15 +13,26 @@ div.itemContainer {
 	    width: 100%;
 	    height: 100%;
 	}
-	
-		img.siteIcon {
-		    float: left;
+		div.siteIconContainer {
+			margin: -0.25em 0em 0em -0.7em;
+			padding: 0.6em 1em 0em 1em;
+		    height: 99%;
 		}
-		
-		h3.siteTitle {
-		    display: inline-block;
-		    font-size: 1em;
-		    margin: .45em 0 0 .75em;
-		}
+			img.siteIcon {
+			    float: left;
+			}
+
+		div.siteTitleContainer {
+			margin-top: -0.5em;
+			padding-top: 0.4em;
+			height: 100%;
+			float: left;
+			border-left: 2px solid lightgray;
+        }
+			h3.siteTitle {
+			    display: inline-block;
+			    font-size: 1.2em;
+			    margin: 1.1em 0 0 1.1em;
+			}
 
 
