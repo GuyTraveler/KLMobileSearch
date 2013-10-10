@@ -6,7 +6,12 @@ define({
     currentUserName: "0#.w|dev\\spadmin",    
 	claimsTestUrl: "https://knowledgelake.sharepoint.com",
 	claimsTestUser: "office365dev1@knowledgelake.onmicrosoft.com",
+	claimsTestUserOnly: "office365dev1",
+	claimsTestDomainOnly: "knowledgelake.onmicrosoft.com",
 	claimsTestPassword: "Cloud750",
+	claimsValidXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Test />",
+	claimsFaultXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><S:Envelope xmlns:S=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:wst=\"http://schemas.xmlsoap.org/ws/2005/02/trust\" xmlns:psf=\"http://schemas.microsoft.com/Passport/SoapServices/SOAPFault\"><S:Body><S:Fault><S:Code><S:Value>S:Sender</S:Value><S:Subcode><S:Value>wst:FailedAuthentication</S:Value></S:Subcode></S:Code><S:Reason><S:Text xml:lang=\"en-US\">Authentication Failure</S:Text></S:Reason><S:Detail><psf:error><psf:value>0x80048821</psf:value><psf:internalerror><psf:code>0x80041034</psf:code><psf:text>The specified member name is either invalid or empty.&#x000D;&#x000A;</psf:text></psf:internalerror></psf:error></S:Detail></S:Fault></S:Body></S:Envelope>",
+	
 	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
     siteTitle: "ProdSp2010",
@@ -21,7 +26,7 @@ define({
 	questionImageCheck: "/question",
 	docUrl: "http://prodsp2010.dev.local/sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif",
     docTitle: "1bf7a0e8-fcd2-4363-be2e-cb5b09269e39",
-    testDocumentListID: "{60DAB558-74AA-41B3-B9AE-96ADE51D60D1}",
+	testDocumentListID: "{60DAB558-74AA-41B3-B9AE-96ADE51D60D1}",
     testDocumentListItemID: "1498",
     testDocumentQuery: "<Query><Where><Eq><FieldRef Name=\"ID\" /><Value Type=\"Number\">1498</Value></Eq></Where></Query>",
     testDocumentViewFields: "<ViewFields Properties=\"true\" xmlns=\"\"><FieldRef Name=\"ContentTypeID\" /></ViewFields>",
@@ -34,6 +39,7 @@ define({
     testDocumentListItemValues: {"value":"","GetListItemsResult":{"value":"","listitems":{"value":"\n\n","xmlns:s":"uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882","xmlns:dt":"uuid:C2F41010-65B3-11d1-A29F-00AA00C14882","xmlns:rs":"urn:schemas-microsoft-com:rowset","xmlns:z":"#RowsetSchema","rs:data":{"value":"\n   \n","ItemCount":"1","z:row":{"value":"","ows_Title2":"SITE_SP_DEFAULT","ows_TaxKeyword":"","ows__ModerationStatus":"0","ows__Level":"1","ows_ID":"1498","ows_UniqueId":"1498;#{0B7A180F-2962-438B-84EE-A7742887F879}","ows_owshiddenversion":"3","ows_FSObjType":"1498;#0","ows_Created_x0020_Date":"1498;#2013-03-07 12:45:57","ows_ProgId":"1498;#","ows_FileLeafRef":"1498;#1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif","ows_PermMask":"0x7fffffffffffffff","ows_Modified":"2013-03-07 12:45:59","ows_FileRef":"1498;#sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif","ows_DocIcon":"tif","ows_Editor":"14;#Steve Danner","ows_Last_x0020_Modified":"1498;#2013-03-07 12:45:59"}}}}},
     testDocumentParsedProperties: [{"name":"Title","displayName":"Title","hidden":false,"value":""},{"name":"Parson_x0020_Name","displayName":"Person Name","hidden":false,"value":""},{"name":"NickName","displayName":"NickName","hidden":false,"value":""},{"name":"Title2","displayName":"Title2","hidden":false,"value":"SITE_SP_DEFAULT"},{"name":"TaxKeyword","displayName":"Enterprise Keywords","hidden":false,"value":""},{"name":"TaxKeywordTaxHTField","displayName":"TaxKeywordTaxHTField","hidden":true,"value":""},{"name":"TaxCatchAll","displayName":"Taxonomy Catch All Column","hidden":true,"value":""},{"name":"p878ac2e183e4288b8e0365f7b7c0ec8","displayName":"ManagedMetadata_0","hidden":true,"value":""},{"name":"TaxCatchAllLabel","displayName":"Taxonomy Catch All Column1","hidden":true,"value":""},{"name":"ManagedMetadata","displayName":"ManagedMetadata","hidden":false,"value":""}],
     testDispFormUrl: "http://prodsp2010.dev.local/sites/team4/TestLib/Forms/DispForm.aspx?ID=1498",
+	
 	testFileLeafRef: "1498;#asdfasdfadsfsdf",
 	testListId: "{60DAB558-74AA-41B3-B9AE-96ADE51D60D1}",
     imagingSearchId: "a9b82b7b-e677-4529-9be7-88f4cf4c76d8",
@@ -96,8 +102,5 @@ define({
     testSearchGreaterThanOrEqual: ">=",
     testChoices: ["Choice 1", "Choice 2", "Choice 3"],
     testOperators: ["=", "Like", "Starts With"],
-    testDocumentPropertyName: "Title",
-    testDocumentPropertyDisplayName: "Title",
-    testDocumentPropertyValue: "Document title", 
 	testMessage: "A status message"
 });

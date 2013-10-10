@@ -1,27 +1,3 @@
-/*android only*/
-li.item {
-	margin-left: -15px!important;
-	margin-right: -15px!important;
-}
 
-div.itemContainer {
-    height: 2em;
-}
-
-	div.site {		
-	    position: absolute;
-	    width: 100%;
-	    height: 100%;
-	}
-	
-		img.siteIcon {
-		    float: left;
-		}
-		
-		h3.siteTitle {
-		    display: inline-block;
-		    font-size: 1em;
-		    margin: .45em 0 0 .75em;
-		}
 
 

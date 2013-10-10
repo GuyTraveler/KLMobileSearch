@@ -6,44 +6,4 @@ img.resultIcon {
 #resultPageHeading {
 	text-align: center;
 	padding: 0.5em 0em;	
-}
-
-.resultOuterContainer {
-	width: 100%;	
-}
-
-div.resultIconContainer,
-div.resultContentContainer {
-    float: left;
-	display: inline-block;
-}
-
-div.resultIconContainer {
-	width: 10%;
-}
-
-div.resultContentContainer {
-	width: 90%;
-}
-
-div.resultTitleContainer {
-    width: 100%;
-	word-break: break-word;
-}
-
-div.resultLastModifiedContainer {
-    width: 100%;
-	color: Gray;
-	font-size: small;
-	margin-left: 1em;
-}
-	
-img.resultIcon {
-    float: left;
-}
-
-h1.resultTitle {
-    display: inline-block;
-    font-size: 1em;
-    margin: .45em 0 0 .75em;
-}    
+} 

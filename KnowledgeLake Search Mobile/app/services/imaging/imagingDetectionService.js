@@ -18,7 +18,14 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
             logonPromise.done(function (result) {       
                 service.GetActivatedFeatures()
     				.done(function (result) {
-                        dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
+						var hasImaging = result != null && result.GetActivatedFeaturesResult != null && result.GetActivatedFeaturesResult.value;
+						
+						if (hasImaging) {
+                        	dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
+						}
+						else {
+							dfd.reject();
+                        }
     	            })
     	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         dfd.reject();

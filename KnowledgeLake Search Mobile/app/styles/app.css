@@ -41,6 +41,56 @@ li.highlight {
 	color: Black;
 }
 
+div.itemContainer {
+    height: 4.8em;
+	margin: -0.5em -0.7em; /* override kendo's default padding */
+}
+
+	div.itemIconContainer {
+		height: 100%;
+		width: 5em;
+		display: table;
+	}
+		div.itemIconContainer p {
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
+        }
+
+		img.itemIcon {
+			width: 48px;
+			height: 48px;			
+		}
+
+	div.itemContentContainer {
+		height: 100%;
+		width: 70%;
+		padding-left: 1em;
+		border-left: 2px solid lightgray;
+		display: table;
+		position: relative;
+    }
+
+		div.itemContentContainer div.itemTitle {
+			display: table-cell;
+			vertical-align: middle;
+        }	
+			div.itemTitle div {
+				font-size: 1.2em;
+				font-weight: bold;
+				max-height: 2.4em;  /* 2x font size */		
+				word-break: break-all;
+				overflow: hidden;
+	        }	
+
+		div.itemSubtext {
+		    position: absolute;
+			left: 1em;  /* == padding-left of itemContentContainer */
+			bottom: 0;
+			color: Gray;
+			font-size: small;
+		}
+
 
 .transparent-button {
     background-color: transparent!important;
@@ -63,10 +113,6 @@ div[data-role=content] {
 
 input[type=search].invalid {
     color: red!important;
-}
-
-div.imageContainer {
-    float: left;
 }
 
 div.status-message,

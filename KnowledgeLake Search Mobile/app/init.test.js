@@ -10,14 +10,14 @@ require(["config"], function (config) {
              "knockout", 
              "kendo",
              "application",
-             "logger",
+			 "logger",
 			 "extensions",
              "framework/logLevel"],
     function($, ko, kendo, application, logger, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
 			testsToRun = [testRootPath + "application_tests",
-                          testRootPath + "logger_tests",
+						  testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
 						  testRootPath + "rootViewModel_tests",
@@ -64,6 +64,8 @@ require(["config"], function (config) {
 						  testRootPath + "searchType_tests",
 						  testRootPath + "site_tests",
                           testRootPath + "klamlBuilderService_tests",
+                          testRootPath + "guid_tests",
+						  testRootPath + "office365LogonService_tests",
 						  testRootPath + "searchProperty_tests",
                           testRootPath + "documentViewModel_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
@@ -78,7 +80,7 @@ require(["config"], function (config) {
         }
 		
         //add tests that CANNOT be run in the SIMULATOR here
-        /*if (!system.isRunningInSimulator()) {
+        /*if (!application.isRunningInSimulator()) {
             testsToRun.push();
         }*/
         
