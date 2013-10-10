@@ -15,7 +15,9 @@ define(["knockout", "application"], function (ko, application) {
         self.selectedOperator = ko.observable("");
         self.selectedProperty = ko.observable(self.name);
         self.value = ko.observable("");
+        self.previousValue = "";        
         self.secondaryValue = ko.observable("");
+        self.previousSecondaryValue = "";
         
 		self.key = ko.computed(function () {
 			return (self.name ? self.name : "") + self.selectedOperator();

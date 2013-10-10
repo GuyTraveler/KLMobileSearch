@@ -3,9 +3,9 @@
 </div>
 
 <div class="pull-left">    
-    <input type="number" data-bind=" value: data.value" />
+    <input id="numeric" type="number" pattern="[0-9]*" data-bind="value: data.value" />
     <div data-bind="if: data.isRange">
         <label>To</label>
-        <input type="number" data-bind=" value: data.secondaryValue" />
+        <input id="numeric" type="number" data-bind=" value: data.secondaryValue" />
     </div>
 </div>

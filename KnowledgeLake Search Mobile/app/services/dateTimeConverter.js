@@ -3,10 +3,11 @@ define([], function () {
         var self = this;
        
         self.dateTimeToLocaleString = function (locale, dateTime) {
-            var date = dateTime ? new Date(dateTime) : new Date(),
-                localeString; 
+            var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
             
-            if(locale)
+            return kendo.toString(date, "g");
+            
+            /*if(locale)
             {
                 switch(locale.toUpperCase())
                 {
@@ -156,15 +157,13 @@ define([], function () {
                 }
             }
             else
-                localeString = self.formatDate(date, "M/dd/yyyy h:mm tt");
-            
-            return localeString;
+                localeString = self.formatDate(date, "M/dd/yyyy h:mm tt");*/         
         };
         
-        self.toDateString = function (dateTime) {
-            var date = dateTime ? new Date(dateTime) : new Date();
+        self.toDateString = function (dateTime) {            
+            var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
             
-            return self.formatDate(date, "yyyy-MM-dd");
+            return kendo.toString(date, "d");
         }
         
         self.convertToKlamlDateTime = function (start, end) {
@@ -172,17 +171,15 @@ define([], function () {
                 startDate = self.getUTCDate(start),
                 endDate = self.getUTCDate(end, true);
             
-            var blank = self.formatDate(endDate, "yyyy-MM-ddTHH:mm:ssZ");
-            
             return {
                 startDate: self.formatDate(startDate, klamlDateTimeFormat),
                 endDate: self.formatDate(endDate, klamlDateTimeFormat)
             };
         }        
         
-        self.getUTCDate = function (date, endingDay) {
+        self.getUTCDate = function (date, endOfDay) {
             var gmtDate = date ? new Date(date) : new Date();
-            var dayEnd = endingDay ? 86399999 : 0; 
+            var dayEnd = endOfDay ? 86399999 : 0; 
             
             return (new Date(gmtDate.valueOf() + gmtDate.getTimezoneOffset() * 60000 + dayEnd));
         }

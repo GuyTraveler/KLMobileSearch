@@ -143,6 +143,8 @@ define(["jquery",
                                     newSearchProperty.secondaryValue(klamlSearchFieldProperties[i].condition2);
                                 }
                                 
+                                newSearchProperty.previousValue = newSearchProperty.value();
+                                newSearchProperty.previousSecondaryValue = newSearchProperty.secondaryValue();
     	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
     	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
     							newSearchProperty.conjunctionVisible(i !== klamlSearchFieldPropertiesLength - 1);
