@@ -14,6 +14,11 @@ define({
 	
 	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
+	
+	fbaTestUrl: "http://imgsp2010ca:30",
+	fbaTestUser: "melissa.edwards",
+	fbaTestPassword: "qalake750!",
+	
     siteTitle: "ProdSp2010",
     siteMajorVersion: "15",
 	siteTestUser: "spadmin",

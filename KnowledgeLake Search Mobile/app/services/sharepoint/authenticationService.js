@@ -16,6 +16,16 @@ define(["jquery",
 			logger.logVerbose("authenticationService.Mode called");
             return self.executeSoapMethodAsync("Mode", null);
         }
+		
+		self.Login = function (userName, password) {
+			var parms = [
+				new keyValuePair("userName", userName),
+				new keyValuePair("password", password)
+			];
+			
+			logger.logVerbose("authenticationService.Login called");
+			return self.executeSoapMethodAsync("Login", parms);
+        }
         
         return self;
     };

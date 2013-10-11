@@ -9,9 +9,9 @@ define(["application"], function (application) {
 		
 		//office 365
 		office365STS: "https://login.microsoftonline.com/extSTS.srf",
-		loginUriPart: "_forms/default.aspx?wa=wsignin1.0",
+		office365LoginUriPart: "_forms/default.aspx?wa=wsignin1.0",
 		samlTemplateUrl: "app/services/soapTemplates/Office365/SAML.xml",
-	    
+			    
 		//controls
 	    numberOperators: [ "=", ">", "<", ">=", "<=", application.strings.Range ],
 	    textboxOperators: [ "=", application.strings.Contains, application.strings.StartsWith, application.strings.Like, application.strings.IsNotNull ],

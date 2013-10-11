@@ -14,7 +14,7 @@ function ($, moment, Constants, application, logger, guid, siteDataService) {
 			cachedSamlTemplate;
 		
 		fullLoginUri = !siteUrl || !siteUrl.endsWith("/") ? siteUrl + "/" : siteUrl;
-		fullLoginUri += Constants.loginUriPart;
+		fullLoginUri += Constants.office365LoginUriPart;
 		
 		self.logonExpiration = null;
 		
