@@ -1,6 +1,6 @@
 define(['knockout', 'jquery'],
     function (ko, $) {
-        var loadCurrentCalendar= function (element, currentCulture) {            
+        var loadCurrentCalendar= function (element, value, currentCulture) {            
             var kendoCultureUrl = "app/lib/culture/kendo.culture." + currentCulture + ".min.js";
             
             var getKendoCulturePromise = $.get(kendoCultureUrl);
@@ -10,6 +10,7 @@ define(['knockout', 'jquery'],
                 
                 require([requireKendoCulture], function (culture) {
                     $(element).kendoDatePicker({
+                        value: value,
                         culture: currentCulture
                     });
                 });
@@ -22,7 +23,7 @@ define(['knockout', 'jquery'],
         
 		ko.bindingHandlers.kendoCalendar = {       
             init: function(element, valueAccessor) {
-                loadCurrentCalendar(element, kendo.culture().name);
+                loadCurrentCalendar(element, ko.unwrap(valueAccessor()), kendo.culture().name);
             },
             update: function(element, valueAccessor) {
                 

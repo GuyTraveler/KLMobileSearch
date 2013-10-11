@@ -1,25 +1,21 @@
 define(['knockout', 'logger', 'jquery', 'application'],
     function (ko, logger, $, application) {		
         ko.bindingHandlers.numberValidation = {
-            init: function(element, valueAccessor) {
-
+            init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                ko.bindingHandlers.value.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
             },
             update: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                var value = ko.unwrap(valueAccessor());
-                var property = value.property;
-                var observable = allBindingsAccessor().value;
+                ko.bindingHandlers.value.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+                var observable = valueAccessor();
                 
-                var pattern = new RegExp('^[0-9]*');
-                
-                // if good update observable and update value.data[property] 
-                // else use value.data[property] to update observable
-                if(!element.validity.badInput && pattern.test(observable()))
+                if(element.validity.badInput)
                 {
-                    value.data[property] = observable();
+                    observable(observable.lastValue || "");
+                    ko.bindingHandlers.value.update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
                 }
-                else
-                    element.value = value.data[property];
-                    //observable(value.data[property]);
+                
+                else                
+                    observable.lastValue = observable();                
             }
         };
 });

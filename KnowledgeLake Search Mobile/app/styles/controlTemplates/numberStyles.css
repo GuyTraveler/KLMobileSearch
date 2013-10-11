@@ -1,0 +1,21 @@
+.num-left-container {
+    width: 40%;
+}
+
+.num-right-container {
+    width: 60%;
+}
+
+.num-seperator {
+    padding-right: 0.5em;
+    text-align: right;
+    font-style: italic;
+}
+
+.top-num-margin {
+    padding-top: .2em!important;
+}
+
+.bottom-num-margin {
+    padding-top: 3em!important;
+}

@@ -102,7 +102,7 @@ div.itemContainer {
 }
 
 .relative-container {
-	position: relative!important;
+	position: inherit!important;
 }
 
 div[data-role=content] {	
@@ -162,7 +162,7 @@ img.margin-img {
 }
 
 .full-width {
-    width: 100%;
+    width: 100%!important;
 }
 
 .km-ios input[type=search] {

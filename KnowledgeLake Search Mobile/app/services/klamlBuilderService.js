@@ -69,7 +69,8 @@ define(["jquery",
                 {                    
                     for(var i = searchProperties.length - 1; i >= 0; i--)
                     {
-                        if(searchProperties[i].selectedOperator() === application.strings.Range)
+                        if(searchProperties[i].selectedOperator() === application.strings.Range || 
+                           searchProperties[i].selectedOperator() === "=")
                         {
                             var modifiedProperty = new searchProperty();
                             
@@ -80,8 +81,14 @@ define(["jquery",
                             modifiedProperty.value(modifiedProperty.secondaryValue());
                             
                             if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
-                            {         
-                                var klamlDateTimes = DateTimeConverter.convertToKlamlDateTime(searchProperties[i].value(), modifiedProperty.value());
+                            {       
+                                var klamlDateTimes;
+                                
+                                if(searchProperties[i].selectedOperator() === application.strings.Range)
+                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), modifiedProperty.value());
+                                
+                                if(searchProperties[i].selectedOperator() === "=")
+                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value());                                
                                 
                                 searchProperties[i].value(klamlDateTimes.startDate);
                                 modifiedProperty.value(klamlDateTimes.endDate);

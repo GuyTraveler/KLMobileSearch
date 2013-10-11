@@ -1,10 +1,18 @@
-<div class="pull-left">
-    <select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+<div class="full-width">
+    <div class="pull-left cal-left-container">
+        <select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+    </div>
+    <div class="pull-left cal-right-container">
+        <input class="full-width" type="date" data-bind="value: data.value, kendoCalendar: data.value, calendarValidation: { 'data': data, 'property': 'previousValue'}" />
+    </div>
 </div>
-<div class="pull-left">
-    <input id="datepicker" type="date" data-bind="value: data.value, kendoCalendar: navigator.language, calendarValidation: { 'data': data, 'property': 'previousValue'}" />
+<div class="full-width cal-margin">    
     <div data-bind="if: data.isRange">
-        <label>To</label>
-        <input id="datepicker" type="date" data-bind="value: data.secondaryValue, kendoCalendar: navigator.language, calendarValidation: { 'data': data, 'property': 'previousValue'}" />
+        <div class="pull-left cal-left-container cal-seperator">            
+            <span>To</span>
+        </div>
+        <div class="pull-left cal-right-container">
+            <input class="full-width" type="date" data-bind="value: data.secondaryValue, kendoCalendar: data.secondaryValue, calendarValidation: { 'data': data, 'property': 'previousValue'}" />            
+        </div>
     </div>
 </div>
