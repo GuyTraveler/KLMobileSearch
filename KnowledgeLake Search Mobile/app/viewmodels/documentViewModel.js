@@ -12,7 +12,7 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
     	viewModelBase.call(self);
 		
         self.documentTitle = ko.observable("");
-        self.documentDataSource = ko.observableArray();
+        self.documentDataSource = ko.observableArray([]);
         
         self.SetDataSource = function (properties) {             
             self.documentDataSource([]);

@@ -101,8 +101,8 @@ define(["knockout",
         }
             
         self.hide = function (e) {            
-            self.setSelectedResult(null);
-            self.SetDataSource([]);
+            //self.setSelectedResult(null);
+            //self.SetDataSource([]);
         }
         
         self.setSelectedResult = function (selection, event) {

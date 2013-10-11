@@ -1,9 +1,14 @@
 define(["jquery", 
+        "knockout",
 		"application", 
+        "domain/searchProperty",
 		"domain/keywordConjunction",
-		"domain/Constants", 
+        "domain/catalogPropertyControlType",
+		"domain/Constants",
+        "services/dateTimeConverter",
+        "knockoutMapping", 
 		"extensions"],
-        function ($, application, keywordConjunction, Constants) {
+        function ($, ko, application, searchProperty, keywordConjunction, catalogPropertyControlType, Constants, DateTimeConverter, mapping) {
         
 		var klamlBuilderService = function () {
 			var self = this,
@@ -39,11 +44,13 @@ define(["jquery",
                         whereClause += IsDocument;
                     }
                     
+                    searchProperties = self.amendRangeProperties(searchProperties);
+                    
                     var searchPropertiesLength = searchProperties.length;
                     
                     for(var i = 0; i < searchPropertiesLength; i++)
                     {
-                        if(!(searchProperties[i].hidden))
+                        if(!ko.unwrap(searchProperties[i].hidden) && ((searchProperties[i].value() && searchProperties[i].value() !== "") || searchProperties[i].selectedOperator() === application.strings.IsNotNull))
                             whereClause += self.buildFieldFromSearchProperty(searchProperties[i]);
                     }
                 }
@@ -55,24 +62,61 @@ define(["jquery",
                 }
                 
                 return query.replace("{whereClause}", whereClause);
-            }     
+            }  
+            
+            self.amendRangeProperties = function (searchProperties) {
+                if(searchProperties)
+                {                    
+                    for(var i = searchProperties.length - 1; i >= 0; i--)
+                    {
+                        if(searchProperties[i].selectedOperator() === application.strings.Range || 
+                           searchProperties[i].selectedOperator() === "=")
+                        {
+                            var modifiedProperty = new searchProperty();
+                            
+                            mapping.fromJS(searchProperties[i], {}, modifiedProperty);                            
+                            
+                            searchProperties[i].selectedOperator("<=");
+                            modifiedProperty.selectedOperator(">=");                            
+                            modifiedProperty.value(modifiedProperty.secondaryValue());
+                            
+                            if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
+                            {       
+                                var klamlDateTimes;
+                                
+                                if(searchProperties[i].selectedOperator() === application.strings.Range)
+                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), modifiedProperty.value());
+                                
+                                if(searchProperties[i].selectedOperator() === "=")
+                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value());                                
+                                
+                                searchProperties[i].value(klamlDateTimes.startDate);
+                                modifiedProperty.value(klamlDateTimes.endDate);
+                            }
+                            
+                            searchProperties.splice(i + 1, 0, modifiedProperty);
+                        }
+                    }
+                }
+                
+                return searchProperties;
+            }
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
                 if(searchProperty)
                 {
                     var field = masterMetaDataWhereTemplate;
                                     
-					field = field.replace(/{id}/g, searchProperty.id);
-                    field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
-                    field = field.replace("{type}", searchProperty.dataType);
+					field = field.replace(/{id}/g, ko.unwrap(searchProperty.id));
+                    field = field.replace("{displayName}", ko.unwrap(searchProperty.name)); // change to searchProperty.selectedProperty() later?
+                    field = field.replace("{type}", ko.unwrap(searchProperty.dataType));
 					
                     field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
                     field = field.replace("{condition}", searchProperty.value());
                     field = field.replace("{conjunction}", searchProperty.conjunction());
                     
                     return field;
-                }
-                
+                }                
                 return "";
             }
             

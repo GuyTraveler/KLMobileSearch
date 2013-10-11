@@ -3,167 +3,54 @@ define([], function () {
         var self = this;
        
         self.dateTimeToLocaleString = function (locale, dateTime) {
-            var date = dateTime ? new Date(dateTime) : new Date(),
-                localeString; 
+            var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
             
-            if(locale)
-            {
-                switch(locale.toUpperCase())
-                {
-                    case "ZH":
-                    case "ZH-HANS":
-                    case "ZH-CHS":
-                    case "ZH-CN":
-                    case "ZH-TW":
-                        localeString = self.formatDate(date, "yyyy/M/d HH:mm");
-                        break;
-                    
-                    case "ZH-SG":
-                    case "ZH-HANT":
-                    case "ZH-CHT":
-                    case "ZH-HK":
-                    case "ZH-MO":
-                        localeString = self.formatDate(date, "d/M/yyyy HH:mm");
-                        break;
-                    
-                    case "NL":
-                    case "NL-NL":                  
-                        localeString = self.formatDate(date, "d-M-yyyy HH:mm");
-                        break;
-                    
-                    
-                    case "NL-BE":
-                        localeString = self.formatDate(date, "d/MM/yyyy HH:mm");
-                        break;
-                    
-                    case "EN":
-                    case "EN-PH":
-                    case "EN-US":                
-                    case "ES-US":
-                        localeString = self.formatDate(date, "M/d/yyyy h:mm tt");
-                        break;
-                    
-                    case "EN-AU":
-                        localeString = self.formatDate(date, "d/MM/yyyy h:mm tt");                    
-                        break;
-                    
-                    
-                    case "EN-029":
-                    case "EN-BZ":
-                    case "EN-IE":
-                    case "EN-JM":
-                    case "EN-TT":                
-                    case "EN-GB":
-                    case "EN-ZW":
-                    case "FR":
-                    case "FR-FR":
-                    case "FR-LU":
-                    case "FR-MC":
-                    case "PT":
-                    case "PT-BR":
-                    case "PT-PT":
-                    case "ES":
-                    case "ES-EC":                
-                    case "ES-ES":                
-                    case "ES-UY":
-                        localeString = self.formatDate(date, "dd/MM/yyyy HH:mm");    
-                        break;                
-                    
-                    case "EN-NZ":
-                        localeString = self.formatDate(date, "d/MM/yyyy h:mm t.t.");    
-                        break;
-                    
-                    case "EN-CA":
-                    case "EN-ZA":                   
-                        localeString = self.formatDate(date, "yyyy-MM-dd h:mm tt");    
-                        break;
-                    
-                    case "EN-IN":
-                    case "ES-CL":
-                        localeString = self.formatDate(date, "dd-MM-yyyy HH:mm");    
-                        break;
-                    
-                    case "EN-MY":
-                    case "EN-SG":
-                        localeString = self.formatDate(date, "d/M/yyyy h:mm tt");    
-                        break;
-                    
-                    case "FR-BE":
-                        localeString = self.formatDate(date, "dd-MM-yy HH:mm");    
-                        break;
-                    
-                    case "FR-CA":
-                    case "KO":
-                    case "KO-KR":
-                        localeString = self.formatDate(date, "yyyy-MM-dd HH:mm");    
-                        break;
-                    
-                    case "FR-CH":
-                    case "DE":
-                    case "DE-AT":
-                    case "DE-DE":
-                    case "DE-LI":
-                    case "DE-LU":
-                    case "DE-CH":
-                    case "IT-CH":
-                        localeString = self.formatDate(date, "dd.MM.yyyy HH:mm");    
-                        break;
-                    
-                    case "IT":
-                    case "IT-IT":
-                        localeString = self.formatDate(date, "dd/MM/yyyy HH.mm");    
-                        break;
-                    
-                    case "JA":
-                    case "JA-JP":
-                        localeString = self.formatDate(date, "yyyy/MM/dd HH:mm");    
-                        break;
-                    
-                    case "RU":
-                    case "RU-RU":
-                        localeString = self.formatDate(date, "dd.MM.yyyy HH:mm");    
-                        break;
-                    
-                    case "ES-AR":
-                    case "ES-BO":                
-                    case "ES-CR":                
-                    case "ES-SV":
-                    case "ES-HN":
-                    case "ES-NI":
-                    case "ES-PY":
-                    case "ES-PE":
-                    case "ES-PR":
-                        localeString = self.formatDate(date, "dd/MM/yyyy h:mm t.t.");                    
-                        break;
-                    
-                    case "ES-VE":
-                        localeString = self.formatDate(date, "dd-MM-yyyy h:mm t.t.");    
-                        break;
-                    
-                    case "ES-CO":
-                    case "ES-GT":                
-                    case "ES-MX":
-                        localeString = self.formatDate(date, "dd/MM/yyyy h:mm t. t.");    
-                        break;
-                    
-                    case "ES-DO":
-                    case "ES-PA":
-                        localeString = self.formatDate(date, "d/M/yy h:mm t. t.");    
-                        break;
-                    
-                    default:                    
-                        localeString = self.formatDate(date, "M/dd/yyyy h:mm tt");
-                }
-            }
-            else
-                localeString = self.formatDate(date, "M/dd/yyyy h:mm tt");
-            
-            return localeString;
+            return kendo.toString(date, "g");        
         };
+        
+        self.toDateString = function (dateTime) {            
+            var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
+            
+            return kendo.toString(date, "d");
+        }
+        
+        self.convertToKlamlDateTimeRange = function (start, end) {
+            var klamlDateTimeFormat = "MM/dd/yyyy HH:mm:ss",
+                startDate = self.getUTCDate(start),
+                endDate = self.getUTCDate(end, true);
+            
+            return {
+                startDate: self.formatDate(startDate, klamlDateTimeFormat),
+                endDate: self.formatDate(endDate, klamlDateTimeFormat)
+            };
+        } 
+        
+        self.convertToKlamlDateTimeEqual = function (date) {
+            var klamlDateTimeFormat = "MM/dd/yyyy HH:mm:ss",
+                startDate = self.getUTCDate(date),
+                endDate = self.getUTCDate(date, true);
+            
+            return {
+                startDate: self.formatDate(startDate, klamlDateTimeFormat),
+                endDate: self.formatDate(endDate, klamlDateTimeFormat)
+            };
+        } 
+        
+        self.getUTCDate = function (date, endOfDay) {
+            var gmtDate = date ? new Date(date) : new Date();
+            var dayEnd = endOfDay ? 86399999 : 0; 
+            var offset = self.determineOffset(gmtDate) ? 1 : 0;
+            
+            return (new Date(gmtDate.valueOf() + offset * gmtDate.getTimezoneOffset() * 60000 + dayEnd));
+        }
+        
+        self.determineOffset = function (dateObject) {
+            return dateObject.getHours() !== 0;
+        }
         
         self.formatStringParser = function (formatString) {
             var formatArray = [],
-                separatorArray = ["/", " ", ":", ".", "-"],
+                separatorArray = ["/", " ", ":", ".", "-", "T", "Z"],
                 part = "";
             
             if(formatString)
@@ -204,7 +91,8 @@ define([], function () {
             var year = dateTime.getFullYear(); // xxxx
             
             var hour = dateTime.getHours(); // 0-23 (if greater than 12 do -12 and pm)
-            var minute = dateTime.getMinutes(); // 0-59            
+            var minute = dateTime.getMinutes(); // 0-59       
+            var second = dateTime.getSeconds();
             
             for(i = 0; i < formatArray.length; i++)
             {                
@@ -258,6 +146,12 @@ define([], function () {
                         break;
                     case "tt":
                         char = self.calculatePeriod(hour);
+                        break;
+                    case "ss":
+                        if(second < 10)
+                            char = "0" + second.toString();
+                        else
+                            char = second;
                         break;
                     default:
                         char = formatArray[i];                    

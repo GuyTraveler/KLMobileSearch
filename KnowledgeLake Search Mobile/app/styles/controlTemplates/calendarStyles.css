@@ -1,0 +1,18 @@
+.cal-left-container {
+    width: 40%;
+}
+
+.cal-right-container {
+    width: 60%;
+}
+
+.cal-seperator {
+    padding-top: 0.5em;
+    padding-right: 0.5em;
+    text-align: right;
+    font-style: italic;
+}
+
+.cal-margin {
+    padding-top: 3em!important;
+}

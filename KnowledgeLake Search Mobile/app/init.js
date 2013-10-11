@@ -9,7 +9,7 @@ require(["config"], function (config) {
     
     require(["jquery", 
              "knockout", 
-             "kendo", 
+             "kendo",   
              "application", 
 			 "logger",
 			 "extensions",
@@ -26,7 +26,10 @@ require(["config"], function (config) {
              "framework/knockout/majorVersionToSiteIcon", 
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
-			 "framework/knockout/kendoListView"], 
+			 "framework/knockout/kendoListView",    
+			 "framework/knockout/kendoCalendar",
+			 "framework/knockout/numberValidation",
+			 "framework/knockout/calendarValidation"], 
     function($, ko, kendo, application, logger, extensions, logLevel, rootViewModel) {
         var testHref = "test.html?coverage=true";                
         
