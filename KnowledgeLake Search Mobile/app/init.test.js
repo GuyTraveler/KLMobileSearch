@@ -16,7 +16,7 @@ require(["config"], function (config) {
     function($, ko, kendo, application, logger, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [/*testRootPath + "application_tests",
+			testsToRun = [testRootPath + "application_tests",
 						  testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
@@ -24,9 +24,9 @@ require(["config"], function (config) {
 						  testRootPath + "viewModelBase_tests",
                           testRootPath + "homeViewModel_tests",
                           testRootPath + "localization_tests",                                             
-                          testRootPath + "websService_tests",*/
+                          testRootPath + "websService_tests",
                           testRootPath + "authenticationService_tests",
-						  /*testRootPath + "configureSiteViewModel_test",
+						  testRootPath + "configureSiteViewModel_test",
 						  testRootPath + "siteDataCachingService_test",
 						  testRootPath + "ntlmLogonService_tests",
 						  testRootPath + "claimsLogonService_tests",
@@ -67,7 +67,7 @@ require(["config"], function (config) {
                           testRootPath + "guid_tests",
 						  testRootPath + "office365LogonService_tests",
 						  testRootPath + "searchProperty_tests",
-                          testRootPath + "documentViewModel_tests",*/
+                          testRootPath + "documentViewModel_tests",
 						  testRootPath + "logonServiceFactory_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
