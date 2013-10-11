@@ -15,7 +15,7 @@ define(['require',
             var vm,
 			    siteData = [];
             
-            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev")));
             
             vm = new homeViewModel();
             vm.siteDataSource(["test", "data"]);
@@ -32,7 +32,7 @@ define(['require',
             var vm,
                 siteData = [];
             
-            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev")));
             
             vm = new homeViewModel();            
             vm.siteDataSource([]);
@@ -72,7 +72,7 @@ define(['require',
         QUnit.test("test homeViewModel LoadSiteData if sites is not null", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             SiteDataCachingService.sites = [];
             vm = new homeViewModel();
@@ -153,7 +153,7 @@ define(['require',
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is null", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.selectedSite = null;
@@ -168,7 +168,7 @@ define(['require',
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is equal", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.selectedSite = siteData;
@@ -183,8 +183,8 @@ define(['require',
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is not equal", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.selectedSite = siteData;
@@ -200,8 +200,8 @@ define(['require',
         QUnit.test("test homeViewModel setSelectedSite with suppressnavbar keeps navbar invisible", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.selectedSite = siteData;
@@ -217,7 +217,7 @@ define(['require',
         QUnit.test("test homeViewModel isSelectedSite if http://docs.kendoui.com/getting-started/mobile/switch false", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.navBarVisible(false);
@@ -232,7 +232,7 @@ define(['require',
         QUnit.test("test homeViewModel isSelectedSite if hasHighlightedSite true", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             vm.hasHighlightedSite(true);
@@ -249,7 +249,7 @@ define(['require',
             //arrange
             var vm,
                 searchUrl = "#savedSearch",
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
             
@@ -295,7 +295,7 @@ define(['require',
         QUnit.test("test homeViewModel editSite if selectedSite is not null", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             var configureSiteUrl = "#configureSite";
             
             vm = new homeViewModel();
@@ -311,8 +311,8 @@ define(['require',
         QUnit.test("test homeViewModel deleteSite", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             SiteDataCachingService.sites = [];
             vm = new homeViewModel();

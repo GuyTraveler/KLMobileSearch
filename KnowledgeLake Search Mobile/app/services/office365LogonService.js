@@ -68,21 +68,6 @@ function ($, moment, Constants, application, logger, guid, siteDataService) {
 			return dfd.promise();
 		};	
 		
-		self.checkLogonStatusAsync = function () {
-			var now = new Date(),
-				parsedExp = self.logonExpirationToDate(),
-				dfd = $.Deferred();
-
-			if (parsedExp > now) {
-				dfd.resolve(true);
-			}
-			else {
-				dfd.reject(false);
-			}
-			
-			return dfd.promise();
-		};
-		
 		self.logonExpirationToDate = function () {
 			var parsed;
 			

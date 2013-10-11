@@ -270,38 +270,6 @@ define(['jquery',
 				QUnit.start();
             });
         });
-				
-		QUnit.asyncTest("Test office365LogonService.checkLogonStatusAsync works with valid credentials", function () {
-			//arrange
-			var service,
-				promise;
-			
-			//act
-			service = new office365LogonService(TestSettings.claimsTestUrl);
-			promise = service.logonAsync(TestSettings.claimsTestDomainOnly, TestSettings.claimsTestUserOnly, TestSettings.claimsTestPassword);
-			
-			//assert			
-			promise.done(function (result) {
-				QUnit.ok(service.logonExpiration);
-				
-				promise = service.checkLogonStatusAsync();
-				
-				promise.done(function () {
-					QUnit.ok(true);
-					QUnit.start();
-                });
-				
-				promise.fail(function () {
-					QUnit.ok(false, "checkLogonStatusAsync should have returned true");
-					QUnit.start();
-                });							
-            });
-			
-			promise.fail(function () {
-				QUnit.ok(false, "Failed to logon with good creds?!");
-				QUnit.start();
-            });
-        });
 		
 		QUnit.asyncTest("Test office365LogonService.logonAsync works with cached creds", function () {
 			//arrange
@@ -334,41 +302,5 @@ define(['jquery',
 				QUnit.start();
             });
         });
-				
-		QUnit.asyncTest("Test office365LogonService.checkLogonStatusAsync fails with expired token", function () {
-			//arrange
-			var newExp,
-				service,
-				promise;
-			
-			//act
-			service = new office365LogonService(TestSettings.claimsTestUrl);
-			newExp = service.getUtcNow();
-			promise = service.logonAsync(TestSettings.claimsTestDomainOnly, TestSettings.claimsTestUserOnly, TestSettings.claimsTestPassword);
-			
-			//assert			
-			promise.done(function (result) {
-				QUnit.ok(service.logonExpiration);
-				
-				service.logonExpiration = newExp;
-				
-				promise = service.checkLogonStatusAsync();
-				
-				promise.done(function () {
-					QUnit.ok(false, "checkLogonStatusAsync should have failed");
-					QUnit.start();
-                });
-				
-				promise.fail(function () {
-					QUnit.ok(true);
-					QUnit.start();
-                });							
-            });
-			
-			promise.fail(function () {
-				QUnit.ok(false, "Failed to logon with good creds?!");
-				QUnit.start();
-            });
-        });
-		
+	
 	});
