@@ -318,16 +318,7 @@ define(["application",
 			urlValidationPromise.done(function (credType) {
 				QUnit.ok(true);
 				QUnit.equal(credType, credentialType.claimsOrForms);
-				
-				//shut down the logon window
-				QUnit.ok(vm.logonService);
-				
-				setTimeout(function () {
-					QUnit.ok(vm.logonService.windowRef);
-					vm.logonService.windowRef.close();
-					
-					QUnit.start();
-				}, 750);
+				QUnit.start();
             });
 			urlValidationPromise.fail(function (status) {
 				QUnit.ok(false, "Could not validate " + TestSettings.adfsTestUrl); 

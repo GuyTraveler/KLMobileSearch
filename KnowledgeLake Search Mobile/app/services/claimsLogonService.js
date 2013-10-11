@@ -1,3 +1,6 @@
+//generic "passive" claims logon service
+//pops logon dialogs when necessary to do authentication and obtain
+//authentication cookies
 define(["jquery", 
 		"application",
 		"logger",
