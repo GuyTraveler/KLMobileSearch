@@ -9,9 +9,13 @@ define([], function () {
         };
         
         self.toDateString = function (dateTime) {            
-            var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
+            var date = dateTime ? self.getUTCDate(dateTime) : new Date();
             
             return kendo.toString(date, "d");
+        }
+        
+        self.toKlamlDateString = function (dateObject) {
+            return self.formatDate(dateObject, "MM/dd/yyyy HH:mm:ss");
         }
         
         self.convertToKlamlDateTimeRange = function (start, end) {
@@ -45,7 +49,17 @@ define([], function () {
         }
         
         self.determineOffset = function (dateObject) {
-            return dateObject.getHours() !== 0;
+            return (dateObject.getHours() !== 0 && (dateObject.getMinutes() === 0 || dateObject.getMilliseconds === 0));
+        }
+        
+        self.isDateEqual = function (date, duplicateDate) {
+            return self.toDateString(date) === self.toDateString(duplicateDate);
+        }
+        
+        self.addMillisecond = function (date) {
+            var dateObject = self.getUTCDate(date);
+            
+            return self.toKlamlDateString(dateObject.setMilliseconds(dateObject.getMilliseconds() + 1));
         }
         
         self.formatStringParser = function (formatString) {
