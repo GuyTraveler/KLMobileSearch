@@ -138,7 +138,13 @@ img.margin-img {
     word-wrap: break-word
 }
 
-.center-head {
+.center-head-ios {
+	position: absolute;
+	top: 50%;
+	margin-top: -12px;
+}
+
+.center-head-droid {
 	position: absolute;
 	top: 50%;
 	margin-top: -1.6em;
@@ -155,10 +161,11 @@ img.margin-img {
 	margin-top: 4px!important;
 }
 
-.list-view-right-item {
+.dropdown-indicator {
 	position: absolute; 
 	right: 0; 
-	top: -0.5em;
+	top: 50%;
+	margin-top: -1em;
 }
 
 .full-width {

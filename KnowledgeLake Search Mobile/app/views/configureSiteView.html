@@ -2,7 +2,7 @@
 <header data-role="header">
     <div data-role="navbar"> 
 		<button class="transparent-button head-button" data-align="left">
-			<img class="center-head" src="app/images/kl_head.png" />
+			<img data-bind="css: { 'center-head-ios': isIOS, 'center-head-droid': !isIOS() }" src="app/images/kl_head.png" />
         </button>	
 		
 		<button data-align="left" data-role="button" class="transparent-button"></button>
@@ -24,7 +24,7 @@
 	                <span data-bind="text: strings().protocol" />
 	            </p>
 				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
-				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+				<button data-role="button" data-icon="details" class="transparent-button dropdown-indicator"></button>
             </div>  	
         </label> 
     </li>
@@ -59,7 +59,7 @@
 	                <span data-bind="text: strings().credentialType" />
 	            </p>
 	            <select id="credentialTypeDropDown" class="list-view-input" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
-				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+				<button data-role="button" data-icon="details" class="transparent-button dropdown-indicator"></button>
 			</div>
         </label>
     </li>       
