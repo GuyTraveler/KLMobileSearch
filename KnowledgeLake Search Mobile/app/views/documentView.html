@@ -5,10 +5,14 @@
 </header>
 
 <h3 data-bind="text: documentTitle"></h3>
-<div data-bind="foreach: documentDataSource">
-    <div data-bind="ifnot: hidden">
-        <span data-bind="text: displayName"></span>
-        <span>: </span>
-        <span data-bind="text: value"></span>
-    </div>
-</div>
+<ul data-bind="foreach: documentDataSource" data-style="inset">
+    <li data-bind="ifnot: hidden">
+        <label>
+            <p class="list-view-label">
+                <span data-bind="text: displayName" />		
+                <span>: </span>
+            </p> 
+			<span data-bind="text: value"></span>
+        </label>
+    </li>      
+</ul>
