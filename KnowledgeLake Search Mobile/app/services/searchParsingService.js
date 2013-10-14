@@ -24,7 +24,7 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                         for(var i = 0; i < fieldsLength; i++)
                         {
                             if(fields[i])
-                            {
+                            {                                
                                 klamlSearchFieldProperties.push(new searchFieldProperty($(fields[i]).attr(idProperty),
 																						$(fields[i]).attr(nameProperty), 
                                                                                         $(fields[i]).attr(typeProperty),
@@ -73,9 +73,9 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                         }
                         
                         else if(searchProperties[i].type && searchProperties[i].type === "DateTime" &&
-                                searchProperties[i].operator && searchProperties[i].operator === "geq")
+                                searchProperties[i].operator && searchProperties[i].operator === ">=")
                         {
-                             searchProperties.condition1 = DateTimeConverter.addMillisecond(searchProperties[i].condition1);
+                             searchProperties[i].condition1 = DateTimeConverter.adjustDateTime(searchProperties[i].condition1, 1000, "+");
                         }                        
                     }                    
                 }

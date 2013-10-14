@@ -8,37 +8,58 @@ define([], function () {
             return kendo.toString(date, "g");        
         };
         
-        self.toDateString = function (dateTime) {            
-            var date = dateTime ? self.getUTCDate(dateTime) : new Date();
+        self.toDateString = function (dateTime) {
+            if(dateTime && dateTime !== "")
+            {
+                var date = self.getUTCDate(dateTime);
+                
+                return kendo.toString(date, "d");
+            }
             
-            return kendo.toString(date, "d");
+            return dateTime;
         }
         
         self.toKlamlDateString = function (dateObject) {
             return self.formatDate(dateObject, "MM/dd/yyyy HH:mm:ss");
         }
         
+        self.convertToKlamlDateTime = function (date) {
+            var klamlDate = self.getUTCDate(date);
+            
+            return  self.toKlamlDateString(klamlDate);
+        } 
+        
         self.convertToKlamlDateTimeRange = function (start, end) {
-            var klamlDateTimeFormat = "MM/dd/yyyy HH:mm:ss",
-                startDate = self.getUTCDate(start),
+            var startDate = self.getUTCDate(start),
                 endDate = self.getUTCDate(end, true);
             
             return {
-                startDate: self.formatDate(startDate, klamlDateTimeFormat),
-                endDate: self.formatDate(endDate, klamlDateTimeFormat)
+                startDate: self.toKlamlDateString(startDate),
+                endDate: self.toKlamlDateString(endDate)
             };
         } 
         
         self.convertToKlamlDateTimeEqual = function (date) {
-            var klamlDateTimeFormat = "MM/dd/yyyy HH:mm:ss",
-                startDate = self.getUTCDate(date),
+            var startDate = self.getUTCDate(date),
                 endDate = self.getUTCDate(date, true);
             
             return {
-                startDate: self.formatDate(startDate, klamlDateTimeFormat),
-                endDate: self.formatDate(endDate, klamlDateTimeFormat)
+                startDate: self.toKlamlDateString(startDate),
+                endDate: self.toKlamlDateString(endDate)
             };
         } 
+        
+        self.convertToKlamlDateTimeDayEnd = function (date) {
+            var endDate = self.getUTCDate(date, true);
+            
+            return self.toKlamlDateString(endDate);
+        } 
+        
+        self.convertToKlamlDateTimePreviousDay = function (date) {
+            var previousDate = self.adjustDateTime(date, 1000, "-");
+            
+            return self.toKlamlDateString(previousDate);
+        }
         
         self.getUTCDate = function (date, endOfDay) {
             var gmtDate = date ? new Date(date) : new Date();
@@ -56,10 +77,16 @@ define([], function () {
             return self.toDateString(date) === self.toDateString(duplicateDate);
         }
         
-        self.addMillisecond = function (date) {
-            var dateObject = self.getUTCDate(date);
+        self.adjustDateTime = function (date, increment, operation) {
+            var dateObject = self.getUTCDate(date),
+                adjustedDateTime;
             
-            return self.toKlamlDateString(dateObject.setMilliseconds(dateObject.getMilliseconds() + 1));
+            if(operation === "+")
+                adjustedDateTime = new Date(dateObject.valueOf() + increment);
+            else             
+                adjustedDateTime = new Date(dateObject.valueOf() - increment);
+            
+            return adjustedDateTime;
         }
         
         self.formatStringParser = function (formatString) {
