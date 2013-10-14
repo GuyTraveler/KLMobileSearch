@@ -91,7 +91,7 @@ define(["knockout",
 		self.afterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-			if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
+			if(savedSearchViewModel.selectedSearch() === null && savedSearchViewModel.keyword() !== "")
             {                
 			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
                     return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());

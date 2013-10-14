@@ -136,7 +136,7 @@ define(['require',
             vm.setSelectedSearch(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
         });    
         
         QUnit.test("test savedSearchViewModel setSelectedSearch already set", function () {
@@ -145,13 +145,13 @@ define(['require',
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             vm.setSelectedSearch(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, null);
+            QUnit.equal(vm.selectedSearch(), null);
         });    
         
         QUnit.test("test savedSearchViewModel setSelectedSearch with event object", function () {
@@ -166,7 +166,7 @@ define(['require',
             vm.setSelectedSearch(searchData, event);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
         });       
         
         QUnit.test("test savedSearchViewModel isSelectedSearch equal", function () {
@@ -175,7 +175,7 @@ define(['require',
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             var result = vm.isSelectedSearch(searchData);
@@ -217,13 +217,13 @@ define(['require',
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             vm.searchClick(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
         });  
         
         QUnit.test("test savedSearchViewModel onSearchKeyUp", function () {

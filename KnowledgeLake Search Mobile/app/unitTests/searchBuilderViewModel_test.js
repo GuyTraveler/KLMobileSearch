@@ -144,7 +144,7 @@ define(['require',
             
             vm = new searchBuilderViewModel();
             savedSearchVM = new savedSearchViewModel();
-            savedSearchVM.selectedSearch = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
+            savedSearchVM.selectedSearch(new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml));
             savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
             
             window.savedSearchViewModel = savedSearchVM;
@@ -153,7 +153,7 @@ define(['require',
             vm.afterShow();
                         
             //assert
-            QUnit.equal(vm.search(), savedSearchVM.selectedSearch);
+            QUnit.equal(vm.search(), savedSearchVM.selectedSearch());
         });  
        
         QUnit.test("test searchBuilderViewModel onSearchKeyUp", function () {

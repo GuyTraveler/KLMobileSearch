@@ -101,13 +101,13 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 		self.afterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-			if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
+			if(!self.klaml || savedSearchViewModel.selectedSearch().title !== self.search().title)
             {                                    
                 self.keyword("");
                 self.searchBuilderDataSource([]);
                 self.klaml = null;
                         
-                self.search(savedSearchViewModel.selectedSearch);                
+                self.search(savedSearchViewModel.selectedSearch());                
                                     
                 self.BuildSearchProperties();                    
             }
