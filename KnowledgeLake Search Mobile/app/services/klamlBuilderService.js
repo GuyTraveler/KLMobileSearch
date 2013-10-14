@@ -44,7 +44,7 @@ define(["jquery",
                         whereClause += IsDocument;
                     }
                     
-                    searchProperties = self.amendRangeProperties(searchProperties);
+                    self.refineKlamlProperties(searchProperties);
                     
                     var searchPropertiesLength = searchProperties.length;
                     
@@ -64,42 +64,73 @@ define(["jquery",
                 return query.replace("{whereClause}", whereClause);
             }  
             
-            self.amendRangeProperties = function (searchProperties) {
+            self.refineKlamlProperties = function (searchProperties)
+            {
                 if(searchProperties)
                 {                    
                     for(var i = searchProperties.length - 1; i >= 0; i--)
                     {
-                        if(searchProperties[i].selectedOperator() === application.strings.Range || 
-                           searchProperties[i].selectedOperator() === "=")
+                        if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
                         {
-                            var modifiedProperty = new searchProperty();
-                            
-                            mapping.fromJS(searchProperties[i], {}, modifiedProperty);                            
-                            
-                            searchProperties[i].selectedOperator("<=");
-                            modifiedProperty.selectedOperator(">=");                            
-                            modifiedProperty.value(modifiedProperty.secondaryValue());
-                            
-                            if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
-                            {       
-                                var klamlDateTimes;
+                            if(searchProperties[i].selectedOperator() === application.strings.Range)
+                            {
+                                self.duplicateKlamlProperty(searchProperties, i);
                                 
-                                if(searchProperties[i].selectedOperator() === application.strings.Range)
-                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), modifiedProperty.value());
-                                
-                                if(searchProperties[i].selectedOperator() === "=")
-                                    klamlDateTimes = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value());                                
-                                
-                                searchProperties[i].value(klamlDateTimes.startDate);
-                                modifiedProperty.value(klamlDateTimes.endDate);
+                                var klamlDateTimesRange = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), searchProperties[i+1].value());
+                                         
+                                searchProperties[i].value(klamlDateTimesRange.startDate);
+                                searchProperties[i+1].value(klamlDateTimesRange.endDate);
                             }
                             
-                            searchProperties.splice(i + 1, 0, modifiedProperty);
+                            else if(searchProperties[i].selectedOperator() === "=")
+                            {
+                                self.duplicateKlamlProperty(searchProperties, i);
+                                
+                                var klamlDateTimesEqual = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value()); 
+                                
+                                searchProperties[i].value(klamlDateTimesEqual.startDate);
+                                searchProperties[i+1].value(klamlDateTimesEqual.endDate);
+                            }
+                            
+                            else if(searchProperties[i].selectedOperator() === ">" ||
+                                    searchProperties[i].selectedOperator() === "<=")
+                            {
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimeDayEnd(searchProperties[i].value()));
+                            }
+                            
+                            else if(searchProperties[i].selectedOperator() === ">=")
+                            {                                
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimePreviousDay(searchProperties[i].value()));
+                            }
+                            
+                            else
+                            {
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTime(searchProperties[i].value()));
+                            }
+                        }
+                        
+                        else if (searchProperties[i].controlType === catalogPropertyControlType.Number &&
+                                 searchProperties[i].selectedOperator() === application.strings.Range)
+                        {
+                            self.duplicateKlamlProperty(searchProperties, i);
                         }
                     }
                 }
-                
-                return searchProperties;
+            }
+            
+            self.duplicateKlamlProperty = function(searchProperties, index) {
+                if(searchProperties && index)
+                {
+                    var modifiedProperty = new searchProperty();
+                            
+                    mapping.fromJS(searchProperties[index], {}, modifiedProperty);                            
+                    
+                    searchProperties[index].selectedOperator(">=");
+                    modifiedProperty.selectedOperator("<=");                            
+                    modifiedProperty.value(modifiedProperty.secondaryValue());
+                    
+                    searchProperties.splice(index + 1, 0, modifiedProperty);
+                }
             }
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
