@@ -18,7 +18,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 		self.keywordConjunction = keywordConjunction;
         self.searchDataSource = ko.observableArray(null);
         
-        self.selectedSearch = null;
+        self.selectedSearch = ko.observable(null);
         self.site = ko.observable("");          
         self.keyword = ko.observable("");            
 					
@@ -75,7 +75,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
                     self.site(homeViewModel.selectedSite);
                     
                     self.keyword("");
-                    self.selectedSearch = null;
+                    self.selectedSearch(null);
                 }
                 
                 self.LoadSearchData();
@@ -86,18 +86,18 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 			if (event)
 				event.stopImmediatePropagation();
 			
-            if(self.selectedSearch === selection)
-                self.selectedSearch = null;
+            if(self.selectedSearch() === selection)
+                self.selectedSearch(null);
             else
-                self.selectedSearch = selection;
+                self.selectedSearch(selection);
             
             //self.navBarVisible(self.selectedSite);
         }
         
         self.isSelectedSearch = function (item) {
-            if(item && self.selectedSearch)
+            if(item && self.selectedSearch())
             {
-                return item.title == self.selectedSearch.title;
+                return item.title == self.selectedSearch().title;
             }
             
 			return false;
@@ -106,8 +106,8 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
         self.searchClick = function (selection) {
 			self.setSelectedSearch(selection, null);
 			
-            if(self.selectedSearch !== selection)
-                self.selectedSearch = selection;
+            if(self.selectedSearch() !== selection)
+                self.selectedSearch(selection);
             
             window.App.navigate(searchBuilderUrl);              
         }
