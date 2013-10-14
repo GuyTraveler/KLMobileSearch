@@ -9,6 +9,7 @@ function (ko, application, logger) {
 			return application.strings;
 		};
 		
+		self.isIOS = ko.observable(false);
 		self.message = ko.observable("");
         self.isBusy = ko.observable(false);
 		
@@ -42,6 +43,8 @@ function (ko, application, logger) {
         } 
 				
 		self.beforeShow = function (e) {
+			self.isIOS(window.App && window.App.os && window.App.os.ios);
+			
 			logger.logVerbose("base class viewModelBase.beforeShow called");
         } 
 		
