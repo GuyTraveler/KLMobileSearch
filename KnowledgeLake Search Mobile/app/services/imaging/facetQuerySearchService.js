@@ -49,6 +49,10 @@ function ($, application, logger, keyValuePair, soapServiceBase) {
 			return self.executeSoapMethodAsync("GetCurrentUserName");
         }
         
+        self.GetImagingVersion = function () {			
+			return self.executeSoapMethodAsync("GetImagingVersion");
+        }
+        
         return self;
     };
     
