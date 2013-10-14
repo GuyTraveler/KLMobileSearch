@@ -4,15 +4,22 @@
     </div>
 </header>
 
-<h3 data-bind="text: documentTitle"></h3>
-<ul data-bind="foreach: documentDataSource" data-style="inset">
-    <li data-bind="ifnot: hidden">
-        <label>
-            <p class="list-view-label">
-                <span data-bind="text: displayName" />		
-                <span>: </span>
-            </p> 
-			<span data-bind="text: value"></span>
-        </label>
-    </li>      
-</ul>
+<form>
+	<div>
+	    <h3 data-bind="text: documentTitle"></h3>
+	    
+		<ul data-role="listview" data-bind="foreach: documentDataSource" data-style="inset">
+            <!-- ko ifnot: hidden -->
+                <li class="full-width">
+                    <label>
+                        <p>
+                            <span class="bold" data-bind="text: displayName" />		
+                            <span class="bold">: </span>                    
+            			    <span data-bind="text: value"></span>
+                        </p> 
+                    </label>
+                </li>  
+            <!-- /ko -->
+	    </ul>
+	</div>
+</form>
