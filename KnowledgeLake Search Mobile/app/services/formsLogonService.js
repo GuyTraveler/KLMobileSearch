@@ -3,10 +3,10 @@ define(["jquery",
 		"application",
 		"logger",
 		"IAuthenticationService",
-		"ISiteDataService",
+		"IWebsService",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, authenticationService, siteDataService) {
+function ($, Constants, application, logger, authenticationService, websService) {
 	var formsLogonService = function (siteUrl) {
 		var self = this;
 		
@@ -20,7 +20,7 @@ function ($, Constants, application, logger, authenticationService, siteDataServ
 					isValid = (result != null) && (result.LoginResult != null) && (result.LoginResult.CookieName != null) && (result.LoginResult.CookieName.value != null);
 					
 					if (isValid) {
-						logger.logVerbose("Obtained FBA Cookie: " + result.CookieName.value);
+						logger.logVerbose("Obtained FBA Cookie: " + result.LoginResult.CookieName.value);
 						dfd.resolve(result);
 					}
 					else {
@@ -33,25 +33,6 @@ function ($, Constants, application, logger, authenticationService, siteDataServ
 			
 			return dfd.promise();
 		};	
-		
-		self.checkLogonStatusAsync = function () {
-			var dfd = $.Deferred(),
-				siteData = new siteDataService(siteUrl);
-				
-			//lightweight SP call to verify we are authenticated
-			siteData.GetSiteUrlAsync(siteUrl)
-				.done(function () {
-	                dfd.resolve(true);
-	            })
-	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-	                if (XMLHttpRequest.status == 200)
-						dfd.resolve(true);
-					else
-						dfd.reject(false);
-	            });
-			
-			return dfd.promise();
-		};
 		
 		return self;
     };

@@ -265,10 +265,11 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 						
 						getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
                     })
-                    .fail(function () {  //fail, invalidate our creds
-                        self.isCredentialsValid(false);
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {  //fail, invalidate our creds
+                        /*self.isCredentialsValid(false);
                         self.credValidationImageSrc(invalidImageUrl);                               
-                        self.sharePointVersion(0);
+                        self.sharePointVersion(0);*/
+						self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
 
 						getWebDfd.reject();							
                     });
@@ -304,14 +305,14 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                 self.setMessage(application.strings.urlInvalidMessage);
                 return false;
             }
-            else if (!self.isTitleValid()) {
-                self.setMessage(application.strings.siteTitleRequired);
-                return false;
-            }
-            else if (!self.isCredentialsValid()) {
+			else if (!self.isCredentialsValid()) {
                 self.setMessage(application.strings.credentialsInvalidMessage);
                 return false;
             }
+            else if (!self.isTitleValid()) {
+                self.setMessage(application.strings.siteTitleRequired);
+                return false;
+            }            
             
             return true;
         }

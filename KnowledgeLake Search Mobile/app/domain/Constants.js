@@ -1,6 +1,7 @@
 define(["application"], function (application) {
 
 	return {
+		maxResults: 100,  //TODO: change this to something higher once we have dynamic paging
 		//sharepoint
 	    sharePointDelimiter: ";#",
 	    sharePoint2013MajorVersion: 15, 

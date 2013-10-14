@@ -68,7 +68,8 @@ require(["config"], function (config) {
 						  testRootPath + "office365LogonService_tests",
 						  testRootPath + "searchProperty_tests",
                           testRootPath + "documentViewModel_tests",
-						  testRootPath + "logonServiceFactory_tests"
+						  testRootPath + "logonServiceFactory_tests",
+						  testRootPath + "formsLogonService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];

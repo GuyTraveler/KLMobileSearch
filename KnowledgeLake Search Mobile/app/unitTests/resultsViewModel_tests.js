@@ -2,6 +2,7 @@
 define(['require',
         'jquery',
         'knockout',
+		'domain/Constants',
         'viewmodels/resultsViewModel',
         'viewmodels/savedSearchViewModel',
         'viewmodels/searchBuilderViewModel',
@@ -14,7 +15,7 @@ define(['require',
 		"domain/keywordConjunction",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, application, TestSettings, keywordConjunction) {
+    function (require, $, ko, Constants, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, application, TestSettings, keywordConjunction) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -111,6 +112,28 @@ define(['require',
 			vm.SetDataSource(resultData);
 			
 			expectedMessage = application.strings.resultCountFormat.format(resultData.length.toString());
+                        
+            //assert
+            QUnit.equal(vm.resultDataSource().length, resultData.length);
+			QUnit.equal(vm.resultCountString(), expectedMessage);
+        });
+				  
+		QUnit.test("test resultCountString reads properly for MAX results", function () {
+			//arrange
+            var vm,
+				resultData = [],
+				expectedMessage;
+            
+            //act 
+            vm = new resultsViewModel();
+			
+			for (var i = 0; i < Constants.maxResults + 1; i++) {
+				resultData.push(new result("http://prodsp2010.dev.local/sites/team2/RyanLib/" + i + "Page.pdf", {"title":"pdf"}));
+            }
+			
+			vm.SetDataSource(resultData);
+			
+			expectedMessage = application.strings.maxResultsFormat.format(resultData.length.toString());
                         
             //assert
             QUnit.equal(vm.resultDataSource().length, resultData.length);

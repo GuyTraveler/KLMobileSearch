@@ -1,6 +1,7 @@
 define(["knockout",
 		"application",
 		"logger",
+		"domain/Constants",
         "jquery",
 		"viewmodels/viewModelBase", 
         "factory/queryServiceFactory", 
@@ -11,7 +12,8 @@ define(["knockout",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
-    function (ko, application, logger, $, viewModelBase, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
+    function (ko, application, logger, Constants, $, viewModelBase, QueryServiceFactory, keywordConjunction, 
+			  LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this,
             documentUrl = "#document";
@@ -28,13 +30,15 @@ define(["knockout",
                                                 
             if (length === 0) {
                 countMessage = application.strings.noResultsFound;
-            }
-            
+            }            
             else {
                 countMessage = application.strings.resultCountFormat.format(length.toString());
                                                 
                 if (length === 1) {
-                    countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
+                    countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's' for only 1 result
+                }
+				else if (length >= Constants.maxResults) {
+					countMessage = application.strings.maxResultsFormat.format(length.toString());
                 }
             }  
                                                 
