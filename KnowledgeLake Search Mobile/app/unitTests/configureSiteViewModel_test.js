@@ -403,20 +403,34 @@ define(["application",
 			QUnit.equal(vm.message(), application.strings.urlInvalidMessage);
         });
 		
-		QUnit.test("test configureSiteViewModel.validateAll validates bad site title", function () {
+		QUnit.asyncTest("test configureSiteViewModel.validateAll validates bad site title", function () {
 			//arrange
-			var vm;
+			var vm,
+				promise;
 			
 			//act
 			vm = new configureSiteViewModel();
 			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
+			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.setValidUrl(credentialType.ntlm);
+			
+			promise = vm.logonAsync();
 			
 			//assert
 			QUnit.ok(vm);
 			
-			QUnit.equal(vm.validateAll(), false);
-			QUnit.equal(vm.message(), application.strings.siteTitleRequired);
+			promise.done(function () {
+				vm.siteTitle("");
+				QUnit.equal(vm.validateAll(), false);
+				QUnit.equal(vm.message(), application.strings.siteTitleRequired);	
+				QUnit.start();
+            });
+			
+			promise.fail(function () {
+				QUnit.ok(false);
+				QUnit.start();
+			});			
         });
 		
 		QUnit.test("test configureSiteViewModel.validateAll validates bad credentials", function () {
