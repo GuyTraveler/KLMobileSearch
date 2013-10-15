@@ -23,7 +23,7 @@
 					<img width="16" data-bind="attr: { src: urlValidationImageSrc }, visible: urlValidationImageSrc" class="margin-img" />
 	                <span data-bind="text: strings().protocol" />
 	            </p>
-				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
+				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }" id="siteProtocolDropdown"></select>
 				<button data-role="button" data-icon="details" class="transparent-button dropdown-indicator"></button>
             </div>  	
         </label> 
@@ -75,7 +75,7 @@
                     <img width="16" data-bind="attr: { src: credValidationImageSrc }, visible: credValidationImageSrc" class="margin-img" />
                     <span data-bind="text: strings().userName" />
                 </p>
-                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" id="configureSiteUserNameText" />            
             </label>
         </li>        
         <li>
@@ -86,7 +86,7 @@
                 </p>
 				
 				<span data-bind="if: !shouldShowPassword()">
-                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="password" />            
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="password" id="configureSitePasswordText" />            
 				</span>
 				<span data-bind="if: shouldShowPassword">
                 	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="text" />            
