@@ -20,7 +20,7 @@
         <label>      
 			<div class="relative-container">
 				<p class="list-view-label">
-					<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+					<img width="16" data-bind="attr: { src: urlValidationImageSrc }, visible: urlValidationImageSrc" class="margin-img" />
 	                <span data-bind="text: strings().protocol" />
 	            </p>
 				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
@@ -31,7 +31,7 @@
     <li>
         <label>            
             <p class="list-view-label">
-                <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+                <img width="16" data-bind="attr: { src: urlValidationImageSrc }, visible: urlValidationImageSrc" class="margin-img" />
                 <span data-bind="text: strings().siteUrl" />
             </p>
 			<!-- android works better with 'text' types and iOS works better with 'url' types -->
@@ -72,7 +72,7 @@
         <li>
             <label>
                 <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+                    <img width="16" data-bind="attr: { src: credValidationImageSrc }, visible: credValidationImageSrc" class="margin-img" />
                     <span data-bind="text: strings().userName" />
                 </p>
                 <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" />            
@@ -81,7 +81,7 @@
         <li>
             <label>
                 <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+                    <img width="16" data-bind="attr: { src: credValidationImageSrc }, visible: credValidationImageSrc" class="margin-img" />
                     <span data-bind="text: strings().password" />
                 </p>
 				

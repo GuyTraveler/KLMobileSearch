@@ -3,7 +3,7 @@ img.resultIcon {
     height: 1.88em;
 }
 
-#resultPageHeading {
+.pageHeading {
 	text-align: center;
 	padding: 0.5em 0em;	
 } 

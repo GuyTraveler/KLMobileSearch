@@ -24,7 +24,7 @@ define({
 	keywordsWatermark: "Keywords",
     loading: "Loading...",
     searching: "Searching...",
-    credentialType: "Type",
+    credentialType: "Auth Type",
     credentials: "Credentials",
     userName: "User",
     password: "Password",
@@ -84,5 +84,6 @@ define({
 	AccessDirectoryFailure: "Unable to access file directory.",	
 	LogonSucceeded: "Logon succeeded.",
 	And: "And",
-	Or: "Or"
+	Or: "Or",
+	AvailableSites: "Available Sites"
 });
