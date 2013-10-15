@@ -1,6 +1,6 @@
 /*global QUnit*/
-define(['services/dateTimeConverter'],
-    function (DateTimeConverter) {
+define(['services/dateTimeConverter', "unitTests/unitTestSettings"],
+    function (DateTimeConverter, TestSettings) {
         QUnit.module("Testing services/dateTimeConverter");
 
         QUnit.test("test dateTimeConverter formatStringParser null", function () {
@@ -154,7 +154,7 @@ define(['services/dateTimeConverter'],
             QUnit.equal(result, "30.12.1988 08:08");
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale null date null", function () {
+        QUnit.test("test dateTimeConverter dateTimeToLocaleString date null", function () {
             //arrange
             
             //act            
@@ -164,268 +164,175 @@ define(['services/dateTimeConverter'],
             QUnit.ok(result);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale zh date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter dateTimeToLocaleString date 2012-10-30T15:47:52-05:00", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "zh";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.dateTimeToLocaleString(TestSettings.testDateTime);
                         
             //assert
-            QUnit.equal(result, "2012/10/30 15:47");
+            QUnit.equal(result, TestSettings.testDateTimeToLocaleString);
+        });  
+        
+        QUnit.test("test dateTimeConverter toDateString null", function () {
+            //arrange
+            
+            //act            
+            var result = DateTimeConverter.toDateString();
+                        
+            //assert
+            QUnit.equal(result, null);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale zh-SG date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter toDateString date 2012-10-30T15:47:52-05:00", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "zh-SG";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.toDateString(TestSettings.testDateTime);
                         
             //assert
-            QUnit.equal(result, "30/10/2012 15:47");
+            QUnit.equal(result, TestSettings.testDate);
+        });       
+        
+        QUnit.test("test dateTimeConverter toKlamlDateString null", function () {
+            //arrange
+            
+            //act            
+            var result = DateTimeConverter.toKlamlDateString();
+                        
+            //assert
+            QUnit.equal(result, "");
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale nl date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter toKlamlDateString date 2012-10-30T15:47:52-05:00", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "nl";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.toKlamlDateString(new Date(TestSettings.testDateTime));
                         
             //assert
-            QUnit.equal(result, "30-10-2012 15:47");
+            QUnit.equal(result, TestSettings.testKlamlDateString);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale nl-BE date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter convertToKlamlDateTime date 2012-10-30T15:47:52-05:00", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "nl-BE";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.convertToKlamlDateTime(TestSettings.testDateTime);
                         
             //assert
-            QUnit.equal(result, "30/10/2012 15:47");
+            QUnit.equal(result, TestSettings.testKlamlDateString);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter convertToKlamlDateTimeRange", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.convertToKlamlDateTimeRange(TestSettings.testDate, TestSettings.testSecondaryDate);
                         
             //assert
-            QUnit.equal(result, "10/30/2012 3:47 PM");
+            QUnit.equal(result.startDate, TestSettings.testStartDateTime);
+            QUnit.equal(result.endDate, TestSettings.testEndDateTime);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-AU date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter convertToKlamlDateTimeEqual", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-AU";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.convertToKlamlDateTimeEqual(TestSettings.testDate);
                         
             //assert
-            QUnit.equal(result, "30/10/2012 3:47 PM");
+            QUnit.equal(result.startDate, TestSettings.testStartDateTime);
+            QUnit.equal(result.endDate, TestSettings.testEndDateTimeEqual);
         });
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-029 date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter convertToKlamlDateTimeDayEnd", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-029";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.convertToKlamlDateTimeDayEnd(TestSettings.testDate);
                         
             //assert
-            QUnit.equal(result, "30/10/2012 15:47");
-        });
+            QUnit.equal(result, TestSettings.testEndDateTimeEqual);
+        });     
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-NZ date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter convertToKlamlDateTimePreviousDay", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-NZ";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.convertToKlamlDateTimePreviousDay(TestSettings.testDate);
                         
             //assert
-            QUnit.equal(result, "30/10/2012 3:47 P.M.");
-        });
+            QUnit.equal(result, TestSettings.testPreviousDateTime);
+        });         
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-CA date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter getUTCDate", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-CA";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.getUTCDate(TestSettings.testDate);
                         
             //assert
-            QUnit.equal(result, "2012-10-30 3:47 PM");
-        });
+            QUnit.equal(result, TestSettings.testUTCDate);
+        });         
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-IN date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter getUTCDate endOfDay", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-IN";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.getUTCDate(TestSettings.testDate, true);
                         
             //assert
-            QUnit.equal(result, "30-10-2012 15:47");
-        });
+            QUnit.equal(result, TestSettings.testUTCDateDayEnd);
+        });         
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale en-MY date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter determineOffset", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "en-MY";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.determineOffset(new Date(TestSettings.testDate));
                         
             //assert
-            QUnit.equal(result, "30/10/2012 3:47 PM");
-        });
+            QUnit.equal(result, false);
+        });            
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale fr-BE date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter isDateEqual true", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "fr-BE";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.isDateEqual(TestSettings.testDate, TestSettings.testDate);
                         
             //assert
-            QUnit.equal(result, "30-10-12 15:47");
-        }); 
+            QUnit.equal(result, true);
+        });      
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale fr-CA date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter isDateEqual false", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "fr-CA";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.isDateEqual(TestSettings.testDate, TestSettings.testSecondaryDate);
                         
             //assert
-            QUnit.equal(result, "2012-10-30 15:47");
-        });
+            QUnit.equal(result, false);
+        });      
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale fr-CH date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter adjustDateTime +", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "fr-CH";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.adjustDateTime(TestSettings.testPreviousDateTime, 1000, "+");
                         
             //assert
-            QUnit.equal(result, "30.10.2012 15:47");
-        });
+            QUnit.equal(result, TestSettings.testUTCDate);
+        });      
         
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale it date 2012-10-30T15:47:52-05:00", function () {
+        QUnit.test("test dateTimeConverter adjustDateTime -", function () {
             //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "it";
             
             //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
+            var result = DateTimeConverter.adjustDateTime(TestSettings.testDate, 1000, "-");
                         
             //assert
-            QUnit.equal(result, "30/10/2012 15.47");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale ja date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "ja";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "2012/10/30 15:47");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale ru date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "ru";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "30.10.2012 15:47");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale es-AR date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "es-AR";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "30/10/2012 3:47 P.M.");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale es-VE date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "es-VE";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "30-10-2012 3:47 P.M.");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale es-CO date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "es-CO";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "30/10/2012 3:47 P. M.");
-        });
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale es-DO date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "es-DO";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "30/10/12 3:47 P. M.");
-        });
-        
-        
-        QUnit.test("test dateTimeConverter dateTimeToLocaleString locale banana date 2012-10-30T15:47:52-05:00", function () {
-            //arrange
-            var date = "2012-10-30T15:47:52-05:00", 
-                locale = "banana";
-            
-            //act            
-            var result = DateTimeConverter.dateTimeToLocaleString(locale, date);
-                        
-            //assert
-            QUnit.equal(result, "10/30/2012 3:47 PM");
-        });
+            QUnit.equal(result, TestSettings.testUTCDatePreviousDay);
+        });       
     });

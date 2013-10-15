@@ -2,7 +2,7 @@ define([], function () {
     var dateTimeConverter = function() {
         var self = this;
        
-        self.dateTimeToLocaleString = function (locale, dateTime) {
+        self.dateTimeToLocaleString = function (dateTime) {
             var date = kendo.parseDate(dateTime) !== null ? kendo.parseDate(dateTime) : new Date();
             
             return kendo.toString(date, "g");        
@@ -127,78 +127,81 @@ define([], function () {
                 char,
                 periodIndex = 1;
             
-            var month = dateTime.getMonth() + 1; // 0-11 (+1)
-            var date = dateTime.getDate(); // 1-31
-            var year = dateTime.getFullYear(); // xxxx
-            
-            var hour = dateTime.getHours(); // 0-23 (if greater than 12 do -12 and pm)
-            var minute = dateTime.getMinutes(); // 0-59       
-            var second = dateTime.getSeconds();
-            
-            for(i = 0; i < formatArray.length; i++)
-            {                
-                switch(formatArray[i])
-                {
-                    case "d":
-                        char = date;
-                        break;
-                    case "dd":
-                        if(date < 10)
-                            char = "0" + date.toString();
-                        else
-                            char = date;
-                        break;                    
-                    case "h":
-                        if(hour > 12)
-                            char = hour - 12;
-                        else
-                            char = hour;
-                        break;
-                    case "HH": 
-                        if(hour < 10)
-                            char = "0" + hour.toString();
-                        else
-                            char = hour;
-                        break;
-                    case "mm":
-						if(minute < 10)
-                            char = "0" + minute.toString();
-                        else
-                            char = minute;
-                        break;
-                    case "M":
-                        char = month;
-                        break;
-                    case "MM":
-                        if(month < 10)
-                            char = "0" + month.toString();
-                        else
-                            char = month;
-                        break;
-                    case "yy":
-                        char = year.toString().substr((year.toString().length) - 2);
-                        break;
-                    case "yyyy":
-                        char = year;
-                        break;
-                    case "t":
-                        char = self.calculatePeriod(hour, periodIndex);
-                        periodIndex++;
-                        break;
-                    case "tt":
-                        char = self.calculatePeriod(hour);
-                        break;
-                    case "ss":
-                        if(second < 10)
-                            char = "0" + second.toString();
-                        else
-                            char = second;
-                        break;
-                    default:
-                        char = formatArray[i];                    
-                }
+            if(dateTime)
+            {
+                var month = dateTime.getMonth() + 1; // 0-11 (+1)
+                var date = dateTime.getDate(); // 1-31
+                var year = dateTime.getFullYear(); // xxxx
                 
-                formattedDate = formattedDate + char.toString();
+                var hour = dateTime.getHours(); // 0-23 (if greater than 12 do -12 and pm)
+                var minute = dateTime.getMinutes(); // 0-59       
+                var second = dateTime.getSeconds();
+                
+                for(i = 0; i < formatArray.length; i++)
+                {                
+                    switch(formatArray[i])
+                    {
+                        case "d":
+                            char = date;
+                            break;
+                        case "dd":
+                            if(date < 10)
+                                char = "0" + date.toString();
+                            else
+                                char = date;
+                            break;                    
+                        case "h":
+                            if(hour > 12)
+                                char = hour - 12;
+                            else
+                                char = hour;
+                            break;
+                        case "HH": 
+                            if(hour < 10)
+                                char = "0" + hour.toString();
+                            else
+                                char = hour;
+                            break;
+                        case "mm":
+    						if(minute < 10)
+                                char = "0" + minute.toString();
+                            else
+                                char = minute;
+                            break;
+                        case "M":
+                            char = month;
+                            break;
+                        case "MM":
+                            if(month < 10)
+                                char = "0" + month.toString();
+                            else
+                                char = month;
+                            break;
+                        case "yy":
+                            char = year.toString().substr((year.toString().length) - 2);
+                            break;
+                        case "yyyy":
+                            char = year;
+                            break;
+                        case "t":
+                            char = self.calculatePeriod(hour, periodIndex);
+                            periodIndex++;
+                            break;
+                        case "tt":
+                            char = self.calculatePeriod(hour);
+                            break;
+                        case "ss":
+                            if(second < 10)
+                                char = "0" + second.toString();
+                            else
+                                char = second;
+                            break;
+                        default:
+                            char = formatArray[i];                    
+                    }
+                    
+                    formattedDate = formattedDate + char.toString();
+                }
             }
             
             return formattedDate;

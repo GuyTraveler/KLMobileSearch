@@ -75,9 +75,9 @@ define(["services/searchBuilderService",
             result = service.mapKlamlSearchFieldPropertiesToSearchProperties(TestSettings.testKlamlSearchFieldProperties, TestSettings.testFacetSearchProperties);
             
             //assert
-            QUnit.deepEqual(mapping.toJS(result.propertiesList), TestSettings.testSearchBuilderResultPropertiesList);
+            QUnit.equal(JSON.stringify(result.propertiesList), TestSettings.testSearchBuilderResultPropertiesList);
             QUnit.deepEqual(result.propertiesName, TestSettings.testSearchBuilderResultPropertiesName);
-            QUnit.deepEqual(mapping.toJS(result.searchProperties), TestSettings.testSearchBuilderResultSearchProperties);
+            QUnit.equal(JSON.stringify(result.searchProperties), TestSettings.testSearchBuilderResultSearchProperties);
         });
         
         QUnit.test("Test mapKlamlSearchFieldPropertiesToSearchProperties null null", function () {

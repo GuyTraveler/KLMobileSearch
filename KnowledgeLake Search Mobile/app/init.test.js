@@ -69,7 +69,8 @@ require(["config"], function (config) {
 						  testRootPath + "searchProperty_tests",
                           testRootPath + "documentViewModel_tests",
 						  testRootPath + "logonServiceFactory_tests",
-						  testRootPath + "formsLogonService_tests"
+						  testRootPath + "formsLogonService_tests",
+                          testRootPath + "dateTimeConverter_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
