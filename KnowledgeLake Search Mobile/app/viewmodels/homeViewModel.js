@@ -8,8 +8,7 @@ define(["knockout",
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
-                searchUrl = "#savedSearch",
-				baseShow;
+                searchUrl = "#savedSearch";
                        
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
@@ -167,6 +166,10 @@ define(["knockout",
                   
                 }
             }
+			
+			self.onMenuClick = function () {
+				
+			}
             
             return self;
         };
