@@ -8,10 +8,13 @@ define(["knockout",
         var homeViewModel = function () {
             var self = this, 
                 configureSiteUrl = "#configureSite",                
-                searchUrl = "#savedSearch";
+                searchUrl = "#savedSearch",
+				baseShow;
                        
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
+			
+			baseShow = self.show;
 			
             self.siteDataSource = ko.observableArray([]);
             
@@ -82,13 +85,9 @@ define(["knockout",
             }
             
             self.beforeShow = function (e) {
-                logger.logVerbose("homeViewModel beforeShow");                                 
+				logger.logVerbose("homeViewModel beforeShow");                                 
             }
-            
-            self.show = function (e) {
-                logger.logVerbose("homeViewModel show");							   
-            }
-			
+           
 			self.afterShow = function (e) {
 				logger.logVerbose("homeViewModel.afterShow");
 				

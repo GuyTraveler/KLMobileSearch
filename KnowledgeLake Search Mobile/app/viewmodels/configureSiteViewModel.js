@@ -18,7 +18,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
     var configureSiteViewModel = function () {
         var self = this,
             homeUrl = "#home",
-            questionImageUrl = "app/images/question.png",
+            questionImageUrl = "",
             invalidImageUrl = "app/images/invalid.png",
             validImageUrl = "app/images/valid.png",
             sharepointVersionHeader = "MicrosoftSharePointTeamServices";
@@ -343,6 +343,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             self.siteCredentialType(siteObj.credential.credentialType);
             self.siteFullUserName(userNameParser.mergeUserNameParts(siteObj.credential.userName, siteObj.credential.domain));
             self.sitePassword(siteObj.credential.password);
+			self.resetUrlValidation();
 
             self.setValidUrl(self.siteCredentialType());
         }

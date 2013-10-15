@@ -28,7 +28,7 @@ define({
 	homeUrl: "#home",
 	validImageCheck: "/valid",
 	invalidImageCheck: "/invalid",
-	questionImageCheck: "/question",
+	questionImageCheck: "",
 	docUrl: "http://prodsp2010.dev.local/sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif",
     docTitle: "1bf7a0e8-fcd2-4363-be2e-cb5b09269e39",
 	testDocumentListID: "{60DAB558-74AA-41B3-B9AE-96ADE51D60D1}",

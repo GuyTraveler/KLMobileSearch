@@ -39,16 +39,16 @@ function (ko, application, logger) {
 		
     
 		self.init = function (e) {
+			self.isIOS(window.App && window.App.os && window.App.os.ios);
 			logger.logVerbose("base class viewModelBase.init called");
         } 
 				
 		self.beforeShow = function (e) {
-			self.isIOS(window.App && window.App.os && window.App.os.ios);
-			
 			logger.logVerbose("base class viewModelBase.beforeShow called");
         } 
 		
 		self.show = function (e) {
+			self.isIOS(window.App && window.App.os && window.App.os.ios);
 			logger.logVerbose("base class viewModelBase.show called");
         } 
 			
