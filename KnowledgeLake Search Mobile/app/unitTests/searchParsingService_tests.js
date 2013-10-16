@@ -43,6 +43,59 @@ define(["services/searchParsingService",
             QUnit.deepEqual(result, []);
         });
         
+        // refineSearchFieldProperties
+        QUnit.test("Test refineSearchFieldProperties", function () {
+            //arrange
+            var service;
+            
+            service = new searchParsingService();
+            
+            //act
+            var result = service.refineSearchFieldProperties(JSON.parse(TestSettings.testKlamlSearchFieldPropertiesStringified));
+            
+            //assert
+            QUnit.equal(JSON.stringify(result), TestSettings.testKlamlRefinedSearchFieldPropertiesStringified);
+        });
+        
+        QUnit.test("Test refineSearchFieldProperties []", function () {
+            //arrange
+            var service;
+            
+            service = new searchParsingService();
+            
+            //act
+            var result = service.refineSearchFieldProperties([]);
+            
+            //assert
+            QUnit.deepEqual(result, []);
+        });
+        
+        QUnit.test("Test refineSearchFieldProperties null", function () {
+            //arrange
+            var service;
+            
+            service = new searchParsingService();
+            
+            //act
+            var result = service.refineSearchFieldProperties();
+            
+            //assert
+            QUnit.equal(result, null);
+        });
+        
+        QUnit.test("Test determineOperatorForDateTime null", function () {
+            //arrange
+            var service;
+            
+            service = new searchParsingService();
+            
+            //act
+            var result = service.determineOperatorForDateTime();
+            
+            //assert
+            QUnit.equal(result, TestSettings.testSearchRange);
+        });
+        
         QUnit.test("Test GetSearchPropertyOperator contains", function () {
             //arrange
             var service;

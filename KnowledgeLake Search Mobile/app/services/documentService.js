@@ -435,8 +435,6 @@ define(["jquery",
             }
             
             self.getDocumentPropertiesFromListItemValues = function (viewProperties, listItemValues) {
-                console.log("viewProperties: " + JSON.stringify(viewProperties));
-                console.log("listItemValues: " + JSON.stringify(listItemValues));
                 var values = self.parseRowFromListItem(listItemValues);
                 
                 if(values && viewProperties)

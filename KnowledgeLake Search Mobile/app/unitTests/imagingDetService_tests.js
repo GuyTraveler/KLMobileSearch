@@ -29,33 +29,23 @@ define(["services/imaging/imagingDetectionService",
             });
         });
         
-        QUnit.test("Test identifyImagingSearchByFeatureID with Imaging search guid", function () {
+        QUnit.asyncTest("Test detect with bad credentials", function () {
             //arrange
+            var siteData = new site(TestSettings.siteTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, 
+                            new credential(credentialType.ntlm, TestSettings.siteTestUser, "", TestSettings.siteTestDomain));
             
             //act
-            result = ImagingDetectionService.identifyImagingSearchByFeatureID(TestSettings.imagingSearchId);
+            var detectPromise = ImagingDetectionService.detectAsync(siteData);
             
             //assert
-            QUnit.equal(result, true);
-        });
-        
-        QUnit.test("Test identifyImagingSearchByFeatureID with invalid guid", function () {
-            //arrange
+            detectPromise.done(function (result) {
+                QUnit.ok(false);                
+                QUnit.start();
+            });
             
-            //act
-            result = ImagingDetectionService.identifyImagingSearchByFeatureID(TestSettings.invalidId);
-            
-            //assert
-            QUnit.equal(result, false);
-        });
-        
-        QUnit.test("Test identifyImagingSearchByFeatureID with null guid", function () {
-            //arrange
-            
-            //act
-            result = ImagingDetectionService.identifyImagingSearchByFeatureID();
-            
-            //assert
-            QUnit.equal(result, false);
+            detectPromise.fail(function (error) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
         });
     });

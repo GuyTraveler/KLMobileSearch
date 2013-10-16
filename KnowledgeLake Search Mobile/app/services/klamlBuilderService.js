@@ -74,7 +74,7 @@ define(["jquery",
                         {
                             if(searchProperties[i].selectedOperator() === application.strings.Range)
                             {
-                                self.duplicateKlamlProperty(searchProperties, i);
+                                searchProperties = self.duplicateKlamlProperty(searchProperties, i);
                                 
                                 var klamlDateTimesRange = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), searchProperties[i+1].value());
                                          
@@ -84,7 +84,7 @@ define(["jquery",
                             
                             else if(searchProperties[i].selectedOperator() === "=")
                             {
-                                self.duplicateKlamlProperty(searchProperties, i);
+                                searchProperties = self.duplicateKlamlProperty(searchProperties, i);
                                 
                                 var klamlDateTimesEqual = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value()); 
                                 
@@ -112,14 +112,16 @@ define(["jquery",
                         else if (searchProperties[i].controlType === catalogPropertyControlType.Number &&
                                  searchProperties[i].selectedOperator() === application.strings.Range)
                         {
-                            self.duplicateKlamlProperty(searchProperties, i);
+                            searchProperties = self.duplicateKlamlProperty(searchProperties, i);
                         }
                     }
                 }
+                
+                return searchProperties;
             }
             
             self.duplicateKlamlProperty = function(searchProperties, index) {
-                if(searchProperties && index)
+                if(searchProperties && !isNaN(index) && index >= 0)
                 {
                     var modifiedProperty = new searchProperty();
                             
@@ -131,6 +133,8 @@ define(["jquery",
                     
                     searchProperties.splice(index + 1, 0, modifiedProperty);
                 }
+                
+                return searchProperties;
             }
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
