@@ -1,11 +1,12 @@
-define(["i18n!domain/nls/strings"], 
-	function (strings) {
+define(["i18n!domain/nls/strings", "framework/klNavigator"], 
+	function (strings, navigator) {
 		var messageDisplayTime = 3000,
 			isToastUp = false,
 			deviceID = window.device != null && window.device.uuid != null ? window.device.uuid : "";
 		
 	    return {
 	        strings: strings,
+            navigator: new navigator(),
 			ajaxTimeout: 15000,
 			urlContainsClaimsSignInIndicator: function (url) {
 				var claimsSignInIndicators = ["wa=wsignin1.0".toUpperCase(), 

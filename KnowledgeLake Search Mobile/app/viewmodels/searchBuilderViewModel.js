@@ -3,14 +3,15 @@ define(["knockout",
 		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"services/keywordValidationService", 
 		"services/searchBuilderService", 
 		"services/klamlBuilderService"], 
-function (ko, application, logger, viewModelBase, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
+function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, ValidationService, searchBuilderService, klamlBuilderService) {
     var searchBuilderViewModel = function () {
-        var self = this,
-            resultsUrl = "#results",
-			klamlService = new klamlBuilderService();
+        var self = this;
                    
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
@@ -18,7 +19,6 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 		self.wordConjunction = ko.observable(keywordConjunction.and);
 		self.keywordConjunction = keywordConjunction;
         self.search = ko.observable("");
-        self.klaml = null;
         
         self.propertiesList = null;
         self.propertiesName = ko.observableArray();
@@ -58,12 +58,11 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
         }        
         
         self.BuildSearchProperties = function () {
-            var builderService = new searchBuilderService(),
-				buildSearchPromise;
+            var builderService = new searchBuilderService();
 			
 			self.isBusy(true);
 			
-			buildSearchPromise = builderService.buildSearchDataSourceAsync(savedSearchViewModel.site(), self.search())
+			var buildSearchPromise = builderService.buildSearchDataSourceAsync(application.navigator.currentNavigationContext.properties.site, self.search())
             
             buildSearchPromise.done(function (result) {
 				self.isBusy(false);
@@ -77,19 +76,18 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
             });
         }
       
-        self.executeSearch = function (e) {
-            // add validation 
-            var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
+        self.executeSearch = function (e) {            
+			var klamlService = new klamlBuilderService(),
+                klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
             
             if(klaml)  
-            {
-                self.klaml = klaml;
-                
-                window.App.navigate(resultsUrl);
+            {                
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
+                {"site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml}));
             }
           
             else {
-                // failed to build klaml
+                logger.logError("Failed to build klaml.");
             }   
         }
         
@@ -97,17 +95,23 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 			if (event.keyCode === 13)
 				self.executeSearch();
         }
+        
+        self.beforeShow = function (e) {
+			logger.logVerbose("resultsViewModel beforeShow");
+            
+            if(application.navigator.isStandardNavigation())
+            {     
+                self.keyword("");
+                self.searchBuilderDataSource([]);
+            }
+        }
 	  
 		self.afterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-			if(!self.klaml || savedSearchViewModel.selectedSearch().title !== self.search().title)
-            {                                    
-                self.keyword("");
-                self.searchBuilderDataSource([]);
-                self.klaml = null;
-                        
-                self.search(savedSearchViewModel.selectedSearch());                
+			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {                        
+                self.search(application.navigator.currentNavigationContext.properties.search);                
                                     
                 self.BuildSearchProperties();                    
             }

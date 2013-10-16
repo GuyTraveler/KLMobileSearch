@@ -1,10 +1,13 @@
 define(["knockout", 
         "services/documentService",
         "factory/logonServiceFactory",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
         "application",
         "logger",
 		"viewmodels/viewModelBase"], 
-function (ko, documentService, LogonServiceFactory, application, logger, viewModelBase) {
+function (ko, documentService, LogonServiceFactory, navigationDirection, navigationPage, navigationContext, application, logger, viewModelBase) {
     var documentViewModel = function () {
         var self = this;
                    
@@ -23,31 +26,25 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
             }
         }
         
-        self.init = function (e) {
-            logger.logVerbose("documentViewModel init");
-        }
-        
         self.beforeShow = function (e) {
             logger.logVerbose("documentViewModel beforeShow");
-        }
-        
-        self.show = function (e) {
-            logger.logVerbose("documentViewModel show");
+            
+            if(application.navigator.isStandardNavigation())
+            {
+                self.documentTitle("");
+                self.documentDataSource([]);
+            }
         }
         
         self.afterShow = function (e) {			
             logger.logVerbose("documentViewModel afterShow");
             
-            if(resultsViewModel && resultsViewModel.selectedResult)
-            {       
-                self.documentTitle(resultsViewModel.selectedResult.title);
+            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {    
+                self.documentTitle(application.navigator.currentNavigationContext.properties.result.title);
                 
                 return self.getDocumentProperties();
             }
-        }
-        
-        self.hide = function (e) {
-            logger.logVerbose("documentViewModel hide");
         }
         
         self.getDocumentProperties = function () {
@@ -55,18 +52,19 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
                 service,
                 logonService;
             
-            if(resultsViewModel.selectedResult && savedSearchViewModel.site())
+            if(application.navigator.currentNavigationContext.properties.site && application.navigator.currentNavigationContext.properties.result)
             {
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
-                service = new documentService(resultsViewModel.selectedResult.url);        
-                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
+                service = new documentService(application.navigator.currentNavigationContext.properties.result.url);        
+                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType);
 
-                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
-                                                  savedSearchViewModel.site().credential.userName, 
-                                                  savedSearchViewModel.site().credential.password,
-                                                  resultsViewModel.selectedResult.url);
+                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
+                                                       application.navigator.currentNavigationContext.properties.result.url);
             
                 logonPromise.done(function (result) {
                     var getDocumentPropertiesPromise = service.getDocumentPropertiesAsync();

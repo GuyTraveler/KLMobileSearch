@@ -2,14 +2,15 @@ define(["knockout",
         "application", 
 		"logger",
         "jquery", 
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"viewmodels/viewModelBase",
-		"FileManagement",
+        "FileManagement",
         "ISiteDataCachingService"], 
-    function (ko, application, logger, $, viewModelBase, File, SiteDataCachingService) {
+    function (ko, application, logger, $, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
         var homeViewModel = function () {
-            var self = this, 
-                configureSiteUrl = "#configureSite",                
-                searchUrl = "#savedSearch";
+            var self = this;
                        
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
@@ -55,14 +56,14 @@ define(["knockout",
                                 self.SetDataSource(result.response);
                             
                             else
-                                window.App.navigate(configureSiteUrl);
+                                self.addSite();
                         });
                       
                         loadSitesPromise.fail(function (error) {
 							self.isBusy(false);
 							
                             if (error.response === application.strings.FileNotFound) {
-                                window.App.navigate(configureSiteUrl);
+                                self.addSite();
                             }
                             else {
                                 self.SetDataSource();
@@ -83,21 +84,20 @@ define(["knockout",
             }
             
             self.beforeShow = function (e) {
-				logger.logVerbose("homeViewModel beforeShow");                                 
+				logger.logVerbose("homeViewModel beforeShow");   
+                
+                if(application.navigator.isStandardNavigation())
+                {                
+                    self.navBarVisible(false);
+    				self.hasHighlightedSite(false);                    
+                }
             }
            
 			self.afterShow = function (e) {
 				logger.logVerbose("homeViewModel.afterShow");
 				
-				if(window.App)
+				if(window.App && application.navigator.isStandardNavigation())
                     self.LoadSiteData();          	
-            }
-            
-            self.hide = function (e) {
-                logger.logVerbose("homeViewModel hide");
-                
-                self.navBarVisible(false);
-				self.hasHighlightedSite(false);
             }
             
             self.setSelectedSite = function (selection, event, suppressNavbar) {
@@ -123,17 +123,17 @@ define(["knockout",
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;
                 
-                window.App.navigate(searchUrl);              
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite}));              
             }
             
             self.addSite = function () {
-                window.App.navigate(configureSiteUrl);
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage));
             }
             
             self.editSite = function () {
                 if(self.selectedSite)
                 {
-                    window.App.navigate(configureSiteUrl);                    
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite}));         
                 }
             }
             
@@ -161,12 +161,11 @@ define(["knockout",
                         self.LoadSiteData();
                         
                         self.setSelectedSite(null);
-                    });
-                  
+                    });                  
                 }
             }
-			
-			self.emailSupport = function () {
+            
+            self.emailSupport = function () {
 				/*logger.logVerbose("launching email composer...");
 				
 				if (window.plugins && window.plugins.emailComposer && typeof window.plugins.emailComposer.showEmailComposer === 'function') {

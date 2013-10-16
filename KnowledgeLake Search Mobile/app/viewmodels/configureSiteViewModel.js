@@ -11,13 +11,15 @@ define(["knockout",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
         "keyValuePair",
 		"domain/httpProtocols",], 
 function (ko, application, logger, viewModelBase, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
-	      site, credential, credentialType, authenticationMode, keyValuePair, httpProtocols) {
+	      site, credential, credentialType, authenticationMode, navigationDirection, navigationPage, navigationContext, keyValuePair, httpProtocols) {
     var configureSiteViewModel = function () {
         var self = this,
-            homeUrl = "#home",
             questionImageUrl = "",
             invalidImageUrl = "app/images/invalid.png",
             validImageUrl = "app/images/valid.png",
@@ -99,14 +101,16 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				
 					theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
 	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
-					writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
+					writePromise = application.navigator.currentNavigationContextHasProperties() ? 
+                                        SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 	                    
 	                writePromise.done(function (result) { 
 						logger.logVerbose("done writing site data, returning home");
 						
 						dfd.resolve(result);
-						application.showToast(application.strings.saveSuccess);							
-	                    window.App.navigate(homeUrl);
+						application.showToast(application.strings.saveSuccess);	
+                        
+	                    self.navigateHome();
 	                });
 					
 					writePromise.fail(function (error) {
@@ -143,7 +147,12 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         
         self.closeSiteSettings = function () {
             logger.logVerbose("closing site settings");
-            window.App.navigate(homeUrl);
+            
+            self.navigateHome();
+        }
+        
+        self.navigateHome = function () {
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.homePage, navigationPage.configureSitePage));
         }
         
         self.validateSiteUrl = function () {				
@@ -352,23 +361,30 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			self.validateSiteUrl();
 			return true;
         };
+        
+        self.beforeShow = function (e) {
+			logger.logVerbose("configureSiteViewModel.beforeShow");
+            
+            if(application.navigator.isStandardNavigation() && !application.navigator.currentNavigationContextHasProperties())
+                self.clearPopulatedConfigureSiteViewModel();
+        }
 		
 		self.afterShow = function (e) {
 			logger.logVerbose("configureSiteViewModel.afterShow");
 			
-			if(homeViewModel.selectedSite)
-                self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
-            else                    
-                self.clearPopulatedConfigureSiteViewModel();
-			
-			if (homeViewModel.selectedSite) {
-				$("#siteTitleText").focus();	
+            if(application.navigator.isStandardNavigation())
+            {
+    			if(application.navigator.currentNavigationContextHasProperties())
+                {
+                    self.populateConfigureSiteViewModel(application.navigator.currentNavigationContext.properties.site);
+                    
+                    $("#siteTitleText").focus();
+                }
+                else                
+    				$("#siteUrlText").focus();
+                
+    			application.showSoftKeyboard();
             }
-			else {
-				$("#siteUrlText").focus();
-			}
-			
-			application.showSoftKeyboard();
         }
 		
         return self;
