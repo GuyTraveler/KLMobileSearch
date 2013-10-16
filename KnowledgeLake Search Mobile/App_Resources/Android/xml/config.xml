@@ -29,6 +29,7 @@
         <plugin name="Globalization" value="org.apache.cordova.Globalization"/>
         <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
 		<plugin name="SoftKeyBoard" value="com.zenexity.SoftKeyBoardPlugin.SoftKeyBoard"/>
+		<plugin name="EmailComposer" value="org.apache.cordova.plugin.EmailComposer"/>
     </plugins>
 </cordova>
 

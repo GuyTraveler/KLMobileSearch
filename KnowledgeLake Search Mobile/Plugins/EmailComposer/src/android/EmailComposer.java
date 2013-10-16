@@ -1,14 +1,14 @@
 /**
- * 
+ *
  * Phonegap Email composer plugin for Android with multiple attachments handling
- * 
+ *
  * Version 1.0
- * 
+ *
  * Guido Sabatini 2012
  *
  */
 
-package org.apache.cordova;
+package org.apache.cordova.plugin;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.os.Environment;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
@@ -30,7 +31,7 @@ public class EmailComposer extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		if ("showEmailComposer".equals(action)) {
-			
+
 			try {
 				JSONObject parameters = args.getJSONObject(0);
 				if (parameters != null) {
@@ -46,14 +47,14 @@ public class EmailComposer extends CordovaPlugin {
 	}
 
 	private void sendEmail(JSONObject parameters) {
-		
+
 		final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND_MULTIPLE);
-		
+
 		//String callback = parameters.getString("callback");
 
 		boolean isHTML = false;
 		try {
-			isHTML = parameters.getBoolean("bIsHTML");
+			isHTML = parameters.getBoolean("bIsHTML");			
 		} catch (Exception e) {
 			LOG.e("EmailComposer", "Error handling isHTML param: " + e.toString());
 		}
@@ -78,10 +79,17 @@ public class EmailComposer extends CordovaPlugin {
 		try {
 			String body = parameters.getString("body");
 			if (body != null && body.length() > 0) {
-				if (isHTML) {
-					emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, Html.fromHtml(body));
+				if (isHTML) {										
+					String bodyHtml = Html.fromHtml(body).toString();
+					LOG.e("EmailComposer", "Creating HTML email with body: " + bodyHtml);
+					ArrayList<String> extra_text = new ArrayList<String>();
+					extra_text.add(bodyHtml);
+					emailIntent.putStringArrayListExtra(android.content.Intent.EXTRA_TEXT, extra_text);
 				} else {
-					emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+					LOG.e("EmailComposer", "Creating text email with body: " + body);
+					ArrayList<String> extra_text = new ArrayList<String>();
+					extra_text.add(body);
+					emailIntent.putStringArrayListExtra(android.content.Intent.EXTRA_TEXT, extra_text);
 				}
 			}
 		} catch (Exception e) {
@@ -138,7 +146,9 @@ public class EmailComposer extends CordovaPlugin {
 				//convert from paths to Android friendly Parcelable Uri's
 				for (int i=0; i<attachments.length(); i++) {
 					try {
-						File file = new File(attachments.getString(i));
+						String fullPath = Environment.getExternalStorageDirectory().getPath() + "/" + attachments.getString(i);
+						File file = new File(fullPath);
+
 						if (file.exists()) {
 							Uri uri = Uri.fromFile(file);
 							uris.add(uri);
@@ -157,7 +167,7 @@ public class EmailComposer extends CordovaPlugin {
 
 		this.cordova.startActivityForResult(this, emailIntent, 0);
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// TODO handle callback
