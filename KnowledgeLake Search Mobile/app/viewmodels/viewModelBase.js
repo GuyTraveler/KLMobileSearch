@@ -39,8 +39,12 @@ function (ko, application, logger) {
 		
     
 		self.init = function (e) {
-			self.isIOS(window.App && window.App.os && window.App.os.ios);
 			logger.logVerbose("base class viewModelBase.init called");
+            
+            $(".km-content").kendoTouch({
+                enableSwipe: true,
+                swipe: application.navigator.swipe 
+            });
         } 
 				
 		self.beforeShow = function (e) {
@@ -48,8 +52,9 @@ function (ko, application, logger) {
         } 
 		
 		self.show = function (e) {
-			self.isIOS(window.App && window.App.os && window.App.os.ios);
 			logger.logVerbose("base class viewModelBase.show called");
+            
+			self.isIOS(window.App && window.App.os && window.App.os.ios);            
         } 
 			
 		self.afterShow = function (e) {

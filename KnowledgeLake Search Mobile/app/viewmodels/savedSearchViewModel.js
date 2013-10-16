@@ -3,13 +3,14 @@ define(["knockout",
 		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"services/keywordValidationService", 
 		"services/imaging/serverSavedSearchesService"], 
-function (ko, application, logger, viewModelBase, keywordConjunction, ValidationService, serverSavedSearchesService) {
+function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, ValidationService, serverSavedSearchesService) {
     var savedSearchViewModel = function () {
-        var self = this,
-            searchBuilderUrl = "#searchBuilder",
-            resultsUrl = "#results";            
+        var self = this;            
                        
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
@@ -62,24 +63,28 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 			$("#savedSearchKeywordInput").focus();
 			application.showSoftKeyboard();
 		}
+        
+        self.beforeShow = function (e) {
+			logger.logVerbose("savedSearchViewModel beforeShow");
+            
+            if(application.navigator.isStandardNavigation())
+            {                                
+                self.selectedSearch(null);                
+                self.keyword("");
+    			self.searchDataSource([]);
+            }
+        }
       
         self.afterShow = function (e) {
 			logger.logVerbose("savedSearchViewModel afterShow");
 			
-			self.searchDataSource([]);
-            
-            if(homeViewModel.selectedSite)
-            {                    
-                if(homeViewModel.selectedSite.url !== self.site().url)
-                {                        
-                    self.site(homeViewModel.selectedSite);
-                    
-                    self.keyword("");
-                    self.selectedSearch(null);
-                }
+            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {                
+                if(application.navigator.currentNavigationContext.properties.site.url !== self.site().url)
+                    self.site(application.navigator.currentNavigationContext.properties.site);
                 
                 self.LoadSearchData();
-            }    
+            }
         }
         
         self.setSelectedSearch = function (selection, event) {
@@ -109,11 +114,13 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
             if(self.selectedSearch() !== selection)
                 self.selectedSearch(selection);
             
-            window.App.navigate(searchBuilderUrl);              
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
+                {"site": application.navigator.currentNavigationContext.properties.site, "search": self.selectedSearch()}));             
         }
         
         self.search = function (e) {
-            window.App.navigate(resultsUrl);
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
+                {"site": application.navigator.currentNavigationContext.properties.site, "keyword": self.keyword(), "wordConjunction": self.wordConjunction()}));
         }
         
         self.onSearchKeyUp = function (selection, event) {

@@ -5,18 +5,20 @@ define(["knockout",
         "jquery",
 		"viewmodels/viewModelBase", 
         "factory/queryServiceFactory", 
-        "domain/keywordConjunction", 
+        "domain/keywordConjunction",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext", 
         "factory/logonServiceFactory",
         "services/imaging/serverSavedSearchesService", 
         "IDocumentService",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
-    function (ko, application, logger, Constants, $, viewModelBase, QueryServiceFactory, keywordConjunction, 
+    function (ko, application, logger, Constants, $, viewModelBase, QueryServiceFactory, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
 			  LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
-        var self = this,
-            documentUrl = "#document";
+        var self = this;
                    
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
@@ -65,7 +67,7 @@ define(["knockout",
             }
         }
         
-        self.init = function (e) {
+        /*self.init = function (e) {
 			$(".km-content").kendoTouch({
                 enableSwipe: true,
                 swipe: self.swipe 
@@ -75,38 +77,40 @@ define(["knockout",
 		self.swipe = function (e) {
 			logger.logVerbose("results listview swiped");
 			if(e.direction == "right")
-            {
-				window.App.navigate("#:back");
-            }
-        }
+                application.navigator.navigate(new navigationContext(navigationDirection.back));
+        }*/
         
         self.beforeShow = function (e) {
-            logger.logVerbose("resultsViewModel beforeShow");   			
-        }
-		
-		self.show = function (e) {
-			logger.logVerbose("resultsViewModel show");
+            logger.logVerbose("resultsViewModel beforeShow");
+            
+            if(application.navigator.isStandardNavigation())
+            {
+                self.setSelectedResult(null);
+                self.SetDataSource([]);
+            }
         }
         	
 		self.afterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-			if(savedSearchViewModel.selectedSearch() === null && savedSearchViewModel.keyword() !== "")
-            {                
-			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());
-            }	
-            
-            else if(searchBuilderViewModel.klaml)
-            {
-                if(savedSearchViewModel.site && savedSearchViewModel.site())
-                    return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
+            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {    
+                if(application.navigator.currentNavigationContext.properties.site)
+                {
+        			if(application.navigator.currentNavigationContext.properties.keyword)
+                    {
+                        return self.keywordSearchAsync(application.navigator.currentNavigationContext.properties.site, 
+                                                       application.navigator.currentNavigationContext.properties.keyword, 
+                                                       application.navigator.currentNavigationContext.properties.wordConjunction);
+                    }	
+                    
+                    else if(application.navigator.currentNavigationContext.properties.klaml)
+                    {
+                        return self.propertySearchAsync(application.navigator.currentNavigationContext.properties.site, 
+                                                        application.navigator.currentNavigationContext.properties.klaml);
+                    }                    
+                }
             }
-        }
-            
-        self.hide = function (e) {            
-            //self.setSelectedResult(null);
-            //self.SetDataSource([]);
         }
         
         self.setSelectedResult = function (selection, event) {
@@ -129,7 +133,8 @@ define(["knockout",
         self.viewProperties = function () {
             if(self.selectedResult)
             {
-                window.App.navigate(documentUrl);                    
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+                    {"site": application.navigator.currentNavigationContext.properties.site, "result": self.selectedResult}));           
             }         
         }
         
@@ -140,18 +145,19 @@ define(["knockout",
             
 			self.setSelectedResult(selection);
 			
-            if(selection && savedSearchViewModel.site())
+            if(selection && application.navigator.currentNavigationContext.properties.site)
             {
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
                 service = new documentService(selection.url);        
-                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType);
 
-                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
-                                                  savedSearchViewModel.site().credential.userName, 
-                                                  savedSearchViewModel.site().credential.password,
-                                                  selection.url);
+                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
+                                                       selection.url);
             
                 logonPromise.done(function (result) {
                     getDisplayFormUrlPromise = service.getDisplayFormUrlAsync();
