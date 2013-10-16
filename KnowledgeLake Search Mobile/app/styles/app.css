@@ -36,6 +36,15 @@ textarea::visited
 	padding: 2px;
 }
 
+a.traditional-link {
+	color: Blue;
+	text-decoration: underline;
+}
+a.traditional-link::active,
+a.traditional-link::hover {
+	text-decoration: none;
+}
+
 li.highlight {		
 	background-color: #D0E8F2!important;
 	color: Black;

@@ -1,0 +1,29 @@
+<header data-role="header">
+    <div data-role="navbar"> 
+		<button data-role="backbutton" class="transparent-button head-back-button" data-align="left"></button>				
+    </div>
+	
+	<div class="pageHeading">
+		<h4 data-bind="text: strings().ViewLogs"></h4>
+    </div>
+</header>
+
+<p>
+	<a class="traditional-link" data-bind="text: strings().EmailLogsToSupport"></a>
+</p>
+
+<div>
+	<h3 data-bind="text: strings().Logs"></h3>
+	
+	<ul data-role="listview" data-style="inset" data-bind="foreach: logs">
+		<li>
+			<label>
+				<div class="relative-container">
+					<!--<img width="16" data-bind="attr: { src: $parent.getLogTypeImageUrl($data.key) }" class="margin-img" />-->
+					<img width="16" src="app/images/invalid.png" />
+					<span class="list-view-label" data-bind="text: value"></span>
+				</div>
+            </label>
+        </li>
+	</ul>
+</div>

@@ -14,8 +14,6 @@ define(["knockout",
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
 			
-			baseShow = self.show;
-			
             self.siteDataSource = ko.observableArray([]);
             
             self.selectedSite = null;
@@ -191,6 +189,11 @@ define(["knockout",
 							window.plugins.emailComposer.showEmailComposer(null, null, "test", "test", ["steve.danner@knowledgelake.com"], [], [], false, [fullPath]);									
                         });					
 				}*/
+			}
+			
+			self.onViewLogsClicked = function () {
+				logger.logVerbose("onViewLogsClicked");
+				window.App.navigate("#logs");
 			}
             
             return self;
