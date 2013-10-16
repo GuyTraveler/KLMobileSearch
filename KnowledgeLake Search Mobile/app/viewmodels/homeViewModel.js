@@ -6,8 +6,9 @@ define(["knockout",
         "domain/navigationPage",
         "domain/navigationContext",
 		"viewmodels/viewModelBase",
+        "FileManagement",
         "ISiteDataCachingService"], 
-    function (ko, application, logger, $, navigationDirection, navigationPage, navigationContext, viewModelBase, SiteDataCachingService) {
+    function (ko, application, logger, $, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
         var homeViewModel = function () {
             var self = this;
                        
@@ -83,7 +84,7 @@ define(["knockout",
             }
             
             self.beforeShow = function (e) {
-				logger.logVerbose("homeViewModel beforeShow");
+				logger.logVerbose("homeViewModel beforeShow");   
                 
                 if(application.navigator.isStandardNavigation())
                 {                
@@ -96,7 +97,7 @@ define(["knockout",
 				logger.logVerbose("homeViewModel.afterShow");
 				
 				if(window.App && application.navigator.isStandardNavigation())
-                    self.LoadSiteData();
+                    self.LoadSiteData();          	
             }
             
             self.setSelectedSite = function (selection, event, suppressNavbar) {
@@ -122,7 +123,7 @@ define(["knockout",
                 if(self.selectedSite !== selection)
                     self.selectedSite = selection;
                 
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite}));
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite}));              
             }
             
             self.addSite = function () {
@@ -131,7 +132,7 @@ define(["knockout",
             
             self.editSite = function () {
                 if(self.selectedSite)
-                {                    
+                {
                     application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite}));         
                 }
             }
@@ -163,6 +164,31 @@ define(["knockout",
                     });                  
                 }
             }
+            
+            self.emailSupport = function () {
+				/*logger.logVerbose("launching email composer...");
+				
+				if (window.plugins && window.plugins.emailComposer && typeof window.plugins.emailComposer.showEmailComposer === 'function') {
+					logger.logVerbose("email composer found...");		
+					
+					File.getFolderAsync()
+						.done(function (result) {
+							var fullPath = result.response.fullPath + "/sites.dat";
+							
+							if (window.App.os.ios == true) {
+								fullPath = fullPath.substring(1);	
+                            }							
+							else {
+								fullPath = "KnowledgeLake/sites.dat";
+                            }
+							
+							
+							logger.logVerbose("full path: " + fullPath);
+							
+							window.plugins.emailComposer.showEmailComposer(null, null, "test", "test", ["steve.danner@knowledgelake.com"], [], [], false, [fullPath]);									
+                        });					
+				}*/
+			}
             
             return self;
         };

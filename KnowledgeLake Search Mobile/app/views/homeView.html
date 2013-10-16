@@ -1,9 +1,7 @@
 <header data-role="header">
     <div data-role="navbar"> 
-		<button class="transparent-button head-button" data-align="left"> 
-			<img data-bind="css: { 'center-head-ios': isIOS, 'center-head-droid': !isIOS() }" src="app/images/kl_head.png" />
-        </button>	
-		<button data-align="left" data-role="button" class="transparent-button"></button>
+		<a data-role="button" href="#homeViewMenu" data-rel="popover" class="transparent-button head-menu-button" data-align="left">
+        </a>
 		        
 		<button class="nav-button" data-align="right"
 			data-role="button" data-icon="compose" 
@@ -25,6 +23,23 @@
 		<h4 data-bind="text: strings().AvailableSites"></h4>
     </div>
 </header>
+
+<div id="homeViewMenu" data-role="popover" data-pane="{ 'layout': 'homeMenu-layout'}" data-popup="{'height': '80px', 'width': '12em'}">
+	<div data-role="view">
+		<ul id="homeMenu" data-role="listview">
+			<li>
+				<label><a data-bind="click: emailSupport">Email Support</a></label>				
+            </li>
+			<li>
+				<label><a>View Logs</a></label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div data-role="layout" data-id="homeMenu-layout">
+	
+</div>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
 	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }, click: $parent.siteClick">

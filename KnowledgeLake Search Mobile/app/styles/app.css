@@ -154,8 +154,14 @@ img.margin-img {
 	position: relative;
 }
  
-.back-button-head {
+.head-back-button {
 	background-image: url('../images/kl_head_back.png')!important;
+	min-width: 56px;
+	min-height: 36px;
+	margin-top: 4px!important;
+}
+.head-menu-button {
+	background-image: url('../images/kl_head_menu.png')!important;
 	min-width: 56px;
 	min-height: 36px;
 	margin-top: 4px!important;
