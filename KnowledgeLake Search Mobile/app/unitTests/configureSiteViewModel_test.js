@@ -631,7 +631,7 @@ define(["application",
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
         });
         
-        QUnit.test("test configureSiteViewModel afterShow (with selected site)", function () {
+        QUnit.test("test configureSiteViewModel onAfterShow (with selected site)", function () {
             //arrange
             var configureSiteVM,
             	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
@@ -642,7 +642,7 @@ define(["application",
             //act 
 			window.homeViewModel = homeVM;
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
+            configureSiteVM.onAfterShow();
                         
             //assert
             QUnit.equal(configureSiteVM.fullUrl().toUpperCase(), siteData.url.toUpperCase());
@@ -655,14 +655,14 @@ define(["application",
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
         });
 		
-		QUnit.test("test configureSiteViewModel afterShow (NO selected site)", function () {
+		QUnit.test("test configureSiteViewModel onAfterShow (NO selected site)", function () {
             //arrange
             var configureSiteVM;
                         			
             //act 
 			window.homeViewModel = {};
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
+            configureSiteVM.onAfterShow();
                         
             //assert
             QUnit.equal(configureSiteVM.url(), TestSettings.defaultUrlText);
@@ -679,7 +679,7 @@ define(["application",
 			QUnit.equal(configureSiteVM.isCredentialsValid(), false);
         });
 						  
-		QUnit.test("test configureSiteViewModel.afterShow (with selected site)", function () {
+		QUnit.test("test configureSiteViewModel.onAfterShow (with selected site)", function () {
 			//arrange
             var configureSiteVM,
             	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
@@ -690,7 +690,7 @@ define(["application",
             //act 
 			window.homeViewModel = homeVM;
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
+            configureSiteVM.onAfterShow();
                         
             //assert
             QUnit.ok(configureSiteVM);

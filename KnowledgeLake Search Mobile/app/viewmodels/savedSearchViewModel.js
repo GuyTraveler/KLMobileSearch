@@ -64,8 +64,8 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
 			application.showSoftKeyboard();
 		}
         
-        self.beforeShow = function (e) {
-			logger.logVerbose("savedSearchViewModel beforeShow");
+        self.onBeforeShow = function (e) {
+			logger.logVerbose("savedSearchViewModel onBeforeShow");
             
             if(application.navigator.isStandardNavigation())
             {                                
@@ -75,7 +75,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             }
         }
       
-        self.afterShow = function (e) {
+        self.onAfterShow = function (e) {
 			logger.logVerbose("savedSearchViewModel afterShow");
 			
             if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())

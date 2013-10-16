@@ -96,8 +96,8 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
 				self.executeSearch();
         }
         
-        self.beforeShow = function (e) {
-			logger.logVerbose("resultsViewModel beforeShow");
+        self.onBeforeShow = function (e) {
+			logger.logVerbose("resultsViewModel onBeforeShow");
             
             if(application.navigator.isStandardNavigation())
             {     
@@ -106,7 +106,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             }
         }
 	  
-		self.afterShow = function (e) {
+		self.onAfterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
 			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())

@@ -67,7 +67,7 @@ define(["knockout",
             }
         }
         
-        /*self.init = function (e) {
+        /*self.onInit = function (e) {
 			$(".km-content").kendoTouch({
                 enableSwipe: true,
                 swipe: self.swipe 
@@ -80,8 +80,8 @@ define(["knockout",
                 application.navigator.navigate(new navigationContext(navigationDirection.back));
         }*/
         
-        self.beforeShow = function (e) {
-            logger.logVerbose("resultsViewModel beforeShow");
+        self.onBeforeShow = function (e) {
+            logger.logVerbose("resultsViewModel onBeforeShow");
             
             if(application.navigator.isStandardNavigation())
             {
@@ -90,7 +90,7 @@ define(["knockout",
             }
         }
         	
-		self.afterShow = function (e) {
+		self.onAfterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
             if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())

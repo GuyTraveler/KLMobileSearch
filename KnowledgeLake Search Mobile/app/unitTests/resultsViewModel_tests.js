@@ -147,7 +147,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act 
-            vm.init();
+            vm.onInit();
             
             //assert
             QUnit.ok(vm);
@@ -168,20 +168,20 @@ define(['require',
             QUnit.ok(vm);
         });
         
-        QUnit.test("test resultsViewModel beforeShow", function () {
+        QUnit.test("test resultsViewModel onBeforeShow", function () {
             //arrange
             var vm;
             
             vm = new resultsViewModel();
             
             //act
-            vm.beforeShow();
+            vm.onBeforeShow();
                         
             //assert
             QUnit.ok(vm);
         });
        
-        QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (AND)", function () {
+        QUnit.asyncTest("test resultsViewModel onAfterShow keywordSearchAsync (AND)", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -196,7 +196,7 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            keywordSearchPromise = vm.afterShow();
+            keywordSearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -213,7 +213,7 @@ define(['require',
             });
         });
 		
-		QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (OR)", function () {
+		QUnit.asyncTest("test resultsViewModel onAfterShow keywordSearchAsync (OR)", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -228,7 +228,7 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            keywordSearchPromise = vm.afterShow();
+            keywordSearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -245,7 +245,7 @@ define(['require',
             });
         });
        
-        QUnit.asyncTest("test resultsViewModel afterShow propertySearchAsync", function () {
+        QUnit.asyncTest("test resultsViewModel onAfterShow propertySearchAsync", function () {
             //arrange
             var vm,
                 savedSearchVM,
@@ -262,7 +262,7 @@ define(['require',
             window.searchBuilderViewModel = searchBuilderVM;
             
             //act
-            propertySearchPromise = vm.afterShow();
+            propertySearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -277,20 +277,6 @@ define(['require',
 				QUnit.ok(false);
 				QUnit.start();
             });
-        });
-        
-        QUnit.test("test resultsViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            vm = new resultsViewModel();
-            
-            //act
-            vm.hide();
-                        
-            //assert
-            QUnit.equal(vm.selectedResult, null);
-            QUnit.deepEqual(vm.resultDataSource(), []);
         });
         
         QUnit.test("test resultsViewModel setSelectedResult if selectedResult is null", function () {
@@ -505,7 +491,7 @@ define(['require',
             });
         });
         
-        QUnit.test("test resultViewModel afterShow", function () {
+        QUnit.test("test resultViewModel onAfterShow", function () {
             //arrange
             var vm, 
                 object = {"view": {"footer": {"find": function (control) { return {"data": function(control) { return {"clear": function () {}}}}}}}};
@@ -513,7 +499,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act 
-            vm.afterShow(object);
+            vm.onAfterShow(object);
             
             //assert
             QUnit.ok(vm);

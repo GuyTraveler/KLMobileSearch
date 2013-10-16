@@ -362,14 +362,14 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			return true;
         };
         
-        self.beforeShow = function (e) {
-			logger.logVerbose("configureSiteViewModel.beforeShow");
+        self.onBeforeShow = function (e) {
+			logger.logVerbose("configureSiteViewModel.onBeforeShow");
             
             if(application.navigator.isStandardNavigation() && !application.navigator.currentNavigationContextHasProperties())
                 self.clearPopulatedConfigureSiteViewModel();
         }
 		
-		self.afterShow = function (e) {
+		self.onAfterShow = function (e) {
 			logger.logVerbose("configureSiteViewModel.afterShow");
 			
             if(application.navigator.isStandardNavigation())

@@ -32,18 +32,6 @@ define(['require',
 			QUnit.equal(vm.wordConjunction(), keywordConjunction.and);
         });
         
-        QUnit.test("test searchBuilderViewModel init", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new searchBuilderViewModel();
-            vm.init();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
         QUnit.test("test searchBuilderViewModel SetDataSource", function () {
             //arrange
             var vm,
@@ -137,7 +125,7 @@ define(['require',
             QUnit.ok(vm);
         });  
        
-        QUnit.test("test searchBuilderViewModel afterShow", function () {
+        QUnit.test("test searchBuilderViewModel onAfterShow", function () {
             //arrange
             var vm,
                 savedSearchVM;            
@@ -150,7 +138,7 @@ define(['require',
             window.savedSearchViewModel = savedSearchVM;
             
             //act
-            vm.afterShow();
+            vm.onAfterShow();
                         
             //assert
             QUnit.equal(vm.search(), savedSearchVM.selectedSearch());
