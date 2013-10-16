@@ -8,15 +8,22 @@ function (NavigationDirection, navigationContext) {
         self.forwardNavigationContext = [];
         self.backNavigationContext = [];
         
-        
+        self.onDeviceReady = function () {
+            document.addEventListener("backbutton", function(e) {
+               e.preventDefault();
+               
+               self.navigate(new navigationContext(NavigationDirection.back));             
+            }, false);
+        }
         
         self.swipe = function (e) {
-			//logger.logVerbose("swipe");
 			if(e.direction == "right")
                 self.navigate(new navigationContext(NavigationDirection.back));
             else if(e.direction == "left")
                 self.navigate(new navigationContext(NavigationDirection.forward));            
         }
+        
+        document.addEventListener("deviceready", self.onDeviceReady, false);
         
         self.navigate = function (navigationContext) {            
             if(navigationContext.navigationDirection === NavigationDirection.standard)
