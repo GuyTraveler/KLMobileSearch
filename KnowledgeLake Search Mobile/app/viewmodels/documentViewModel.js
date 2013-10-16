@@ -26,8 +26,8 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
             }
         }
         
-        self.beforeShow = function (e) {
-            logger.logVerbose("documentViewModel beforeShow");
+        self.onBeforeShow = function (e) {
+            logger.logVerbose("documentViewModel onBeforeShow");
             
             if(application.navigator.isStandardNavigation())
             {
@@ -36,8 +36,8 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
             }
         }
         
-        self.afterShow = function (e) {			
-            logger.logVerbose("documentViewModel afterShow");
+        self.onAfterShow = function (e) {			
+            logger.logVerbose("documentViewModel onAfterShow");
             
             if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
             {    

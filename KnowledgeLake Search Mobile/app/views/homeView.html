@@ -24,14 +24,15 @@
     </div>
 </header>
 
-<div id="homeViewMenu" data-role="popover" data-pane="{ 'layout': 'homeMenu-layout'}" data-popup="{'height': '80px', 'width': '12em'}">
+<div id="homeViewMenu" data-role="popover" data-pane="{ 'layout': 'homeMenu-layout'}" data-popup="{'height': '80px', 'width': '14em'}">
 	<div data-role="view">
 		<ul id="homeMenu" data-role="listview">
-			<li>
-				<label><a data-bind="click: emailSupport">Email Support</a></label>				
+			<!-- TODO: highlight touched item and clear it out after ~100ms -->
+			<li data-bind="click: emailSupport">
+				<label data-bind="text: strings().EmailSupport"></label>	
             </li>
-			<li>
-				<label><a>View Logs</a></label>
+			<li data-bind="click: onViewLogsClicked">
+				<label data-bind="text: strings().ViewLogs"></label>
             </li>
         </ul>
     </div>

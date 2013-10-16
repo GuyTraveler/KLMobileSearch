@@ -3,6 +3,7 @@ define({
     addSiteLinkText: "Add Site",
     appTitle: "KnowledgeLake Search Mobile",
     configureSitePageTitle: "Configure Site",
+	viewLogsPageTitle: "View Logs",
     savedSearchesPageTitle: "Saved Searches",
     searchBuilderPageTitle: "Search Builder",
     resultsPageTitle: "Search Results",
@@ -85,5 +86,9 @@ define({
 	LogonSucceeded: "Logon succeeded.",
 	And: "And",
 	Or: "Or",
-	AvailableSites: "Available Sites"
+	AvailableSites: "Available Sites",
+	EmailSupport: "Email Support",
+	ViewLogs: "View Logs",
+	Logs: "Logs",
+	EmailLogsToSupport: "Email Logs to KnowledgeLake Support"
 });

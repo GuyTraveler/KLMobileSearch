@@ -63,7 +63,7 @@ define(['require',
             
             //act 
             vm = new homeViewModel();
-            vm.init();
+            vm.onInit();
                         
             //assert
             QUnit.ok(vm);
@@ -108,48 +108,24 @@ define(['require',
             
             //act 
             vm = new homeViewModel();
-            vm.beforeShow();
+            vm.onBeforeShow();
                         
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test homeViewModel show", function () {
+     
+        QUnit.test("test homeViewModel onAfterShow", function () {
             //arrange
             var vm;
             
             //act 
             vm = new homeViewModel();
-            vm.show();
+            vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test homeViewModel afterShow", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.afterShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test homeViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
+      
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is null", function () {
             //arrange
             var vm;

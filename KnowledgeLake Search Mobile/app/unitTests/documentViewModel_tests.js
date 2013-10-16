@@ -65,46 +65,20 @@ define(['require',
 			QUnit.ok(window.App.isMock);
         });
 		
-        QUnit.test("test documentViewModel init", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act 
-            vm.init();
-            
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test documentViewModel beforeShow", function () {
+        QUnit.test("test documentViewModel onBeforeShow", function () {
             //arrange
             var vm;
             
             vm = new documentViewModel();
             
             //act
-            vm.beforeShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
-        QUnit.test("test documentViewModel show", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act
-            vm.show();
+            vm.onBeforeShow();
                         
             //assert
             QUnit.ok(vm);
         });
        
-        QUnit.test("test documentViewModel afterShow", function () {            
+        QUnit.test("test documentViewModel onAfterShow", function () {            
             //arrange
             var vm,
                 resultsVM,
@@ -120,25 +94,12 @@ define(['require',
             window.resultsViewModel = resultsVM;
             
             //act
-            vm.afterShow();
+            vm.onAfterShow();
             
             //assert
             QUnit.ok(vm);
         });
-        
-        QUnit.test("test documentViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
+     
         QUnit.asyncTest("test documentViewModel getDocumentProperties", function () {
             //arrange
             var vm,

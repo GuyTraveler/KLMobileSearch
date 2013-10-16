@@ -40,6 +40,9 @@ function (ko, application, logger) {
     
 		self.init = function (e) {
 			logger.logVerbose("base class viewModelBase.init called");
+			
+			if (typeof self.onInit === 'function')
+				self.onInit(e);
             
             $(".km-content").kendoTouch({
                 enableSwipe: true,
@@ -49,20 +52,32 @@ function (ko, application, logger) {
 				
 		self.beforeShow = function (e) {
 			logger.logVerbose("base class viewModelBase.beforeShow called");
+			
+			if (typeof self.onBeforeShow === 'function')
+				self.onBeforeShow(e);
         } 
 		
 		self.show = function (e) {
 			logger.logVerbose("base class viewModelBase.show called");
             
 			self.isIOS(window.App && window.App.os && window.App.os.ios);            
+			
+			if (typeof self.onShow === 'function')
+				self.onShow(e);
         } 
 			
 		self.afterShow = function (e) {
 			logger.logVerbose("base class viewModelBase.afterShow called");
+			
+			if (typeof self.onAfterShow === 'function')
+				self.onAfterShow(e);
         } 
 			
 		self.hide = function (e) {
 			logger.logVerbose("base class viewModelBase.hide called");
+			
+			if (typeof self.onHide === 'function')
+				self.onHide(e);
         } 
 	
 		return self;

@@ -74,8 +74,8 @@ define(["knockout",
                 }
             }
             
-            self.init = function (e) {
-				logger.logVerbose("homeViewModel.init");
+            self.onInit = function (e) {
+				logger.logVerbose("homeViewModel.onInit");
 				
                 window.AppLoaded.subscribe(function (updatedValue) {
                     if(updatedValue)
@@ -83,8 +83,8 @@ define(["knockout",
                 });
             }
             
-            self.beforeShow = function (e) {
-				logger.logVerbose("homeViewModel beforeShow");   
+            self.onBeforeShow = function (e) {
+				logger.logVerbose("homeViewModel onBeforeShow");   
                 
                 if(application.navigator.isStandardNavigation())
                 {                
@@ -93,7 +93,7 @@ define(["knockout",
                 }
             }
            
-			self.afterShow = function (e) {
+			self.onAfterShow = function (e) {
 				logger.logVerbose("homeViewModel.afterShow");
 				
 				if(window.App && application.navigator.isStandardNavigation())
@@ -188,6 +188,11 @@ define(["knockout",
 							window.plugins.emailComposer.showEmailComposer(null, null, "test", "test", ["steve.danner@knowledgelake.com"], [], [], false, [fullPath]);									
                         });					
 				}*/
+			}
+			
+			self.onViewLogsClicked = function () {
+				logger.logVerbose("onViewLogsClicked");
+				window.App.navigate("#logs");
 			}
             
             return self;

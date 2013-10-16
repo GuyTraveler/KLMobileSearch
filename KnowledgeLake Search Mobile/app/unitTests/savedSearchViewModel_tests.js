@@ -28,19 +28,7 @@ define(['require',
 			QUnit.ok(window.App.isMock);
 			QUnit.equal(vm.wordConjunction(), keywordConjunction.and);
         });
-        
-        QUnit.test("test savedSearchViewModel init", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new savedSearchViewModel();
-            vm.init();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
+       
         QUnit.test("test savedSearchViewModel SetDataSource", function () {
             //arrange
             var vm,
@@ -95,7 +83,7 @@ define(['require',
             QUnit.ok(vm);
         });  
         
-        QUnit.test("test savedSearchViewModel afterShow", function () {
+        QUnit.test("test savedSearchViewModel onAfterShow", function () {
             //arrange
             var vm,
                 homeVM;            
@@ -107,24 +95,12 @@ define(['require',
             window.homeViewModel = homeVM;
             
             //act
-            vm.afterShow();
+            vm.onAfterShow();
                         
             //assert
             QUnit.equal(vm.site(), homeVM.selectedSite);
         });         
-        
-        QUnit.test("test savedSearchViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new savedSearchViewModel();
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
+       
         QUnit.test("test savedSearchViewModel setSelectedSearch", function () {
             //arrange
             var vm,
