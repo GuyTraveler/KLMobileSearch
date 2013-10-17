@@ -1,7 +1,9 @@
 define(["knockout", 
         "application",
-		"logger"],
-function (ko, application, logger) {
+		"logger",
+        "domain/navigationContext",
+        "domain/navigationDirection"],
+function (ko, application, logger, navigationContext, NavigationDirection) {
 	var viewModelBase = function () {
 		var self = this;
 		
@@ -37,6 +39,9 @@ function (ko, application, logger) {
 			}
         });
 		
+        self.navigateBack = function () {            
+            application.navigator.navigate(new navigationContext(NavigationDirection.back)); 
+        }
     
 		self.init = function (e) {
 			logger.logVerbose("base class viewModelBase.init called");
