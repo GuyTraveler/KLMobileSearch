@@ -67,19 +67,6 @@ define(["knockout",
             }
         }
         
-        /*self.onInit = function (e) {
-			$(".km-content").kendoTouch({
-                enableSwipe: true,
-                swipe: self.swipe 
-            });
-        }
-		
-		self.swipe = function (e) {
-			logger.logVerbose("results listview swiped");
-			if(e.direction == "right")
-                application.navigator.navigate(new navigationContext(navigationDirection.back));
-        }*/
-        
         self.onBeforeShow = function (e) {
             logger.logVerbose("resultsViewModel onBeforeShow");
             

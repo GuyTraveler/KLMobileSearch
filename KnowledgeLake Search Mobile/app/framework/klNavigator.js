@@ -63,8 +63,6 @@ function (ko, NavigationDirection, navigationContext) {
                         self.updateCurrentIndex(self.currentIndex() + 1);
                         self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
                     }
-                        
-                    self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection;  
                 }
                 else if(navigationContext.navigationDirection === NavigationDirection.back)
                 {
