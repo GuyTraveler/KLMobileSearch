@@ -26,12 +26,11 @@
 
 <div id="homeViewMenu" data-role="popover" data-pane="{ 'layout': 'homeMenu-layout'}" data-popup="{'height': '80px', 'width': '14em'}">
 	<div data-role="view">
-		<ul id="homeMenu" data-role="listview">
-			<!-- TODO: highlight touched item and clear it out after ~100ms -->
-			<li data-bind="click: emailSupport">
+		<ul id="homeMenu" data-role="listview">			
+			<li data-bind="click: emailSupport, css: { 'highlight': isEmailSelected }">
 				<label data-bind="text: strings().EmailSupport"></label>	
             </li>
-			<li data-bind="click: onViewLogsClicked">
+			<li data-bind="click: onViewLogsClicked, css: { 'highlight': isViewLogsSelected }">
 				<label data-bind="text: strings().ViewLogs"></label>
             </li>
         </ul>

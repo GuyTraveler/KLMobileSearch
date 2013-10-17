@@ -2,15 +2,17 @@ define(["knockout",
         "application", 
 		"logger",
         "jquery", 
+		"domain/Constants",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext",
 		"viewmodels/viewModelBase",
         "FileManagement",
         "ISiteDataCachingService"], 
-    function (ko, application, logger, $, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
+    function (ko, application, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
         var homeViewModel = function () {
-            var self = this;
+            var self = this,
+				selectionTimeout = 1000;
                        
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
@@ -20,6 +22,8 @@ define(["knockout",
             self.selectedSite = null;
             self.navBarVisible = ko.observable(false);
 			self.hasHighlightedSite = ko.observable(false);
+			self.isEmailSelected = ko.observable(false);
+			self.isViewLogsSelected = ko.observable(false);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
@@ -164,17 +168,36 @@ define(["knockout",
                     });                  
                 }
             }
+			
+			self.closePopover = function () {
+				$("#homeViewMenu").data("kendoMobilePopOver").close();
+            }
             
             self.emailSupport = function () {
-				//TODO: test
-				window.open("mailto: steve.danner@knowledgelake.com", "_blank");
+				logger.logVerbose("emailSupport clicked");
+				
+				self.isEmailSelected(true);
+
+				setTimeout(function () {
+					self.isEmailSelected(false);
+                }, selectionTimeout);
+				
+				window.open("mailto:" + Constants.supportEmailAddress, "_blank");
+				self.closePopover();
 			}
 			
 			self.onViewLogsClicked = function () {
+				
 				logger.logVerbose("onViewLogsClicked");
-				//TODO: integrate with new application.navigator
-				//application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.logsPage));
-				window.App.navigate("#logs");
+				
+				self.isViewLogsSelected(true);
+
+				setTimeout(function () {					
+					self.isViewLogsSelected(false);
+                }, selectionTimeout);
+				
+				application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.logsPage, navigationPage.homePage));
+				self.closePopover();
 			}
             
             return self;
