@@ -24,7 +24,7 @@
     </div>
 </header>
 
-<div id="homeViewMenu" data-role="popover" data-pane="{ 'layout': 'homeMenu-layout'}" data-popup="{'height': '80px', 'width': '14em'}">
+<div id="homeViewMenu" data-role="popover" data-popup="{'height': '80px', 'width': '14em'}">
 	<div data-role="view">
 		<ul id="homeMenu" data-role="listview">			
 			<li data-bind="click: emailSupport, css: { 'highlight': isEmailSelected }">
@@ -35,10 +35,6 @@
             </li>
         </ul>
     </div>
-</div>
-
-<div data-role="layout" data-id="homeMenu-layout">
-	
 </div>
 
 <ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
