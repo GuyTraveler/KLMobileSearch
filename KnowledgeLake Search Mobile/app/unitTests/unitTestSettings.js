@@ -132,5 +132,8 @@ define({
     testNumberValue: 47,
     testChoices: ["Choice 1", "Choice 2", "Choice 3"],
     testOperators: ["=", "Like", "Starts With"],
-	testMessage: "A status message"
+	testMessage: "A status message",
+	logFileName: "logs.txt",
+	logCount: 5,
+	logMessage: "test"
 });

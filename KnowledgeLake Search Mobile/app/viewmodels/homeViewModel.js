@@ -166,32 +166,14 @@ define(["knockout",
             }
             
             self.emailSupport = function () {
-				/*logger.logVerbose("launching email composer...");
-				
-				if (window.plugins && window.plugins.emailComposer && typeof window.plugins.emailComposer.showEmailComposer === 'function') {
-					logger.logVerbose("email composer found...");		
-					
-					File.getFolderAsync()
-						.done(function (result) {
-							var fullPath = result.response.fullPath + "/sites.dat";
-							
-							if (window.App.os.ios == true) {
-								fullPath = fullPath.substring(1);	
-                            }							
-							else {
-								fullPath = "KnowledgeLake/sites.dat";
-                            }
-							
-							
-							logger.logVerbose("full path: " + fullPath);
-							
-							window.plugins.emailComposer.showEmailComposer(null, null, "test", "test", ["steve.danner@knowledgelake.com"], [], [], false, [fullPath]);									
-                        });					
-				}*/
+				//TODO: test
+				window.open("mailto: steve.danner@knowledgelake.com", "_blank");
 			}
 			
 			self.onViewLogsClicked = function () {
 				logger.logVerbose("onViewLogsClicked");
+				//TODO: integrate with new application.navigator
+				//application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.logsPage));
 				window.App.navigate("#logs");
 			}
             
