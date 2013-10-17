@@ -92,6 +92,6 @@ define({
 	Logs: "Application Logs",
 	EmailLogsToSupport: "Email Logs to KnowledgeLake Support",
 	CreateLogFileFailed: "Failed to save logs to disk",
-	EmailCountNotBeLaunched: "Error loading email application",
+	EmailCouldNotBeLaunched: "Error loading email application",
 	GetLogFilePathFailed: "Failed to find log file to attach"
 });

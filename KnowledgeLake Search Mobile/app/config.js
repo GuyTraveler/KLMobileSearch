@@ -1,6 +1,6 @@
 define(["framework/logLevel"], function(logLevel) {
 	
-    var isUnitTesting = false, 
+    var isUnitTesting = true, 
 	    loggingLevel = logLevel.Verbose;
 	 
 	var config = {           
@@ -125,6 +125,7 @@ define(["framework/logLevel"], function(logLevel) {
                //factory
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',
+			   'emailComposer': 'factory/emailComposerFactory',
                
                //framework
 			   'keyValuePair': 'framework/keyValuePair',

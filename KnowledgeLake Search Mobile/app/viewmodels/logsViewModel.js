@@ -6,8 +6,9 @@ define(["knockout",
 		"framework/logLevel",
 		"viewmodels/viewModelBase",
 		"FileManagement",
-        "services/logFileManager"], 
-    function (ko, Constants, application, logger, $, logLevel, viewModelBase, File, logFileManager) {
+        "services/logFileManager",
+		"emailComposer"], 
+    function (ko, Constants, application, logger, $, logLevel, viewModelBase, File, logFileManager, emailComposer) {
         var logsViewModel = function () {
 			var self = this;
 						            
@@ -16,27 +17,22 @@ define(["knockout",
 			
 			self.logs = ko.observableArray();
 			
-			self.onInit = function (e) {
-				logger.logVerbose("logsViewModel.onInit");
-            }
-			
 			self.onAfterShow = function () {
 				self.isBusy(true);
-				
 				self.logs(logger.getLogs());
-				
 				self.isBusy(false);
             }
 			
 			self.emailLogsToSupport = function () {
-				var manager = new logFileManager(),
+				var dfd = $.Deferred(),
+					manager = new logFileManager(),
 					createLogsPromise,
 					getLogPathPromise,
 					emailFullBody;
 				
-				if (!window.plugins || !window.plugins.emailComposer) {
+				if (!emailComposer) {
 					logger.logError("Email composer not found in plugin collection");
-					self.message(application.strings.EmailCountNotBeLaunched);
+					self.setMessage(application.strings.EmailCouldNotBeLaunched);
 					return;
                 }
 				
@@ -51,13 +47,15 @@ define(["knockout",
 						
 						emailFullBody = Constants.emailBodyStart + manager.logsToPrettyString();
 						
-						window.plugins.emailComposer.showEmailComposer(self.onEmailSent, self.onEmailSent, Constants.emailSubject, emailFullBody, 
-																	   [Constants.supportEmailAddress], [], [], Constants.emailIsHtml, [logFile]);
+						emailComposer.showEmailComposer(null, null, Constants.emailSubject, emailFullBody, 
+														[Constants.supportEmailAddress], [], [], Constants.emailIsHtml, [logFile]);
+						
+						dfd.resolve();
                     });
 					
 					getLogPathPromise.fail(function() {
-						logger.logError("failed to obtain log path");
-						self.message(application.strings.GetLogFilePathFailed);
+						self.setMessage(application.strings.GetLogFilePathFailed);
+						dfd.reject();
                     });
 					
 					getLogPathPromise.always(function () {
@@ -67,14 +65,11 @@ define(["knockout",
 				
 				createLogsPromise.fail(function (error) {					
 					self.isBusy(false);
-					self.message(application.strings.CreateLogFileFailed);
-                });											
-            }
-			
-			self.onEmailSent = function () {
-				var manager = new logFileManager();
-				logger.logVerbose("Email callback: deleting log file");
-				//manager.deleteLogFileAsync();  //we don't care about the result, we'll just overwrite it later anyway	
+					self.setMessage(application.strings.CreateLogFileFailed);
+					dfd.reject();
+                });	
+				
+				return dfd.promise();
             }
 			
 			return self;

@@ -16,7 +16,7 @@ require(["config"], function (config) {
     function($, ko, kendo, application, logger, extensions, logLevel) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [testRootPath + "application_tests",
+			testsToRun = [/*testRootPath + "application_tests",
 						  testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
@@ -73,7 +73,8 @@ require(["config"], function (config) {
                           testRootPath + "dateTimeConverter_tests",
 						  testRootPath + "iconConverter_tests",
 						  testRootPath + "logFileManager_tests",
-						  testRootPath + "logLevel_tests"
+						  testRootPath + "logLevel_tests",*/
+						  testRootPath + "logsViewModel_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
