@@ -82,7 +82,7 @@ define(["jquery",
                                 searchProperties[i+1].value(klamlDateTimesRange.endDate);
                             }
                             
-                            else if(searchProperties[i].selectedOperator() === "=")
+                            else if(searchProperties[i].selectedOperator() === Constants.equalOperator)
                             {
                                 searchProperties = self.duplicateKlamlProperty(searchProperties, i);
                                 
@@ -92,13 +92,13 @@ define(["jquery",
                                 searchProperties[i+1].value(klamlDateTimesEqual.endDate);
                             }
                             
-                            else if(searchProperties[i].selectedOperator() === ">" ||
-                                    searchProperties[i].selectedOperator() === "<=")
+                            else if(searchProperties[i].selectedOperator() === Constants.greaterThanOperator ||
+                                    searchProperties[i].selectedOperator() === Constants.lessThanOrEqualOperator)
                             {
                                 searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimeDayEnd(searchProperties[i].value()));
                             }
                             
-                            else if(searchProperties[i].selectedOperator() === ">=")
+                            else if(searchProperties[i].selectedOperator() === Constants.greaterThanOrEqualOperator)
                             {                                
                                 searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimePreviousDay(searchProperties[i].value()));
                             }
@@ -127,8 +127,8 @@ define(["jquery",
                             
                     mapping.fromJS(searchProperties[index], {}, modifiedProperty);                            
                     
-                    searchProperties[index].selectedOperator(">=");
-                    modifiedProperty.selectedOperator("<=");                            
+                    searchProperties[index].selectedOperator(Constants.greaterThanOrEqualOperator);
+                    modifiedProperty.selectedOperator(Constants.lessThanOrEqualOperator);                            
                     modifiedProperty.value(modifiedProperty.secondaryValue());
                     
                     searchProperties.splice(index + 1, 0, modifiedProperty);
