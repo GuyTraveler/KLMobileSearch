@@ -1,4 +1,4 @@
-define(["domain/constants"], function (Constants) {
+define(["domain/Constants"], function (Constants) {
     var dateTimeConverter = function() {
         var self = this;
        
