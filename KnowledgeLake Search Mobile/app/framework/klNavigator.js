@@ -35,51 +35,60 @@ function (ko, NavigationDirection, navigationContext) {
         document.addEventListener("deviceready", self.onDeviceReady, false);
         
         self.navigate = function (navigationContext) {
-            if(navigationContext.navigationDirection === NavigationDirection.standard)
-            {                
-                if(self.currentIndex() < self.globalNavigationContext.length - 1)
-                {
-                    self.globalNavigationContext.splice(self.currentIndex() + 1, self.globalNavigationContext.length - self.currentIndex(), navigationContext);
-                }
-                
-                else if(self.currentIndex() === self.globalNavigationContext.length - 1)
-                {
-                    self.globalNavigationContext.push(navigationContext);
-                }
-                
-                self.updateCurrentIndex(self.globalNavigationContext.length - 1);
-                self.navigateDesiredPage();
-            }
-            else 
+            if(navigationContext)
             {
-                self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection;
-                
-                if(navigationContext.navigationDirection === NavigationDirection.forward)
-                {
-                    self.navigateDesiredPage();
-                    
+                if(navigationContext.navigationDirection === NavigationDirection.standard)
+                {                
                     if(self.currentIndex() < self.globalNavigationContext.length - 1)
                     {
-                        self.updateCurrentIndex(self.currentIndex() + 1);
-                        self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
+                        self.globalNavigationContext.splice(self.currentIndex() + 1, self.globalNavigationContext.length - self.currentIndex(), navigationContext);
+                    }
+                    
+                    else if(self.currentIndex() === self.globalNavigationContext.length - 1)
+                    {
+                        self.globalNavigationContext.push(navigationContext);
+                    }
+                    
+                    self.updateCurrentIndex(self.globalNavigationContext.length - 1);
+                    self.navigateDesiredPage();
+                }
+                else 
+                {
+                    if(self.currentNavigationContext)
+                    {
+                        self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection;
+                        
+                        if(navigationContext.navigationDirection === NavigationDirection.forward)
+                        {
+                            self.navigateDesiredPage();
+                            
+                            if(self.currentIndex() < self.globalNavigationContext.length - 1)
+                            {
+                                self.updateCurrentIndex(self.currentIndex() + 1);
+                                self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
+                            }
+                        }
+                        else if(navigationContext.navigationDirection === NavigationDirection.back)
+                        {
+                            self.navigateCurrentPage();
+                            
+                            if(self.currentIndex() > 0)
+                            {
+                                self.updateCurrentIndex(self.currentIndex() - 1);
+                                self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
+                            }           
+                        }
                     }
                 }
-                else if(navigationContext.navigationDirection === NavigationDirection.back)
-                {
-                    self.navigateCurrentPage();
-                    
-                    if(self.currentIndex() > 0)
-                    {
-                        self.updateCurrentIndex(self.currentIndex() - 1);
-                        self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
-                    }           
-                }
-            }         
+            }
         }
         
         self.updateCurrentIndex = function (index) {
-            self.currentIndex(-1);
-            self.currentIndex(index);
+            if(!isNaN(index))
+            {
+                self.currentIndex(-1);
+                self.currentIndex(index);
+            }
         }
         
         self.navigateCurrentPage = function () {
@@ -100,8 +109,8 @@ function (ko, NavigationDirection, navigationContext) {
             }
         }
         
-        self.shouldNavigate = function (navigationPage) {
-            if(window && window.location && window.location.hash && window.location.hash !== navigationPage)
+        self.shouldNavigate = function (navigationPage) {            
+            if(window && window.location && window.location.hash !== navigationPage)
                 return true;
             
             return false;
