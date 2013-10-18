@@ -70,7 +70,7 @@ require(["config"], function (config) {
                           testRootPath + "documentViewModel_tests",
 						  testRootPath + "logonServiceFactory_tests",
 						  testRootPath + "formsLogonService_tests",
-                          testRootPath + "dateTimeConverter_tests"
+                          testRootPath + "dateTimeConverter_tests",
                           testRootPath + "iconConverter_tests",
 						  testRootPath + "logFileManager_tests",
 						  testRootPath + "logLevel_tests",
