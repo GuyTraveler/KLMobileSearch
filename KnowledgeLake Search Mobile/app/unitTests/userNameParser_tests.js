@@ -125,6 +125,21 @@ define(['services/userNameParser',
             QUnit.equal(resultParts[0], expectedUserName);
 			QUnit.equal(resultParts[1], expectedDomain);
         });
+			
+		QUnit.test("test userNameParser.parseUserNameParts works with valid '/' string", function () {
+			 //arrange
+			var userNameDomain = TestSettings.ntlmTestDomain + "/" + TestSettings.ntlmTestUser,
+				expectedUserName = TestSettings.ntlmTestUser,
+				expectedDomain = TestSettings.ntlmTestDomain,
+				resultParts;
+            
+            //act 
+			resultParts = userNameParser.parseUserNameParts(userNameDomain);
+                        
+            //assert
+            QUnit.equal(resultParts[0], expectedUserName);
+			QUnit.equal(resultParts[1], expectedDomain);
+        });
 		
 		QUnit.test("test userNameParser.parseUserNameParts works with valid '@' string", function () {
 			 //arrange
@@ -201,7 +216,7 @@ define(['services/userNameParser',
 			QUnit.equal(resultParts[1], expectedDomain);
         });		
 		
-		QUnit.test("test userNameParser.parseUserNameParts works with valid no '@' or '\\'", function () {
+		QUnit.test("test userNameParser.parseUserNameParts works with valid no '@' or '\\' or '/'", function () {
 			 //arrange
 			var userNameDomain = TestSettings.ntlmTestUser,
 				expectedUserName = TestSettings.ntlmTestUser,
@@ -215,6 +230,36 @@ define(['services/userNameParser',
             QUnit.equal(resultParts[0], expectedUserName);
 			QUnit.equal(resultParts[1], expectedDomain);
         });
+		
+		QUnit.test("test userNameParser.parseUserNameParts works with string starts with '/'", function () {
+			 //arrange
+			var userNameDomain = "/" + TestSettings.ntlmTestUser,
+				expectedUserName = TestSettings.ntlmTestUser,
+				expectedDomain = "",
+				resultParts;
+            
+            //act 
+			resultParts = userNameParser.parseUserNameParts(userNameDomain);
+                        
+            //assert
+            QUnit.equal(resultParts[0], expectedUserName);
+			QUnit.equal(resultParts[1], expectedDomain);
+        });
+		
+		QUnit.test("test userNameParser.parseUserNameParts works with string ends with '/'", function () {
+			 //arrange
+			var userNameDomain = TestSettings.ntlmTestDomain + "/",
+				expectedUserName = "",
+				expectedDomain = TestSettings.ntlmTestDomain,
+				resultParts;
+            
+            //act 
+			resultParts = userNameParser.parseUserNameParts(userNameDomain);
+                        
+            //assert
+            QUnit.equal(resultParts[0], expectedUserName);
+			QUnit.equal(resultParts[1], expectedDomain);
+        });		
 		
 		QUnit.test("test userNameParser.parseUserNameParts works with NULL string", function () {
 			 //arrange
