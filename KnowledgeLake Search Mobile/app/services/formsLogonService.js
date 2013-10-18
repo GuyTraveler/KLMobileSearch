@@ -12,14 +12,11 @@ function ($, Constants, application, logger, authenticationService, websService)
 		
 		self.logonAsync = function (domain, userName, password) {
 			var dfd = $.Deferred(),
-				authService = new authenticationService(siteUrl),
-				isValid = false;
+				authService = new authenticationService(siteUrl);
 			
 			authService.Login(userName, password)
-				.done(function (result) {
-					isValid = (result != null) && (result.LoginResult != null) && (result.LoginResult.CookieName != null) && (result.LoginResult.CookieName.value != null);
-					
-					if (isValid) {
+				.done(function (result) {					
+					if (result && result.LoginResult && result.LoginResult.CookieName && result.LoginResult.CookieName.value) {
 						logger.logVerbose("Obtained FBA Cookie: " + result.LoginResult.CookieName.value);
 						dfd.resolve(result);
 					}

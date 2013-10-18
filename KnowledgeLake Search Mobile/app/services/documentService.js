@@ -66,8 +66,13 @@ define(["jquery",
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
-    						cacheListId  = result.strListID.value;
-    						dfd.resolve(cacheListId);
+                            if(result && result.strListID && result.strListID.value)
+                            {
+        						cacheListId  = result.strListID.value;
+        						dfd.resolve(cacheListId);
+                            }
+                            
+                            dfd.reject("Failed to retrieve list ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -100,8 +105,13 @@ define(["jquery",
     					.done(function (listID) {						
     						lists.GetList(listID)
     							.done(function (result) {
-    								cacheListRootFolderUrl = result.GetListResult.List.RootFolder;
-    								dfd.resolve(cacheListRootFolderUrl);
+                                    if(result && result.GetListResult && result.GetListResult.List && GetListResult.List.RootFolder)
+                                    {
+        								cacheListRootFolderUrl = result.GetListResult.List.RootFolder;
+        								dfd.resolve(cacheListRootFolderUrl);
+                                    }
+                                    
+                                    dfd.reject("Failed to retrieve root folder url.");
                                 })
     							.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     								dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -131,8 +141,13 @@ define(["jquery",
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
-    						cacheListItemId  = result.strItemID.value;
-    						dfd.resolve(cacheListItemId);
+                            if(result && result.strItemID && result.strItemID.value)
+                            {
+        						cacheListItemId  = result.strItemID.value;
+        						dfd.resolve(cacheListItemId);
+                            }
+                            
+                            dfd.reject("Failed to retrieve item ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -204,8 +219,13 @@ define(["jquery",
 				
 				siteData.GetSiteUrlAsync(docUrl)
 					.done(function (result) {
-						cacheSiteUrl  = result.siteUrl.value;
-						dfd.resolve(cacheSiteUrl);
+                        if(result && result.siteUrl && result.siteUrl.value)
+                        {
+    						cacheSiteUrl  = result.siteUrl.value;
+    						dfd.resolve(cacheSiteUrl);
+                        }
+                        
+                        dfd.reject("Failed to retrieve site url.");
 					})
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
