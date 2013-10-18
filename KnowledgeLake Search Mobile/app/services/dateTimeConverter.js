@@ -1,4 +1,4 @@
-define([], function () {
+define(["domain/constants"], function (Constants) {
     var dateTimeConverter = function() {
         var self = this;
        
@@ -81,7 +81,7 @@ define([], function () {
             var dateObject = self.getUTCDate(date),
                 adjustedDateTime;
             
-            if(operation === "+")
+            if(operation === Constants.plusOperator)
                 adjustedDateTime = new Date(dateObject.valueOf() + increment);
             else             
                 adjustedDateTime = new Date(dateObject.valueOf() - increment);

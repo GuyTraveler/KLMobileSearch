@@ -55,7 +55,7 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                                 {                                    
                                     if(searchProperties[i].id === searchProperties[j].id)
                                     {
-                                        if(searchProperties[i].type === "DateTime")
+                                        if(searchProperties[i].type === Constants.dateTimeComparator)
                                             searchProperties[i].operator = self.determineOperatorForDateTime(searchProperties, i, j);
                                         
                                         else
@@ -72,8 +72,8 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                             }
                         }
                         
-                        else if(searchProperties[i].type && searchProperties[i].type === "DateTime" &&
-                                searchProperties[i].operator && searchProperties[i].operator === ">=")
+                        else if(searchProperties[i].type && searchProperties[i].type === Constants.dateTimeComparator &&
+                                searchProperties[i].operator && searchProperties[i].operator === Constants.greaterThanOrEqualOperator)
                         {
                              searchProperties[i].condition1 = DateTimeConverter.adjustDateTime(searchProperties[i].condition1, 1000, "+");
                         }                        
@@ -101,17 +101,17 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                 {
                     operatorToken = operatorToken.toLowerCase(); 
                     
-                    if (operatorToken === "contains")
+                    if (operatorToken === Constants.containsComparator)
                     {
                         return application.strings.Contains;
                     }
         
-                    if (operatorToken === "beginswith")
+                    if (operatorToken === Constants.beginsWithComparator)
                     {
                         return application.strings.StartsWith;
                     }
         
-                    if (operatorToken === "isnotnull")
+                    if (operatorToken === Constants.isNotNullComparator)
                     {
                         return application.strings.IsNotNull;
                     }
