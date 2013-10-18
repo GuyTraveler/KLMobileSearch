@@ -108,9 +108,7 @@ define(["jquery",
                 }
                 
                 if(klamlSearchFieldProperties)
-                {				
-                    //klamlSearchFieldProperties = self.trimDuplicateRangeProperties(klamlSearchFieldProperties);
-                    
+                {                    
     				searchPropertiesLength = propertiesList.length;
                     klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length;
     				

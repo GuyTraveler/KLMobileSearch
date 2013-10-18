@@ -72,8 +72,8 @@ define(["knockout",
             
             if(application.navigator.isStandardNavigation())
             {
-                self.setSelectedResult(null);
-                self.SetDataSource([]);
+                self.selectedResult = null;
+                self.resultDataSource([]);
             }
         }
         	

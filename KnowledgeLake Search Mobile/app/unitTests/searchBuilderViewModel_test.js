@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(['require',
+define(["application",
+        'require',
         'jquery',
         'knockout',
         'viewmodels/searchBuilderViewModel',
@@ -11,10 +12,13 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
+		"domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"unitTests/unitTestSettings",
 		"domain/keywordConjunction"],
-    function (require, $, ko, searchBuilderViewModel, savedSearchViewModel, search, searchType, searchProperty, catalogPropertyControlType, 
-			  site, credential, credentialType, TestSettings, keywordConjunction) {
+    function (application, require, $, ko, searchBuilderViewModel, savedSearchViewModel, search, searchType, searchProperty, catalogPropertyControlType, 
+			  site, credential, credentialType, navigationDirection, navigationPage, navigationContext, TestSettings, keywordConjunction) {
         QUnit.module("Testing searchBuilderViewModel");
         
         
@@ -109,14 +113,12 @@ define(['require',
         QUnit.test("test searchBuilderViewModel BuildSearchProperties", function () {
             //arrange
             var vm,
-                savedSearchVM;            
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));            
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, {"site": selectedSite}));
             
             vm = new searchBuilderViewModel();
-            savedSearchVM = new savedSearchViewModel();
-            vm.search(new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml));
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
-            
-            window.savedSearchViewModel = savedSearchVM;
+            vm.search(new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml));            
             
             //act
             vm.BuildSearchProperties();
@@ -125,23 +127,41 @@ define(['require',
             QUnit.ok(vm);
         });  
        
+        QUnit.test("test searchBuilderViewModel onBeforeShow", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),            
+                selectedSearch = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
+                {"site": selectedSite, "search": selectedSearch}));
+            
+            vm = new searchBuilderViewModel();
+            
+            //act
+            vm.onBeforeShow();
+                        
+            //assert
+            QUnit.equal(vm.keyword(), "");
+            QUnit.deepEqual(vm.searchBuilderDataSource(), []);
+        });   
+       
         QUnit.test("test searchBuilderViewModel onAfterShow", function () {
             //arrange
             var vm,
-                savedSearchVM;            
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),            
+                selectedSearch = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
+                {"site": selectedSite, "search": selectedSearch}));
             
             vm = new searchBuilderViewModel();
-            savedSearchVM = new savedSearchViewModel();
-            savedSearchVM.selectedSearch(new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml));
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
-            
-            window.savedSearchViewModel = savedSearchVM;
             
             //act
             vm.onAfterShow();
                         
             //assert
-            QUnit.equal(vm.search(), savedSearchVM.selectedSearch());
+            QUnit.equal(vm.search(), selectedSearch);
         });  
        
         QUnit.test("test searchBuilderViewModel onSearchKeyUp", function () {
@@ -156,5 +176,17 @@ define(['require',
                         
             //assert
             QUnit.ok(vm);
+        });  
+       
+        QUnit.test("test searchBuilderViewModel clearKeyword", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new searchBuilderViewModel();
+            vm.clearKeyword();
+                        
+            //assert
+            QUnit.equal(vm.keyword(), "");
         });
     });

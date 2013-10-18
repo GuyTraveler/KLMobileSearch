@@ -105,7 +105,7 @@ define(["jquery",
     					.done(function (listID) {						
     						lists.GetList(listID)
     							.done(function (result) {
-                                    if(result && result.GetListResult && result.GetListResult.List && GetListResult.List.RootFolder)
+                                    if(result && result.GetListResult && result.GetListResult.List && result.GetListResult.List.RootFolder)
                                     {
         								cacheListRootFolderUrl = result.GetListResult.List.RootFolder;
         								dfd.resolve(cacheListRootFolderUrl);

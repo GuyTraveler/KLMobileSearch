@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(['require',
+define(["application",
+        'require',
         'jquery',
         'knockout',
         'viewmodels/savedSearchViewModel',
@@ -9,9 +10,13 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"unitTests/unitTestSettings",
 		"domain/keywordConjunction"],
-    function (require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, credentialType, TestSettings, keywordConjunction) {
+    function (application, require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, 
+              credentialType, navigationDirection, navigationPage, navigationContext, TestSettings, keywordConjunction) {
         QUnit.module("Testing savedSearchViewModel");
         
         
@@ -82,23 +87,51 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });  
+                  
+        QUnit.test("test savedSearchViewModel clearKeyword", function () {
+            //arrange
+            var vm;
+            
+            //act 
+            vm = new savedSearchViewModel();
+            vm.clearKeyword();
+                        
+            //assert
+            QUnit.equal(vm.keyword(), "");
+        });
+        
+        QUnit.test("test savedSearchViewModel onBeforeShow", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
+            
+            vm = new savedSearchViewModel();
+            
+            //act
+            vm.onBeforeShow();
+                        
+            //assert
+            QUnit.equal(vm.selectedSearch(), null);
+            QUnit.equal(vm.keyword(), "");
+            QUnit.deepEqual(vm.searchDataSource(), []);
+        });       
         
         QUnit.test("test savedSearchViewModel onAfterShow", function () {
             //arrange
             var vm,
-                homeVM;            
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
             
             vm = new savedSearchViewModel();
-            homeVM = new homeViewModel();
-            homeVM.selectedSite(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
-            
-            window.homeViewModel = homeVM;
             
             //act
             vm.onAfterShow();
                         
             //assert
-            QUnit.equal(vm.site(), homeVM.selectedSite());
+            QUnit.equal(vm.site(), selectedSite);
         });         
        
         QUnit.test("test savedSearchViewModel setSelectedSearch", function () {
