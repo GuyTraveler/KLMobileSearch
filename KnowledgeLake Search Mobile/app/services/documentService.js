@@ -72,7 +72,8 @@ define(["jquery",
         						dfd.resolve(cacheListId);
                             }
                             
-                            dfd.reject("Failed to retrieve list ID.");
+                            else
+                                dfd.reject("Failed to retrieve list ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -111,7 +112,8 @@ define(["jquery",
         								dfd.resolve(cacheListRootFolderUrl);
                                     }
                                     
-                                    dfd.reject("Failed to retrieve root folder url.");
+                                    else
+                                        dfd.reject("Failed to retrieve root folder url.");
                                 })
     							.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     								dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -147,7 +149,8 @@ define(["jquery",
         						dfd.resolve(cacheListItemId);
                             }
                             
-                            dfd.reject("Failed to retrieve item ID.");
+                            else
+                                dfd.reject("Failed to retrieve item ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -225,7 +228,8 @@ define(["jquery",
     						dfd.resolve(cacheSiteUrl);
                         }
                         
-                        dfd.reject("Failed to retrieve site url.");
+                        else
+                            dfd.reject("Failed to retrieve site url.");
 					})
 					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						dfd.reject(XMLHttpRequest, textStatus, errorThrown);

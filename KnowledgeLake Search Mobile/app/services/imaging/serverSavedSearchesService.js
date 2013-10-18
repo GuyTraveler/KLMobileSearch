@@ -31,7 +31,8 @@ define(["jquery",
                         dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data));
                     }
                     
-                    dfd.reject("Failed to retrieve search results.");
+                    else
+                        dfd.reject("Failed to retrieve search results.");
                 });
               
                 facetSearchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -65,7 +66,7 @@ define(["jquery",
                 logonPromise.done(function (result) {
                     var getCurrentUserNamePromise = service.GetCurrentUserName();
                 
-                    getCurrentUserNamePromise.done(function (currentUserName) {
+                    getCurrentUserNamePromise.done(function (currentUserName) {                        
                         if(currentUserName && currentUserName.GetCurrentUserNameResult && currentUserName.GetCurrentUserNameResult.value)
                         {
                             var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
@@ -81,7 +82,8 @@ define(["jquery",
                                             dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult));
                                         }
                                         
-                                        dfd.reject("Failed to retrieve queries.");
+                                        else
+                                            dfd.reject("Failed to retrieve queries.");
                                     });
                                   
                                     getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -89,7 +91,8 @@ define(["jquery",
                                     });
                                 }
                                 
-                                dfd.reject("Failed to retrieve query user.");
+                                else
+                                    dfd.reject("Failed to retrieve query user.");
                             });
                                               
                             getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -97,7 +100,8 @@ define(["jquery",
                             });
                         }
                         
-                        dfd.reject("Failed to retrieve current user name.");
+                        else
+                            dfd.reject("Failed to retrieve current user name.");
                     });
                   
                     getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -111,7 +115,7 @@ define(["jquery",
             });
           
             detectPromise.fail(function (error) {
-                dfd.reject("imaging search not activated");
+                dfd.reject("Imaging search not activated.");
             });
             
             return dfd.promise();
