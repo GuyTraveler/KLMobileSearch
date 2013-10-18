@@ -22,6 +22,8 @@ require(["config"], function (config) {
              "viewmodels/searchBuilderViewModel",
              "viewmodels/resultsViewModel",
              "framework/knockout/kendoView",
+			 "framework/knockout/logLevelToIcon",
+			 "framework/knockout/logLevelToCss",
              "framework/knockout/urlToFileTypeIcon",
              "framework/knockout/majorVersionToSiteIcon", 
              "framework/knockout/dateTimeToLocaleString", 

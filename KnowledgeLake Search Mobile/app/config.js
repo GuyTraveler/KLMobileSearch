@@ -125,6 +125,7 @@ define(["framework/logLevel"], function(logLevel) {
                //factory
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',
+			   'emailComposer': 'factory/emailComposerFactory',
                
                //framework
 			   'keyValuePair': 'framework/keyValuePair',

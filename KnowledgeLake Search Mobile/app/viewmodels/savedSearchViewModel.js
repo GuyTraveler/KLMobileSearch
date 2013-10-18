@@ -96,7 +96,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             else
                 self.selectedSearch(selection);
             
-            //self.navBarVisible(self.selectedSite);
+            //self.navBarVisible(self.selectedSite());
         }
         
         self.isSelectedSearch = function (item) {

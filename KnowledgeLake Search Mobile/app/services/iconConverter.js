@@ -37,17 +37,9 @@ function (Constants, logLevel) {
         };  
 		
 		self.logLevelToIcon = function (level) {
-			var urlFormat = "app/images/logViewer/{level}.png",
-				levelName = "info";
+			var urlFormat = "app/images/logViewer/{level}.png";
 			
-			for (var prop in logLevel) {
-				if (logLevel[prop] === level) {
-					levelName = prop;
-					break;
-                }
-            }
-						
-			return urlFormat.replace("{level}", levelName);
+			return urlFormat.replace("{level}", logLevel.toLevelString(level));
         }
        
         return self;

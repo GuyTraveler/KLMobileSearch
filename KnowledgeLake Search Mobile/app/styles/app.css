@@ -183,9 +183,16 @@ img.margin-img {
 	margin-top: -1em;
 }
 
+.width-10 {
+	width: 10%!important;
+}
+.width-90 {
+	width: 90%!important;
+}
 .full-width {
     width: 100%!important;
 }
+
 
 .km-ios input[type=search] {
 	border: 1px solid black;

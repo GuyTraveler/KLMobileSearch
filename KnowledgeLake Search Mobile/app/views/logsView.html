@@ -9,7 +9,7 @@
 </header>
 
 <p>
-	<a class="traditional-link" data-bind="text: strings().EmailLogsToSupport"></a>
+	<a class="traditional-link" data-bind="text: strings().EmailLogsToSupport, click: emailLogsToSupport"></a>
 </p>
 
 <div>
@@ -19,9 +19,16 @@
 		<li>
 			<label>
 				<div class="relative-container">
-					<!--<img width="16" data-bind="attr: { src: $parent.getLogTypeImageUrl($data.key) }" class="margin-img" />-->
-					<img width="16" src="app/images/invalid.png" />
-					<span class="list-view-label" data-bind="text: value"></span>
+					<table>
+						<tr>
+							<td>
+								<img width="16" data-bind="logLevelToIcon: key" />		
+                            </td>
+							<td>
+								<span class="list-view-label" data-bind="text: value, logLevelToCss: key"></span>
+							</td>
+                        </tr>
+                    </table>					
 				</div>
             </label>
         </li>

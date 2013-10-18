@@ -1,5 +1,7 @@
 define(["services/iconConverter", 
-		"jquery"], function (IconConverter, $) {
+		"jquery",
+		"framework/logLevel"], 
+	function (IconConverter, $, logLevel) {
         QUnit.module("services/iconConverter");
 
         QUnit.test("test iconConverter majorVersionToSiteIcon null", function () {
@@ -364,5 +366,101 @@ define(["services/iconConverter",
                         
             //assert
             QUnit.equal(result, expected);
-        });         
+        });   
+			
+		QUnit.test("test iconConverter logLevelToIcon logLevel.Verbose", function () {
+			//arrange
+			var expected = "app/images/logViewer/Verbose.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(logLevel.Verbose);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon logLevel.Debug", function () {
+			//arrange
+			var expected = "app/images/logViewer/Debug.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(logLevel.Debug);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+	
+		QUnit.test("test iconConverter logLevelToIcon logLevel.Warn", function () {
+			//arrange
+			var expected = "app/images/logViewer/Warn.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(logLevel.Warn);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon logLevel.Error", function () {
+			//arrange
+			var expected = "app/images/logViewer/Error.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(logLevel.Error);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon logLevel.Fatal", function () {
+			//arrange
+			var expected = "app/images/logViewer/Fatal.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(logLevel.Fatal);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon null returns Verbose", function () {
+			//arrange
+			var expected = "app/images/logViewer/Verbose.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(null);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon '' returns Verbose", function () {
+			//arrange
+			var expected = "app/images/logViewer/Verbose.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon('');
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
+		
+		QUnit.test("test iconConverter logLevelToIcon 8 returns Verbose", function () {
+			//arrange
+			var expected = "app/images/logViewer/Verbose.png",
+				result;
+			
+			//act
+			result = IconConverter.logLevelToIcon(8);
+			
+			//assert
+			QUnit.equal(expected, result);
+        });
 });

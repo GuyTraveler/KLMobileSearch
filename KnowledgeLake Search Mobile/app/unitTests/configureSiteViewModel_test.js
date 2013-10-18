@@ -565,12 +565,12 @@ define(["application",
             
             homeVM = new homeViewModel();
 			vm = new configureSiteViewModel();
-            homeVM.selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            homeVM.selectedSite(new site(TestSettings.ntlmTestUrl, "ProdSP2010", new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
             
             window.homeViewModel = homeVM;
 			
 			//act
-			vm.url(homeVM.selectedSite.url);
+			vm.url(homeVM.selectedSite().url);
 			vm.siteTitle("dfdsfds");
 			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword(TestSettings.ntlmTestPassword);

@@ -70,7 +70,11 @@ require(["config"], function (config) {
                           testRootPath + "documentViewModel_tests",
 						  testRootPath + "logonServiceFactory_tests",
 						  testRootPath + "formsLogonService_tests",
-                          testRootPath + "dateTimeConverter_tests",
+                          testRootPath + "dateTimeConverter_tests"
+                          testRootPath + "iconConverter_tests",
+						  testRootPath + "logFileManager_tests",
+						  testRootPath + "logLevel_tests",
+						  testRootPath + "logsViewModel_tests",
                           testRootPath + "klNavigator_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE

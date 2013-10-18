@@ -2,31 +2,35 @@ define(["knockout",
         "application", 
 		"logger",
         "jquery", 
+		"domain/Constants",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext",
 		"viewmodels/viewModelBase",
         "FileManagement",
         "ISiteDataCachingService"], 
-    function (ko, application, logger, $, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
+    function (ko, application, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
         var homeViewModel = function () {
-            var self = this;
+            var self = this,
+				selectionTimeout = 1000;
                        
 			self.prototype = Object.create(viewModelBase.prototype);
         	viewModelBase.call(self);
 			
             self.siteDataSource = ko.observableArray([]);
             
-            self.selectedSite = null;
+            self.selectedSite = ko.observable(null);
             self.navBarVisible = ko.observable(false);
 			self.hasHighlightedSite = ko.observable(false);
+			self.isEmailSelected = ko.observable(false);
+			self.isViewLogsSelected = ko.observable(false);
             
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
             });
             
             self.SetDataSource = function (sites) {
-                self.selectedSite = null;                
+                self.selectedSite(null);
                 self.siteDataSource([]);
                 
                 if(sites)
@@ -104,26 +108,26 @@ define(["knockout",
 				if (event)
 					event.stopImmediatePropagation();
 				
-                if(self.selectedSite === selection)
-                    self.selectedSite = null;
+                if(self.selectedSite() === selection)
+                    self.selectedSite(null);
                 else
-                    self.selectedSite = selection;
+                    self.selectedSite(selection);
                                 
-				self.hasHighlightedSite(self.selectedSite != null);				
-				self.navBarVisible(self.selectedSite != null && !suppressNavbar);
+				self.hasHighlightedSite(self.selectedSite() != null);				
+				self.navBarVisible(self.selectedSite() != null && !suppressNavbar);
             }
             
             self.isSelectedSite = function (item) {
-				return self.hasHighlightedSite() && self.selectedSite === item;
+				return self.hasHighlightedSite() && self.selectedSite() === item;
             }
             
             self.siteClick = function (selection) {
 				self.setSelectedSite(selection, null, true);
 				
-                if(self.selectedSite !== selection)
-                    self.selectedSite = selection;
+                if(self.selectedSite() !== selection)
+                    self.selectedSite(selection);
                 
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite}));              
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));              
             }
             
             self.addSite = function () {
@@ -131,17 +135,17 @@ define(["knockout",
             }
             
             self.editSite = function () {
-                if(self.selectedSite)
+                if(self.selectedSite())
                 {
-                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite}));         
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite()}));         
                 }
             }
             
             self.deleteSite = function () {
-                if(self.selectedSite)
+                if(self.selectedSite())
                 {
                     // prompt before removal if yes proceed with deletion
-                    var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite);
+                    var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite());
                     // add the removal of associated searches ... must perform a loadsearches 
                     
 					removeSitePromise.done(function () {
@@ -164,35 +168,36 @@ define(["knockout",
                     });                  
                 }
             }
+			
+			self.closePopover = function () {
+				$("#homeViewMenu").data("kendoMobilePopOver").close();
+            }
             
             self.emailSupport = function () {
-				/*logger.logVerbose("launching email composer...");
+				logger.logVerbose("emailSupport clicked");
 				
-				if (window.plugins && window.plugins.emailComposer && typeof window.plugins.emailComposer.showEmailComposer === 'function') {
-					logger.logVerbose("email composer found...");		
-					
-					File.getFolderAsync()
-						.done(function (result) {
-							var fullPath = result.response.fullPath + "/sites.dat";
-							
-							if (window.App.os.ios == true) {
-								fullPath = fullPath.substring(1);	
-                            }							
-							else {
-								fullPath = "KnowledgeLake/sites.dat";
-                            }
-							
-							
-							logger.logVerbose("full path: " + fullPath);
-							
-							window.plugins.emailComposer.showEmailComposer(null, null, "test", "test", ["steve.danner@knowledgelake.com"], [], [], false, [fullPath]);									
-                        });					
-				}*/
+				self.isEmailSelected(true);
+
+				setTimeout(function () {
+					self.isEmailSelected(false);
+                }, selectionTimeout);
+				
+				window.open("mailto:" + Constants.supportEmailAddress, "_blank");
+				self.closePopover();
 			}
 			
 			self.onViewLogsClicked = function () {
+				
 				logger.logVerbose("onViewLogsClicked");
-				window.App.navigate("#logs");
+				
+				self.isViewLogsSelected(true);
+
+				setTimeout(function () {					
+					self.isViewLogsSelected(false);
+                }, selectionTimeout);
+				
+				application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.logsPage, navigationPage.homePage));
+				self.closePopover();
 			}
             
             return self;

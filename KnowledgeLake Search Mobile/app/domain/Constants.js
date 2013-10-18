@@ -2,6 +2,8 @@ define(["application"], function (application) {
 
 	return {
 		maxResults: 100,  //TODO: change this to something higher once we have dynamic paging
+		logLineFormat: "{logLevel}: {message}",
+		
 		//sharepoint
 	    sharePointDelimiter: ";#",
 	    sharePoint2013MajorVersion: 15, 
@@ -21,6 +23,12 @@ define(["application"], function (application) {
 	    radiobuttonOperators: [ "=", application.strings.IsNotNull ],
 	    comboboxOperators: [ "=", application.strings.Contains, application.strings.StartsWith, application.strings.IsNotNull ],
 	    
-	    radiobuttonValues: [ application.strings.Yes, application.strings.No, application.strings.NotSet ]
+	    radiobuttonValues: [ application.strings.Yes, application.strings.No, application.strings.NotSet ],
+		
+		//email
+		supportEmailAddress: "steve.danner@knowledgelake.com",  //TODO: get from Karen
+		emailSubject: "KnowledgeLake Mobile Logs",
+		emailBodyStart: "\n\n\Application Attached...\n\n",
+		emailIsHtml: true
 	};
 });
