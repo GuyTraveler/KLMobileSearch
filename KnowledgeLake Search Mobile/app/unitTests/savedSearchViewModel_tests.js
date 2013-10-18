@@ -90,7 +90,7 @@ define(['require',
             
             vm = new savedSearchViewModel();
             homeVM = new homeViewModel();
-            homeVM.selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            homeVM.selectedSite(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
             
             window.homeViewModel = homeVM;
             
@@ -98,7 +98,7 @@ define(['require',
             vm.onAfterShow();
                         
             //assert
-            QUnit.equal(vm.site(), homeVM.selectedSite);
+            QUnit.equal(vm.site(), homeVM.selectedSite());
         });         
        
         QUnit.test("test savedSearchViewModel setSelectedSearch", function () {

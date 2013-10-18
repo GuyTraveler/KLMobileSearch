@@ -132,13 +132,13 @@ define(['require',
             var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.selectedSite = null;
+            vm.selectedSite(null);
             
             //act
             vm.setSelectedSite(siteData);
                         
             //assert
-            QUnit.equal(vm.selectedSite, siteData);
+            QUnit.equal(vm.selectedSite(), siteData);
         });
         
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is equal", function () {
@@ -147,13 +147,13 @@ define(['require',
             var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.setSelectedSite(siteData);
                         
             //assert
-            QUnit.equal(vm.selectedSite, null);
+            QUnit.equal(vm.selectedSite(), null);
         });
         
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is not equal", function () {
@@ -163,13 +163,13 @@ define(['require',
             var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.setSelectedSite(testData);
                         
             //assert
-            QUnit.equal(vm.selectedSite, testData);
+            QUnit.equal(vm.selectedSite(), testData);
 			QUnit.equal(vm.navBarVisible(), true);
         });
         
@@ -180,13 +180,13 @@ define(['require',
             var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.setSelectedSite(testData, null, true);
                         
             //assert
-            QUnit.equal(vm.selectedSite, testData);
+            QUnit.equal(vm.selectedSite(), testData);
 			QUnit.equal(vm.navBarVisible(), false);
         });
         
@@ -212,7 +212,7 @@ define(['require',
             
             vm = new homeViewModel();
             vm.hasHighlightedSite(true);
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             var result = vm.isSelectedSite(siteData);
@@ -256,7 +256,7 @@ define(['require',
             var homeUrl = "#home";
             
             vm = new homeViewModel();
-            vm.selectedSite = null;
+            vm.selectedSite(null);
             
             if(window.App)
                 window.App.navigate(homeUrl);
@@ -275,7 +275,7 @@ define(['require',
             var configureSiteUrl = "#configureSite";
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.editSite();
@@ -298,7 +298,7 @@ define(['require',
             SiteDataCachingService.sites.push(siteData);
             
             vm.LoadSiteData();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.deleteSite();

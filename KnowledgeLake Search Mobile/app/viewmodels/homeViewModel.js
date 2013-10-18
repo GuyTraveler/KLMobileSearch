@@ -19,7 +19,7 @@ define(["knockout",
 			
             self.siteDataSource = ko.observableArray([]);
             
-            self.selectedSite = null;
+            self.selectedSite = ko.observable(null);
             self.navBarVisible = ko.observable(false);
 			self.hasHighlightedSite = ko.observable(false);
 			self.isEmailSelected = ko.observable(false);
@@ -30,7 +30,7 @@ define(["knockout",
             });
             
             self.SetDataSource = function (sites) {
-                self.selectedSite = null;                
+                self.selectedSite(null);
                 self.siteDataSource([]);
                 
                 if(sites)
@@ -108,26 +108,26 @@ define(["knockout",
 				if (event)
 					event.stopImmediatePropagation();
 				
-                if(self.selectedSite === selection)
-                    self.selectedSite = null;
+                if(self.selectedSite() === selection)
+                    self.selectedSite(null);
                 else
-                    self.selectedSite = selection;
+                    self.selectedSite(selection);
                                 
-				self.hasHighlightedSite(self.selectedSite != null);				
-				self.navBarVisible(self.selectedSite != null && !suppressNavbar);
+				self.hasHighlightedSite(self.selectedSite() != null);				
+				self.navBarVisible(self.selectedSite() != null && !suppressNavbar);
             }
             
             self.isSelectedSite = function (item) {
-				return self.hasHighlightedSite() && self.selectedSite === item;
+				return self.hasHighlightedSite() && self.selectedSite() === item;
             }
             
             self.siteClick = function (selection) {
 				self.setSelectedSite(selection, null, true);
 				
-                if(self.selectedSite !== selection)
-                    self.selectedSite = selection;
+                if(self.selectedSite() !== selection)
+                    self.selectedSite(selection);
                 
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite}));              
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));              
             }
             
             self.addSite = function () {
@@ -135,17 +135,17 @@ define(["knockout",
             }
             
             self.editSite = function () {
-                if(self.selectedSite)
+                if(self.selectedSite())
                 {
-                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite}));         
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite()}));         
                 }
             }
             
             self.deleteSite = function () {
-                if(self.selectedSite)
+                if(self.selectedSite())
                 {
                     // prompt before removal if yes proceed with deletion
-                    var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite);
+                    var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite());
                     // add the removal of associated searches ... must perform a loadsearches 
                     
 					removeSitePromise.done(function () {
