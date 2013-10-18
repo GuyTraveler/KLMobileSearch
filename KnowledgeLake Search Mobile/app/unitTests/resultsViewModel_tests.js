@@ -140,19 +140,6 @@ define(['require',
 			QUnit.equal(vm.resultCountString(), expectedMessage);
         });
 		
-        QUnit.test("test resultViewModel init", function () {
-            //arrange
-            var vm;
-            
-            vm = new resultsViewModel();
-            
-            //act 
-            vm.onInit();
-            
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
         QUnit.test("test resultsViewModel swipe", function () {
             //arrange
             var vm,

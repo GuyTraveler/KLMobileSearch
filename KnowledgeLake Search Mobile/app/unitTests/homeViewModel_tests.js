@@ -233,7 +233,7 @@ define(['require',
             vm.siteClick(siteData);
                         
             //assert
-            QUnit.equal(window.App.currentUrl, searchUrl);   
+			QUnit.equal(window.App.currentUrl, searchUrl);   
         });
         
         QUnit.test("test homeViewModel addSite", function () {
