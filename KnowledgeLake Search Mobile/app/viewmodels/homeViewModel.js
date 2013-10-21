@@ -25,6 +25,8 @@ define(["knockout",
 			self.isEmailSelected = ko.observable(false);
 			self.isViewLogsSelected = ko.observable(false);
             
+            self.isHold = false;
+            
             self.navBarVisible.subscribe(function (newValue) {
 				$(".nav-button").kendoMobileButton();
             });
@@ -104,6 +106,21 @@ define(["knockout",
                     self.LoadSiteData();          	
             }
             
+            self.longPress = function (e) {
+                if(e)
+                    e.preventDefault();
+                
+                self.isHold = true;
+                
+                if(e && e.event && e.event.currentTarget)
+                {
+                    var selection = ko.dataFor(e.event.currentTarget);
+                         
+                    if(selection)
+                        self.setSelectedSite(selection);
+                }
+            }
+            
             self.setSelectedSite = function (selection, event, suppressNavbar) {
 				if (event)
 					event.stopImmediatePropagation();
@@ -121,13 +138,23 @@ define(["knockout",
 				return self.hasHighlightedSite() && self.selectedSite() === item;
             }
             
-            self.siteClick = function (selection) {
-				self.setSelectedSite(selection, null, true);
-				
-                if(self.selectedSite() !== selection)
-                    self.selectedSite(selection);
+            self.siteClick = function (e) {                
+				if(!self.isHold && e && e.event && e.event.currentTarget)
+                {
+                    var selection = ko.dataFor(e.event.currentTarget);
+                    
+                    if(selection)
+                    {
+                        self.setSelectedSite(selection, null, true);
+        				
+                        if(self.selectedSite() !== selection)
+                            self.selectedSite(selection);
+                        
+                        application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));
+                    }
+                }
                 
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));              
+                self.isHold = false;
             }
             
             self.addSite = function () {

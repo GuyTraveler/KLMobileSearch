@@ -1,8 +1,11 @@
 define(['knockout', 'jquery', 'kendo'],
     function (ko, $, kendo) {
-		ko.bindingHandlers.kendoListView = {
+		ko.bindingHandlers.kendoTouch = {
             init: function(element, valueAccessor) {
-                $(element).kendoMobileListView(valueAccessor());
+                $(element).kendoTouch({
+                    tap: valueAccessor().tap,
+                    hold: valueAccessor().hold
+                });
             },
             update: function(element, valueAccessor) {
                 
