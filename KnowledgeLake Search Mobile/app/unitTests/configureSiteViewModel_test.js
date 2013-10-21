@@ -41,6 +41,7 @@ define(["application",
 			QUnit.equal(vm.message(), "");
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
+			QUnit.equal(vm.isEditMode(), false);
 			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			
@@ -622,6 +623,7 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), "");
             QUnit.equal(configureSiteVM.sitePassword(), "");
             QUnit.equal(configureSiteVM.siteDomain(), "");
+			QUnit.equal(configureSiteVM.isEditMode(), false);
         });
         
         QUnit.test("test configureSiteViewModel populateConfigureSiteViewModel", function () {
@@ -643,6 +645,7 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), siteData.credential.userName);
             QUnit.equal(configureSiteVM.sitePassword(), siteData.credential.password);
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
+			QUnit.equal(configureSiteVM.isEditMode(), true);
         });
         
         QUnit.test("test configureSiteViewModel onAfterShow (with selected site)", function () {
@@ -664,6 +667,7 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), siteData.credential.userName);
             QUnit.equal(configureSiteVM.sitePassword(), siteData.credential.password);
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
+			QUnit.equal(configureSiteVM.isEditMode(), true);
         });
 		
 		QUnit.test("test configureSiteViewModel onAfterShow (NO selected site)", function () {
@@ -689,23 +693,6 @@ define(["application",
 			QUnit.equal(configureSiteVM.message(), "");
 			QUnit.equal(configureSiteVM.isUrlValid(), false);
 			QUnit.equal(configureSiteVM.isCredentialsValid(), false);
+			QUnit.equal(configureSiteVM.isEditMode(), false);
         });
-						  
-		QUnit.test("test configureSiteViewModel.onAfterShow (with selected site)", function () {
-			//arrange
-            var configureSiteVM,
-            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
-				homeVM = {
-					selectedSite: siteData
-                };
-                        			
-            //act 
-			window.homeViewModel = homeVM;
-			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.onAfterShow();
-                        
-            //assert
-            QUnit.ok(configureSiteVM);
-        });
-		
     });

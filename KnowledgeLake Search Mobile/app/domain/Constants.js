@@ -12,8 +12,10 @@ define(["application"], function (application) {
 		
 		//office 365
 		office365STS: "https://login.microsoftonline.com/extSTS.srf",
+		office365UserRealm: "https://login.microsoftonline.com/GetUserRealm.srf",
 		office365LoginUriPart: "_forms/default.aspx?wa=wsignin1.0",
 		samlTemplateUrl: "app/services/soapTemplates/Office365/SAML.xml",
+		userRealmRequestFormat: "handler=1&login={userName}",
 			    
 		//controls
 	    numberOperators: [ "=", ">", "<", ">=", "<=", application.strings.Range ],
