@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<ul id="listView" data-role="listview" data-bind="foreach: siteDataSource" >
+<ul id="listView" data-role="listview" data-bind="visible: hasData, foreach: siteDataSource" >
 	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }, click: $parent.siteClick">
 		<div class="itemContainer">			
 			<div class="pull-left itemIconContainer" data-bind="click: $parent.setSelectedSite">
@@ -53,4 +53,8 @@
             </div>				
 	    </div>
 	</li>
-</ul>
+</ul>	
+
+<div id="addSiteMainLink" data-bind="visible: !hasData()">
+	<a class="traditional-link" href="#" data-bind="text: strings().addSiteLinkText, click: addSite"></a>
+</div>

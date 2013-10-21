@@ -13,6 +13,7 @@ define({
     cancel: "Cancel",
     save: "Save",
     addSite: "Add",
+	addSiteLinkText: "Please Configure a Site to Search",
     editSite: "Edit",
     editProperties: "Edit",
 	viewProperties: "View",
