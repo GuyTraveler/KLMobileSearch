@@ -122,13 +122,13 @@ define(["services/sharepoint/websService",
             var service;
             
             //act
-            service = new websService(TestSettings.adfsTestUrl);
+            service = new websService(TestSettings.adfsInvalidUrl);
             deleteAllCookies();
                         
             //assert
             QUnit.ok(service);
             
-            service.GetWeb(TestSettings.adfsTestUrl)
+            service.GetWeb(TestSettings.adfsInvalidUrl)
 				.done(function (result) {
 	                QUnit.ok(false, "GetWeb was successful when it should have been 401");
 	                QUnit.start();

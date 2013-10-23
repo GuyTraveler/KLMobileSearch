@@ -41,6 +41,8 @@ define(["application",
 			QUnit.equal(vm.message(), "");
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
+			QUnit.equal(vm.isOffice365(), false);
+			QUnit.equal(vm.adfsUrl(), "");
 			QUnit.equal(vm.isEditMode(), false);
 			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
@@ -377,7 +379,71 @@ define(["application",
             });
 			
 			credValidationPromise.fail(function () {
-				QUnit.ok(false, "credential validation failed when it should have been good");
+				QUnit.ok(false, "NTLM credential validation failed when it should have been good");
+				QUnit.start();
+            });
+        });
+			
+		QUnit.asyncTest("configureSiteViewModel.logon (Office365 Std) succeeds with good creds", function () {
+			//arrange
+			var vm,
+				credValidationPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.protocol(httpProtocols.https);
+			vm.url(TestSettings.claimsTestUrl);
+			vm.siteFullUserName(TestSettings.claimsTestUser);
+			vm.sitePassword(TestSettings.claimsTestPassword);
+			vm.siteCredentialType(credentialType.claimsOrForms);
+			
+			credValidationPromise = vm.logonAsync();
+			
+			//assert
+			QUnit.ok(credValidationPromise);
+			
+			credValidationPromise.done(function (title, version) {
+				QUnit.ok(true);
+				QUnit.equal(vm.isOffice365(), true);
+				QUnit.equal(vm.adfsUrl(), "");
+				
+				QUnit.start();
+            });
+			
+			credValidationPromise.fail(function () {
+				QUnit.ok(false, "Office 365 credential validation failed when it should have been good");
+				QUnit.start();
+            });
+        });
+			
+		QUnit.asyncTest("configureSiteViewModel.logon (Office365 ADFS) succeeds with good creds", function () {
+			//arrange
+			var vm,
+				credValidationPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.protocol(httpProtocols.https);
+			vm.url(TestSettings.adfsTestUrl);
+			vm.siteFullUserName(TestSettings.adfsTestUser + "@" + TestSettings.adfsTestDomain);
+			vm.sitePassword(TestSettings.adfsTestPassword);
+			vm.siteCredentialType(credentialType.claimsOrForms);
+			
+			credValidationPromise = vm.logonAsync();
+			
+			//assert
+			QUnit.ok(credValidationPromise);
+			
+			credValidationPromise.done(function (title, version) {
+				QUnit.ok(true);
+				QUnit.equal(vm.isOffice365(), true);
+				QUnit.ok(vm.adfsUrl().startsWith(TestSettings.adfsSTSTestUrl));
+				
+				QUnit.start();
+            });
+			
+			credValidationPromise.fail(function () {
+				QUnit.ok(false, "Office 365 credential validation failed when it should have been good");
 				QUnit.start();
             });
         });

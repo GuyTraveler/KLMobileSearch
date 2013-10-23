@@ -89,12 +89,9 @@ define(["knockout",
             
             self.onBeforeShow = function (e) {
 				logger.logVerbose("homeViewModel onBeforeShow");   
-                
-                if(application.navigator.isStandardNavigation())
-                {                
-                    self.navBarVisible(false);
-    				self.hasHighlightedSite(false);                    
-                }
+            
+                self.navBarVisible(false);
+				self.hasHighlightedSite(false);                    
             }
            
 			self.onAfterShow = function (e) {

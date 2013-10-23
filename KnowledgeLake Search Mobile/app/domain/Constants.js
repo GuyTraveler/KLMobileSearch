@@ -15,7 +15,11 @@ define(["application"], function (application) {
 		office365UserRealm: "https://login.microsoftonline.com/GetUserRealm.srf",
 		office365LoginUriPart: "_forms/default.aspx?wa=wsignin1.0",
 		samlTemplateUrl: "app/services/soapTemplates/Office365/SAML.xml",
+		samlAdfsTemplateUrl: "app/services/soapTemplates/Office365/SAML_ADFS.xml",
+		samlAssertionTemplateUrl: "app/services/soapTemplates/Office365/SAMLAssertion.xml",
 		userRealmRequestFormat: "handler=1&login={userName}",
+		adfsTrust2005WindowsTransport: "https://{adfsHost}/adfs/services/trust/2005/usernamemixed/",
+		entityId: "urn:federation:MicrosoftOnline",
 			    
 		//controls
 	    numberOperators: [ "=", ">", "<", ">=", "<=", application.strings.Range ],

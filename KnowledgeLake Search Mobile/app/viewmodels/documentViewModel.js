@@ -59,7 +59,9 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
                 
                 service = new documentService(application.navigator.currentNavigationContext.properties.result.url);        
                 logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
-                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType);
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
+																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
+																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
 
                 logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
                                                        application.navigator.currentNavigationContext.properties.site.credential.userName, 

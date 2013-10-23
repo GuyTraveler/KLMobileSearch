@@ -3,10 +3,9 @@ define(["jquery",
 		"application",
 		"logger",
 		"IAuthenticationService",
-		"IWebsService",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, authenticationService, websService) {
+function ($, Constants, application, logger, authenticationService) {
 	var formsLogonService = function (siteUrl) {
 		var self = this;
 		
@@ -25,7 +24,7 @@ function ($, Constants, application, logger, authenticationService, websService)
                     }
                 })
 				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					dfd.reject();
+					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
 				});
 			
 			return dfd.promise();

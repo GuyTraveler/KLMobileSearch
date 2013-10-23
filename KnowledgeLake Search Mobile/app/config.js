@@ -148,7 +148,8 @@ define(["framework/logLevel"], function(logLevel) {
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService',
 			   'IDocumentService': 'services/documentService',
-			   'IUserNameParser': 'services/userNameParser'
+			   'IUserNameParser': 'services/userNameParser',
+			   'IOffice365Service': 'services/office365Service'
 	       }
 	   },
 	   logLevel: loggingLevel,

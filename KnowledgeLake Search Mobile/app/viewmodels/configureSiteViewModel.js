@@ -6,6 +6,7 @@ define(["knockout",
         "IWebsService", 
         "ISiteDataCachingService", 
 		"IUserNameParser",
+		"IOffice365Service",
 		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
@@ -15,9 +16,14 @@ define(["knockout",
         "domain/navigationPage",
         "domain/navigationContext",
         "keyValuePair",
-		"domain/httpProtocols",], 
-function (ko, application, logger, viewModelBase, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
-	      site, credential, credentialType, authenticationMode, navigationDirection, navigationPage, navigationContext, keyValuePair, httpProtocols) {
+		"domain/httpProtocols",
+		"domain/office365Metadata",
+		"domain/office365LogonType"], 
+function (ko, application, logger, viewModelBase, authenticationService, websService, 
+		  SiteDataCachingService, userNameParser, office365Service, LogonServiceFactory,
+	      site, credential, credentialType, authenticationMode, navigationDirection, navigationPage, 
+		  navigationContext, keyValuePair, httpProtocols, office365Metadata, office365LogonType) {
+			  
     var configureSiteViewModel = function () {
         var self = this,
             questionImageUrl = "",
@@ -30,6 +36,8 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 		
 		self.urlValidationDfd = null;
 		self.logonService = null;
+		self.officeService = new office365Service();
+		
 		self.protocols = [
 			httpProtocols.http,
 			httpProtocols.https
@@ -73,6 +81,8 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         self.isClaimsFormsCredential = ko.computed(function () {
             return self.siteCredentialType() == credentialType.claimsOrForms; 
         });
+		self.isOffice365 = ko.observable(false);
+		self.adfsUrl = ko.observable("");
         
         self.isUrlValid = ko.observable(false);
         self.isCredentialsValid = ko.observable(false);
@@ -100,7 +110,8 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				if (self.validateAll()) {
 				
 					theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
-	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
+	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()),
+									   self.isOffice365(), self.adfsUrl());
 					writePromise = application.navigator.currentNavigationContextHasProperties() ? 
                                         SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 	                    
@@ -212,10 +223,6 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             self.credValidationImageSrc(questionImageUrl);
             
             self.siteCredentialType(detectedCredType);
-			
-			if (detectedCredType == credentialType.claimsOrForms) {
-				self.logonAsync();
-            }
         }
         
         self.setInvalidUrl = function () {
@@ -249,48 +256,60 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         self.logonAsync = function () {
 			var service = new websService(self.fullUrl()),
 				logonPromise,
+				officePromise,
+				websPromise,
 				getWebDfd = $.Deferred();
 			
-			self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType());
-			logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword())
+			if (self.siteCredentialType() == credentialType.claimsOrForms) {
+				officePromise = self.officeService.getOffice365MetadataAsync(self.siteFullUserName());
+			}
+			else {
+				officePromise = $.Deferred();
+				officePromise.resolve(new office365Metadata(office365LogonType.unknown, ""));
+			}
 			
-			//probably already logging on
-			if (!logonPromise) {
-				getWebDfd.reject(false);
-				logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
-				return getWebDfd.promise();
-            }
-			
-			logonPromise.done(function () {
+			officePromise.always(function (metadata) {
+				self.isOffice365(metadata.logonType !== office365LogonType.unknown);
+				self.adfsUrl(metadata.adfsUrl);
 				
-                service.GetWeb(self.fullUrl())
-                    .done(function (result, textStatus, xhr) {
-                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-						
-                        self.isCredentialsValid(true);
-                        self.credValidationImageSrc(validImageUrl);                            
-                        self.setTitle(result.GetWebResult.Web.Title);                            
-                        self.sharePointVersion(spVersion.substring(0, 2));
-						
-						getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
-                    })
-                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {  //fail, invalidate our creds
-                        /*self.isCredentialsValid(false);
-                        self.credValidationImageSrc(invalidImageUrl);                               
-                        self.sharePointVersion(0);*/
-						self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
+				self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType(), self.isOffice365(), self.adfsUrl());
+				logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword());
+				
+				//probably already logging on
+				if (!logonPromise) {
+					logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
+					getWebDfd.reject(false);					
+	            }
+				else {
+					logonPromise.done(function () {						
+		                websPromise = service.GetWeb(self.fullUrl());
+		                    
+						websPromise.done(function (result, textStatus, xhr) {
+	                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+							
+	                        self.isCredentialsValid(true);
+	                        self.credValidationImageSrc(validImageUrl);                            
+	                        self.setTitle(result.GetWebResult.Web.Title);                            
+	                        self.sharePointVersion(spVersion.substring(0, 2));
+							
+							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+	                    });
+	                    
+						websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+							self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
+							getWebDfd.reject();							
+	                    });
+		            });
+					
+					logonPromise.fail(function () {
+						self.isCredentialsValid(false);
+		                self.credValidationImageSrc(invalidImageUrl);                                       
+		                self.sharePointVersion(0);
 
-						getWebDfd.reject();							
-                    });
-            });
-			
-			logonPromise.fail(function () {
-				self.isCredentialsValid(false);
-                self.credValidationImageSrc(invalidImageUrl);                                       
-                self.sharePointVersion(0);
-
-				getWebDfd.reject();		
-            });
+						getWebDfd.reject();		
+		            });
+				}
+			});
 			
 			return getWebDfd.promise();
         }
@@ -341,7 +360,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         }
 		
         self.populateConfigureSiteViewModel = function (selectedSite) {
-			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
+			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential, selectedSite.isOffice365, selectedSite.adfsUrl);
 			
             self.isEditMode(true);
             
