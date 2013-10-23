@@ -1,3 +1,8 @@
 ul#homeMenu > li {
 	padding: 11px;
 }
+
+#addSiteMainLink {
+	padding-top: 1em;
+	text-align: center;
+}

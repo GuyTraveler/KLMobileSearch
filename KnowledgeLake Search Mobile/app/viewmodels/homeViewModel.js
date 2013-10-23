@@ -18,6 +18,10 @@ define(["knockout",
         	viewModelBase.call(self);
 			
             self.siteDataSource = ko.observableArray([]);
+			
+			self.hasData = ko.computed(function () {
+				return self.siteDataSource() != null && self.siteDataSource().length > 0;
+            });
             
             self.selectedSite = ko.observable(null);
             self.navBarVisible = ko.observable(false);
@@ -60,18 +64,12 @@ define(["knockout",
 							
                             if (result.response && Object.prototype.toString.call(result.response) === '[object Array]' && result.response.length > 0)
                                 self.SetDataSource(result.response);
-                            
-                            else
-                                self.addSite();
                         });
                       
                         loadSitesPromise.fail(function (error) {
 							self.isBusy(false);
 							
-                            if (error.response === application.strings.FileNotFound) {
-                                self.addSite();
-                            }
-                            else {
+                            if (error.response !== application.strings.FileNotFound) {                                
                                 self.SetDataSource();
 								application.showToast(application.strings.siteLoadError);
                             }

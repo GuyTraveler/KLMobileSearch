@@ -92,7 +92,8 @@ function ($, moment, Constants, application, logger, guid, siteDataService) {
 			
 			self.getSamlTemplateAsync()
 				.done(function (template) {
-					office365STSRequestBody = template.replace(/{guid}/g, newGuid)
+					office365STSRequestBody = template.replace(/{toUrl}/g, Constants.office365STS)
+													  .replace(/{guid}/g, newGuid)
 													  .replace(/{utcNow}/g, self.getUtcNow())
 													  .replace(/{userName}/g, userName + "@" + domain)
 													  .replace(/{password}/g, password)

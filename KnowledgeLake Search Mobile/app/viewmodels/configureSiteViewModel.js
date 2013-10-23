@@ -35,7 +35,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			httpProtocols.https
 		];
         self.url = ko.observable("");
-        self.enableUrl = ko.observable(true);			
+        self.isEditMode = ko.observable(false);			
         self.siteTitle = ko.observable("");
         self.sharePointVersion = ko.observable(0);			
 		self.protocol = ko.observable(httpProtocols.http);
@@ -327,7 +327,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         }
         
         self.clearPopulatedConfigureSiteViewModel = function () {
-            self.enableUrl(true);
+            self.isEditMode(false);
             
             self.url("");
 			self.protocol(httpProtocols.http);
@@ -343,7 +343,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         self.populateConfigureSiteViewModel = function (selectedSite) {
 			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
 			
-            self.enableUrl(false);
+            self.isEditMode(true);
             
             self.url(siteObj.urlWithoutScheme());
 			self.protocol(httpProtocols.parseProtocol(siteObj.url));
@@ -377,13 +377,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
     			if(application.navigator.currentNavigationContextHasProperties())
                 {
                     self.populateConfigureSiteViewModel(application.navigator.currentNavigationContext.properties.site);
-                    
-                    $("#siteTitleText").focus();
                 }
-                else                
-    				$("#siteUrlText").focus();
-                
-    			application.showSoftKeyboard();
             }
         }
 		

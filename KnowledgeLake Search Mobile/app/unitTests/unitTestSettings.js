@@ -14,6 +14,8 @@ define({
 	
 	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
+	adfsTestUser: "steve.danner@knowledgelake.com",
+	adfsSTSTestUrl: "https://sts.knowledgelake.com",
 	
 	fbaTestUrl: "http://imgsp2010ca.qa.local:30",
 	fbaTestUser: "melissa.edwards",
