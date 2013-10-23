@@ -61,7 +61,7 @@ define(["jquery",
                     whereClause += IsDocument;
                 }
                 
-                return query.replace("{whereClause}", whereClause);
+                return query.replace(/{whereClause}/g, whereClause);
             }  
             
             self.refineKlamlProperties = function (searchProperties)
@@ -143,12 +143,12 @@ define(["jquery",
                     var field = masterMetaDataWhereTemplate;
                                     
 					field = field.replace(/{id}/g, ko.unwrap(searchProperty.id));
-                    field = field.replace("{displayName}", ko.unwrap(searchProperty.name)); // change to searchProperty.selectedProperty() later?
-                    field = field.replace("{type}", ko.unwrap(searchProperty.dataType));
+                    field = field.replace(/{displayName}/g, ko.unwrap(searchProperty.name)); // change to searchProperty.selectedProperty() later?
+                    field = field.replace(/{type}/g, ko.unwrap(searchProperty.dataType));
 					
-                    field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
-                    field = field.replace("{condition}", searchProperty.value());
-                    field = field.replace("{conjunction}", searchProperty.conjunction());
+                    field = field.replace(/{operator}/g, self.GetKlamlOperator(searchProperty.selectedOperator()));
+                    field = field.replace(/{condition}/g, searchProperty.value());
+                    field = field.replace(/{conjunction}/g, searchProperty.conjunction());
                     
                     return field;
                 }                

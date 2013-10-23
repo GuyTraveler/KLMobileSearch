@@ -9,8 +9,9 @@
 		    <span data-bind="text: strings().editSite"></span>
         </button>
         <button class="nav-button" data-align="right" 
-				data-role="button" data-icon="delete" 
-				data-bind="click: deleteSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+				data-role="button" data-icon="delete"
+                href="#modalview-delete" data-rel="modalview" 
+				data-bind="style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
 			<span data-bind="text: strings().deleteSite"></span>
         </button>
 		<button class="nav-button" data-align="right"
@@ -37,8 +38,8 @@
     </div>
 </div>
 
-<ul id="listView" data-role="listview" data-bind="visible: hasData, foreach: siteDataSource" >
-	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }, click: $parent.siteClick">
+<ul data-role="listview" data-bind="visible: hasData, foreach: siteDataSource" >
+	<li data-bind="css: { 'highlight': $parent.isSelectedSite($data) }">
 		<div class="itemContainer">			
 			<div class="pull-left itemIconContainer" data-bind="click: $parent.setSelectedSite">
 				<p>
@@ -46,15 +47,28 @@
                 </p>                
 			</div>
             
-			<div class="pull-left itemContentContainer">
+			<div class="pull-left itemContentContainer data-bind="kendoTouch: {'tap': $parent.siteClick, 'hold': $parent.longPress }">
 				<div class="itemTitle">
 					<div data-bind="text: title"></div>
                 </div>
             </div>				
 	    </div>
 	</li>
-</ul>	
+</ul>
 
 <div id="addSiteMainLink" data-bind="visible: !hasData()">
 	<a class="traditional-link" href="#" data-bind="text: strings().addSiteLinkText, click: addSite"></a>
+</div>
+
+<div data-role="modalview" id="modalview-delete">
+    <h3 class="align-center" data-bind="text: strings().ShouldDelete" />
+    
+    <div class="align-center">
+        <button class="button-margin" data-role="button" data-bind="click: closeModalViewDelete">
+    	    <span data-bind="text: strings().Yes"></span>
+        </button>
+        <button class="button-margin" data-role="button" data-bind="click: closeModalViewDelete">
+    	    <span data-bind="text: strings().No"></span>
+        </button>
+    </div>
 </div>

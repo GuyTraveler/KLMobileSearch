@@ -1,4 +1,5 @@
 define(["knockout", 
+        "jquery",
 		"application", 
 		"logger",
 		"viewmodels/viewModelBase",
@@ -7,8 +8,10 @@ define(["knockout",
         "domain/navigationPage",
         "domain/navigationContext",
 		"services/keywordValidationService", 
-		"services/imaging/serverSavedSearchesService"], 
-function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, ValidationService, serverSavedSearchesService) {
+		"services/imaging/serverSavedSearchesService",
+        "ISiteDataCachingService"], 
+function (ko, $, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
+          ValidationService, serverSavedSearchesService, SiteDataCachingService) {
     var savedSearchViewModel = function () {
         var self = this;            
                        
@@ -20,12 +23,9 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         self.searchDataSource = ko.observableArray(null);
         
         self.selectedSearch = ko.observable(null);
-        self.site = ko.observable("");          
-        self.keyword = ko.observable("");            
-					
-        self.isKeywordValid = ko.computed(function () {
-            return ValidationService.validateKeyword(self.keyword());
-        });
+        self.site = ko.observable("");
+        
+        self.isSelect = false;
         
         self.SetDataSource = function (searches) {
             self.searchDataSource([]);
@@ -58,33 +58,50 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
 		
 		self.clearKeyword = function () {
 			logger.logVerbose("clearing keyword");
-			self.keyword("");
-			
-			$("#savedSearchKeywordInput").focus();
-			application.showSoftKeyboard();
+            
+            var autoComplete = $('#savedSearchAutoComplete').data("kendoAutoComplete");
+
+            if(autoComplete && autoComplete.value())
+            {
+			    autoComplete.value("");
+    			autoComplete.focus();
+                
+                self.popSuggestions();
+                
+    			application.showSoftKeyboard();
+            }
 		}
         
         self.onBeforeShow = function (e) {
 			logger.logVerbose("savedSearchViewModel onBeforeShow");
             
+            var autoComplete = $('#savedSearchAutoComplete').data("kendoAutoComplete");
+            
             if(application.navigator.isStandardNavigation())
-            {                                
+            {                
                 self.selectedSearch(null);                
-                self.keyword("");
+                autoComplete.value("");
     			self.searchDataSource([]);
             }
+
+            autoComplete.setDataSource(new kendo.data.DataSource({data:[]}));
         }
       
         self.onAfterShow = function (e) {
 			logger.logVerbose("savedSearchViewModel afterShow");
+            
+            var autoComplete = $('#savedSearchAutoComplete').data("kendoAutoComplete");
 			
             if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
-            {                
-                if(application.navigator.currentNavigationContext.properties.site.url !== self.site().url)
+            {                   
+                if(application.navigator.currentNavigationContext.properties.site.url !== self.site().url)                    
                     self.site(application.navigator.currentNavigationContext.properties.site);
                 
                 self.LoadSearchData();
             }
+                    
+            if(autoComplete)
+                autoComplete.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));
         }
         
         self.setSelectedSearch = function (selection, event) {
@@ -119,13 +136,89 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         }
         
         self.search = function (e) {
-            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
-                {"site": application.navigator.currentNavigationContext.properties.site, "keyword": self.keyword(), "wordConjunction": self.wordConjunction()}));
+            var autoComplete = $('#savedSearchAutoComplete').data("kendoAutoComplete");
+            
+            if(autoComplete && autoComplete.value() && 
+               ValidationService.validateKeyword(autoComplete.value()) &&
+               application.navigator.currentNavigationContextHasProperties())
+            {
+                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, autoComplete.value());
+                
+                SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
+                
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
+                    {"site": application.navigator.currentNavigationContext.properties.site, "keyword": autoComplete.value(), "wordConjunction": self.wordConjunction()}));
+                
+            }
+            
+            else
+                self.setMessage(application.strings.InvalidKeyword);
+        }
+        
+        self.onChange = function() {
+            if(self.select)
+                self.search();
+            
+            self.select = false;
+        }
+        
+        self.onSelect = function() {
+            self.select = true;
+        }
+        
+        self.popSuggestions = function (e, event) {
+            var autoComplete = $('#savedSearchAutoComplete').data("kendoAutoComplete");
+            
+            if(application.navigator.currentNavigationContext.properties.site &&
+               application.navigator.currentNavigationContext.properties.site.keywordSearches && 
+               autoComplete && autoComplete.value() === "")
+            {
+                if (event)
+    				event.stopImmediatePropagation();         
+                
+                self.overrideSearchMethod(autoComplete);
+                autoComplete.search("");
+            }
         }
         
         self.onSearchKeyUp = function (selection, event) {
 			if (event.keyCode === 13)
 				self.search(selection);
+        }
+        
+        self.overrideSearchMethod = function (autoCompleteControl) {
+            autoCompleteControl.search = function (word) {
+                var that = this,
+                options = that.options,
+                ignoreCase = options.ignoreCase,
+                separator = options.separator,
+                length;
+             
+                word = word || that.value();
+             
+                that._current = null;
+             
+                clearTimeout(that._typing);
+             
+                if (separator) {
+                    word = wordAtCaret(caretPosition(that.element[0]), word, separator);
+                }
+             
+                length = word.length;
+             
+                if (!length && !length == 0) {
+                    that.popup.close();
+                } else if (length >= that.options.minLength) {
+                    that._open = true;
+             
+                    that.dataSource.filter({
+                        value: ignoreCase ? word.toLowerCase() : word,
+                        operator: options.filter,
+                        field: options.dataTextField,
+                        ignoreCase: ignoreCase
+                    });
+                }
+            } 
         }
         
         return self;

@@ -16,7 +16,7 @@ define({
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
 	adfsTestUser: "steve.danner",  //TODO
 	adfsTestDomain: "knowledgelake.com", //TODO
-	adfsTestPassword: "LizDan11", //TODO
+	adfsTestPassword: "", //TODO
 	adfsTestFullUser: "steve.danner@knowledgelake.com",
 	adfsSTSTestUrlHost: "sts.knowledgelake.com",
 	adfsSTSTestUrl: "https://sts.knowledgelake.com",
