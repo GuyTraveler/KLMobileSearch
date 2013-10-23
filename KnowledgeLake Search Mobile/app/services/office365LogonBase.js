@@ -77,7 +77,8 @@ function ($, Constants, application, logger, Uri) {
 		
 			
 		self.getSamlTemplateAsync = function () {
-			var dfd = $.Deferred();
+			var dfd = $.Deferred(),
+				getPromise;
 			
 			if (cachedSamlTemplate) {
 				dfd.resolve(cachedSamlTemplate);
@@ -85,25 +86,28 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML template at: " + Constants.samlTemplateUrl);
 				
-				$.get(Constants.samlTemplateUrl)
-					.done(function (result) {
-						logger.logVerbose("template acquired: " + result);
-						
-						cachedSamlTemplate = result;
-						
-						dfd.resolve(result);
-                    })
-					.fail(function () {
-						logger.logFatal("Unable to acquire SAML default template");
-						dfd.reject();
-                    });
+				getPromise = $.get(Constants.samlTemplateUrl);
+				
+				getPromise.done(function (result) {
+					logger.logVerbose("template acquired: " + result);
+					
+					cachedSamlTemplate = result;
+					
+					dfd.resolve(result);
+                });
+				
+				getPromise.fail(function () {
+					logger.logFatal("Unable to acquire SAML default template");
+					dfd.reject();
+                });
             }
 						
 			return dfd.promise();
         };
 		
 		self.getSamlAdfsTemplateAsync = function () {
-			var dfd = $.Deferred();
+			var dfd = $.Deferred(),
+				getPromise;
 			
 			if (cachedSamlAdfsTemplate) {
 				dfd.resolve(cachedSamlAdfsTemplate);
@@ -111,25 +115,28 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML ADFS template at: " + Constants.samlAdfsTemplateUrl);
 				
-				$.get(Constants.samlAdfsTemplateUrl)
-					.done(function (result) {
-						logger.logVerbose("template acquired: " + result);
-						
-						cachedSamlAdfsTemplate = result;
-						
-						dfd.resolve(result);
-                    })
-					.fail(function () {
-						logger.logFatal("Unable to acquire SAML ADFS default template");
-						dfd.reject();
-                    });
+				getPromise = $.get(Constants.samlAdfsTemplateUrl);
+				
+				getPromise.done(function (result) {
+					logger.logVerbose("template acquired: " + result);
+					
+					cachedSamlAdfsTemplate = result;
+					
+					dfd.resolve(result);
+                });
+
+				getPromise.fail(function () {
+					logger.logFatal("Unable to acquire SAML ADFS default template");
+					dfd.reject();
+                });
             }
 						
 			return dfd.promise();
         };
 		
 		self.getSamlAssertionTemplateAsync = function () {
-			var dfd = $.Deferred();
+			var dfd = $.Deferred(),
+				getPromise;
 			
 			if (cachedSamlAssertionTemplate) {
 				dfd.resolve(cachedSamlAssertionTemplate);
@@ -137,18 +144,20 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML Assertion template at: " + Constants.samlAssertionTemplateUrl);
 				
-				$.get(Constants.samlAssertionTemplateUrl)
-					.done(function (result) {
-						logger.logVerbose("assertion template acquired: " + result);
-						
-						cachedSamlAssertionTemplate = result;
-						
-						dfd.resolve(result);
-                    })
-					.fail(function () {
-						logger.logFatal("Unable to acquire SAML Assertion default template");
-						dfd.reject();
-                    });
+				getPromise = $.get(Constants.samlAssertionTemplateUrl);
+				
+				getPromise.done(function (result) {
+					logger.logVerbose("assertion template acquired: " + result);
+					
+					cachedSamlAssertionTemplate = result;
+					
+					dfd.resolve(result);
+                });
+				
+				getPromise.fail(function () {
+					logger.logFatal("Unable to acquire SAML Assertion default template");
+					dfd.reject();
+                });
             }
 						
 			return dfd.promise();

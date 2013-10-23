@@ -1,4 +1,5 @@
 define({
+	siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
 	ntlmTestUrl: "http://prodsp2010.dev.local/sites/team4",
 	ntlmTestUser: "spadmin",
 	ntlmTestPassword: "password",
@@ -12,14 +13,15 @@ define({
 	claimsValidXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Test />",
 	claimsFaultXml: "<?xml version=\"1.0\" encoding=\"utf-8\" ?><S:Envelope xmlns:S=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:wst=\"http://schemas.xmlsoap.org/ws/2005/02/trust\" xmlns:psf=\"http://schemas.microsoft.com/Passport/SoapServices/SOAPFault\"><S:Body><S:Fault><S:Code><S:Value>S:Sender</S:Value><S:Subcode><S:Value>wst:FailedAuthentication</S:Value></S:Subcode></S:Code><S:Reason><S:Text xml:lang=\"en-US\">Authentication Failure</S:Text></S:Reason><S:Detail><psf:error><psf:value>0x80048821</psf:value><psf:internalerror><psf:code>0x80041034</psf:code><psf:text>The specified member name is either invalid or empty.&#x000D;&#x000A;</psf:text></psf:internalerror></psf:error></S:Detail></S:Fault></S:Body></S:Envelope>",
 	
-	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
-    siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
-	adfsTestUser: "steve.danner",  //TODO
-	adfsTestDomain: "knowledgelake.com", //TODO
-	adfsTestPassword: "", //TODO
+	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",    
+	adfsTestUser: "365user",
+	adfsTestDomain: "knowledgelake.com",
+	adfsTestPassword: "klake750",
 	adfsTestFullUser: "steve.danner@knowledgelake.com",
 	adfsSTSTestUrlHost: "sts.knowledgelake.com",
 	adfsSTSTestUrl: "https://sts.knowledgelake.com",
+	
+	adfsInvalidUrl: "https://fujitsu.sharepoint.com",
 	
 	fbaTestUrl: "http://imgsp2010ca.qa.local:30",
 	fbaTestUser: "melissa.edwards",

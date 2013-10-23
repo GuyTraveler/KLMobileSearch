@@ -11,7 +11,9 @@ define(["jquery",
 		"extensions"],
 function ($, moment, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase) {
 	var office365LogonService = function (siteUrl) {
-		var self = this;
+		var self = this,
+			binaryTokenPromise,
+			postTokenPromise;
 		 
         self.prototype = Object.create(office365LogonBase.prototype);
         office365LogonBase.call(self, siteUrl);
@@ -27,40 +29,44 @@ function ($, moment, Constants, application, logger, guid, Uri, siteDataService,
 			else {
 				self.logonExpiration = null;
 				
-				self.getBinarySecurityTokenAsync(domain, userName, password)
-					.done(function (result) { 
-						//result contains an XMLDocument which we can parse and grab BinarySecurityToken
-						token = self.parseBinaryTokenFromXml(result);
-						self.logonExpiration = self.parseExpirationFromXml(result);
+				binaryTokenPromise = self.getBinarySecurityTokenAsync(domain, userName, password);
+				
+				binaryTokenPromise.done(function (result) { 
+					//result contains an XMLDocument which we can parse and grab BinarySecurityToken
+					token = self.parseBinaryTokenFromXml(result);
+					self.logonExpiration = self.parseExpirationFromXml(result);
+					
+					logger.logVerbose("Acquired Office 365 Claims token: " + token);
+					logger.logVerbose("Office 365 Claims token expires on: " + self.logonExpiration.toString());
+					
+					//NO token means logon failed (bad creds)
+					if (token != "") {
+						postTokenPromise = self.postSecurityTokenToLoginForm(token);
 						
-						logger.logVerbose("Acquired Office 365 Claims token: " + token);
-						logger.logVerbose("Office 365 Claims token expires on: " + self.logonExpiration.toString());
-						
-						//NO token means logon failed (bad creds)
-						if (token != "") {
-							self.postSecurityTokenToLoginForm(token)
-								.done(function (result) {
-									logger.logVerbose("Office 365 logon successful");
-									
-									dfd.resolve(token);
-				                })
-								.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
-									logger.logVerbose("failed to post Office 365 security token"); 
-									
-									self.logonExpiration = null;
-									
-									dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-								});
-						}
-						else {
-							logger.logVerbose("Security token not found in Office 365 response");
+						postTokenPromise.done(function (result) {
+							logger.logVerbose("Office 365 logon successful");
+							
+							dfd.resolve(token);
+		                });
+
+						postTokenPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
+							logger.logVerbose("failed to post Office 365 security token"); 
+							
 							self.logonExpiration = null;
-							dfd.reject();
-	                    }
-					})
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
-						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-					});
+							
+							dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+						});
+					}
+					else {
+						logger.logVerbose("Security token not found in Office 365 response");
+						self.logonExpiration = null;
+						dfd.reject();
+                    }
+				});
+				
+				binaryTokenPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
+					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+				});
 			}
 			
 			return dfd.promise();

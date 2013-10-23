@@ -34,6 +34,10 @@ define(['domain/site',
 			QUnit.equal(s.title, null);
 			QUnit.equal(s.majorVersion, null);
 			QUnit.equal(s.credential, null);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, false);
+			QUnit.equal(s.adfsUrl, null);
         });
 		
 		QUnit.test("test site instantiates properly with 1 parameter", function () {
@@ -49,6 +53,10 @@ define(['domain/site',
 			QUnit.equal(s.title, null);
 			QUnit.equal(s.majorVersion, null);
 			QUnit.equal(s.credential, null);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, false);
+			QUnit.equal(s.adfsUrl, null);
         });
 		
 		QUnit.test("test site instantiates properly with 2 parameters", function () {
@@ -79,6 +87,10 @@ define(['domain/site',
 			QUnit.equal(s.title, title);
 			QUnit.equal(s.majorVersion, majorVersion);
 			QUnit.equal(s.credential, null);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, false);
+			QUnit.equal(s.adfsUrl, null);
         });
 		
 		QUnit.test("test site instantiates properly with 4 parameters", function () {
@@ -94,6 +106,48 @@ define(['domain/site',
 			QUnit.equal(s.title, title);
 			QUnit.equal(s.majorVersion, majorVersion);
 			QUnit.deepEqual(s.credential, creds);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, false);
+			QUnit.equal(s.adfsUrl, null);
+        });
+			
+		QUnit.test("test site instantiates properly with 5 parameters", function () {
+			//arrange
+			var s;
+			
+			//act
+			s = new site(url, title, majorVersion, creds, true);
+
+			//assert
+			QUnit.ok(s);
+			QUnit.equal(s.url, url);
+			QUnit.equal(s.title, title);
+			QUnit.equal(s.majorVersion, majorVersion);
+			QUnit.deepEqual(s.credential, creds);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, true);
+			QUnit.equal(s.adfsUrl, null);
+        });
+				
+		QUnit.test("test site instantiates properly with 6 parameters", function () {
+			//arrange
+			var s;
+			
+			//act
+			s = new site(url, title, majorVersion, creds, true, TestSettings.adfsSTSTestUrl);
+
+			//assert
+			QUnit.ok(s);
+			QUnit.equal(s.url, url);
+			QUnit.equal(s.title, title);
+			QUnit.equal(s.majorVersion, majorVersion);
+			QUnit.deepEqual(s.credential, creds);
+			QUnit.ok(s.keywordSearches);
+			QUnit.equal(s.keywordSearches.length, 0);
+			QUnit.equal(s.isOffice365, true);
+			QUnit.equal(s.adfsUrl, TestSettings.adfsSTSTestUrl);
         });
 		
 		
