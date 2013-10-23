@@ -6,7 +6,8 @@ define(["domain/httpProtocols", "extensions"], function (httpProtocols) {
         self.title = title;
         self.majorVersion = majorVersion;
         self.credential = credential;
-              
+        
+        self.keywordSearches = [];     
 		
 		self.urlWithoutScheme = function () {
 			var fullSiteUrl = (self.url || "").toLowerCase();

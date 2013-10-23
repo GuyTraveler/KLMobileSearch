@@ -239,10 +239,7 @@ define(["jquery",
             };
 		
             self.getDocumentPropertiesAsync = function () {
-                var dfd = $.Deferred(),
-                    idQuery = "<Query><Where><Eq><FieldRef Name=\"ID\" /><Value Type=\"Number\">{cacheListItemId}</Value></Eq></Where></Query>",
-                    contentTypeIdViewField = "<ViewFields Properties=\"true\" xmlns=\"\"><FieldRef Name=\"ContentTypeID\" /></ViewFields>",
-                    propertiesViewFields = "<ViewFields Properties=\"true\" xmlns=\"\">{viewFields}</ViewFields>";
+                var dfd = $.Deferred();
                                 
                 var getListIdPromise = self.getListIDAsync();
                     
@@ -250,7 +247,7 @@ define(["jquery",
                     var getListItemIdPromise = self.getListItemIDAsync();
                         
                     getListItemIdPromise.done(function (listItemId) {
-                        var getContentTypeIdPromise = self.getListItemsAsync(cacheListId, null, idQuery.replace("{cacheListItemId}", cacheListItemId), contentTypeIdViewField, 0);
+                        var getContentTypeIdPromise = self.getListItemsAsync(cacheListId, null, Constants.idQuery.replace("{cacheListItemId}", cacheListItemId), Constants.contentTypeIdViewField, 0);
                         
                         getContentTypeIdPromise.done(function (listItem) {   
                             var getListContentTypePromise = self.GetListContentTypeAsync(self.parseContentTypeIdFromListItem(listItem));
@@ -259,8 +256,8 @@ define(["jquery",
                                 var viewProperties = self.parseViewPropertiesFromContentType(contentType);
                                 var viewFields = self.buildViewFieldsFromViewProperties(viewProperties);
                                 
-                                var getListItemValuesPromise = self.getListItemsAsync(cacheListId, null, idQuery.replace("{cacheListItemId}", cacheListItemId), 
-                                                                                        propertiesViewFields.replace("{viewFields}", viewFields), 0);
+                                var getListItemValuesPromise = self.getListItemsAsync(cacheListId, null, Constants.idQuery.replace("{cacheListItemId}", cacheListItemId), 
+                                                                                        Constants.propertiesViewFields.replace("{viewFields}", viewFields), 0);
                             
                                 getListItemValuesPromise.done(function (listItemValues) {  
                                     dfd.resolve(self.getDocumentPropertiesFromListItemValues(viewProperties, listItemValues));

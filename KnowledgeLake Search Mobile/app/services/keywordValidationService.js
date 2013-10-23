@@ -53,6 +53,31 @@ define([], function () {
             return false;
             
             return true;
+        }    
+        
+        self.appendKeywordSearch = function (site, keyword) {
+            if(site && site.keywordSearches && keyword && keyword !== "")
+            {
+                var keywordIndex = site.keywordSearches.indexOf(keyword);
+                
+                if(keywordIndex === -1)
+                {
+                    if(site.keywordSearches.length === 5)
+                        site.keywordSearches.pop();
+                    
+                    site.keywordSearches.unshift(keyword);
+                }
+                else if(keywordIndex > 0)
+                    self.bubbleUpKeyword(site.keywordSearches, keywordIndex);
+                
+            }
+        }      
+        
+        self.bubbleUpKeyword = function (keywordSearches, index)
+        {
+            var temp = keywordSearches[0];
+            keywordSearches[0] = keywordSearches[index];
+            keywordSearches[index] = temp;
         }
        
         return self;

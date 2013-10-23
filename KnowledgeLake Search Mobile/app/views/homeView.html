@@ -9,8 +9,9 @@
 		    <span data-bind="text: strings().editSite"></span>
         </button>
         <button class="nav-button" data-align="right" 
-				data-role="button" data-icon="delete" 
-				data-bind="click: deleteSite, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+				data-role="button" data-icon="delete"
+                href="#modalview-delete" data-rel="modalview"
+				data-bind="style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
 			<span data-bind="text: strings().deleteSite"></span>
         </button>
 		<button class="nav-button" data-align="right"
@@ -54,3 +55,16 @@
 	    </div>
 	</li>
 </ul>
+
+<div data-role="modalview" id="modalview-delete">
+    <h3 class="align-center" data-bind="text: strings().ShouldDelete" />
+    
+    <div class="align-center">
+        <button class="button-margin" data-role="button" data-bind="click: closeModalViewDelete">
+    	    <span data-bind="text: strings().Yes"></span>
+        </button>
+        <button class="button-margin" data-role="button" data-bind="click: closeModalViewDelete">
+    	    <span data-bind="text: strings().No"></span>
+        </button>
+    </div>
+</div>

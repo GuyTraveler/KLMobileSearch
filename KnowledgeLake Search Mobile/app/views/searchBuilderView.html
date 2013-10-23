@@ -12,17 +12,17 @@
 	<li>
 		<div class="keywordContainer">
 			<div class="keywordInputContainer deleteicon">
-				<input id="searchBuilderKeywordInput" type="search"
-    	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: strings().keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
+                <input id="searchBuilderAutoComplete" class="keyword" type="search" data-bind="click: popSuggestions, event: { keyup: onSearchKeyUp }, kendoKeywordBox: {'placeholder': strings().keywordsWatermark}" />
+				
 				<a data-bind="click: clearKeyword"></a>
             </div>
 			
 			<div id="keywordSearchButtonContainer"> 
-				<button data-role="button" data-icon="search" data-bind="click: executeSearch" class="" />
+				<button data-role="button" data-icon="search" data-bind="click: executeSearch" class="searchButton" />
             </div>			
-		</div>
+		</div>			
     </li>
-</ul>
+</ul>    
 
 <p class="align-right">
 	<input type="radio" name="searchBuilderConjunction" data-bind="value: keywordConjunction.and, checked: wordConjunction" />

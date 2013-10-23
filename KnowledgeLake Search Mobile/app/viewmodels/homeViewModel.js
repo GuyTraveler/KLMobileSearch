@@ -170,10 +170,8 @@ define(["knockout",
             
             self.deleteSite = function () {
                 if(self.selectedSite())
-                {
-                    // prompt before removal if yes proceed with deletion
+                {                   
                     var removeSitePromise = SiteDataCachingService.RemoveSiteAsync(self.selectedSite());
-                    // add the removal of associated searches ... must perform a loadsearches 
                     
 					removeSitePromise.done(function () {
 						application.showToast(application.strings.DeleteSiteSuccess);
@@ -192,8 +190,15 @@ define(["knockout",
                         self.LoadSiteData();
                         
                         self.setSelectedSite(null);
-                    });                  
+                    });            
                 }
+            }
+            
+            self.closeModalViewDelete = function (e, event) {
+                if(event && event.currentTarget && event.currentTarget.innerText === application.strings.Yes)
+                    self.deleteSite();    
+                
+                $("#modalview-delete").kendoMobileModalView("close");
             }
 			
 			self.closePopover = function () {

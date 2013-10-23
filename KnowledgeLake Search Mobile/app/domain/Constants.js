@@ -41,6 +41,11 @@ define(["application"], function (application) {
         dateTimeComparator: "DateTime",
         containsComparator: "contains",
         beginsWithComparator: "beginswith",
-        isNotNullComparator: "isnotnull"
+        isNotNullComparator: "isnotnull",
+        
+        // document service query parts
+        idQuery: "<Query><Where><Eq><FieldRef Name=\"ID\" /><Value Type=\"Number\">{cacheListItemId}</Value></Eq></Where></Query>",
+        contentTypeIdViewField: "<ViewFields Properties=\"true\" xmlns=\"\"><FieldRef Name=\"ContentTypeID\" /></ViewFields>",
+        propertiesViewFields: "<ViewFields Properties=\"true\" xmlns=\"\">{viewFields}</ViewFields>"
 	};
 });

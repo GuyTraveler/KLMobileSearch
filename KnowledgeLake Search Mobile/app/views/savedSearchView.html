@@ -12,13 +12,13 @@
 	<li>
 		<div class="keywordContainer">
 			<div class="keywordInputContainer deleteicon">
-				<input id="savedSearchKeywordInput" type="search"
-    	   			data-bind="value: keyword, valueUpdate: 'afterkeydown', event: { keyup: onSearchKeyUp }, attr: { placeholder: strings().keywordsWatermark }, css: { 'keyword': true, 'invalid' : !isKeywordValid() } " />
+                <input id="savedSearchAutoComplete" class="keyword" type="search" data-bind="click: popSuggestions, event: { keyup: onSearchKeyUp }, kendoKeywordBox: {'onSelect': onSelect, 'onChange': onChange, 'placeholder': strings().keywordsWatermark}" />
+				
 				<a data-bind="click: clearKeyword"></a>
             </div>
 			
 			<div id="keywordSearchButtonContainer"> 
-				<button data-role="button" data-icon="search" data-bind="click: search, enable: isKeywordValid" class="" />
+				<button data-role="button" data-icon="search" data-bind="click: search" class="searchButton" />
             </div>			
 		</div>			
     </li>
