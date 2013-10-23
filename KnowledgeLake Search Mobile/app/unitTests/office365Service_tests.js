@@ -67,7 +67,7 @@ define(['jquery',
 			
 			//act
 			service = new office365Service();
-			promise = service.getOffice365LogonTypeForUserAsync(TestSettings.adfsTestUser);
+			promise = service.getOffice365LogonTypeForUserAsync(TestSettings.adfsTestFullUser);
 			
 			//assert
 			promise.done(function (result) {
@@ -174,7 +174,7 @@ define(['jquery',
 			
 			//act
 			service = new office365Service();
-			promise = service.getAdfsUri(TestSettings.adfsTestUser);
+			promise = service.getAdfsUri(TestSettings.adfsTestFullUser);
 			
 			//assert
 			promise.done(function (result) {

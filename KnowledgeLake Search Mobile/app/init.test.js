@@ -64,8 +64,7 @@ require(["config"], function (config) {
 						  testRootPath + "searchType_tests",
 						  testRootPath + "site_tests",
                           testRootPath + "klamlBuilderService_tests",
-                          testRootPath + "guid_tests",
-						  testRootPath + "office365LogonService_tests",
+                          testRootPath + "guid_tests",						  
 						  testRootPath + "searchProperty_tests",
                           testRootPath + "documentViewModel_tests",
 						  testRootPath + "logonServiceFactory_tests",
@@ -76,7 +75,9 @@ require(["config"], function (config) {
 						  testRootPath + "logLevel_tests",
 						  testRootPath + "logsViewModel_tests",
                           testRootPath + "klNavigator_tests",
-						  testRootPath + "office365Service_tests"
+						  testRootPath + "office365Service_tests",
+						  testRootPath + "office365LogonService_tests",
+						  testRootPath + "adfs365LogonService_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];

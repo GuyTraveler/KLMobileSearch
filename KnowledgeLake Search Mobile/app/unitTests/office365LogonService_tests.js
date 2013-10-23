@@ -1,9 +1,8 @@
 /*global QUnit*/
 define(['jquery',
-		'moment',
 		'services/office365LogonService',
 		'unitTests/unitTestSettings'],
-    function ($, moment, office365LogonService, TestSettings) {
+    function ($, office365LogonService, TestSettings) {
         QUnit.module("Testing services/office365LogonService");
 
 		QUnit.test("Test office365LogonService is available", function () {
@@ -59,21 +58,6 @@ define(['jquery',
 				QUnit.ok(false, "Failed to get SAML template");
 				QUnit.start();
             });
-        });
-		
-		QUnit.test("Test office365LogonService.getUtcNow returns valid string", function () {
-			//arrange
-			var service,
-				utcNow;
-			
-			//act
-			service = new office365LogonService(TestSettings.claimsTestUrl);
-			utcNow = service.getUtcNow();
-			
-			//assert
-			QUnit.ok(utcNow);
-			QUnit.equal(typeof utcNow, 'string');
-			QUnit.equal(utcNow.length, 20);
         });
 		
 		QUnit.test("Test office365LogonService.hasErrorResult == true with empty XML", function () {

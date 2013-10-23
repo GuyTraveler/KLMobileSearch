@@ -14,7 +14,11 @@ define({
 	
 	adfsTestUrl: "https://kl.sharepoint.com/sites/devtesting",
     siteTestUrl: "http://prodsp2010.dev.local/sites/team4",
-	adfsTestUser: "steve.danner@knowledgelake.com",
+	adfsTestUser: "steve.danner",  //TODO
+	adfsTestDomain: "knowledgelake.com", //TODO
+	adfsTestPassword: "LizDan11", //TODO
+	adfsTestFullUser: "steve.danner@knowledgelake.com",
+	adfsSTSTestUrlHost: "sts.knowledgelake.com",
 	adfsSTSTestUrl: "https://sts.knowledgelake.com",
 	
 	fbaTestUrl: "http://imgsp2010ca.qa.local:30",

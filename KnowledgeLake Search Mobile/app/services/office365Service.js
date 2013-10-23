@@ -9,6 +9,7 @@ function ($, application, logger, Constants, office365LogonType, Uri) {
 		var self = this,
 			postToUserRealm;
 		
+		
 		postToUserRealm = function (userName, successCallback, failCallback) {
 			var requestBody = Constants.userRealmRequestFormat.replace("{userName}", userName);
 			
@@ -38,7 +39,7 @@ function ($, application, logger, Constants, office365LogonType, Uri) {
 			
 			postToUserRealm(userName, 
 				function (result, textStatus, xhr) {
-					nsType = office365LogonType.unknown
+					nsType = office365LogonType.unknown;
 					
 					logger.logVerbose("Got result from office365UserRealm: " + xhr.responseText);
 						
