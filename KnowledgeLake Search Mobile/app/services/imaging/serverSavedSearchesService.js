@@ -16,7 +16,7 @@ define(["jquery",
             var dfd = $.Deferred(),            
                 service = new facetQuerySearchService(site.url);
             
-            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
             logonPromise = logonService.logonAsync(site.credential.domain, 
                                                    site.credential.userName, 
@@ -56,7 +56,7 @@ define(["jquery",
             detectPromise.done(function (result) {
                 var service = new facetQuerySearchService(site.url);          
                                 
-                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 

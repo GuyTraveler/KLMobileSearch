@@ -6,7 +6,7 @@ define(["jquery",
 		"guid",
 		"jsUri",
 		"ISiteDataService",
-"services/office365LogonBase",
+		"services/office365LogonBase",
 		//uncaught
 		"extensions"],
 function ($, moment, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase) {

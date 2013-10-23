@@ -109,7 +109,7 @@ function ($, Constants, application, logger, Uri) {
 				dfd.resolve(cachedSamlAdfsTemplate);
             }
 			else {
-				logger.logVerbose("Requesting SAML template at: " + Constants.samlAdfsTemplateUrl);
+				logger.logVerbose("Requesting SAML ADFS template at: " + Constants.samlAdfsTemplateUrl);
 				
 				$.get(Constants.samlAdfsTemplateUrl)
 					.done(function (result) {
@@ -120,7 +120,7 @@ function ($, Constants, application, logger, Uri) {
 						dfd.resolve(result);
                     })
 					.fail(function () {
-						logger.logFatal("Unable to acquire SAML default template");
+						logger.logFatal("Unable to acquire SAML ADFS default template");
 						dfd.reject();
                     });
             }

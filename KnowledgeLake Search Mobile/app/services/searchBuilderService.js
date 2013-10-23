@@ -43,7 +43,7 @@ define(["jquery",
                     logonService, 
                     facetService = new facetQuerySearchService(siteUrl);                
                 
-                logonService = LogonServiceFactory.createLogonService(siteUrl, site.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(siteUrl, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 

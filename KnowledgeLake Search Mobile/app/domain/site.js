@@ -1,5 +1,5 @@
 define(["domain/httpProtocols", "extensions"], function (httpProtocols) {
-    var site = function(url, title, majorVersion, credential) {
+    var site = function(url, title, majorVersion, credential, isOffice365, adfsUrl) {
         var self = this;
        
         self.url = url;

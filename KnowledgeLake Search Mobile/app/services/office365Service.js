@@ -3,15 +3,18 @@ define(["jquery",
 		"logger",
 		"domain/Constants",
 		"domain/office365LogonType",
+		"domain/office365Metadata",
 		"jsUri"], 
-function ($, application, logger, Constants, office365LogonType, Uri) {
+function ($, application, logger, Constants, office365LogonType, office365Metadata, Uri) {
 	var office365Service = function () {
-		var self = this,
-			postToUserRealm;
-		
-		
-		postToUserRealm = function (userName, successCallback, failCallback) {
-			var requestBody = Constants.userRealmRequestFormat.replace("{userName}", userName);
+		var self = this;
+				
+		self.getOffice365MetadataAsync = function (userName) {
+			var dfd = $.Deferred(),
+				responseJson,
+				nsType = office365LogonType.unknown,
+				adfsFullUri = "",
+				requestBody = Constants.userRealmRequestFormat.replace("{userName}", userName);
 			
 			$.ajax({
 				url: Constants.office365UserRealm,
@@ -24,21 +27,7 @@ function ($, application, logger, Constants, office365LogonType, Uri) {
 				dataType: "json",
 				timeOut: application.ajaxTimeout,
 				success: function (result, textStatus, xhr) {
-					successCallback(result, textStatus, xhr);
-                },
-				error: function  (XMLHttpRequest, textStatus, errorThrown) {
-                    failCallback(XMLHttpRequest, textStatus, errorThrown);
-                }
-            });
-        }
-		
-		self.getOffice365LogonTypeForUserAsync = function (userName) {
-			var dfd = $.Deferred(),
-				responseJson,
-				nsType;
-			
-			postToUserRealm(userName, 
-				function (result, textStatus, xhr) {
+					adfsFullUri = "";
 					nsType = office365LogonType.unknown;
 					
 					logger.logVerbose("Got result from office365UserRealm: " + xhr.responseText);
@@ -51,52 +40,26 @@ function ($, application, logger, Constants, office365LogonType, Uri) {
 						logger.logDebug("Failed to parse user realm request: " + e.message);
 	                }
 					
-					dfd.resolve(nsType);
-	            },
-				function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                });
-			
-			return dfd.promise();
-        }
-		
-		self.getAdfsUri = function (userName) {
-			var dfd = $.Deferred(),
-				responseJson,
-				adfsFullUri;
-			
-			postToUserRealm(userName, 
-				function (result, textStatus, xhr) {					
-					adfsFullUri = "";
-					
-					logger.logVerbose("Got result from office365UserRealm: " + xhr.responseText);
-						
 					try {
-						responseJson = JSON.parse(xhr.responseText);
 						adfsFullUri = responseJson && responseJson.AuthURL ? responseJson.AuthURL : "";
 	                }
 					catch (e) {
 						logger.logDebug("Failed to parse user realm request: " + e.message);
 	                }
 					
-					dfd.resolve(adfsFullUri);
-            	},
-				function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-				});
+					dfd.resolve(new office365Metadata(nsType, adfsFullUri));
+                },
+				error: function  (XMLHttpRequest, textStatus, errorThrown) {
+					logger.logError("Get User Realm failed with status: " + textStatus);
+					logger.logError("Get User Realm failed with HTTP status: " + XMLHttpRequest.status);
+					
+                    dfd.reject(new office365Metadata(nsType, adfsFullUri));
+                }
+            });
 			
 			return dfd.promise();
         }
-		
-	/*	TODO: this methods go into new adfs365LogonService.js
-		self.postSAMLToAdfs = function (siteUrl, adfsFullUri, domain, userName, password) {
-			
-        }
-		
-		self.postAssertionToOffice365STS = function (siteUrl, samlAssertion) {
-			
-        }*/
-		
+	
 		return self;
     };
 	

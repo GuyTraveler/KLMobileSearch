@@ -139,7 +139,9 @@ define(["knockout",
                 
                 service = new documentService(selection.url);        
                 logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
-                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType);
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
+																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
+																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
 
                 logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
                                                        application.navigator.currentNavigationContext.properties.site.credential.userName, 
@@ -195,7 +197,7 @@ define(["knockout",
 				conjunction = keywordConjunction.defaultConjunction;
             
             service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
-            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType, searchSite.isOffice365, searchSite.adfsUrl);
             
             logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             
