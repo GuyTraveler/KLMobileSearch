@@ -1,5 +1,4 @@
-define(["jquery", 
-		"moment",
+define(["jquery",
 		"domain/Constants",
 		"application",
 		"logger",
@@ -7,9 +6,10 @@ define(["jquery",
 		"jsUri",
 		"ISiteDataService",
 		"services/office365LogonBase",
+		"services/dateTimeConverter",
 		//uncaught
 		"extensions"],
-function ($, moment, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase) {
+function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter) {
 	var office365LogonService = function (siteUrl) {
 		var self = this,
 			binaryTokenPromise,
@@ -77,7 +77,7 @@ function ($, moment, Constants, application, logger, guid, Uri, siteDataService,
 			
 			try {
 				if (self.logonExpiration) {
-					parsed = moment(self.logonExpiration);
+					parsed = DateTimeConverter.parseDate(self.logonExpiration);
 				}
 				
 				return parsed;
@@ -98,7 +98,7 @@ function ($, moment, Constants, application, logger, guid, Uri, siteDataService,
 				.done(function (template) {
 					office365STSRequestBody = template.replace(/{toUrl}/g, Constants.office365STS)
 													  .replace(/{guid}/g, newGuid)
-													  .replace(/{utcNow}/g, self.getUtcNow())
+													  .replace(/{utcNow}/g, (new Date()).toISOString())  //utc now
 													  .replace(/{userName}/g, userName + "@" + domain)
 													  .replace(/{password}/g, password)
 													  .replace(/{signinUri}/g, self.fullLoginUri);
@@ -139,10 +139,6 @@ function ($, moment, Constants, application, logger, guid, Uri, siteDataService,
 				});
 			
 			return dfd.promise();
-        };
-		
-		self.getUtcNow = function () {
-			return moment.utc().format("YYYY-MM-DDTHH:mm:ss") + "Z";
         };
 	
 		return self;

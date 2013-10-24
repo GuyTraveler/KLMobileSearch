@@ -35,7 +35,7 @@ define(["jquery",
                         for (var i = parameters.length - 1; i >= 0; i--) {
                             parm = parameters[i];
 							parmValue = parm.value != null ? parm.value : "";
-                            $soap = $soap.replace("{" + parm.key + "}", parmValue);
+                            $soap = $soap.replaceAll("{" + parm.key + "}", parmValue);
                         }
                     }
                     

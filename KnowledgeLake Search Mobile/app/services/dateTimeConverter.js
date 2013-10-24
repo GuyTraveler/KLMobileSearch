@@ -228,9 +228,13 @@ define(["domain/Constants"], function (Constants) {
                     return "AM";
             }
         }
+		
+		self.parseDate = function (dateString, formatString) {
+			return kendo.parseDate(dateString, formatString);			
+        }
        
         return self;
-    };
+    };	
     
     return new dateTimeConverter();
 });

@@ -125,6 +125,52 @@ define(['framework/extensions'],
             QUnit.equal(str.format(), str);
         });
 		
+		QUnit.test("test String.replaceAll works with 1 instance replacement", function () {
+			//arrange
+			var str = "test123";
+			
+			//act
+			
+			//assert
+			QUnit.ok(str.replaceAll);
+			QUnit.equal(str.replaceAll("123", "1"), "test1");
+        });
+		
+		QUnit.test("test String.replaceAll works with multiple instance replacement", function () {
+			//arrange
+			var str = "test123123123";
+			
+			//act
+			
+			//assert
+			QUnit.ok(str.replaceAll);
+			QUnit.equal(str.replaceAll("123", "1"), "test111");
+        });
+		
+		QUnit.test("test String.replaceAll works with multiple dynamic replacement", function () {
+			//arrange
+			var str = "test123123123",
+				target = "123",
+				replaceWith = "1";
+			
+			//act
+			
+			//assert
+			QUnit.ok(str.replaceAll);
+			QUnit.equal(str.replaceAll(target, replaceWith), "test111");
+        });
+		
+		QUnit.test("test String.replaceAll with nulls returns same string", function () {
+			//arrange
+			var str = "test123123123";
+			
+			//act
+			
+			//assert
+			QUnit.ok(str.replaceAll);
+			QUnit.equal(str.replaceAll(null, null), str);
+        });
+		
 		QUnit.test("test String.encodeXML with normal values does not change string", function () {
 			//arrange
 			var str = "testing";

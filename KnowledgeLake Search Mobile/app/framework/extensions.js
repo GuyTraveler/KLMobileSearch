@@ -22,6 +22,26 @@ define(function () {
 		};
 	}
 	
+	if (!RegExp.quote) {
+		RegExp.quote = function(str) {
+			if (str == null)
+				str = "";
+			return str.replace(/([.?*+^$[\]\\(){}-])/g, "\\$1");
+		};
+    }
+	
+	if (!String.prototype.replaceAll) {
+		String.prototype.replaceAll = function (replaceThis, withThis) {
+			var re;
+			
+			if (replaceThis == null || withThis == null) 
+				return this;
+			
+			re = new RegExp(RegExp.quote(replaceThis),"g"); 
+			return this.replace(re, withThis);
+		};
+    }
+	
 	if (!String.prototype.encodeXML) {
 		String.prototype.encodeXML = function () {
 			return this.replace(/&/g, '&amp;')
