@@ -125,6 +125,12 @@ define(["knockout",
             }         
         }
         
+        self.navigateToProperties = function (selection) {            
+			self.setSelectedResult(selection);
+            
+            self.viewProperties();
+        }
+        
         self.navigateToResult = function (selection) {
             var dfd = $.Deferred(), 
                 service,

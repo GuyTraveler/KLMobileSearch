@@ -83,8 +83,7 @@ define(["jquery",
 					property,
 					controlType,
 					choices,
-					klamlSearchFieldPropertiesLength,
-					searchPropertiesLength;
+					klamlSearchFieldPropertiesLength;
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
                 {                  
@@ -108,49 +107,12 @@ define(["jquery",
                 }
                 
                 if(klamlSearchFieldProperties)
-                {                    
-    				searchPropertiesLength = propertiesList.length;
+                {
                     klamlSearchFieldPropertiesLength = klamlSearchFieldProperties.length;
     				
     				for(var i = 0; i < klamlSearchFieldPropertiesLength; i++)
-                    {
-    					for (var j = 0; j < searchPropertiesLength; j++) 
-    					{
-    						property = propertiesList[j];
-    						
-    						if (property.name === klamlSearchFieldProperties[i].name)
-    	                    {
-    							var newSearchProperty = new searchProperty(property.choices(),
-    								                                      property.controlType,
-    								                                      property.hidden,
-    								                                      property.description,
-    								                                      property.dataType,
-    								                                      property.name,
-    								                                      (klamlSearchFieldProperties[i].id ? klamlSearchFieldProperties[i].id : ""),
-    								                                      property.operators());
-                                
-                                if(newSearchProperty.controlType === catalogPropertyControlType.Calendar)
-                                {
-                                    newSearchProperty.value(DateTimeConverter.toDateString(klamlSearchFieldProperties[i].condition1));
-                                    newSearchProperty.secondaryValue(DateTimeConverter.toDateString(klamlSearchFieldProperties[i].condition2));
-                                }
-                                
-                                else
-                                {                                    
-        	                        newSearchProperty.value(klamlSearchFieldProperties[i].condition1);
-                                    newSearchProperty.secondaryValue(klamlSearchFieldProperties[i].condition2);
-                                }
-                                
-                                newSearchProperty.previousValue = newSearchProperty.value();
-                                newSearchProperty.previousSecondaryValue = newSearchProperty.secondaryValue();
-    	                        newSearchProperty.selectedOperator(klamlSearchFieldProperties[i].operator);
-    	                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperties[i].conjunction));
-    							newSearchProperty.conjunctionVisible(i !== klamlSearchFieldPropertiesLength - 1);
-    	                        
-    	                        searchProperties.push(newSearchProperty);
-    	                        break;
-    	                    }
-                        }                    
+                    {                        
+    					self.mapKlamlSearchFieldPropertyToProperties(klamlSearchFieldProperties[i], propertiesList, searchProperties, i === klamlSearchFieldPropertiesLength - 1);                   
                     }  
                 }
                 
@@ -159,7 +121,49 @@ define(["jquery",
 					propertiesName: propertiesName,
 					searchProperties: searchProperties
                 };                
-            }    
+            } 
+            
+            self.mapKlamlSearchFieldPropertyToProperties = function (klamlSearchFieldProperty, propertiesList, searchProperties, isLastSearchFieldProperty) {
+                var propertiesLength = propertiesList.length;
+                
+                for (var j = 0; j < propertiesLength; j++) 
+				{
+					property = propertiesList[j];
+					
+					if (property.name === klamlSearchFieldProperty.name)
+                    {
+						var newSearchProperty = new searchProperty(property.choices(),
+							                                      property.controlType,
+							                                      property.hidden,
+							                                      property.description,
+							                                      property.dataType,
+							                                      property.name,
+							                                      (klamlSearchFieldProperty.id ? klamlSearchFieldProperty.id : ""),
+							                                      property.operators());
+                        
+                        if(newSearchProperty.controlType === catalogPropertyControlType.Calendar)
+                        {
+                            newSearchProperty.value(DateTimeConverter.toDateString(klamlSearchFieldProperty.condition1));
+                            newSearchProperty.secondaryValue(DateTimeConverter.toDateString(klamlSearchFieldProperty.condition2));
+                        }
+                        
+                        else
+                        {                                    
+	                        newSearchProperty.value(klamlSearchFieldProperty.condition1);
+                            newSearchProperty.secondaryValue(klamlSearchFieldProperty.condition2);
+                        }
+                        
+                        newSearchProperty.previousValue = newSearchProperty.value();
+                        newSearchProperty.previousSecondaryValue = newSearchProperty.secondaryValue();
+                        newSearchProperty.selectedOperator(klamlSearchFieldProperty.operator);
+                        newSearchProperty.conjunction(keywordConjunction.boolToConjunction(klamlSearchFieldProperty.conjunction));
+						newSearchProperty.conjunctionVisible(!isLastSearchFieldProperty);
+                        
+                        searchProperties.push(newSearchProperty);
+                        break;
+                    }
+                } 
+            }
             
 			self.getChoicesForSearchProperty = function (controlType, ArrayOfCatalogPropertyBase, properties) {
 				var choicesText = "Choices",
