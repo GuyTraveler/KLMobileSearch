@@ -15,7 +15,6 @@ define(["framework/logLevel"], function(logLevel) {
 	       i18n: 'lib/i18n',
 		   jsUri: 'lib/jsUri',
            CryptoJS: 'lib/aes',
-           moment: 'lib/moment',
            
            // kendo culture dependencies
            culture_de: 'lib/culture/kendo.culture.de.min',
@@ -112,9 +111,6 @@ define(["framework/logLevel"], function(logLevel) {
            },
            CryptoJS: {
                exports: 'CryptoJS'
-           },
-           moment: {
-			   exports: 'moment'
            }
 	   },
 	   map: {              

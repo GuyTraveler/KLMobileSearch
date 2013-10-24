@@ -102,18 +102,17 @@ define(["knockout",
             }
             
             self.longPress = function (e) {
+				var selection;
+				
                 if(e)
                     e.preventDefault();
                 
+				selection = self.getSelectionFrom(e);
+				
                 self.isHold = true;
                 
-                if(e && e.event && e.event.currentTarget)
-                {
-                    var selection = ko.dataFor(e.event.currentTarget);
-                         
-                    if(selection)
-                        self.setSelectedSite(selection);
-                }
+                if(selection)
+                    self.setSelectedSite(selection);
             }
             
             self.setSelectedSite = function (selection, event, suppressNavbar) {
@@ -133,23 +132,26 @@ define(["knockout",
 				return self.hasHighlightedSite() && self.selectedSite() === item;
             }
             
-            self.siteClick = function (e) {                
-				if(!self.isHold && e && e.event && e.event.currentTarget)
+            self.siteClick = function (e) {             
+				var selection = self.getSelectionFrom(e);
+				
+				if(selection)
                 {
-                    var selection = ko.dataFor(e.event.currentTarget);
+                    self.setSelectedSite(selection, null, true);
+    				
+                    if(self.selectedSite() !== selection)
+                        self.selectedSite(selection);
                     
-                    if(selection)
-                    {
-                        self.setSelectedSite(selection, null, true);
-        				
-                        if(self.selectedSite() !== selection)
-                            self.selectedSite(selection);
-                        
-                        application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));
-                    }
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": self.selectedSite()}));
                 }
                 
                 self.isHold = false;
+            }
+			
+			self.getSelectionFrom = function (e) {
+				return (!self.isHold && e && e.event && e.event.currentTarget) ? 
+						ko.dataFor(e.event.currentTarget) : 
+						null;
             }
             
             self.addSite = function () {
@@ -197,10 +199,15 @@ define(["knockout",
             }
 			
 			self.closePopover = function () {
-				$("#homeViewMenu").data("kendoMobilePopOver").close();
+				var popover = $("#homeViewMenu").data("kendoMobilePopOver");
+				
+				if (popover)
+					popover.close();
             }
             
             self.emailSupport = function () {
+				var windowRef;
+				
 				logger.logVerbose("emailSupport clicked");
 				
 				self.isEmailSelected(true);
@@ -209,8 +216,10 @@ define(["knockout",
 					self.isEmailSelected(false);
                 }, selectionTimeout);
 				
-				window.open("mailto:" + Constants.supportEmailAddress, "_blank");
+				windowRef = window.open("mailto:" + Constants.supportEmailAddress, "_blank");
 				self.closePopover();
+				
+				return windowRef;
 			}
 			
 			self.onViewLogsClicked = function () {

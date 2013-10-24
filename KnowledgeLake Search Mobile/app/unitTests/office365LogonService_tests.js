@@ -232,7 +232,7 @@ define(['jquery',
 				QUnit.start();
             });
         });
-							
+		
 		QUnit.asyncTest("Test office365LogonService.logonAsync fails with invalid URL", function () {
 			//arrange
 			var service,
@@ -287,4 +287,19 @@ define(['jquery',
             });
         });
 	
+		QUnit.test("test logonExpirationToDate parses good UTC date", function () {
+			//arrange
+			var service,
+				parsed;
+			
+			//act
+			service = new office365LogonService(TestSettings.claimsTestUrl);
+			service.logonExpiration = "2013-10-23T00:00:00.000Z";
+			parsed = service.logonExpirationToDate();
+			
+			//assert			
+			QUnit.ok(parsed);
+			QUnit.equal(parsed.getFullYear(), 2013);
+			QUnit.equal(service.logonExpiration, parsed.toISOString());
+		});
 	});
