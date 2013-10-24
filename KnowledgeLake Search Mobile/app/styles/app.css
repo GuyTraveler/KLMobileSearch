@@ -272,6 +272,11 @@ div.deleteicon input {
     margin-right: 1em;
 }
 
+.button-opaque {
+	background-color: white!important;
+	opacity: 0.75;
+}
+
 div.keywordContainer {
     width: 100%;
     height: 2.75em;
