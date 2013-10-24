@@ -6,12 +6,13 @@ define(["knockout",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext",
+        "domain/kendoKeywordBoxHandler",
 		"services/keywordValidationService", 
 		"services/searchBuilderService", 
 		"services/klamlBuilderService",
         "ISiteDataCachingService"], 
 function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
-          ValidationService, searchBuilderService, klamlBuilderService, SiteDataCachingService) {
+          KendoKeywordBoxHandler, ValidationService, searchBuilderService, klamlBuilderService, SiteDataCachingService) {
     var searchBuilderViewModel = function () {
         var self = this;
                    
@@ -25,6 +26,8 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         self.propertiesList = null;
         self.propertiesName = ko.observableArray();
         self.searchBuilderDataSource = ko.observableArray();
+        
+        self.autoCompleteBox = new KendoKeywordBoxHandler();        
       
         self.SetDataSource = function (searchProperties) {
             self.searchBuilderDataSource([]);
@@ -72,19 +75,17 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             });
         }
       
-        self.executeSearch = function (e) {   
-            var autoComplete = $('#searchBuilderAutoComplete').data("kendoAutoComplete");
-            
-            if(autoComplete && autoComplete.value() && 
-               ValidationService.validateKeyword(autoComplete.value()) &&
+        self.executeSearch = function (e) {            
+            if(self.autoCompleteBox.isElementValid() && 
+               ValidationService.validateKeyword(self.autoCompleteBox.element.value()) &&
                application.navigator.currentNavigationContextHasProperties())
             {
-                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, autoComplete.value());
+                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
                 
                 SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
                 
     			var klamlService = new klamlBuilderService(),
-                    klaml = klamlService.buildKlamlQueryFromServerSavedQuery(autoComplete.value(), self.searchBuilderDataSource(), self.wordConjunction());
+                    klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.autoCompleteBox.element.value(), self.searchBuilderDataSource(), self.wordConjunction());
                 
                 if(klaml)  
                 {                
@@ -102,18 +103,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         }
         
         self.popSuggestions = function (e, event) {
-            var autoComplete = $('#searchBuilderAutoComplete').data("kendoAutoComplete");
-            
-            if(application.navigator.currentNavigationContext.properties.site &&
-               application.navigator.currentNavigationContext.properties.site.keywordSearches && 
-               autoComplete && autoComplete.value() === "")
-            {
-                if (event)
-    				event.stopImmediatePropagation();         
-                
-                self.overrideSearchMethod(autoComplete);
-                autoComplete.search("");
-            }
+            self.autoCompleteBox.popDropDown(e, event);
         }
         
         self.onSearchKeyUp = function (selection, event) {
@@ -124,22 +114,21 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         self.onBeforeShow = function (e) {
 			logger.logVerbose("resultsViewModel onBeforeShow");
             
-            var autoComplete = $('#searchBuilderAutoComplete').data("kendoAutoComplete");
-            
             if(application.navigator.isStandardNavigation())
-            {     
-                autoComplete.value("");
+            {
                 self.searchBuilderDataSource([]);
+                
+                if(self.autoCompleteBox.isElementValid())
+                    self.autoCompleteBox.element.value("");
             }
 
-            autoComplete.setDataSource(new kendo.data.DataSource({data:[]}));
+            if(self.autoCompleteBox.isElementValid())
+                self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:[]}));
         }
 	  
 		self.onAfterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
-            
-            var autoComplete = $('#searchBuilderAutoComplete').data("kendoAutoComplete");
-			
+            			
 			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
             {                        
                 self.search(application.navigator.currentNavigationContext.properties.search);                
@@ -147,60 +136,23 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
                 self.BuildSearchProperties();                    
             }
                     
-            if(autoComplete)
-                autoComplete.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));
+            if(self.autoCompleteBox.isElementValid())
+                self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));
         }
         
 		self.clearKeyword = function () {
 			logger.logVerbose("clearing keyword");
             
-			var autoComplete = $('#searchBuilderAutoComplete').data("kendoAutoComplete");
-
-            if(autoComplete && autoComplete.value())
+			if(self.autoCompleteBox.isElementValid())
             {
-			    autoComplete.value("");
-    			autoComplete.focus();
+			    self.autoCompleteBox.element.value("");
+    			self.autoCompleteBox.element.focus();
                 
                 self.popSuggestions();
                 
     			application.showSoftKeyboard();
             }
 		}
-        
-        self.overrideSearchMethod = function (autoCompleteControl) {
-            autoCompleteControl.search = function (word) {
-                var that = this,
-                options = that.options,
-                ignoreCase = options.ignoreCase,
-                separator = options.separator,
-                length;
-             
-                word = word || that.value();
-             
-                that._current = null;
-             
-                clearTimeout(that._typing);
-             
-                if (separator) {
-                    word = wordAtCaret(caretPosition(that.element[0]), word, separator);
-                }
-             
-                length = word.length;
-             
-                if (!length && !length == 0) {
-                    that.popup.close();
-                } else if (length >= that.options.minLength) {
-                    that._open = true;
-             
-                    that.dataSource.filter({
-                        value: ignoreCase ? word.toLowerCase() : word,
-                        operator: options.filter,
-                        field: options.dataTextField,
-                        ignoreCase: ignoreCase
-                    });
-                }
-            } 
-        }
         
         /*self.addProperty = function () {
             

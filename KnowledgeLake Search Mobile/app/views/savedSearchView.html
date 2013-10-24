@@ -12,7 +12,7 @@
 	<li>
 		<div class="keywordContainer">
 			<div class="keywordInputContainer deleteicon">
-                <input id="savedSearchAutoComplete" class="keyword" type="search" data-bind="click: popSuggestions, event: { keyup: onSearchKeyUp }, kendoKeywordBox: {'onSelect': onSelect, 'onChange': onChange, 'placeholder': strings().keywordsWatermark}" />
+                <input id="savedSearchAutoComplete" class="keyword" type="search" data-bind="click: popSuggestions, event: { keyup: onSearchKeyUp }, kendoKeywordBox: autoCompleteBox" />
 				
 				<a data-bind="click: clearKeyword"></a>
             </div>

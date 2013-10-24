@@ -325,8 +325,42 @@ define(['require',
             //assert
             QUnit.equal(product, true);
         });
-        /*
-        QUnit.test("test resultsViewModel editProperties", function () {
+        
+        QUnit.test("test resultsViewModel viewProperties", function () {
+            //arrange
+            var vm,
+                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"}),
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));        
+                        
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
+                {"site": selectedSite, "klaml": TestSettings.testKlaml}));    
+            
+            vm = new resultsViewModel();
+            vm.selectedResult = resultData;
+            
+            //act
+            vm.viewProperties();
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        QUnit.test("test resultsViewModel navigateToProperties", function () {
+            //arrange
+            var vm,
+                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"});   
+            
+            vm = new resultsViewModel();
+            vm.selectedResult = resultData;
+            
+            //act
+            vm.navigateToProperties(resultData);
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        /*QUnit.test("test resultsViewModel editProperties", function () {
             //arrange
             var vm,
                 resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"});    
@@ -340,7 +374,7 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });
-        */
+        
         QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
@@ -371,7 +405,7 @@ define(['require',
                 QUnit.ok(false);
                 QUnit.start();
             });
-        });
+        });*/
       
         QUnit.asyncTest("test resultsViewModel keywordSearch bad credentials", function () {
             //arrange

@@ -51,8 +51,6 @@ define([], function () {
             }
             
             return false;
-            
-            return true;
         }    
         
         self.appendKeywordSearch = function (site, keyword) {
@@ -75,9 +73,13 @@ define([], function () {
         
         self.bubbleUpKeyword = function (keywordSearches, index)
         {
-            var temp = keywordSearches[0];
-            keywordSearches[0] = keywordSearches[index];
-            keywordSearches[index] = temp;
+            for(var i = index; i > 0; i--)
+            {
+                var temp = keywordSearches[i-1];
+                
+                keywordSearches[i-1] = keywordSearches[i];
+                keywordSearches[i] = temp;
+            }
         }
        
         return self;

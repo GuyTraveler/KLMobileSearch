@@ -92,7 +92,7 @@ define(["services/searchBuilderService",
             QUnit.deepEqual(mapping.toJS(result.propertiesList), []);
             QUnit.deepEqual(result.propertiesName, []);
             QUnit.deepEqual(mapping.toJS(result.searchProperties), []);
-        });    
+        });
         
         QUnit.test("Test convertToControlType Number", function () {
             //arrange
