@@ -87,7 +87,7 @@ define(["application",
             //arrange
             var vm,
                 selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain))
-                selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
                 {"site": selectedSite, "result": selectedResult}));
@@ -105,7 +105,7 @@ define(["application",
             //arrange
             var vm,
                 selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain))
-                selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
                 {"site": selectedSite, "result": selectedResult}));
@@ -131,7 +131,8 @@ define(["application",
             //arrange
             var vm,
                 selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, "", TestSettings.ntlmTestDomain))
-                selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
                 {"site": selectedSite, "result": selectedResult}));
