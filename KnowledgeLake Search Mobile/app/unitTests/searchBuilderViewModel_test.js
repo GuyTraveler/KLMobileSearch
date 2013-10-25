@@ -125,6 +125,23 @@ define(["application",
                         
             //assert
             QUnit.ok(vm);
+        });
+                  
+        QUnit.test("test searchBuilderViewModel executeSearch", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));            
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, {"site": selectedSite}));
+            
+            vm = new searchBuilderViewModel();                        
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;            
+            
+            //act
+            vm.executeSearch();
+                        
+            //assert
+            QUnit.ok(vm);
         });  
        
         QUnit.test("test searchBuilderViewModel onBeforeShow", function () {
@@ -136,13 +153,13 @@ define(["application",
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
                 {"site": selectedSite, "search": selectedSearch}));
             
-            vm = new searchBuilderViewModel();
+            vm = new searchBuilderViewModel();                        
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
             
             //act
             vm.onBeforeShow();
                         
             //assert
-            QUnit.equal(vm.keyword(), "");
             QUnit.deepEqual(vm.searchBuilderDataSource(), []);
         });   
        
@@ -155,7 +172,8 @@ define(["application",
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
                 {"site": selectedSite, "search": selectedSearch}));
             
-            vm = new searchBuilderViewModel();
+            vm = new searchBuilderViewModel();   
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
             
             //act
             vm.onAfterShow();
@@ -183,10 +201,11 @@ define(["application",
             var vm;
             
             //act 
-            vm = new searchBuilderViewModel();
+            vm = new searchBuilderViewModel();            
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
             vm.clearKeyword();
                         
             //assert
-            QUnit.equal(vm.keyword(), "");
+            QUnit.ok(vm);
         });
     });

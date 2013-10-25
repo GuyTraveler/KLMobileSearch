@@ -77,7 +77,8 @@ require(["config"], function (config) {
                           testRootPath + "klNavigator_tests",
 						  testRootPath + "office365Service_tests",
 						  testRootPath + "office365LogonService_tests",
-						  testRootPath + "adfs365LogonService_tests"
+						  testRootPath + "adfs365LogonService_tests",
+                          testRootPath + "keywordBoxHandler_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];

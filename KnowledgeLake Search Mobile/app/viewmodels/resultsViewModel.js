@@ -131,7 +131,7 @@ define(["knockout",
             self.viewProperties();
         }
         
-        self.navigateToResult = function (selection) {
+        /*self.navigateToResult = function (selection) {
             var dfd = $.Deferred(), 
                 service,
                 logonService;
@@ -189,7 +189,7 @@ define(["knockout",
             }
             
             return dfd.promise();
-        }
+        }*/
         
         self.keywordSearchAsync = function (searchSite, keyword, conjunction) {
             var dfd = $.Deferred(),
