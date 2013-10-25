@@ -34,7 +34,7 @@ define(["application"], function (application) {
 		//email
 		supportEmailAddress: "steve.danner@knowledgelake.com",  //TODO: get from Karen
 		emailSubject: "KnowledgeLake Mobile Logs",
-		emailBodyStart: "\n\n\Application Attached...\n\n",
+		emailBodyStart: "\n\n\Application Logs Attached...\n\n",
 		emailIsHtml: true,
         
         // comparison
