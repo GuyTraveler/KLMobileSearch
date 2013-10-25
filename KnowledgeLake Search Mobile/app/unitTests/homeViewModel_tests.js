@@ -425,22 +425,17 @@ define(['require',
 			
 		QUnit.asyncTest("Test emailSupport succeeds and closes popover properly", function () {
 			//arrange
-			var vm,
-				windowRef;
+			var vm;
 			
 			//act
 			vm = new homeViewModel();
 			windowRef = vm.emailSupport();
 			
 			//assert
-			QUnit.ok(windowRef);
 			QUnit.equal(vm.isEmailSelected(), true);
 			
 			setTimeout(function () {
 				QUnit.equal(vm.isEmailSelected(), false);
-				QUnit.ok(windowRef);
-				
-				windowRef.close();
 				
 				QUnit.start();
 

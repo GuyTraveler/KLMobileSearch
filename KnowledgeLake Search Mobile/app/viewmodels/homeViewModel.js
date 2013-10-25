@@ -8,8 +8,9 @@ define(["knockout",
         "domain/navigationContext",
 		"viewmodels/viewModelBase",
         "FileManagement",
-        "ISiteDataCachingService"], 
-    function (ko, application, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService) {
+        "ISiteDataCachingService",
+		"emailComposer"], 
+    function (ko, application, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService, emailComposer) {
         var homeViewModel = function () {
             var self = this,
 				selectionTimeout = 1000;
@@ -206,8 +207,6 @@ define(["knockout",
             }
             
             self.emailSupport = function () {
-				var windowRef;
-				
 				logger.logVerbose("emailSupport clicked");
 				
 				self.isEmailSelected(true);
@@ -216,10 +215,17 @@ define(["knockout",
 					self.isEmailSelected(false);
                 }, selectionTimeout);
 				
-				windowRef = window.open("mailto:" + Constants.supportEmailAddress, "_blank");
-				self.closePopover();
 				
-				return windowRef;
+				if (!emailComposer) {
+					logger.logError("Email composer not found in plugin collection");
+					self.setMessage(application.strings.EmailCouldNotBeLaunched);
+				}
+				else {
+					emailComposer.showEmailComposer(null, null, Constants.emailFeedbackSubject, "", 
+													[Constants.supportEmailAddress], [], [], Constants.emailIsHtml, []);
+                }
+				
+				self.closePopover();
 			}
 			
 			self.onViewLogsClicked = function () {
