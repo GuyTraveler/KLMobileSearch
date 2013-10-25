@@ -77,7 +77,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
       
         self.executeSearch = function (e) {            
             if(self.autoCompleteBox.isElementValid() && 
-               ValidationService.validateKeyword(self.autoCompleteBox.element.value()) &&
+               (ValidationService.validateKeyword(self.autoCompleteBox.element.value()) || self.autoCompleteBox.element.value() === "") &&
                application.navigator.currentNavigationContextHasProperties())
             {
                 ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
