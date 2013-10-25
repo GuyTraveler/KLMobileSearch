@@ -8,7 +8,7 @@ define(["domain/httpProtocols", "extensions"], function (httpProtocols) {
         self.credential = credential;
         self.keywordSearches = [];
         self.isOffice365 = isOffice365 != null ? isOffice365 : false;
-		self.adfsUrl = adfsUrl;
+		self.adfsUrl = adfsUrl ? adfsUrl : "";
               
 		
 		self.urlWithoutScheme = function () {

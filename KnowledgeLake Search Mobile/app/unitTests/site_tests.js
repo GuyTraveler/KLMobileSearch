@@ -37,7 +37,7 @@ define(['domain/site',
 			QUnit.ok(s.keywordSearches);
 			QUnit.equal(s.keywordSearches.length, 0);
 			QUnit.equal(s.isOffice365, false);
-			QUnit.equal(s.adfsUrl, null);
+			QUnit.equal(s.adfsUrl, "");
         });
 		
 		QUnit.test("test site instantiates properly with 1 parameter", function () {
@@ -56,7 +56,7 @@ define(['domain/site',
 			QUnit.ok(s.keywordSearches);
 			QUnit.equal(s.keywordSearches.length, 0);
 			QUnit.equal(s.isOffice365, false);
-			QUnit.equal(s.adfsUrl, null);
+			QUnit.equal(s.adfsUrl, "");
         });
 		
 		QUnit.test("test site instantiates properly with 2 parameters", function () {
@@ -90,7 +90,7 @@ define(['domain/site',
 			QUnit.ok(s.keywordSearches);
 			QUnit.equal(s.keywordSearches.length, 0);
 			QUnit.equal(s.isOffice365, false);
-			QUnit.equal(s.adfsUrl, null);
+			QUnit.equal(s.adfsUrl, "");
         });
 		
 		QUnit.test("test site instantiates properly with 4 parameters", function () {
@@ -109,7 +109,7 @@ define(['domain/site',
 			QUnit.ok(s.keywordSearches);
 			QUnit.equal(s.keywordSearches.length, 0);
 			QUnit.equal(s.isOffice365, false);
-			QUnit.equal(s.adfsUrl, null);
+			QUnit.equal(s.adfsUrl, "");
         });
 			
 		QUnit.test("test site instantiates properly with 5 parameters", function () {
@@ -128,7 +128,7 @@ define(['domain/site',
 			QUnit.ok(s.keywordSearches);
 			QUnit.equal(s.keywordSearches.length, 0);
 			QUnit.equal(s.isOffice365, true);
-			QUnit.equal(s.adfsUrl, null);
+			QUnit.equal(s.adfsUrl, "");
         });
 				
 		QUnit.test("test site instantiates properly with 6 parameters", function () {
