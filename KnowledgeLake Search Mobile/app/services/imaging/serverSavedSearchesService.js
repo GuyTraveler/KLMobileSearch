@@ -72,7 +72,7 @@ define(["jquery",
                             var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
                             
                             getQueryUserPromise.done(function (queryUser) {
-                                if(queryUser && queryUser.GetQueryUserResult.Name && queryUser.GetQueryUserResult.Name.value)
+                                if(queryUser && queryUser.GetQueryUserResult && queryUser.GetQueryUserResult.Name && queryUser.GetQueryUserResult.Name.value)
                                 {
                                     var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
                                     
