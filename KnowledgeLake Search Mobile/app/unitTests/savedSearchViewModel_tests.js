@@ -93,7 +93,7 @@ define(["application",
             var vm,
                 selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
             
-            selectedSite.keywordSearches = ["test"];
+            selectedSite.keywordSearches = [TestSettings.testSearchKeyword];
             
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));;
             
