@@ -28,7 +28,7 @@ define(["services/searchBuilderService",
             var buildSearchDataSourcePromise,
                 service = new searchBuilderService(),
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml),
-                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
                        
             //act
 			buildSearchDataSourcePromise = service.buildSearchDataSourceAsync(siteData, searchData);
@@ -49,7 +49,7 @@ define(["services/searchBuilderService",
 			//arrange
             var buildSearchPropertiesPromise,
                 service = new searchBuilderService(),
-                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
                        
             //act
 			buildSearchPropertiesPromise = service.buildSearchPropertiesAsync(siteData, siteData.url, TestSettings.testKlamlSearchFieldProperties);

@@ -212,7 +212,8 @@ define(["jquery",
             };
             
             self.getSiteUrlAsync = function () {
-				var siteData = new SiteDataService(docUrl),										
+				var siteData = new SiteDataService(docUrl),	
+					promise,
 					dfd = $.Deferred();
 				
 				if (cacheSiteUrl) {
@@ -220,20 +221,22 @@ define(["jquery",
 					return dfd.promise();
                 }
 				
-				siteData.GetSiteUrlAsync(docUrl)
-					.done(function (result) {
-                        if(result && result.siteUrl && result.siteUrl.value)
-                        {
-    						cacheSiteUrl  = result.siteUrl.value;
-    						dfd.resolve(cacheSiteUrl);
-                        }
-                        
-                        else
-                            dfd.reject("Failed to retrieve site url.");
-					})
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-					});
+				promise = siteData.GetSiteUrlAsync(docUrl);
+				
+				promise.done(function (result) {
+                    if(result && result.siteUrl && result.siteUrl.value)
+                    {
+						cacheSiteUrl  = result.siteUrl.value;
+						dfd.resolve(cacheSiteUrl);
+                    }
+                    
+                    else
+                        dfd.reject("Failed to retrieve site url.");
+				});
+
+				promise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+				});
 				
 				return dfd.promise();
             };

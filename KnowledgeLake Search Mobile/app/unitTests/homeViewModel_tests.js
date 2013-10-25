@@ -9,8 +9,11 @@ define(['require',
 		"domain/credential", 
 		"domain/credentialType", 
         "services/siteDataCachingService",
+		"domain/navigationDirection",
+		"domain/navigationContext",
+		"framework/klNavigator",
 		"unitTests/unitTestSettings"],
-    function (require, $, ko, application, navigationPage, homeViewModel, site, credential, credentialType, SiteDataCachingService, TestSettings) {
+    function (require, $, ko, application, navigationPage, homeViewModel, site, credential, credentialType, SiteDataCachingService, navigationDirection, navigationContext, navigator, TestSettings) {
 		var popoverCloseTimeout = 1005;
 		
         QUnit.module("Testing homeViewModel");
@@ -238,11 +241,14 @@ define(['require',
                 };
             
             //act
+			application.navigator = new navigator();
 			vm = new homeViewModel();
+			
+			vm.SetDataSource([siteData]);
 			vm.getSelectionFrom = function () {
 				return siteData;
             }
-			
+		
             vm.siteClick(siteData, e);
                         
             //assert

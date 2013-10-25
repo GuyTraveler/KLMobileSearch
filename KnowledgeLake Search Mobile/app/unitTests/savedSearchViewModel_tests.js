@@ -230,7 +230,10 @@ define(["application",
         QUnit.test("test savedSearchViewModel searchClick equal", function () {
             //arrange
             var vm,
+				selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
             
             vm = new savedSearchViewModel();
             vm.selectedSearch(searchData);

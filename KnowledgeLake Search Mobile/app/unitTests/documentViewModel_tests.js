@@ -104,10 +104,10 @@ define(["application",
         QUnit.asyncTest("test documentViewModel getDocumentProperties", function () {
             //arrange
             var vm,
-                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain))
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
                 selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
-            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+			application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
                 {"site": selectedSite, "result": selectedResult}));
                         
 			vm = new documentViewModel();
@@ -130,8 +130,7 @@ define(["application",
         QUnit.asyncTest("test documentViewModel getDocumentProperties bad credentials", function () {
             //arrange
             var vm,
-                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, "", TestSettings.ntlmTestDomain))
-                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, "", TestSettings.ntlmTestDomain)),
                 selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
             application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
@@ -163,7 +162,7 @@ define(["application",
             savedSearchVM = new savedSearchViewModel();
 			resultsVM = new resultsViewModel();
 			vm = new documentViewModel();
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
+            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""));
             resultsVM.selectedResult = new result("", {"title": TestSettings.docTitle});     
             
             window.savedSearchViewModel = savedSearchVM;

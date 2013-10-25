@@ -268,9 +268,13 @@ define(['services/dateTimeConverter', "unitTests/unitTestSettings"],
         
         QUnit.test("test dateTimeConverter getUTCDate", function () {
             //arrange
+			var result,
+				index;
             
             //act            
-            var result = DateTimeConverter.getUTCDate(TestSettings.testDate);
+            result = DateTimeConverter.getUTCDate(TestSettings.testDate).toString();
+			index = result.indexOf("(");
+			result = result.substring(0, index);
                         
             //assert
             QUnit.equal(result, TestSettings.testUTCDate);
@@ -278,9 +282,13 @@ define(['services/dateTimeConverter', "unitTests/unitTestSettings"],
         
         QUnit.test("test dateTimeConverter getUTCDate endOfDay", function () {
             //arrange
+			var result,
+				index;
             
             //act            
-            var result = DateTimeConverter.getUTCDate(TestSettings.testDate, true);
+            result = DateTimeConverter.getUTCDate(TestSettings.testDate, true).toString();
+			index = result.indexOf("(");
+			result = result.substring(0, index);
                         
             //assert
             QUnit.equal(result, TestSettings.testUTCDateDayEnd);
@@ -318,9 +326,13 @@ define(['services/dateTimeConverter', "unitTests/unitTestSettings"],
         
         QUnit.test("test dateTimeConverter adjustDateTime +", function () {
             //arrange
+			var result,
+				index;
             
             //act            
-            var result = DateTimeConverter.adjustDateTime(TestSettings.testPreviousDateTime, 1000, "+");
+            result = DateTimeConverter.adjustDateTime(TestSettings.testPreviousDateTime, 1000, "+").toString();
+			index = result.indexOf("(");
+			result = result.substring(0, index);
                         
             //assert
             QUnit.equal(result, TestSettings.testUTCDate);
@@ -328,9 +340,13 @@ define(['services/dateTimeConverter', "unitTests/unitTestSettings"],
         
         QUnit.test("test dateTimeConverter adjustDateTime -", function () {
             //arrange
+			var result,
+				index;
             
             //act            
-            var result = DateTimeConverter.adjustDateTime(TestSettings.testDate, 1000, "-");
+            result = DateTimeConverter.adjustDateTime(TestSettings.testDate, 1000, "-").toString();
+			index = result.indexOf("(");
+			result = result.substring(0, index);
                         
             //assert
             QUnit.equal(result, TestSettings.testUTCDatePreviousDay);

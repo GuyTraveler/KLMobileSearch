@@ -52,7 +52,11 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
                 service,
                 logonService;
             
-            if(application.navigator.currentNavigationContext.properties.site && application.navigator.currentNavigationContext.properties.result)
+            if (application.navigator &&
+				application.navigator.currentNavigationContext && 
+				application.navigator.currentNavigationContext.properties &&
+				application.navigator.currentNavigationContext.properties.site && 
+				application.navigator.currentNavigationContext.properties.result)
             {
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
@@ -62,7 +66,8 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
                                                                       application.navigator.currentNavigationContext.properties.site.credential.credentialType,
 																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
 																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
-
+				logger.logWarning("domain: " + application.navigator.currentNavigationContext.properties.site.credential.domain + "|...pass: " + application.navigator.currentNavigationContext.properties.site.credential.password + "|...user: " + application.navigator.currentNavigationContext.properties.site.credential.userName);
+				
                 logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
                                                        application.navigator.currentNavigationContext.properties.site.credential.userName, 
                                                        application.navigator.currentNavigationContext.properties.site.credential.password,
@@ -97,7 +102,10 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
                     
                     dfd.reject(error);
                 });
-            }     
+            }   
+			else {
+				dfd.reject();
+            }
             
             return dfd.promise();
         }
