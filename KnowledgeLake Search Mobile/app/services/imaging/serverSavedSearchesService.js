@@ -66,7 +66,7 @@ define(["jquery",
                 logonPromise.done(function (result) {
                     var getCurrentUserNamePromise = service.GetCurrentUserName();
                 
-                    getCurrentUserNamePromise.done(function (currentUserName) {                        
+                    getCurrentUserNamePromise.done(function (currentUserName) {
                         if(currentUserName && currentUserName.GetCurrentUserNameResult && currentUserName.GetCurrentUserNameResult.value)
                         {
                             var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
