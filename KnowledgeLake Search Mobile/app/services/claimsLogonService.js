@@ -1,10 +1,12 @@
+//generic "passive" claims logon service
+//pops logon dialogs when necessary to do authentication and obtain
+//authentication cookies
 define(["jquery", 
 		"application",
 		"logger",
-		"IWebsService",  
         "framework/promiseResponse/promiseResolveResponse", 
         "framework/promiseResponse/promiseRejectResponse"], 
-	function ($, application, logger, websService, PromiseResolveResponse, PromiseRejectResponse) {
+	function ($, application, logger, PromiseResolveResponse, PromiseRejectResponse) {
 		var claimsLogonService = function (siteUrl) {
 			var self = this;
 			
@@ -56,26 +58,7 @@ define(["jquery",
 				
 				return dfd.promise();
             };
-			
-			self.checkLogonStatusAsync = function () {
-				var dfd = $.Deferred(),
-					getWebPromise,
-					service = new websService(siteUrl);
-				
-				//lightweight SP call to verify we are authenticated
-				getWebPromise = service.GetWeb(siteUrl);
-				
-				getWebPromise.done(function () {
-	                dfd.resolve(true);
-	            });
-				
-	            getWebPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-	                dfd.reject(false);
-	            });
-				
-				return dfd.promise();
-            };
-			
+		
             self.isLoggedOnUrl = function (url) {
 				if (!url) return false;
 				if (url.toUpperCase().indexOf(siteUrl.toUpperCase()) != 0) return false;

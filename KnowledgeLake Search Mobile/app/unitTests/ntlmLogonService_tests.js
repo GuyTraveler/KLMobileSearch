@@ -37,44 +37,7 @@ define(['services/ntlmLogonService',
 				QUnit.start();
             });
         });  
-		
-		//NOTE: we aren't currently controlling coookies, so if the user is ALREADY authenticated before 
-		//we logon, the status will still return true
-		QUnit.asyncTest("test ntlmLogonService.checkLogonStatus succeeds", function () {
-            //arrange
-            var service,
-				logonPromise,
-				checkLogonPromise;
-			
-            //act 
-			service = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = service.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-                        
-            //assert
-            QUnit.ok(logonPromise);
-			
-			logonPromise.done(function () {
-				checkLogonPromise = service.checkLogonStatusAsync();
-				
-				QUnit.ok(checkLogonPromise);
-				
-				checkLogonPromise.done(function () {
-					QUnit.ok(true);
-					QUnit.start();
-                });
-				
-				checkLogonPromise.fail(function () {
-					QUnit.ok(false, "NTLMLogonService should have returned false to checkLogonStatus");	
-					QUnit.start();
-                });											
-            });
-			
-			logonPromise.fail(function () {
-				QUnit.ok(false, "logon should have succeeded");
-				QUnit.start();
-            });
-        });  
-		
+	
 		QUnit.asyncTest("test ntlmLogonService.logon with bad URL fails", function () {
             //arrange
             var service,

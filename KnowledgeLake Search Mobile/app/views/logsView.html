@@ -1,0 +1,36 @@
+<header data-role="header">
+    <div data-role="navbar"> 
+		<button class="transparent-button head-back-button" data-align="left" data-bind="click: navigateBack"></button>				
+    </div>
+	
+	<div class="pageHeading">
+		<h4 data-bind="text: strings().ViewLogs"></h4>
+    </div>
+</header>
+
+<p>
+	<a class="traditional-link" data-bind="text: strings().EmailLogsToSupport, click: emailLogsToSupport"></a>
+</p>
+
+<div>
+	<h3 data-bind="text: strings().Logs"></h3>
+	
+	<ul data-role="listview" data-style="inset" data-bind="foreach: logs">
+		<li>
+			<label>
+				<div class="relative-container">
+					<table>
+						<tr>
+							<td>
+								<img width="16" data-bind="logLevelToIcon: key" />		
+                            </td>
+							<td>
+								<span class="list-view-label" data-bind="text: value, logLevelToCss: key"></span>
+							</td>
+                        </tr>
+                    </table>					
+				</div>
+            </label>
+        </li>
+	</ul>
+</div>

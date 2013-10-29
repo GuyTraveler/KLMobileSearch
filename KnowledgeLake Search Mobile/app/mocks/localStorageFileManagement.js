@@ -6,6 +6,7 @@ define(["application",
 	   ], function (application, PromiseResolveResponse, PromiseRejectResponse) {
 	var fileSystemMock = function () {
 		var self = this,
+			localStorageFolder = "/",
 			localStorageAvailable = function () {
 				return ('localStorage' in window && window['localStorage'] !== null);
             };
@@ -70,11 +71,26 @@ define(["application",
 				dfd.resolve(new PromiseResolveResponse(application.strings.FileDeleteSuccess));
             }
 			else {
-				dfd.resolve(new PromiseResolveResponse(application.strings.FileDeleteSuccess));
+				dfd.resolve(new PromiseResolveResponse(application.strings.FileNotFound));
             }			
 			
 			return dfd.promise();
         }
+		
+		self.getFolderAsync = function () {
+			var dfd = $.Deferred(),
+				dirEntry = { fullPath: localStorageFolder, name: localStorageFolder };
+			
+			if (!localStorageAvailable()) {
+				dfd.reject(new PromiseRejectResponse(application.strings.FileSystemNull, null));
+            }
+			else {
+				
+				dfd.resolve(new PromiseResolveResponse(dirEntry));
+            }
+			
+			return dfd.promise();
+		}
 		
 		return self;
     };

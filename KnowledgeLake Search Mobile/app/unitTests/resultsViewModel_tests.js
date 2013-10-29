@@ -2,6 +2,7 @@
 define(['require',
         'jquery',
         'knockout',
+		'domain/Constants',
         'viewmodels/resultsViewModel',
         'viewmodels/savedSearchViewModel',
         'viewmodels/searchBuilderViewModel',
@@ -9,12 +10,16 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"application",
         "unitTests/unitTestSettings",
 		"domain/keywordConjunction",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, site, credential, credentialType, application, TestSettings, keywordConjunction) {
+    function (require, $, ko, Constants, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, result, 
+              site, credential, credentialType, navigationDirection, navigationPage, navigationContext, application, TestSettings, keywordConjunction) {
         QUnit.module("Testing resultsViewModel");
         
         QUnit.test("test SetDataSource if resultDataSource is already defined", function () {
@@ -116,64 +121,60 @@ define(['require',
             QUnit.equal(vm.resultDataSource().length, resultData.length);
 			QUnit.equal(vm.resultCountString(), expectedMessage);
         });
-		
-        QUnit.test("test resultViewModel init", function () {
-            //arrange
-            var vm;
-            
-            vm = new resultsViewModel();
+				  
+		QUnit.test("test resultCountString reads properly for MAX results", function () {
+			//arrange
+            var vm,
+				resultData = [],
+				expectedMessage;
             
             //act 
-            vm.init();
-            
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test resultsViewModel swipe", function () {
-            //arrange
-            var vm,
-                swipeObject = {"direction":"right"};
-            
             vm = new resultsViewModel();
-            
-            
-            //act
-            vm.swipe(swipeObject);
+			
+			for (var i = 0; i < Constants.maxResults + 1; i++) {
+				resultData.push(new result("http://prodsp2010.dev.local/sites/team2/RyanLib/" + i + "Page.pdf", {"title":"pdf"}));
+            }
+			
+			vm.SetDataSource(resultData);
+			
+			expectedMessage = application.strings.maxResultsFormat.format(resultData.length.toString());
                         
             //assert
-            QUnit.ok(vm);
+            QUnit.equal(vm.resultDataSource().length, resultData.length);
+			QUnit.equal(vm.resultCountString(), expectedMessage);
         });
         
-        QUnit.test("test resultsViewModel beforeShow", function () {
+        QUnit.test("test resultsViewModel onBeforeShow", function () {
             //arrange
-            var vm;
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, {"site": selectedSite}));
             
             vm = new resultsViewModel();
             
             //act
-            vm.beforeShow();
+            vm.onBeforeShow();
                         
             //assert
-            QUnit.ok(vm);
+            QUnit.equal(vm.selectedResult, null);
+            QUnit.deepEqual(vm.resultDataSource(), []);
         });
        
-        QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (AND)", function () {
+        QUnit.asyncTest("test resultsViewModel onAfterShow keywordSearchAsync (AND)", function () {
             //arrange
             var vm,
-                savedSearchVM,
-				keywordSearchPromise;
+                keyword = "ryan",
+                wordConjunction = keywordConjunction.and,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
-            savedSearchVM = new savedSearchViewModel();
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
+            {"keyword": keyword, "wordConjunction": wordConjunction, "site": selectedSite}));
+            
 			vm = new resultsViewModel();
-            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-            savedSearchVM.keyword = ko.observable("ryan");
-			savedSearchVM.wordConjunction = ko.observable(keywordConjunction.and);
-            
-            window.savedSearchViewModel = savedSearchVM;
             
             //act
-            keywordSearchPromise = vm.afterShow();
+            var keywordSearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -190,22 +191,20 @@ define(['require',
             });
         });
 		
-		QUnit.asyncTest("test resultsViewModel afterShow keywordSearchAsync (OR)", function () {
+		QUnit.asyncTest("test resultsViewModel onAfterShow keywordSearchAsync (OR)", function () {
             //arrange
             var vm,
-                savedSearchVM,
-				keywordSearchPromise;
+                keyword = "ryan",
+                wordConjunction = keywordConjunction.or,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
-            savedSearchVM = new savedSearchViewModel();
-			vm = new resultsViewModel();
-            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-            savedSearchVM.keyword = ko.observable("ryan");
-			savedSearchVM.wordConjunction = ko.observable(keywordConjunction.or);
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
+                {"keyword": keyword, "wordConjunction": wordConjunction, "site": selectedSite}));
             
-            window.savedSearchViewModel = savedSearchVM;
+            vm = new resultsViewModel();
             
             //act
-            keywordSearchPromise = vm.afterShow();
+            var keywordSearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -222,24 +221,18 @@ define(['require',
             });
         });
        
-        QUnit.asyncTest("test resultsViewModel afterShow propertySearchAsync", function () {
+        QUnit.asyncTest("test resultsViewModel onAfterShow propertySearchAsync", function () {
             //arrange
             var vm,
-                savedSearchVM,
-                searchBuilderVM,
-				propertySearchPromise;
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));        
+                        
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
+                {"site": selectedSite, "klaml": TestSettings.testKlaml}));
             
-            savedSearchVM = new savedSearchViewModel();
-            searchBuilderVM = new searchBuilderViewModel();
 			vm = new resultsViewModel();
-            savedSearchVM.site = ko.observable(new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
-            searchBuilderVM.klaml = TestSettings.testKlaml;
-            
-            window.savedSearchViewModel = savedSearchVM;
-            window.searchBuilderViewModel = searchBuilderVM;
             
             //act
-            propertySearchPromise = vm.afterShow();
+            var propertySearchPromise = vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
@@ -254,20 +247,6 @@ define(['require',
 				QUnit.ok(false);
 				QUnit.start();
             });
-        });
-        
-        QUnit.test("test resultsViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            vm = new resultsViewModel();
-            
-            //act
-            vm.hide();
-                        
-            //assert
-            QUnit.equal(vm.selectedResult, null);
-            QUnit.deepEqual(vm.resultDataSource(), []);
         });
         
         QUnit.test("test resultsViewModel setSelectedResult if selectedResult is null", function () {
@@ -346,8 +325,42 @@ define(['require',
             //assert
             QUnit.equal(product, true);
         });
-        /*
-        QUnit.test("test resultsViewModel editProperties", function () {
+        
+        QUnit.test("test resultsViewModel viewProperties", function () {
+            //arrange
+            var vm,
+                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"}),
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));        
+                        
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
+                {"site": selectedSite, "klaml": TestSettings.testKlaml}));    
+            
+            vm = new resultsViewModel();
+            vm.selectedResult = resultData;
+            
+            //act
+            vm.viewProperties();
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        QUnit.test("test resultsViewModel navigateToProperties", function () {
+            //arrange
+            var vm,
+                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"});   
+            
+            vm = new resultsViewModel();
+            vm.selectedResult = resultData;
+            
+            //act
+            vm.navigateToProperties(resultData);
+                        
+            //assert
+            QUnit.ok(vm);
+        });
+        
+        /*QUnit.test("test resultsViewModel editProperties", function () {
             //arrange
             var vm,
                 resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", {"title":"pdf"});    
@@ -361,7 +374,7 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });
-        */
+        
         QUnit.asyncTest("test resultsViewModel navigateToResult", function () {
             //arrange
             var vm,
@@ -392,7 +405,7 @@ define(['require',
                 QUnit.ok(false);
                 QUnit.start();
             });
-        });
+        });*/
       
         QUnit.asyncTest("test resultsViewModel keywordSearch bad credentials", function () {
             //arrange
@@ -437,28 +450,6 @@ define(['require',
                 QUnit.start();
             });
         });
-      
-        QUnit.asyncTest("test resultsViewModel propertySearch bad credentials", function () {
-            //arrange
-            var vm,            
-                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan", "pw", "dev"));  
-            
-            vm = new resultsViewModel();
-            
-            //act
-            var propertySearchPromise = vm.propertySearchAsync(siteData, TestSettings.testKlaml);
-            
-            //assert
-            propertySearchPromise.done(function (result) {
-                QUnit.ok(false);
-                QUnit.start();
-            });
-            
-            propertySearchPromise.fail(function (error) {
-                QUnit.ok(true);
-                QUnit.start();
-            });
-        });
         
         QUnit.asyncTest("test resultsViewModel propertySearch good credentials", function () {
             //arrange
@@ -481,18 +472,26 @@ define(['require',
                 QUnit.start();
             });
         });
-        
-        QUnit.test("test resultViewModel afterShow", function () {
+      
+        QUnit.asyncTest("test resultsViewModel propertySearch bad credentials", function () {
             //arrange
-            var vm, 
-                object = {"view": {"footer": {"find": function (control) { return {"data": function(control) { return {"clear": function () {}}}}}}}};
+            var vm,            
+                siteData = new site("http://prodsp2010.dev.local/sites/team4", "ProdSP2010", 15, new credential(credentialType.ntlm, "ryan", "pw", "dev"));  
             
             vm = new resultsViewModel();
             
-            //act 
-            vm.afterShow(object);
+            //act
+            var propertySearchPromise = vm.propertySearchAsync(siteData, TestSettings.testKlaml);
             
             //assert
-            QUnit.ok(vm);
+            propertySearchPromise.done(function (result) {
+                QUnit.ok(false);
+                QUnit.start();
+            });
+            
+            propertySearchPromise.fail(function (error) {
+                QUnit.ok(true);
+                QUnit.start();
+            });
         });
     });

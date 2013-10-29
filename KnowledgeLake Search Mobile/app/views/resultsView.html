@@ -1,14 +1,14 @@
 <header data-role="header">
     <div data-role="navbar"> 
-		<button data-role="backbutton" class="transparent-button back-button-head" data-align="left"></button>				
+		<button class="transparent-button head-back-button" data-align="left" data-bind="click: navigateBack"></button>				
         <button class="nav-button" data-align="right"
 				data-role="button" data-icon="details" 
-				data-bind="click: viewProperties, style: { visibility: navBarVisible() ? 'visible' : 'hidden' }">
+				data-bind="click: viewProperties, visible: false"> <!-- should be bound to navBarVisible -->
 			<span data-bind="text: strings().viewProperties"></span>
         </button>
     </div>
 	
-	<div id="resultPageHeading">
+	<div class="pageHeading">
 		<h4 data-bind="visible: !isBusy(), text: resultCountString"></h4>
 		<h4 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: strings().searching"></h4>
     </div>
@@ -17,7 +17,7 @@
 <div id="resultsContainer">
 	
 	<ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
-		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToResult">
+		<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToProperties">
 	        <div class="itemContainer">
 	            <div class="pull-left itemIconContainer">
 					<!-- TODO: add this back in once we do something with the action bar

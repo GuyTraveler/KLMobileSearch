@@ -1,10 +1,13 @@
 define(["knockout", 
         "services/documentService",
         "factory/logonServiceFactory",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
         "application",
         "logger",
 		"viewmodels/viewModelBase"], 
-function (ko, documentService, LogonServiceFactory, application, logger, viewModelBase) {
+function (ko, documentService, LogonServiceFactory, navigationDirection, navigationPage, navigationContext, application, logger, viewModelBase) {
     var documentViewModel = function () {
         var self = this;
                    
@@ -12,7 +15,7 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
     	viewModelBase.call(self);
 		
         self.documentTitle = ko.observable("");
-        self.documentDataSource = ko.observableArray();
+        self.documentDataSource = ko.observableArray([]);
         
         self.SetDataSource = function (properties) {             
             self.documentDataSource([]);
@@ -23,31 +26,25 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
             }
         }
         
-        self.init = function (e) {
-            logger.logVerbose("documentViewModel init");
-        }
-        
-        self.beforeShow = function (e) {
-            logger.logVerbose("documentViewModel beforeShow");
-        }
-        
-        self.show = function (e) {
-            logger.logVerbose("documentViewModel show");
-        }
-        
-        self.afterShow = function (e) {			
-            logger.logVerbose("documentViewModel afterShow");
+        self.onBeforeShow = function (e) {
+            logger.logVerbose("documentViewModel onBeforeShow");
             
-            if(resultsViewModel && resultsViewModel.selectedResult)
-            {       
-                self.documentTitle(resultsViewModel.selectedResult.title);
-                
-                return self.getDocumentProperties();
+            if(application.navigator.isStandardNavigation())
+            {
+                self.documentTitle("");
+                self.documentDataSource([]);
             }
         }
         
-        self.hide = function (e) {
-            logger.logVerbose("documentViewModel hide");
+        self.onAfterShow = function (e) {			
+            logger.logVerbose("documentViewModel onAfterShow");
+            
+            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {    
+                self.documentTitle(application.navigator.currentNavigationContext.properties.result.title);
+                
+                return self.getDocumentProperties();
+            }
         }
         
         self.getDocumentProperties = function () {
@@ -55,18 +52,26 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
                 service,
                 logonService;
             
-            if(resultsViewModel.selectedResult && savedSearchViewModel.site())
+            if (application.navigator &&
+				application.navigator.currentNavigationContext && 
+				application.navigator.currentNavigationContext.properties &&
+				application.navigator.currentNavigationContext.properties.site && 
+				application.navigator.currentNavigationContext.properties.result)
             {
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
-                service = new documentService(resultsViewModel.selectedResult.url);        
-                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
-
-                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
-                                                  savedSearchViewModel.site().credential.userName, 
-                                                  savedSearchViewModel.site().credential.password,
-                                                  resultsViewModel.selectedResult.url);
+                service = new documentService(application.navigator.currentNavigationContext.properties.result.url);        
+                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
+																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
+																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
+				logger.logWarning("domain: " + application.navigator.currentNavigationContext.properties.site.credential.domain + "|...pass: " + application.navigator.currentNavigationContext.properties.site.credential.password + "|...user: " + application.navigator.currentNavigationContext.properties.site.credential.userName);
+				
+                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
+                                                       application.navigator.currentNavigationContext.properties.result.url);
             
                 logonPromise.done(function (result) {
                     var getDocumentPropertiesPromise = service.getDocumentPropertiesAsync();
@@ -97,7 +102,10 @@ function (ko, documentService, LogonServiceFactory, application, logger, viewMod
                     
                     dfd.reject(error);
                 });
-            }     
+            }   
+			else {
+				dfd.reject();
+            }
             
             return dfd.promise();
         }

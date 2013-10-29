@@ -6,19 +6,27 @@ define(["knockout",
         "IWebsService", 
         "ISiteDataCachingService", 
 		"IUserNameParser",
+		"IOffice365Service",
 		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
         "domain/authenticationMode",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
         "keyValuePair",
-		"domain/httpProtocols",], 
-function (ko, application, logger, viewModelBase, authenticationService, websService, SiteDataCachingService, userNameParser, LogonServiceFactory,
-	      site, credential, credentialType, authenticationMode, keyValuePair, httpProtocols) {
+		"domain/httpProtocols",
+		"domain/office365Metadata",
+		"domain/office365LogonType"], 
+function (ko, application, logger, viewModelBase, authenticationService, websService, 
+		  SiteDataCachingService, userNameParser, office365Service, LogonServiceFactory,
+	      site, credential, credentialType, authenticationMode, navigationDirection, navigationPage, 
+		  navigationContext, keyValuePair, httpProtocols, office365Metadata, office365LogonType) {
+			  
     var configureSiteViewModel = function () {
         var self = this,
-            homeUrl = "#home",
-            questionImageUrl = "app/images/question.png",
+            questionImageUrl = "",
             invalidImageUrl = "app/images/invalid.png",
             validImageUrl = "app/images/valid.png",
             sharepointVersionHeader = "MicrosoftSharePointTeamServices";
@@ -28,12 +36,14 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 		
 		self.urlValidationDfd = null;
 		self.logonService = null;
+		self.officeService = new office365Service();
+		
 		self.protocols = [
 			httpProtocols.http,
 			httpProtocols.https
 		];
         self.url = ko.observable("");
-        self.enableUrl = ko.observable(true);			
+        self.isEditMode = ko.observable(false);			
         self.siteTitle = ko.observable("");
         self.sharePointVersion = ko.observable(0);			
 		self.protocol = ko.observable(httpProtocols.http);
@@ -71,6 +81,8 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         self.isClaimsFormsCredential = ko.computed(function () {
             return self.siteCredentialType() == credentialType.claimsOrForms; 
         });
+		self.isOffice365 = ko.observable(false);
+		self.adfsUrl = ko.observable("");
         
         self.isUrlValid = ko.observable(false);
         self.isCredentialsValid = ko.observable(false);
@@ -98,15 +110,18 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				if (self.validateAll()) {
 				
 					theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
-	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()))
-					writePromise = homeViewModel.selectedSite ? SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
+	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()),
+									   self.isOffice365(), self.adfsUrl());
+					writePromise = application.navigator.currentNavigationContextHasProperties() ? 
+                                        SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 	                    
 	                writePromise.done(function (result) { 
 						logger.logVerbose("done writing site data, returning home");
 						
 						dfd.resolve(result);
-						application.showToast(application.strings.saveSuccess);							
-	                    window.App.navigate(homeUrl);
+						application.showToast(application.strings.saveSuccess);	
+                        
+	                    self.navigateHome();
 	                });
 					
 					writePromise.fail(function (error) {
@@ -143,7 +158,12 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         
         self.closeSiteSettings = function () {
             logger.logVerbose("closing site settings");
-            window.App.navigate(homeUrl);
+            
+            self.navigateHome();
+        }
+        
+        self.navigateHome = function () {
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.homePage, navigationPage.configureSitePage));
         }
         
         self.validateSiteUrl = function () {				
@@ -203,10 +223,6 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             self.credValidationImageSrc(questionImageUrl);
             
             self.siteCredentialType(detectedCredType);
-			
-			if (detectedCredType == credentialType.claimsOrForms) {
-				self.logonAsync();
-            }
         }
         
         self.setInvalidUrl = function () {
@@ -240,47 +256,60 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         self.logonAsync = function () {
 			var service = new websService(self.fullUrl()),
 				logonPromise,
+				officePromise,
+				websPromise,
 				getWebDfd = $.Deferred();
 			
-			self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType());
-			logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword())
+			if (self.siteCredentialType() == credentialType.claimsOrForms) {
+				officePromise = self.officeService.getOffice365MetadataAsync(self.siteFullUserName());
+			}
+			else {
+				officePromise = $.Deferred();
+				officePromise.resolve(new office365Metadata(office365LogonType.unknown, ""));
+			}
 			
-			//probably already logging on
-			if (!logonPromise) {
-				getWebDfd.reject(false);
-				logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
-				return getWebDfd.promise();
-            }
-			
-			logonPromise.done(function () {
+			officePromise.always(function (metadata) {
+				self.isOffice365(metadata.logonType !== office365LogonType.unknown);
+				self.adfsUrl(metadata.adfsUrl);
 				
-                service.GetWeb(self.fullUrl())
-                    .done(function (result, textStatus, xhr) {
-                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-						
-                        self.isCredentialsValid(true);
-                        self.credValidationImageSrc(validImageUrl);                            
-                        self.setTitle(result.GetWebResult.Web.Title);                            
-                        self.sharePointVersion(spVersion.substring(0, 2));
-						
-						getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
-                    })
-                    .fail(function () {  //fail, invalidate our creds
-                        self.isCredentialsValid(false);
-                        self.credValidationImageSrc(invalidImageUrl);                               
-                        self.sharePointVersion(0);
+				self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType(), self.isOffice365(), self.adfsUrl());
+				logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword());
+				
+				//probably already logging on
+				if (!logonPromise) {
+					logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
+					getWebDfd.reject(false);					
+	            }
+				else {
+					logonPromise.done(function () {						
+		                websPromise = service.GetWeb(self.fullUrl());
+		                    
+						websPromise.done(function (result, textStatus, xhr) {
+	                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+							
+	                        self.isCredentialsValid(true);
+	                        self.credValidationImageSrc(validImageUrl);                            
+	                        self.setTitle(result.GetWebResult.Web.Title);                            
+	                        self.sharePointVersion(spVersion.substring(0, 2));
+							
+							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+	                    });
+	                    
+						websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+							self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
+							getWebDfd.reject();							
+	                    });
+		            });
+					
+					logonPromise.fail(function () {
+						self.isCredentialsValid(false);
+		                self.credValidationImageSrc(invalidImageUrl);                                       
+		                self.sharePointVersion(0);
 
-						getWebDfd.reject();							
-                    });
-            });
-			
-			logonPromise.fail(function () {
-				self.isCredentialsValid(false);
-                self.credValidationImageSrc(invalidImageUrl);                                       
-                self.sharePointVersion(0);
-
-				getWebDfd.reject();		
-            });
+						getWebDfd.reject();		
+		            });
+				}
+			});
 			
 			return getWebDfd.promise();
         }
@@ -304,20 +333,20 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                 self.setMessage(application.strings.urlInvalidMessage);
                 return false;
             }
-            else if (!self.isTitleValid()) {
-                self.setMessage(application.strings.siteTitleRequired);
-                return false;
-            }
-            else if (!self.isCredentialsValid()) {
+			else if (!self.isCredentialsValid()) {
                 self.setMessage(application.strings.credentialsInvalidMessage);
                 return false;
             }
+            else if (!self.isTitleValid()) {
+                self.setMessage(application.strings.siteTitleRequired);
+                return false;
+            }            
             
             return true;
         }
         
         self.clearPopulatedConfigureSiteViewModel = function () {
-            self.enableUrl(true);
+            self.isEditMode(false);
             
             self.url("");
 			self.protocol(httpProtocols.http);
@@ -331,9 +360,9 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         }
 		
         self.populateConfigureSiteViewModel = function (selectedSite) {
-			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential);
+			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential, selectedSite.isOffice365, selectedSite.adfsUrl);
 			
-            self.enableUrl(false);
+            self.isEditMode(true);
             
             self.url(siteObj.urlWithoutScheme());
 			self.protocol(httpProtocols.parseProtocol(siteObj.url));
@@ -342,6 +371,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             self.siteCredentialType(siteObj.credential.credentialType);
             self.siteFullUserName(userNameParser.mergeUserNameParts(siteObj.credential.userName, siteObj.credential.domain));
             self.sitePassword(siteObj.credential.password);
+			self.resetUrlValidation();
 
             self.setValidUrl(self.siteCredentialType());
         }
@@ -350,23 +380,24 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			self.validateSiteUrl();
 			return true;
         };
+        
+        self.onBeforeShow = function (e) {
+			logger.logVerbose("configureSiteViewModel.onBeforeShow");
+            
+            if(application.navigator.isStandardNavigation() && !application.navigator.currentNavigationContextHasProperties())
+                self.clearPopulatedConfigureSiteViewModel();
+        }
 		
-		self.afterShow = function (e) {
+		self.onAfterShow = function (e) {
 			logger.logVerbose("configureSiteViewModel.afterShow");
 			
-			if(homeViewModel.selectedSite)
-                self.populateConfigureSiteViewModel(homeViewModel.selectedSite);
-            else                    
-                self.clearPopulatedConfigureSiteViewModel();
-			
-			if (homeViewModel.selectedSite) {
-				$("#siteTitleText").focus();	
+            if(application.navigator.isStandardNavigation())
+            {
+    			if(application.navigator.currentNavigationContextHasProperties())
+                {
+                    self.populateConfigureSiteViewModel(application.navigator.currentNavigationContext.properties.site);
+                }
             }
-			else {
-				$("#siteUrlText").focus();
-			}
-			
-			application.showSoftKeyboard();
         }
 		
         return self;

@@ -2,7 +2,7 @@
 <header data-role="header">
     <div data-role="navbar"> 
 		<button class="transparent-button head-button" data-align="left">
-			<img class="center-head" src="app/images/kl_head.png" />
+			<img data-bind="css: { 'center-head-ios': isIOS, 'center-head-droid': !isIOS() }" src="app/images/kl_head.png" />
         </button>	
 		
 		<button data-align="left" data-role="button" class="transparent-button"></button>
@@ -20,35 +20,37 @@
         <label>      
 			<div class="relative-container">
 				<p class="list-view-label">
-					<img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+					<img width="16" data-bind="attr: { src: urlValidationImageSrc }, visible: urlValidationImageSrc" class="margin-img" />
 	                <span data-bind="text: strings().protocol" />
 	            </p>
-				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: enableUrl, event: { change: protocolChanged }"></select>
-				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+				<select class="list-view-input" data-bind="options: protocols, value: protocol, enable: !isEditMode(), event: { change: protocolChanged }" id="siteProtocolDropdown"></select>
+				<button data-role="button" data-icon="details" class="transparent-button dropdown-indicator"></button>
             </div>  	
         </label> 
     </li>
     <li>
         <label>            
             <p class="list-view-label">
-                <img width="16" data-bind="attr: { src: urlValidationImageSrc }" class="margin-img" />
+                <img width="16" data-bind="attr: { src: urlValidationImageSrc }, visible: urlValidationImageSrc" class="margin-img" />
                 <span data-bind="text: strings().siteUrl" />
             </p>
 			<!-- android works better with 'text' types and iOS works better with 'url' types -->
 			<!--<input class="list-view-input" type="url"
-				   data-bind="if: (!window.App || window.App.os.ios), value: url, enable: enableUrl" /> -->           
+				   data-bind="if: (!window.App || window.App.os.ios), value: url, enable: isEditMode" /> -->           
 			
-            <input id="siteUrlText" class="list-view-input" type="text"
-				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: enableUrl, attr: { 'placeholder': strings().urlPlaceholder }" />            
+            <input id="siteUrlText" class="list-view-input" type="url"
+				   data-bind="value: url, event: { blur: validateSiteUrl }, enable: !isEditMode(), attr: { 'placeholder': strings().urlPlaceholder }" />            
 			
         </label>    
     </li>	
-    <li>
+    <li data-bind="visible: isEditMode">
         <label>            
             <p class="list-view-label">
                 <span data-bind="text: strings().siteTitle" />
             </p>
-            <input id="siteTitleText" type="text" data-bind="value: siteTitle, attr: { 'placeholder': strings().siteTitlePlaceholder }" class="list-view-input" />            
+			
+            <input id="siteTitleText" type="text" class="list-view-input"
+				   data-bind="value: siteTitle, attr: { 'placeholder': strings().siteTitlePlaceholder }" />            
         </label>    
     </li>
     
@@ -59,7 +61,7 @@
 	                <span data-bind="text: strings().credentialType" />
 	            </p>
 	            <select id="credentialTypeDropDown" class="list-view-input" data-bind="options: credentialTypes, optionsText: 'value', optionsValue: 'key', value: siteCredentialType"></select>
-				<button data-role="button" data-icon="details" class="transparent-button list-view-right-item"></button>
+				<button data-role="button" data-icon="details" class="transparent-button dropdown-indicator"></button>
 			</div>
         </label>
     </li>       
@@ -72,21 +74,21 @@
         <li>
             <label>
                 <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+                    <img width="16" data-bind="attr: { src: credValidationImageSrc }, visible: credValidationImageSrc" class="margin-img" />
                     <span data-bind="text: strings().userName" />
                 </p>
-                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" />            
+                <input type="text" data-bind="value: siteFullUserName, attr: { 'placeholder': strings().userNamePlaceholder }" class="list-view-input" id="configureSiteUserNameText" />            
             </label>
         </li>        
         <li>
             <label>
                 <p class="list-view-label">
-                    <img width="16" data-bind="attr: { src: credValidationImageSrc }" class="margin-img" />
+                    <img width="16" data-bind="attr: { src: credValidationImageSrc }, visible: credValidationImageSrc" class="margin-img" />
                     <span data-bind="text: strings().password" />
                 </p>
 				
 				<span data-bind="if: !shouldShowPassword()">
-                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="password" />            
+                	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="password" id="configureSitePasswordText" />            
 				</span>
 				<span data-bind="if: shouldShowPassword">
                 	<input data-bind="value: sitePassword, attr: { 'placeholder': strings().passwordPlaceholder }" class="list-view-input" type="text" />            

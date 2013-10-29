@@ -5,7 +5,7 @@ define(["keyValuePair",
 		
 	    return {
 	        logLevel: logLevel.Error,
-			maxLogSize: 1000,
+			maxLogSize: 500,
 			setLogLevel: function (level) {
 	            this.logLevel = level;
 	        },

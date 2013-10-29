@@ -355,7 +355,13 @@ define(["services/siteDataCachingService",
     QUnit.asyncTest("test LoadSites if sites.dat exists", function () {
         //arrange
         SiteDataCachingService.sites = [];
-        var newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+        var url = "http://test.com",
+			title = "invalid",
+			majorVersion = 15,
+			cred = new credential(credentialType.ntlm, "ryan.braun", "password", "dev"),
+			is365 = true,
+			stsUrl = "https://sts.knowledgelake.com",
+			newSite = new site(url, title, majorVersion, cred, is365, stsUrl);
         
         //act
         var addSitePromise = SiteDataCachingService.AddSiteAsync(newSite);
@@ -366,7 +372,19 @@ define(["services/siteDataCachingService",
             var loadSitesPromise = SiteDataCachingService.LoadSitesAsync();
             
             loadSitesPromise.done(function (result) {
-                QUnit.ok(true);
+                QUnit.ok(result);
+				QUnit.ok(result.response);
+				QUnit.equal(result.response.length, 1);
+				QUnit.equal(result.response[0].url, url);
+				QUnit.equal(result.response[0].title, title);
+				QUnit.equal(result.response[0].credential.credentialType, cred.credentialType);
+				QUnit.equal(result.response[0].credential.userName, cred.userName);
+				QUnit.equal(result.response[0].credential.password, cred.password);
+				QUnit.equal(result.response[0].credential.domain, cred.domain);
+				QUnit.equal(result.response[0].majorVersion, majorVersion);
+				QUnit.equal(result.response[0].isOffice365, is365);
+				QUnit.equal(result.response[0].adfsUrl, stsUrl);
+				
                 QUnit.start();
             });
             

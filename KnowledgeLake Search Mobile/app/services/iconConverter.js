@@ -1,4 +1,6 @@
-define(["domain/Constants"], function (Constants) {
+define(["domain/Constants",
+		"framework/logLevel"], 
+function (Constants, logLevel) {
     var iconConverter = function() {
         var self = this;
        
@@ -33,6 +35,12 @@ define(["domain/Constants"], function (Constants) {
             
             return defaultIcon;
         };  
+		
+		self.logLevelToIcon = function (level) {
+			var urlFormat = "app/images/logViewer/{level}.png";
+			
+			return urlFormat.replace("{level}", logLevel.toLevelString(level));
+        }
        
         return self;
     };

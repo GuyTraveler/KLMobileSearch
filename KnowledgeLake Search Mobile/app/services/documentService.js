@@ -66,8 +66,14 @@ define(["jquery",
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
-    						cacheListId  = result.strListID.value;
-    						dfd.resolve(cacheListId);
+                            if(result && result.strListID && result.strListID.value)
+                            {
+        						cacheListId  = result.strListID.value;
+        						dfd.resolve(cacheListId);
+                            }
+                            
+                            else
+                                dfd.reject("Failed to retrieve list ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -100,8 +106,14 @@ define(["jquery",
     					.done(function (listID) {						
     						lists.GetList(listID)
     							.done(function (result) {
-    								cacheListRootFolderUrl = result.GetListResult.List.RootFolder;
-    								dfd.resolve(cacheListRootFolderUrl);
+                                    if(result && result.GetListResult && result.GetListResult.List && result.GetListResult.List.RootFolder)
+                                    {
+        								cacheListRootFolderUrl = result.GetListResult.List.RootFolder;
+        								dfd.resolve(cacheListRootFolderUrl);
+                                    }
+                                    
+                                    else
+                                        dfd.reject("Failed to retrieve root folder url.");
                                 })
     							.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     								dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -131,8 +143,14 @@ define(["jquery",
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
-    						cacheListItemId  = result.strItemID.value;
-    						dfd.resolve(cacheListItemId);
+                            if(result && result.strItemID && result.strItemID.value)
+                            {
+        						cacheListItemId  = result.strItemID.value;
+        						dfd.resolve(cacheListItemId);
+                            }
+                            
+                            else
+                                dfd.reject("Failed to retrieve item ID.");
     					})
     					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
     						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
@@ -194,7 +212,8 @@ define(["jquery",
             };
             
             self.getSiteUrlAsync = function () {
-				var siteData = new SiteDataService(docUrl),										
+				var siteData = new SiteDataService(docUrl),	
+					promise,
 					dfd = $.Deferred();
 				
 				if (cacheSiteUrl) {
@@ -202,23 +221,28 @@ define(["jquery",
 					return dfd.promise();
                 }
 				
-				siteData.GetSiteUrlAsync(docUrl)
-					.done(function (result) {
+				promise = siteData.GetSiteUrlAsync(docUrl);
+				
+				promise.done(function (result) {
+                    if(result && result.siteUrl && result.siteUrl.value)
+                    {
 						cacheSiteUrl  = result.siteUrl.value;
 						dfd.resolve(cacheSiteUrl);
-					})
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-					});
+                    }
+                    
+                    else
+                        dfd.reject("Failed to retrieve site url.");
+				});
+
+				promise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+				});
 				
 				return dfd.promise();
             };
 		
             self.getDocumentPropertiesAsync = function () {
-                var dfd = $.Deferred(),
-                    idQuery = "<Query><Where><Eq><FieldRef Name=\"ID\" /><Value Type=\"Number\">{cacheListItemId}</Value></Eq></Where></Query>",
-                    contentTypeIdViewField = "<ViewFields Properties=\"true\" xmlns=\"\"><FieldRef Name=\"ContentTypeID\" /></ViewFields>",
-                    propertiesViewFields = "<ViewFields Properties=\"true\" xmlns=\"\">{viewFields}</ViewFields>";
+                var dfd = $.Deferred();
                                 
                 var getListIdPromise = self.getListIDAsync();
                     
@@ -226,7 +250,7 @@ define(["jquery",
                     var getListItemIdPromise = self.getListItemIDAsync();
                         
                     getListItemIdPromise.done(function (listItemId) {
-                        var getContentTypeIdPromise = self.getListItemsAsync(cacheListId, null, idQuery.replace("{cacheListItemId}", cacheListItemId), contentTypeIdViewField, 0);
+                        var getContentTypeIdPromise = self.getListItemsAsync(cacheListId, null, Constants.idQuery.replace("{cacheListItemId}", cacheListItemId), Constants.contentTypeIdViewField, 0);
                         
                         getContentTypeIdPromise.done(function (listItem) {   
                             var getListContentTypePromise = self.GetListContentTypeAsync(self.parseContentTypeIdFromListItem(listItem));
@@ -235,8 +259,8 @@ define(["jquery",
                                 var viewProperties = self.parseViewPropertiesFromContentType(contentType);
                                 var viewFields = self.buildViewFieldsFromViewProperties(viewProperties);
                                 
-                                var getListItemValuesPromise = self.getListItemsAsync(cacheListId, null, idQuery.replace("{cacheListItemId}", cacheListItemId), 
-                                                                                        propertiesViewFields.replace("{viewFields}", viewFields), 0);
+                                var getListItemValuesPromise = self.getListItemsAsync(cacheListId, null, Constants.idQuery.replace("{cacheListItemId}", cacheListItemId), 
+                                                                                        Constants.propertiesViewFields.replace("{viewFields}", viewFields), 0);
                             
                                 getListItemValuesPromise.done(function (listItemValues) {  
                                     dfd.resolve(self.getDocumentPropertiesFromListItemValues(viewProperties, listItemValues));
@@ -435,8 +459,6 @@ define(["jquery",
             }
             
             self.getDocumentPropertiesFromListItemValues = function (viewProperties, listItemValues) {
-                console.log("viewProperties: " + JSON.stringify(viewProperties));
-                console.log("listItemValues: " + JSON.stringify(listItemValues));
                 var values = self.parseRowFromListItem(listItemValues);
                 
                 if(values && viewProperties)

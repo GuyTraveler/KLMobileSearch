@@ -51,8 +51,35 @@ define([], function () {
             }
             
             return false;
-            
-            return true;
+        }    
+        
+        self.appendKeywordSearch = function (site, keyword) {
+            if(site && site.keywordSearches && keyword && keyword !== "")
+            {
+                var keywordIndex = site.keywordSearches.indexOf(keyword);
+                
+                if(keywordIndex === -1)
+                {
+                    if(site.keywordSearches.length === 5)
+                        site.keywordSearches.pop();
+                    
+                    site.keywordSearches.unshift(keyword);
+                }
+                else if(keywordIndex > 0)
+                    self.bubbleUpKeyword(site.keywordSearches, keywordIndex);
+                
+            }
+        }      
+        
+        self.bubbleUpKeyword = function (keywordSearches, index)
+        {
+            for(var i = index; i > 0; i--)
+            {
+                var temp = keywordSearches[i-1];
+                
+                keywordSearches[i-1] = keywordSearches[i];
+                keywordSearches[i] = temp;
+            }
         }
        
         return self;

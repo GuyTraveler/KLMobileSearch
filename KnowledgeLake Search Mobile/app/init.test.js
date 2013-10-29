@@ -12,11 +12,14 @@ require(["config"], function (config) {
              "application",
 			 "logger",
 			 "extensions",
-             "framework/logLevel"],
-    function($, ko, kendo, application, logger, extensions, logLevel) {
+             "framework/logLevel",
+			 "framework/klNavigator"],
+    function($, ko, kendo, application, logger, extensions, logLevel, navigator) {
 		var appHref = "index.html",
 			testRootPath = 'unitTests/',
-			testsToRun = [testRootPath + "application_tests",
+			testsToRun = [testRootPath + "documentViewModel_tests",
+						  testRootPath + "searchBuilderService_tests",
+						  testRootPath + "application_tests",
 						  testRootPath + "logger_tests",
 						  testRootPath + "extensions_tests",
                           testRootPath + "keyValuePair_tests",
@@ -48,8 +51,7 @@ require(["config"], function (config) {
                           testRootPath + "encryptionService_tests",
 						  testRootPath + "httpProtocols_tests",
 						  testRootPath + "userNameParser_tests",						  
-                          testRootPath + "searchBuilderService_tests",
-						  testRootPath + "savedSearchViewModel_tests",
+                          testRootPath + "savedSearchViewModel_tests",
 						  testRootPath + "searchBuilderViewModel_test",
 						  testRootPath + "promiseRejectResponse_tests",
 						  testRootPath + "promiseResolveResponse_test",
@@ -64,10 +66,20 @@ require(["config"], function (config) {
 						  testRootPath + "searchType_tests",
 						  testRootPath + "site_tests",
                           testRootPath + "klamlBuilderService_tests",
-                          testRootPath + "guid_tests",
-						  testRootPath + "office365LogonService_tests",
+                          testRootPath + "guid_tests",						  
 						  testRootPath + "searchProperty_tests",
-                          testRootPath + "documentViewModel_tests"
+                          testRootPath + "logonServiceFactory_tests",
+						  testRootPath + "formsLogonService_tests",
+                          testRootPath + "dateTimeConverter_tests",
+                          testRootPath + "iconConverter_tests",
+						  testRootPath + "logFileManager_tests",
+						  testRootPath + "logLevel_tests",
+						  testRootPath + "logsViewModel_tests",
+                          testRootPath + "klNavigator_tests",
+						  testRootPath + "office365Service_tests",
+						  testRootPath + "office365LogonService_tests",
+						  testRootPath + "adfs365LogonService_tests",
+                          testRootPath + "keywordBoxHandler_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
@@ -85,9 +97,14 @@ require(["config"], function (config) {
         }*/
         
         QUnit.moduleStart(function (details) {
-            logger.setLogLevel(logLevel.Verbose); 
+            logger.setLogLevel(logLevel.Verbose);			
         });
-        
+		
+		QUnit.testStart(function () {
+			application.navigator = new navigator();
+			window.location.hash = "";
+        });
+		        
         require(testsToRun, function() {           
             QUnit.start(); 
         });

@@ -1,9 +1,8 @@
 /*global QUnit*/
 define(['jquery',
-		'moment',
 		'services/office365LogonService',
 		'unitTests/unitTestSettings'],
-    function ($, moment, office365LogonService, TestSettings) {
+    function ($, office365LogonService, TestSettings) {
         QUnit.module("Testing services/office365LogonService");
 
 		QUnit.test("Test office365LogonService is available", function () {
@@ -59,21 +58,6 @@ define(['jquery',
 				QUnit.ok(false, "Failed to get SAML template");
 				QUnit.start();
             });
-        });
-		
-		QUnit.test("Test office365LogonService.getUtcNow returns valid string", function () {
-			//arrange
-			var service,
-				utcNow;
-			
-			//act
-			service = new office365LogonService(TestSettings.claimsTestUrl);
-			utcNow = service.getUtcNow();
-			
-			//assert
-			QUnit.ok(utcNow);
-			QUnit.equal(typeof utcNow, 'string');
-			QUnit.equal(utcNow.length, 20);
         });
 		
 		QUnit.test("Test office365LogonService.hasErrorResult == true with empty XML", function () {
@@ -248,7 +232,7 @@ define(['jquery',
 				QUnit.start();
             });
         });
-							
+		
 		QUnit.asyncTest("Test office365LogonService.logonAsync fails with invalid URL", function () {
 			//arrange
 			var service,
@@ -267,38 +251,6 @@ define(['jquery',
 			
 			promise.fail(function () {
 				QUnit.ok(true);
-				QUnit.start();
-            });
-        });
-				
-		QUnit.asyncTest("Test office365LogonService.checkLogonStatusAsync works with valid credentials", function () {
-			//arrange
-			var service,
-				promise;
-			
-			//act
-			service = new office365LogonService(TestSettings.claimsTestUrl);
-			promise = service.logonAsync(TestSettings.claimsTestDomainOnly, TestSettings.claimsTestUserOnly, TestSettings.claimsTestPassword);
-			
-			//assert			
-			promise.done(function (result) {
-				QUnit.ok(service.logonExpiration);
-				
-				promise = service.checkLogonStatusAsync();
-				
-				promise.done(function () {
-					QUnit.ok(true);
-					QUnit.start();
-                });
-				
-				promise.fail(function () {
-					QUnit.ok(false, "checkLogonStatusAsync should have returned true");
-					QUnit.start();
-                });							
-            });
-			
-			promise.fail(function () {
-				QUnit.ok(false, "Failed to logon with good creds?!");
 				QUnit.start();
             });
         });
@@ -334,41 +286,20 @@ define(['jquery',
 				QUnit.start();
             });
         });
-				
-		QUnit.asyncTest("Test office365LogonService.checkLogonStatusAsync fails with expired token", function () {
+	
+		QUnit.test("test logonExpirationToDate parses good UTC date", function () {
 			//arrange
-			var newExp,
-				service,
-				promise;
+			var service,
+				parsed;
 			
 			//act
 			service = new office365LogonService(TestSettings.claimsTestUrl);
-			newExp = service.getUtcNow();
-			promise = service.logonAsync(TestSettings.claimsTestDomainOnly, TestSettings.claimsTestUserOnly, TestSettings.claimsTestPassword);
+			service.logonExpiration = "2013-10-23T00:00:00.000Z";
+			parsed = service.logonExpirationToDate();
 			
 			//assert			
-			promise.done(function (result) {
-				QUnit.ok(service.logonExpiration);
-				
-				service.logonExpiration = newExp;
-				
-				promise = service.checkLogonStatusAsync();
-				
-				promise.done(function () {
-					QUnit.ok(false, "checkLogonStatusAsync should have failed");
-					QUnit.start();
-                });
-				
-				promise.fail(function () {
-					QUnit.ok(true);
-					QUnit.start();
-                });							
-            });
-			
-			promise.fail(function () {
-				QUnit.ok(false, "Failed to logon with good creds?!");
-				QUnit.start();
-            });
-        });
-		
+			QUnit.ok(parsed);
+			QUnit.equal(parsed.getFullYear(), 2013);
+			QUnit.equal(service.logonExpiration, parsed.toISOString());
+		});
 	});

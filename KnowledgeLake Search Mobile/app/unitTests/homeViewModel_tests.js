@@ -2,12 +2,20 @@
 define(['require',
         'jquery',
         'knockout',
+		'application',
+		'domain/navigationPage',
         'viewmodels/homeViewModel',
         "domain/site", 
 		"domain/credential", 
 		"domain/credentialType", 
-        "services/siteDataCachingService"],
-    function (require, $, ko, homeViewModel, site, credential, credentialType, SiteDataCachingService) {
+        "services/siteDataCachingService",
+		"domain/navigationDirection",
+		"domain/navigationContext",
+		"framework/klNavigator",
+		"unitTests/unitTestSettings"],
+    function (require, $, ko, application, navigationPage, homeViewModel, site, credential, credentialType, SiteDataCachingService, navigationDirection, navigationContext, navigator, TestSettings) {
+		var popoverCloseTimeout = 1005;
+		
         QUnit.module("Testing homeViewModel");
         
         QUnit.test("test SetDataSource if siteDataSource is already defined", function () {
@@ -15,7 +23,7 @@ define(['require',
             var vm,
 			    siteData = [];
             
-            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
             
             vm = new homeViewModel();
             vm.siteDataSource(["test", "data"]);
@@ -32,7 +40,7 @@ define(['require',
             var vm,
                 siteData = [];
             
-            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev")));
+            siteData.push(new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
             
             vm = new homeViewModel();            
             vm.siteDataSource([]);
@@ -63,7 +71,7 @@ define(['require',
             
             //act 
             vm = new homeViewModel();
-            vm.init();
+            vm.onInit();
                         
             //assert
             QUnit.ok(vm);
@@ -72,7 +80,7 @@ define(['require',
         QUnit.test("test homeViewModel LoadSiteData if sites is not null", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             SiteDataCachingService.sites = [];
             vm = new homeViewModel();
@@ -108,116 +116,93 @@ define(['require',
             
             //act 
             vm = new homeViewModel();
-            vm.beforeShow();
+            vm.onBeforeShow();
                         
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test homeViewModel show", function () {
+     
+        QUnit.test("test homeViewModel onAfterShow", function () {
             //arrange
             var vm;
             
             //act 
             vm = new homeViewModel();
-            vm.show();
+            vm.onAfterShow();
                         
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test homeViewModel afterShow", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.afterShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });  
-        
-        QUnit.test("test homeViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new homeViewModel();
-            vm.hide();
-                        
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
+      
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is null", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             vm = new homeViewModel();
-            vm.selectedSite = null;
+            vm.selectedSite(null);
             
             //act
             vm.setSelectedSite(siteData);
                         
             //assert
-            QUnit.equal(vm.selectedSite, siteData);
+            QUnit.equal(vm.selectedSite(), siteData);
         });
         
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is equal", function () {
             //arrange
-            var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            
-            vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            var vm,
+            	siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				event = {
+					stopImmediatePropagation: function () { }
+                };
             
             //act
-            vm.setSelectedSite(siteData);
+			vm = new homeViewModel();
+            vm.setSelectedSite(siteData, event);
                         
             //assert
-            QUnit.equal(vm.selectedSite, null);
+            QUnit.deepEqual(vm.selectedSite(), siteData);			
         });
         
         QUnit.test("test homeViewModel setSelectedSite if selectedSite is not equal", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.setSelectedSite(testData);
                         
             //assert
-            QUnit.equal(vm.selectedSite, testData);
+            QUnit.equal(vm.selectedSite(), testData);
 			QUnit.equal(vm.navBarVisible(), true);
         });
         
         QUnit.test("test homeViewModel setSelectedSite with suppressnavbar keeps navbar invisible", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "spadmin", "password", "dev"));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.setSelectedSite(testData, null, true);
                         
             //assert
-            QUnit.equal(vm.selectedSite, testData);
+            QUnit.equal(vm.selectedSite(), testData);
 			QUnit.equal(vm.navBarVisible(), false);
         });
         
         QUnit.test("test homeViewModel isSelectedSite if http://docs.kendoui.com/getting-started/mobile/switch false", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             vm = new homeViewModel();
             vm.navBarVisible(false);
@@ -232,11 +217,11 @@ define(['require',
         QUnit.test("test homeViewModel isSelectedSite if hasHighlightedSite true", function () {
             //arrange
             var vm,
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             vm = new homeViewModel();
             vm.hasHighlightedSite(true);
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             var result = vm.isSelectedSite(siteData);
@@ -248,22 +233,31 @@ define(['require',
         QUnit.test("test homeViewModel siteClick", function () {
             //arrange
             var vm,
-                searchUrl = "#savedSearch",
-                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            
-            vm = new homeViewModel();
+                siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				e = {
+					event: {
+						currentTarget: "<div></div>"
+                    }
+                };
             
             //act
-            vm.siteClick(siteData);
+			application.navigator = new navigator();
+			vm = new homeViewModel();
+			
+			vm.SetDataSource([siteData]);
+			vm.getSelectionFrom = function () {
+				return siteData;
+            }
+		
+            vm.siteClick(siteData, e);
                         
             //assert
-            QUnit.equal(window.App.currentUrl, searchUrl);   
+			QUnit.equal(window.App.currentUrl, navigationPage.savedSearchPage);   
         });
         
         QUnit.test("test homeViewModel addSite", function () {
             //arrange
-            var vm,
-                configureSiteUrl = "#configureSite";
+            var vm;
             
             vm = new homeViewModel();
             
@@ -271,48 +265,46 @@ define(['require',
             vm.addSite();
                         
             //assert
-            QUnit.equal(window.App.currentUrl, configureSiteUrl);            
+            QUnit.equal(window.App.currentUrl, navigationPage.configureSitePage);            
         });
         
         QUnit.test("test homeViewModel editSite if selectedSite is null", function () {
             //arrange
             var vm;
-            var homeUrl = "#home";
             
             vm = new homeViewModel();
-            vm.selectedSite = null;
+            vm.selectedSite(null);
             
             if(window.App)
-                window.App.navigate(homeUrl);
+                window.App.navigate(navigationPage.homePage);
             
             //act
             vm.editSite();
                         
             //assert
-            QUnit.equal(window.App.currentUrl, homeUrl);
+            QUnit.equal(window.App.currentUrl, navigationPage.homePage);
         });
         
         QUnit.test("test homeViewModel editSite if selectedSite is not null", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var configureSiteUrl = "#configureSite";
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             vm = new homeViewModel();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.editSite();
                         
             //assert
-            QUnit.equal(window.App.currentUrl, configureSiteUrl);
+            QUnit.equal(window.App.currentUrl, navigationPage.configureSitePage);
         });
         
         QUnit.test("test homeViewModel deleteSite", function () {
             //arrange
             var vm;
-            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
-            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", "password", "dev"));
+            var siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            var testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
             
             SiteDataCachingService.sites = [];
             vm = new homeViewModel();
@@ -322,12 +314,152 @@ define(['require',
             SiteDataCachingService.sites.push(siteData);
             
             vm.LoadSiteData();
-            vm.selectedSite = siteData;
+            vm.selectedSite(siteData);
             
             //act
             vm.deleteSite();
                         
             //assert
             QUnit.deepEqual(vm.siteDataSource(), SiteDataCachingService.sites);
+			QUnit.equal(vm.siteDataSource().length, 1);
         });
+		  
+        QUnit.test("test homeViewModel.closeModalViewDelete: true", function () {
+            //arrange
+            var vm,
+				siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+            	testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				event = {
+					currentTarget: {
+						innerText: application.strings.Yes
+                    }
+                };
+            
+            SiteDataCachingService.sites = [];
+            vm = new homeViewModel();
+            window.AppLoaded(true);            
+            
+            SiteDataCachingService.sites.push(testData);
+            SiteDataCachingService.sites.push(siteData);
+            
+            vm.LoadSiteData();
+            vm.selectedSite(siteData);
+            
+            //act
+            vm.closeModalViewDelete(null, event);
+                        
+            //assert
+            QUnit.deepEqual(vm.siteDataSource(), SiteDataCachingService.sites);
+			QUnit.equal(vm.siteDataSource().length, 1);
+        });
+		  
+        QUnit.test("test homeViewModel.closeModalViewDelete: false", function () {
+            //arrange
+            var vm,
+				siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+            	testData = new site("http://prodsp2010.dev.local", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				event = {
+					currentTarget: {
+						innerText: application.strings.No
+                    }
+                };
+            
+            SiteDataCachingService.sites = [];
+            vm = new homeViewModel();
+            window.AppLoaded(true);            
+            
+            SiteDataCachingService.sites.push(testData);
+            SiteDataCachingService.sites.push(siteData);
+            
+            vm.LoadSiteData();
+            vm.selectedSite(siteData);
+            
+            //act
+            vm.closeModalViewDelete(null, event);
+                        
+            //assert
+            QUnit.deepEqual(vm.siteDataSource(), SiteDataCachingService.sites);
+			QUnit.equal(vm.siteDataSource().length, 2);
+        });
+		
+		QUnit.test("Test closePopover does not fail", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new homeViewModel();
+			vm.closePopover();
+			
+			//assert
+			QUnit.ok(vm);
+        });
+		
+		QUnit.test("Test longpress activates selected site and navbar", function () {
+			//arrange
+			var vm,
+				siteData = new site("http://", "invalid", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
+				e = {
+					event: {
+						currentTarget: "<div></div>"
+                    },
+					preventDefault: function () {}
+                };
+			
+			//act
+			vm = new homeViewModel();
+			vm.getSelectionFrom = function () {
+				return siteData;
+            };
+			
+			SiteDataCachingService.sites = [siteData];
+            
+            vm.LoadSiteData();
+			vm.longPress(e);
+			
+			//assert
+			QUnit.equal(vm.isHold, true);
+			QUnit.equal(vm.hasHighlightedSite(), true);
+			QUnit.equal(vm.navBarVisible(), true);
+			QUnit.deepEqual(vm.selectedSite(), siteData);
+        });
+			
+		QUnit.asyncTest("Test emailSupport succeeds and closes popover properly", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new homeViewModel();
+			windowRef = vm.emailSupport();
+			
+			//assert
+			QUnit.equal(vm.isEmailSelected(), true);
+			
+			setTimeout(function () {
+				QUnit.equal(vm.isEmailSelected(), false);
+				
+				QUnit.start();
+
+            }, popoverCloseTimeout);
+        });
+			
+		QUnit.asyncTest("Test viewLogs succeeds and closes popover properly", function () {
+			//arrange
+			var vm;
+			
+			//act
+			vm = new homeViewModel();
+			vm.onViewLogsClicked();
+			
+			//assert
+			QUnit.equal(vm.isViewLogsSelected(), true);
+			
+			setTimeout(function () {
+				QUnit.equal(vm.isViewLogsSelected(), false);
+				QUnit.equal(window.App.currentUrl, navigationPage.logsPage);
+				
+				QUnit.start();
+
+            }, popoverCloseTimeout);
+        });
+		
     });

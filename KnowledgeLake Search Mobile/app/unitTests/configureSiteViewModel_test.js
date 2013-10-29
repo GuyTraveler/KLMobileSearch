@@ -6,10 +6,13 @@ define(["application",
 		"domain/credential", 
 		"domain/credentialType",
 		"domain/authenticationMode",
+		"domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"domain/httpProtocols",
 		"unitTests/unitTestSettings"],    
 	function (application, SiteDataCachingService, configureSiteViewModel, homeViewModel, site, 
-			  credential, credentialType, authenticationMode, httpProtocols, TestSettings) {
+			  credential, credentialType, authenticationMode, navigationDirection, navigationPage, navigationContext, httpProtocols, TestSettings) {
 		QUnit.module("Testing configureSiteViewModel");
        
 		QUnit.test("configureSiteViewModel initializes propertly", function () {
@@ -38,6 +41,9 @@ define(["application",
 			QUnit.equal(vm.message(), "");
 			QUnit.equal(vm.isUrlValid(), false);
 			QUnit.equal(vm.isCredentialsValid(), false);
+			QUnit.equal(vm.isOffice365(), false);
+			QUnit.equal(vm.adfsUrl(), "");
+			QUnit.equal(vm.isEditMode(), false);
 			QUnit.ok(vm.urlValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			QUnit.ok(vm.credValidationImageSrc().indexOf(TestSettings.questionImageCheck) > -1);
 			
@@ -318,16 +324,7 @@ define(["application",
 			urlValidationPromise.done(function (credType) {
 				QUnit.ok(true);
 				QUnit.equal(credType, credentialType.claimsOrForms);
-				
-				//shut down the logon window
-				QUnit.ok(vm.logonService);
-				
-				setTimeout(function () {
-					QUnit.ok(vm.logonService.windowRef);
-					vm.logonService.windowRef.close();
-					
-					QUnit.start();
-				}, 750);
+				QUnit.start();
             });
 			urlValidationPromise.fail(function (status) {
 				QUnit.ok(false, "Could not validate " + TestSettings.adfsTestUrl); 
@@ -382,7 +379,71 @@ define(["application",
             });
 			
 			credValidationPromise.fail(function () {
-				QUnit.ok(false, "credential validation failed when it should have been good");
+				QUnit.ok(false, "NTLM credential validation failed when it should have been good");
+				QUnit.start();
+            });
+        });
+			
+		QUnit.asyncTest("configureSiteViewModel.logon (Office365 Std) succeeds with good creds", function () {
+			//arrange
+			var vm,
+				credValidationPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.protocol(httpProtocols.https);
+			vm.url(TestSettings.claimsTestUrl);
+			vm.siteFullUserName(TestSettings.claimsTestUser);
+			vm.sitePassword(TestSettings.claimsTestPassword);
+			vm.siteCredentialType(credentialType.claimsOrForms);
+			
+			credValidationPromise = vm.logonAsync();
+			
+			//assert
+			QUnit.ok(credValidationPromise);
+			
+			credValidationPromise.done(function (title, version) {
+				QUnit.ok(true);
+				QUnit.equal(vm.isOffice365(), true);
+				QUnit.equal(vm.adfsUrl(), "");
+				
+				QUnit.start();
+            });
+			
+			credValidationPromise.fail(function () {
+				QUnit.ok(false, "Office 365 credential validation failed when it should have been good");
+				QUnit.start();
+            });
+        });
+			
+		QUnit.asyncTest("configureSiteViewModel.logon (Office365 ADFS) succeeds with good creds", function () {
+			//arrange
+			var vm,
+				credValidationPromise;
+			
+			//act
+			vm = new configureSiteViewModel();
+			vm.protocol(httpProtocols.https);
+			vm.url(TestSettings.adfsTestUrl);
+			vm.siteFullUserName(TestSettings.adfsTestUser + "@" + TestSettings.adfsTestDomain);
+			vm.sitePassword(TestSettings.adfsTestPassword);
+			vm.siteCredentialType(credentialType.claimsOrForms);
+			
+			credValidationPromise = vm.logonAsync();
+			
+			//assert
+			QUnit.ok(credValidationPromise);
+			
+			credValidationPromise.done(function (title, version) {
+				QUnit.ok(true);
+				QUnit.equal(vm.isOffice365(), true);
+				QUnit.ok(vm.adfsUrl().startsWith(TestSettings.adfsSTSTestUrl));
+				
+				QUnit.start();
+            });
+			
+			credValidationPromise.fail(function () {
+				QUnit.ok(false, "Office 365 credential validation failed when it should have been good");
 				QUnit.start();
             });
         });
@@ -412,20 +473,34 @@ define(["application",
 			QUnit.equal(vm.message(), application.strings.urlInvalidMessage);
         });
 		
-		QUnit.test("test configureSiteViewModel.validateAll validates bad site title", function () {
+		QUnit.asyncTest("test configureSiteViewModel.validateAll validates bad site title", function () {
 			//arrange
-			var vm;
+			var vm,
+				promise;
 			
 			//act
 			vm = new configureSiteViewModel();
 			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
+			vm.sitePassword(TestSettings.ntlmTestPassword);
 			vm.setValidUrl(credentialType.ntlm);
+			
+			promise = vm.logonAsync();
 			
 			//assert
 			QUnit.ok(vm);
 			
-			QUnit.equal(vm.validateAll(), false);
-			QUnit.equal(vm.message(), application.strings.siteTitleRequired);
+			promise.done(function () {
+				vm.siteTitle("");
+				QUnit.equal(vm.validateAll(), false);
+				QUnit.equal(vm.message(), application.strings.siteTitleRequired);	
+				QUnit.start();
+            });
+			
+			promise.fail(function () {
+				QUnit.ok(false);
+				QUnit.start();
+			});			
         });
 		
 		QUnit.test("test configureSiteViewModel.validateAll validates bad credentials", function () {
@@ -521,51 +596,62 @@ define(["application",
         QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid new site", function () {
 			//arrange
 			var vm,
+				dfd = $.Deferred(),
+				removeSitePromise,			
 				saveSettingsPromise;
             
 			vm = new configureSiteViewModel();            
             window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl))
-				SiteDataCachingService.RemoveSiteData(TestSettings.ntlmTestUrl);
+			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl)) {
+				removeSitePromise = SiteDataCachingService.RemoveSiteAsync(TestSettings.ntlmTestUrl);
+			}
+			else {
+				removeSitePromise = dfd.promise();
+				dfd.resolve();
+            }				
 			
-			vm.url(TestSettings.ntlmTestUrl);
-			vm.siteTitle("dfdsfds");
-			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
-			vm.sitePassword(TestSettings.ntlmTestPassword);
-			vm.setValidUrl(credentialType.ntlm);
+			removeSitePromise.done(function () {			
+				vm.url(TestSettings.ntlmTestUrl);
+				vm.siteTitle("dfdsfds");
+				vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
+				vm.sitePassword(TestSettings.ntlmTestPassword);
+				vm.setValidUrl(credentialType.ntlm);
+				
+				saveSettingsPromise = vm.saveSiteSettingsAsync();
+							
+				//assert
+				QUnit.ok(saveSettingsPromise);
+							
+				saveSettingsPromise.done(function () {
+					QUnit.equal(vm.validateAll(), true);
+					QUnit.start();
+	            });
+				
+				saveSettingsPromise.fail(function () {
+					QUnit.ok(false, "saveSiteSettings failed when it should have succeeded: " + vm.message());
+					QUnit.start();
+	            });
+			});
 			
-			saveSettingsPromise = vm.saveSiteSettingsAsync();
-						
-			//assert
-			QUnit.ok(saveSettingsPromise);
-						
-			saveSettingsPromise.done(function () {
-				QUnit.equal(vm.validateAll(), true);
-				QUnit.start();
-            });
-			
-			saveSettingsPromise.fail(function () {
-				QUnit.ok(false, "saveSiteSettings failed when it should have succeeded: " + vm.message());
+			removeSitePromise.fail(function () {
+				QUnit.ok(false, "Failed to remove existing site data");
 				QUnit.start();
             });
         });
 		
 		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings saves valid existing site", function () {
 			//arrange
-			var vm,
-                homeVM,
+			var vm,            
+				selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
 				saveSettingsPromise;
             
-            homeVM = new homeViewModel();
-			vm = new configureSiteViewModel();
-            homeVM.selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            vm = new configureSiteViewModel();
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": selectedSite}));
             
-            window.homeViewModel = homeVM;
-			
 			//act
-			vm.url(homeVM.selectedSite.url);
+			vm.url(selectedSite.url);
 			vm.siteTitle("dfdsfds");
 			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
 			vm.sitePassword(TestSettings.ntlmTestPassword);
@@ -603,6 +689,7 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), "");
             QUnit.equal(configureSiteVM.sitePassword(), "");
             QUnit.equal(configureSiteVM.siteDomain(), "");
+			QUnit.equal(configureSiteVM.isEditMode(), false);
         });
         
         QUnit.test("test configureSiteViewModel populateConfigureSiteViewModel", function () {
@@ -624,20 +711,18 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), siteData.credential.userName);
             QUnit.equal(configureSiteVM.sitePassword(), siteData.credential.password);
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
+			QUnit.equal(configureSiteVM.isEditMode(), true);
         });
         
-        QUnit.test("test configureSiteViewModel afterShow (with selected site)", function () {
+        QUnit.test("test configureSiteViewModel onAfterShow (with selected site)", function () {
             //arrange
             var configureSiteVM,
-            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
-				homeVM = {
-					selectedSite: siteData
-                };
+            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
                         			
             //act 
-			window.homeViewModel = homeVM;
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
+			application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": siteData}));
+            configureSiteVM.onAfterShow();
                         
             //assert
             QUnit.equal(configureSiteVM.fullUrl().toUpperCase(), siteData.url.toUpperCase());
@@ -648,16 +733,18 @@ define(["application",
             QUnit.equal(configureSiteVM.siteUserName(), siteData.credential.userName);
             QUnit.equal(configureSiteVM.sitePassword(), siteData.credential.password);
             QUnit.equal(configureSiteVM.siteDomain(), siteData.credential.domain);
+			QUnit.equal(configureSiteVM.isEditMode(), true);
         });
 		
-		QUnit.test("test configureSiteViewModel afterShow (NO selected site)", function () {
+		QUnit.test("test configureSiteViewModel onAfterShow (NO selected site)", function () {
             //arrange
             var configureSiteVM;
                         			
-            //act 
-			window.homeViewModel = {};
+            //act
+			
 			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
+			application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage));
+            configureSiteVM.onAfterShow();
                         
             //assert
             QUnit.equal(configureSiteVM.url(), TestSettings.defaultUrlText);
@@ -672,23 +759,6 @@ define(["application",
 			QUnit.equal(configureSiteVM.message(), "");
 			QUnit.equal(configureSiteVM.isUrlValid(), false);
 			QUnit.equal(configureSiteVM.isCredentialsValid(), false);
+			QUnit.equal(configureSiteVM.isEditMode(), false);
         });
-						  
-		QUnit.test("test configureSiteViewModel.afterShow (with selected site)", function () {
-			//arrange
-            var configureSiteVM,
-            	siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
-				homeVM = {
-					selectedSite: siteData
-                };
-                        			
-            //act 
-			window.homeViewModel = homeVM;
-			configureSiteVM = new configureSiteViewModel();
-            configureSiteVM.afterShow();
-                        
-            //assert
-            QUnit.ok(configureSiteVM);
-        });
-		
     });

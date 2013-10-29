@@ -1,7 +1,10 @@
 /*global QUnit*/
 //explicit request to authenticationService
-define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticationMode"],
-    function (authenticationService, ntlm, authenticationMode) {
+define(["jquery",
+		"services/sharepoint/authenticationService", 
+		"domain/authenticationMode",
+		"unitTests/unitTestSettings"],
+    function ($, authenticationService, authenticationMode, TestSettings) {
         QUnit.module("Testing authenticationService");
         
         
@@ -38,7 +41,6 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
 	            });
         });
                 
-        //TODO: test a couple of Claims sites also
         QUnit.asyncTest("Test authentication Windows Auth returns Windows", function () {
             //arrange
             var service,
@@ -86,8 +88,7 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
 	                QUnit.start();
 	            });
         });        
-        
-            
+                    
         QUnit.asyncTest("Test authentication Office 365 (ADFS) returns Forms", function () {
             //arrange
             var service,
@@ -108,6 +109,55 @@ define(["services/sharepoint/authenticationService", "ntlm", "domain/authenticat
 	            })
 	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
 	                QUnit.notEqual(XMLHttpRequest.status, 200);
+	                QUnit.start();
+	            });
+        });        
+		
+		QUnit.asyncTest("Test authentication.Login can log into FBA site with good creds", function () {
+            //arrange
+            var service;
+            
+            //act
+            service = new authenticationService(TestSettings.fbaTestUrl);
+            
+            //assert
+            QUnit.ok(service);
+            
+            service.Login(TestSettings.fbaTestUser, TestSettings.fbaTestPassword)
+				.done(function (result) {
+	                QUnit.ok(result);
+					QUnit.ok(result.LoginResult);
+					QUnit.ok(result.LoginResult.CookieName);
+					QUnit.ok(result.LoginResult.CookieName.value);
+					QUnit.equal(result.LoginResult.CookieName.value, "FedAuth");
+					
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false, "FBA logon failed and should have succeeded");
+	                QUnit.start();
+	            });
+        });        
+		
+		//NOTE: do not make a test with a GOOD user name and BAD password.  It will cause the user to get locked out
+		QUnit.asyncTest("Test authentication.Login fails with bad creds", function () {
+            //arrange
+            var service;
+            
+            //act
+			service = new authenticationService(TestSettings.fbaTestUrl);
+
+			//assert
+            service.Login("fdasfsdf", TestSettings.fbaTestPassword)
+				.done(function (result) {
+	                QUnit.ok(result);
+					QUnit.ok(result.LoginResult);
+					QUnit.ok(!result.LoginResult.CookieName);
+					
+					QUnit.start();
+	            })
+	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+	                QUnit.ok(false, "Fatal error in FBA login test");
 	                QUnit.start();
 	            });
         });        

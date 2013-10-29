@@ -5,10 +5,10 @@ define(["application",
         "framework/promiseResponse/promiseRejectResponse"], 
 function (application, logger, $, PromiseResolveResponse, PromiseRejectResponse) {
     var fileManagement = function () {
-        var self = this,
-            knowledgelakeDirectory = "KnowledgeLake";
+        var self = this;
         
         self.fileSystem = null;
+		self.knowledgelakeDirectory = "KnowledgeLake"
         
         var onFileSystemSuccess = function (fileSystem) {
             self.deferred.resolve(fileSystem);
@@ -217,7 +217,7 @@ function (application, logger, $, PromiseResolveResponse, PromiseRejectResponse)
             
             if(self.fileSystem)
             {
-                self.fileSystem.root.getDirectory(knowledgelakeDirectory, {create: true, exclusive: false},
+                self.fileSystem.root.getDirectory(self.knowledgelakeDirectory, {create: true, exclusive: false},
                 function (directoryEntry) {
                     dfd.resolve(new PromiseResolveResponse(directoryEntry));
                 },

@@ -1,11 +1,18 @@
-<div class="pull-left">
-	<select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+<div class="full-width top-num-margin">
+    <div class="pull-left num-left-container">
+	    <select class="relative-container" data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+    </div>
+    <div class="pull-left num-right-container">
+        <input class="full-width relative-container" type="number" data-bind="value: data.value, valueUpdate: 'afterkeydown', numberValidation: data.value" />
+    </div>
 </div>
-
-<div class="pull-left">    
-    <input type="number" data-bind=" value: data.value" />
-    <div data-bind="if: data.selectedOperator == 'Range'">
-        <label>To</label>
-        <input type="number" data-bind=" value: data.value" />
+<div class="full-width bottom-num-margin"> 
+    <div data-bind="if: data.isRange">
+        <div class="pull-left num-left-container num-seperator">     
+            <span>To</span>
+        </div>
+        <div class="pull-left num-right-container">
+            <input class="full-width relative-container" type="number" data-bind=" value: data.secondaryValue, valueUpdate: 'afterkeydown', numberValidation: data.secondaryValue" />
+        </div>
     </div>
 </div>

@@ -16,7 +16,7 @@ define(["jquery",
             var dfd = $.Deferred(),            
                 service = new facetQuerySearchService(site.url);
             
-            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
             logonPromise = logonService.logonAsync(site.credential.domain, 
                                                    site.credential.userName, 
@@ -26,11 +26,17 @@ define(["jquery",
                 var facetSearchPromise = service.FacetSearch(klaml);
                 
                 facetSearchPromise.done(function (result) {
-                    dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data)); 
+                    if(result && result.FacetSearchResult && result.FacetSearchResult.Data)
+                    {
+                        dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data));
+                    }
+                    
+                    else
+                        dfd.reject("Failed to retrieve search results.");
                 });
               
                 facetSearchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.reject(errorThrown);
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
                 });
             });
             
@@ -50,7 +56,7 @@ define(["jquery",
             detectPromise.done(function (result) {
                 var service = new facetQuerySearchService(site.url);          
                                 
-                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
                 logonPromise = logonService.logonAsync(site.credential.domain, 
                                                        site.credential.userName, 
@@ -61,27 +67,45 @@ define(["jquery",
                     var getCurrentUserNamePromise = service.GetCurrentUserName();
                 
                     getCurrentUserNamePromise.done(function (currentUserName) {
-                        var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
-                        
-                        getQueryUserPromise.done(function (queryUser) {
-                            var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                        if(currentUserName && currentUserName.GetCurrentUserNameResult && currentUserName.GetCurrentUserNameResult.value)
+                        {
+                            var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
                             
-                            getQueriesForUserPromise.done(function (queryResults) {
-                                dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult)); 
+                            getQueryUserPromise.done(function (queryUser) {
+                                if(queryUser && queryUser.GetQueryUserResult && queryUser.GetQueryUserResult.Name && queryUser.GetQueryUserResult.Name.value)
+                                {
+                                    var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                                    
+                                    getQueriesForUserPromise.done(function (queryResults) {
+                                        if(queryResults && queryResults.GetQueriesForUserResult)
+                                        {
+                                            dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult));
+                                        }
+                                        
+                                        else
+                                            dfd.reject("Failed to retrieve queries.");
+                                    });
+                                  
+                                    getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                                    });
+                                }
+                                
+                                else
+                                    dfd.reject("Failed to retrieve query user.");
                             });
-                          
-                            getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                                dfd.reject("failed to get queries");
-                            }); 
-                        });
-                      
-                        getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                            dfd.reject("failed to get query user");
-                        }); 
+                                              
+                            getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                            });
+                        }
+                        
+                        else
+                            dfd.reject("Failed to retrieve current user name.");
                     });
                   
                     getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        dfd.reject("failed to get current user name");
+                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
                     });
                 });
                 
@@ -91,7 +115,7 @@ define(["jquery",
             });
           
             detectPromise.fail(function (error) {
-                dfd.reject("imaging search not activated");
+                dfd.reject("Imaging search not activated.");
             });
             
             return dfd.promise();

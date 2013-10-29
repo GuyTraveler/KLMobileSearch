@@ -1,11 +1,14 @@
 define(["domain/httpProtocols", "extensions"], function (httpProtocols) {
-    var site = function(url, title, majorVersion, credential) {
+    var site = function(url, title, majorVersion, credential, isOffice365, adfsUrl) {
         var self = this;
        
         self.url = url;
         self.title = title;
         self.majorVersion = majorVersion;
         self.credential = credential;
+        self.keywordSearches = [];
+        self.isOffice365 = !isOffice365 ? false : isOffice365;
+		self.adfsUrl = !adfsUrl ? "" : adfsUrl;
               
 		
 		self.urlWithoutScheme = function () {

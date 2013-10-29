@@ -79,6 +79,9 @@ define(["jquery", "application", "logger", "domain/result"],
 				else if (mappedPropertyName == "Title") {
 					resultItem.title = resultItem.metadata[mappedPropertyName];
                 }
+				else if (mappedPropertyName == "LastModifiedTime") {
+					resultItem.LastModifiedTime = resultItem.metadata[mappedPropertyName];
+                }
 			};
 			
 			isIgnoredProperty = function (propertyName) {

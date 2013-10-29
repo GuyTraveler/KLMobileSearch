@@ -1,9 +1,14 @@
 define(["jquery", 
+        "knockout",
 		"application", 
+        "domain/searchProperty",
 		"domain/keywordConjunction",
-		"domain/Constants", 
+        "domain/catalogPropertyControlType",
+		"domain/Constants",
+        "services/dateTimeConverter",
+        "knockoutMapping", 
 		"extensions"],
-        function ($, application, keywordConjunction, Constants) {
+        function ($, ko, application, searchProperty, keywordConjunction, catalogPropertyControlType, Constants, DateTimeConverter, mapping) {
         
 		var klamlBuilderService = function () {
 			var self = this,
@@ -39,11 +44,13 @@ define(["jquery",
                         whereClause += IsDocument;
                     }
                     
+                    self.refineKlamlProperties(searchProperties);
+                    
                     var searchPropertiesLength = searchProperties.length;
                     
                     for(var i = 0; i < searchPropertiesLength; i++)
                     {
-                        if(!(searchProperties[i].hidden))
+                        if(!ko.unwrap(searchProperties[i].hidden) && ((searchProperties[i].value() && searchProperties[i].value() !== "") || searchProperties[i].selectedOperator() === application.strings.IsNotNull))
                             whereClause += self.buildFieldFromSearchProperty(searchProperties[i]);
                     }
                 }
@@ -54,25 +61,97 @@ define(["jquery",
                     whereClause += IsDocument;
                 }
                 
-                return query.replace("{whereClause}", whereClause);
-            }     
+                return query.replace(/{whereClause}/g, whereClause);
+            }  
+            
+            self.refineKlamlProperties = function (searchProperties)
+            {
+                if(searchProperties)
+                {                    
+                    for(var i = searchProperties.length - 1; i >= 0; i--)
+                    {
+                        if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
+                        {
+                            if(searchProperties[i].selectedOperator() === application.strings.Range)
+                            {
+                                searchProperties = self.duplicateKlamlProperty(searchProperties, i);
+                                
+                                var klamlDateTimesRange = DateTimeConverter.convertToKlamlDateTimeRange(searchProperties[i].value(), searchProperties[i+1].value());
+                                         
+                                searchProperties[i].value(klamlDateTimesRange.startDate);
+                                searchProperties[i+1].value(klamlDateTimesRange.endDate);
+                            }
+                            
+                            else if(searchProperties[i].selectedOperator() === Constants.equalOperator)
+                            {
+                                searchProperties = self.duplicateKlamlProperty(searchProperties, i);
+                                
+                                var klamlDateTimesEqual = DateTimeConverter.convertToKlamlDateTimeEqual(searchProperties[i].value()); 
+                                
+                                searchProperties[i].value(klamlDateTimesEqual.startDate);
+                                searchProperties[i+1].value(klamlDateTimesEqual.endDate);
+                            }
+                            
+                            else if(searchProperties[i].selectedOperator() === Constants.greaterThanOperator ||
+                                    searchProperties[i].selectedOperator() === Constants.lessThanOrEqualOperator)
+                            {
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimeDayEnd(searchProperties[i].value()));
+                            }
+                            
+                            else if(searchProperties[i].selectedOperator() === Constants.greaterThanOrEqualOperator)
+                            {                                
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTimePreviousDay(searchProperties[i].value()));
+                            }
+                            
+                            else
+                            {
+                                searchProperties[i].value(DateTimeConverter.convertToKlamlDateTime(searchProperties[i].value()));
+                            }
+                        }
+                        
+                        else if (searchProperties[i].controlType === catalogPropertyControlType.Number &&
+                                 searchProperties[i].selectedOperator() === application.strings.Range)
+                        {
+                            searchProperties = self.duplicateKlamlProperty(searchProperties, i);
+                        }
+                    }
+                }
+                
+                return searchProperties;
+            }
+            
+            self.duplicateKlamlProperty = function(searchProperties, index) {
+                if(searchProperties && !isNaN(index) && index >= 0)
+                {
+                    var modifiedProperty = new searchProperty();
+                            
+                    mapping.fromJS(searchProperties[index], {}, modifiedProperty);                            
+                    
+                    searchProperties[index].selectedOperator(Constants.greaterThanOrEqualOperator);
+                    modifiedProperty.selectedOperator(Constants.lessThanOrEqualOperator);                            
+                    modifiedProperty.value(modifiedProperty.secondaryValue());
+                    
+                    searchProperties.splice(index + 1, 0, modifiedProperty);
+                }
+                
+                return searchProperties;
+            }
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
                 if(searchProperty)
                 {
                     var field = masterMetaDataWhereTemplate;
                                     
-					field = field.replace(/{id}/g, searchProperty.id);
-                    field = field.replace("{displayName}", searchProperty.name); // change to searchProperty.selectedProperty() later?
-                    field = field.replace("{type}", searchProperty.dataType);
+					field = field.replace(/{id}/g, ko.unwrap(searchProperty.id));
+                    field = field.replace(/{displayName}/g, ko.unwrap(searchProperty.name)); // change to searchProperty.selectedProperty() later?
+                    field = field.replace(/{type}/g, ko.unwrap(searchProperty.dataType));
 					
-                    field = field.replace("{operator}", self.GetKlamlOperator(searchProperty.selectedOperator()));
-                    field = field.replace("{condition}", searchProperty.value());
-                    field = field.replace("{conjunction}", searchProperty.conjunction());
+                    field = field.replace(/{operator}/g, self.GetKlamlOperator(searchProperty.selectedOperator()));
+                    field = field.replace(/{condition}/g, searchProperty.value());
+                    field = field.replace(/{conjunction}/g, searchProperty.conjunction());
                     
                     return field;
-                }
-                
+                }                
                 return "";
             }
             

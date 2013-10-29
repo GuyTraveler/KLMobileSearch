@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(['require',
+define(["application",
+        'require',
         'jquery',
         'knockout',
         'viewmodels/documentViewModel',
@@ -11,11 +12,15 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
         "unitTests/unitTestSettings",
 		"domain/keywordConjunction",
 		//uncaught
 		"extensions"],
-    function (require, $, ko, documentViewModel, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, documentProperty, result, site, credential, credentialType, TestSettings, keywordConjunction) {
+    function (application, require, $, ko, documentViewModel, resultsViewModel, savedSearchViewModel, searchBuilderViewModel, documentProperty, result, 
+              site, credential, credentialType, navigationDirection, navigationPage, navigationContext, TestSettings, keywordConjunction) {
         QUnit.module("Testing documentViewModel");
         
         QUnit.test("test SetDataSource if documentDataSource is already defined", function () {
@@ -65,94 +70,47 @@ define(['require',
 			QUnit.ok(window.App.isMock);
         });
 		
-        QUnit.test("test documentViewModel init", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act 
-            vm.init();
-            
-            //assert
-            QUnit.ok(vm);
-        }); 
-        
-        QUnit.test("test documentViewModel beforeShow", function () {
+        QUnit.test("test documentViewModel onBeforeShow", function () {
             //arrange
             var vm;
             
             vm = new documentViewModel();
             
             //act
-            vm.beforeShow();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
-        QUnit.test("test documentViewModel show", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act
-            vm.show();
+            vm.onBeforeShow();
                         
             //assert
             QUnit.ok(vm);
         });
        
-        QUnit.test("test documentViewModel afterShow", function () {            
+        QUnit.test("test documentViewModel onAfterShow", function () {            
             //arrange
             var vm,
-                resultsVM,
-                savedSearchVM;
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain))
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
-            savedSearchVM = new savedSearchViewModel();
-			resultsVM = new resultsViewModel();
-            vm = new documentViewModel();
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
-            resultsVM.selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});     
-            
-            window.savedSearchViewModel = savedSearchVM;
-            window.resultsViewModel = resultsVM;
-            
-            //act
-            vm.afterShow();
-            
-            //assert
-            QUnit.ok(vm);
-        });
-        
-        QUnit.test("test documentViewModel hide", function () {
-            //arrange
-            var vm;
-            
-            vm = new documentViewModel();
-            
-            //act
-            vm.hide();
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+                {"site": selectedSite, "result": selectedResult}));
                         
+			vm = new documentViewModel();
+            
+            //act
+            vm.onAfterShow();
+            
             //assert
             QUnit.ok(vm);
         });
-        
+     
         QUnit.asyncTest("test documentViewModel getDocumentProperties", function () {
             //arrange
             var vm,
-                resultsVM,
-                savedSearchVM; 
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
-            savedSearchVM = new savedSearchViewModel();
-			resultsVM = new resultsViewModel();
+			application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+                {"site": selectedSite, "result": selectedResult}));
+                        
 			vm = new documentViewModel();
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
-            resultsVM.selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});     
-            
-            window.savedSearchViewModel = savedSearchVM;
-            window.resultsViewModel = resultsVM;  
             
             //act
             var getDocumentPropertiesPromise = vm.getDocumentProperties();    
@@ -172,17 +130,13 @@ define(['require',
         QUnit.asyncTest("test documentViewModel getDocumentProperties bad credentials", function () {
             //arrange
             var vm,
-                resultsVM,
-                savedSearchVM; 
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, "", TestSettings.ntlmTestDomain)),
+                selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
-            savedSearchVM = new savedSearchViewModel();
-			resultsVM = new resultsViewModel();
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+                {"site": selectedSite, "result": selectedResult}));
+                        
 			vm = new documentViewModel();
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, "", TestSettings.ntlmTestDomain)));
-            resultsVM.selectedResult = new result(TestSettings.docUrl, {"title": TestSettings.docTitle});     
-            
-            window.savedSearchViewModel = savedSearchVM;
-            window.resultsViewModel = resultsVM;  
             
             //act
             var getDocumentPropertiesPromise = vm.getDocumentProperties();    
@@ -208,7 +162,7 @@ define(['require',
             savedSearchVM = new savedSearchViewModel();
 			resultsVM = new resultsViewModel();
 			vm = new documentViewModel();
-            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)));
+            savedSearchVM.site = ko.observable(new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""));
             resultsVM.selectedResult = new result("", {"title": TestSettings.docTitle});     
             
             window.savedSearchViewModel = savedSearchVM;

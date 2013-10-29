@@ -6,21 +6,31 @@
 		
         <script src="cordova.js" type="text/javascript"></script>
 		<script src="softkeyboard.js" type="text/javascript"></script>
+		<script src="EmailComposer.js" type="text/javascript"></script>
 		
-        <script data-main="app/init.js" src="app/lib/require.js"></script>     
+        <script data-main="app/init.js" src="app/lib/require.js"></script>       
         
+        <link href="app/styles/kendo/kendo.common.min.css" rel="stylesheet" />
+        <link href="app/styles/kendo/kendo.default.min.css" rel="stylesheet" />
         <link href="app/styles/kendo/kendo.mobile.all.min.css" rel="stylesheet" />
         <link href="app/styles/app.css" rel="stylesheet" />
 		<link href="app/styles/homeViewStyles.css" rel="stylesheet" />
+		<link href="app/styles/logsViewStyles.css" rel="stylesheet" />
 		<link href="app/styles/resultsViewStyles.css" rel="stylesheet" />
 		<link href="app/styles/savedSearchViewStyles.css" rel="stylesheet" />
 		<link href="app/styles/queryBuilderViewStyles.css" rel="stylesheet" />
+		<link href="app/styles/documentViewStyles.css" rel="stylesheet" />
+		<link href="app/styles/controlTemplates/calendarStyles.css" rel="stylesheet" />
+		<link href="app/styles/controlTemplates/numberStyles.css" rel="stylesheet" />
     </head>
-    <body>
+    <body id="body">
         <div data-bind="kendoView: { id: 'home' }, attr: { 'data-title': strings().appTitle, 'data-role': 'view' }">            
         </div>
      
         <div data-bind="kendoView: { id: 'configureSite' }, attr: { 'data-title': strings().configureSitePageTitle, 'data-role': 'view' }" data-use-native-scrolling="true" data-transition="overlay:up">
+        </div>
+		
+		<div data-bind="kendoView: { id: 'logs' }, attr: { 'data-title': strings().viewLogsPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            
         </div>
         
         <div data-bind="kendoView: { id: 'savedSearch' }, attr: { 'data-title': strings().savedSearchesPageTitle, 'data-role': 'view' }" data-use-native-scrolling="true">            

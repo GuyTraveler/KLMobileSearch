@@ -1,22 +1,25 @@
 <header data-role="header">
     <div data-role="navbar">    
-		<button data-role="backbutton" class="transparent-button back-button-head" data-align="left"></button>				
+		<button class="transparent-button head-back-button" data-align="left" data-bind="click: navigateBack"></button>				
     </div>
 </header>
 
-<h3 data-bind="text: documentTitle"></h3>
-<div data-bind="foreach: documentDataSource">
-    <div data-bind="ifnot: hidden">
-        <span data-bind="text: displayName"></span>
-        <span>: </span>
-        <span data-bind="text: value"></span>
-    </div>
-</div>
-
-<!--<footer data-role="footer">
-    <div data-role="tabstrip" data-selected-index="100">
-        <a href="#home" data-icon="home">
-            <span data-bind="text: application.strings.homeLinkText"></span>
-        </a>
-    </div>
-</footer>-->
+<form>
+	<div>
+	    <h3 data-bind="text: documentTitle"></h3>
+	    
+		<ul data-role="listview" data-bind="foreach: documentDataSource" data-style="inset">
+            <!-- ko ifnot: hidden -->
+                <li class="full-width">
+                    <label>
+                        <p>
+                            <span class="bold" data-bind="text: displayName" />		
+                            <span class="bold">: </span>                    
+            			    <span data-bind="text: value"></span>
+                        </p> 
+                    </label>
+                </li>  
+            <!-- /ko -->
+	    </ul>
+	</div>
+</form>

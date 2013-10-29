@@ -1,5 +1,6 @@
 /*global QUnit*/
-define(['require',
+define(["application",
+        'require',
         'jquery',
         'knockout',
         'viewmodels/savedSearchViewModel',
@@ -9,9 +10,13 @@ define(['require',
         "domain/site",
         "domain/credential",
         "domain/credentialType",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
 		"unitTests/unitTestSettings",
 		"domain/keywordConjunction"],
-    function (require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, credentialType, TestSettings, keywordConjunction) {
+    function (application, require, $, ko, savedSearchViewModel, homeViewModel, search, searchType, site, credential, 
+              credentialType, navigationDirection, navigationPage, navigationContext, TestSettings, keywordConjunction) {
         QUnit.module("Testing savedSearchViewModel");
         
         
@@ -28,19 +33,7 @@ define(['require',
 			QUnit.ok(window.App.isMock);
 			QUnit.equal(vm.wordConjunction(), keywordConjunction.and);
         });
-        
-        QUnit.test("test savedSearchViewModel init", function () {
-            //arrange
-            var vm;
-            
-            //act 
-            vm = new savedSearchViewModel();
-            vm.init();
-                        
-            //assert
-            QUnit.ok(vm);
-        });
-        
+       
         QUnit.test("test savedSearchViewModel SetDataSource", function () {
             //arrange
             var vm,
@@ -94,37 +87,60 @@ define(['require',
             //assert
             QUnit.ok(vm);
         });  
-        
-        QUnit.test("test savedSearchViewModel afterShow", function () {
+                  
+        QUnit.test("test savedSearchViewModel clearKeyword", function () {
             //arrange
             var vm,
-                homeVM;            
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
             
-            vm = new savedSearchViewModel();
-            homeVM = new homeViewModel();
-            homeVM.selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+            selectedSite.keywordSearches = [TestSettings.testSearchKeyword];
             
-            window.homeViewModel = homeVM;
-            
-            //act
-            vm.afterShow();
-                        
-            //assert
-            QUnit.equal(vm.site(), homeVM.selectedSite);
-        });         
-        
-        QUnit.test("test savedSearchViewModel hide", function () {
-            //arrange
-            var vm;
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));;
             
             //act 
             vm = new savedSearchViewModel();
-            vm.hide();
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+            vm.clearKeyword();
                         
             //assert
             QUnit.ok(vm);
-        });  
+        });
         
+        QUnit.test("test savedSearchViewModel onBeforeShow", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
+            
+            vm = new savedSearchViewModel();            
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+            
+            //act
+            vm.onBeforeShow();
+                        
+            //assert
+            QUnit.equal(vm.selectedSearch(), null);
+            QUnit.deepEqual(vm.searchDataSource(), []);
+        });       
+        
+        QUnit.test("test savedSearchViewModel onAfterShow", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
+            
+            vm = new savedSearchViewModel();            
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+            
+            //act
+            vm.onAfterShow();
+                        
+            //assert
+            QUnit.equal(vm.site(), selectedSite);
+        });         
+       
         QUnit.test("test savedSearchViewModel setSelectedSearch", function () {
             //arrange
             var vm,
@@ -136,7 +152,7 @@ define(['require',
             vm.setSelectedSearch(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
         });    
         
         QUnit.test("test savedSearchViewModel setSelectedSearch already set", function () {
@@ -145,13 +161,13 @@ define(['require',
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             vm.setSelectedSearch(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, null);
+            QUnit.equal(vm.selectedSearch(), null);
         });    
         
         QUnit.test("test savedSearchViewModel setSelectedSearch with event object", function () {
@@ -166,7 +182,7 @@ define(['require',
             vm.setSelectedSearch(searchData, event);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
         });       
         
         QUnit.test("test savedSearchViewModel isSelectedSearch equal", function () {
@@ -175,7 +191,7 @@ define(['require',
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             var result = vm.isSelectedSearch(searchData);
@@ -214,16 +230,36 @@ define(['require',
         QUnit.test("test savedSearchViewModel searchClick equal", function () {
             //arrange
             var vm,
+				selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain)),
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml);
             
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
+            
             vm = new savedSearchViewModel();
-            vm.selectedSearch = searchData;
+            vm.selectedSearch(searchData);
             
             //act 
             vm.searchClick(searchData);
                         
             //assert
-            QUnit.equal(vm.selectedSearch, searchData);
+            QUnit.equal(vm.selectedSearch(), searchData);
+        });         
+                       
+        QUnit.test("test savedSearchViewModel search", function () {
+            //arrange
+            var vm,
+                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));           
+            
+            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.savedSearchPage, navigationPage.homePage, {"site": selectedSite}));
+            
+            vm = new savedSearchViewModel();            
+            vm.autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+            
+            //act 
+            vm.search();
+                        
+            //assert
+            QUnit.ok(vm);
         });  
         
         QUnit.test("test savedSearchViewModel onSearchKeyUp", function () {

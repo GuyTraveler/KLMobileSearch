@@ -1,4 +1,9 @@
-define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], function ($, websService, LogonServiceFactory, ntlm) {    
+define(["jquery",
+        "services/imaging/facetQuerySearchService", 
+        "factory/logonServiceFactory",
+        "ntlm"], 
+    function ($, facetQuerySearchService, LogonServiceFactory, ntlm) { 
+        
     var imagingDetectionService = function () {
         var self = this;
         
@@ -6,9 +11,9 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
             var logonService,
                 dfd = $.Deferred();
             
-            service = new websService(site.url);
+            service = new facetQuerySearchService(site.url);
             
-            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
 
             logonPromise = logonService.logonAsync(site.credential.domain, 
                                                    site.credential.userName, 
@@ -16,16 +21,9 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
                                                    service.serviceUrl);
             
             logonPromise.done(function (result) {       
-                service.GetActivatedFeatures()
+                service.GetImagingVersion()
     				.done(function (result) {
-						var hasImaging = result != null && result.GetActivatedFeaturesResult != null && result.GetActivatedFeaturesResult.value;
-						
-						if (hasImaging) {
-                        	dfd.resolve(self.identifyImagingSearchByFeatureID(result.GetActivatedFeaturesResult.value));
-						}
-						else {
-							dfd.reject();
-                        }
+                        dfd.resolve();                        
     	            })
     	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         dfd.reject();
@@ -37,18 +35,6 @@ define(["jquery", "IWebsService", "factory/logonServiceFactory", "ntlm"], functi
             });
             
             return dfd.promise();
-        }
-        
-        self.identifyImagingSearchByFeatureID = function (featureIdList) {
-            var searchFeatureID = "a9b82b7b-e677-4529-9be7-88f4cf4c76d8";
-            
-            if(featureIdList)
-            {
-                if(featureIdList.indexOf(searchFeatureID) !== -1)
-                    return true;
-            }
-            
-            return false;            
         }
         
         return self;

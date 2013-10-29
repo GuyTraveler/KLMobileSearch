@@ -1,20 +1,24 @@
 define(["knockout",
 		"application",
 		"logger",
+		"domain/Constants",
         "jquery",
 		"viewmodels/viewModelBase", 
         "factory/queryServiceFactory", 
-        "domain/keywordConjunction", 
+        "domain/keywordConjunction",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext", 
         "factory/logonServiceFactory",
         "services/imaging/serverSavedSearchesService", 
         "IDocumentService",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
-    function (ko, application, logger, $, viewModelBase, QueryServiceFactory, keywordConjunction, LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
+    function (ko, application, logger, Constants, $, viewModelBase, QueryServiceFactory, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
+			  LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
-        var self = this,
-            documentUrl = "#document";
+        var self = this;
                    
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
@@ -28,13 +32,15 @@ define(["knockout",
                                                 
             if (length === 0) {
                 countMessage = application.strings.noResultsFound;
-            }
-            
+            }            
             else {
                 countMessage = application.strings.resultCountFormat.format(length.toString());
                                                 
                 if (length === 1) {
-                    countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's'
+                    countMessage = countMessage.substring(0, countMessage.length - 1); //trim off the 's' for only 1 result
+                }
+				else if (length >= Constants.maxResults) {
+					countMessage = application.strings.maxResultsFormat.format(length.toString());
                 }
             }  
                                                 
@@ -61,48 +67,37 @@ define(["knockout",
             }
         }
         
-        self.init = function (e) {
-			$(".km-content").kendoTouch({
-                enableSwipe: true,
-                swipe: self.swipe 
-            });
-        }
-		
-		self.swipe = function (e) {
-			logger.logVerbose("results listview swiped");
-			if(e.direction == "right")
+        self.onBeforeShow = function (e) {
+            logger.logVerbose("resultsViewModel onBeforeShow");
+            
+            if(application.navigator.isStandardNavigation())
             {
-				window.App.navigate("#:back");
+                self.selectedResult = null;
+                self.resultDataSource([]);
             }
-        }
-        
-        self.beforeShow = function (e) {
-            logger.logVerbose("resultsViewModel beforeShow");   			
-        }
-		
-		self.show = function (e) {
-			logger.logVerbose("resultsViewModel show");
         }
         	
-		self.afterShow = function (e) {
+		self.onAfterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-			if(savedSearchViewModel.selectedSearch === null && savedSearchViewModel.keyword() !== "")
-            {                
-			    if(savedSearchViewModel.site && savedSearchViewModel.site())  
-                    return self.keywordSearchAsync(savedSearchViewModel.site(), savedSearchViewModel.keyword(), savedSearchViewModel.wordConjunction());
-            }	
-            
-            else if(searchBuilderViewModel.klaml)
-            {
-                if(savedSearchViewModel.site && savedSearchViewModel.site())
-                    return self.propertySearchAsync(savedSearchViewModel.site(), searchBuilderViewModel.klaml)
+            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {    
+                if(application.navigator.currentNavigationContext.properties.site)
+                {
+        			if(application.navigator.currentNavigationContext.properties.keyword)
+                    {
+                        return self.keywordSearchAsync(application.navigator.currentNavigationContext.properties.site, 
+                                                       application.navigator.currentNavigationContext.properties.keyword, 
+                                                       application.navigator.currentNavigationContext.properties.wordConjunction);
+                    }	
+                    
+                    else if(application.navigator.currentNavigationContext.properties.klaml)
+                    {
+                        return self.propertySearchAsync(application.navigator.currentNavigationContext.properties.site, 
+                                                        application.navigator.currentNavigationContext.properties.klaml);
+                    }                    
+                }
             }
-        }
-            
-        self.hide = function (e) {            
-            self.setSelectedResult(null);
-            self.SetDataSource([]);
         }
         
         self.setSelectedResult = function (selection, event) {
@@ -125,29 +120,39 @@ define(["knockout",
         self.viewProperties = function () {
             if(self.selectedResult)
             {
-                window.App.navigate(documentUrl);                    
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 
+                    {"site": application.navigator.currentNavigationContext.properties.site, "result": self.selectedResult}));           
             }         
         }
         
-        self.navigateToResult = function (selection) {
+        self.navigateToProperties = function (selection) {            
+			self.setSelectedResult(selection);
+            
+            self.viewProperties();
+        }
+        
+        /*self.navigateToResult = function (selection) {
             var dfd = $.Deferred(), 
                 service,
                 logonService;
             
 			self.setSelectedResult(selection);
 			
-            if(selection && savedSearchViewModel.site())
+            if(selection && application.navigator.currentNavigationContext.properties.site)
             {
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
                 service = new documentService(selection.url);        
-                logonService = LogonServiceFactory.createLogonService(savedSearchViewModel.site().url, savedSearchViewModel.site().credential.credentialType);
+                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
+                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
+																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
+																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
 
-                logonPromise = logonService.logonAsync(savedSearchViewModel.site().credential.domain, 
-                                                  savedSearchViewModel.site().credential.userName, 
-                                                  savedSearchViewModel.site().credential.password,
-                                                  selection.url);
+                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
+                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
+                                                       selection.url);
             
                 logonPromise.done(function (result) {
                     getDisplayFormUrlPromise = service.getDisplayFormUrlAsync();
@@ -184,7 +189,7 @@ define(["knockout",
             }
             
             return dfd.promise();
-        }
+        }*/
         
         self.keywordSearchAsync = function (searchSite, keyword, conjunction) {
             var dfd = $.Deferred(),
@@ -198,7 +203,7 @@ define(["knockout",
 				conjunction = keywordConjunction.defaultConjunction;
             
             service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
-            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType);
+            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType, searchSite.isOffice365, searchSite.adfsUrl);
             
             logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
             

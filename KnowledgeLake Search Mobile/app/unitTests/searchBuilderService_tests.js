@@ -28,7 +28,7 @@ define(["services/searchBuilderService",
             var buildSearchDataSourcePromise,
                 service = new searchBuilderService(),
                 searchData = new search(TestSettings.ntlmTestUrl, TestSettings.searchTitle, searchType.server, TestSettings.testKlaml),
-                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
                        
             //act
 			buildSearchDataSourcePromise = service.buildSearchDataSourceAsync(siteData, searchData);
@@ -49,7 +49,7 @@ define(["services/searchBuilderService",
 			//arrange
             var buildSearchPropertiesPromise,
                 service = new searchBuilderService(),
-                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain));
+                siteData = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
                        
             //act
 			buildSearchPropertiesPromise = service.buildSearchPropertiesAsync(siteData, siteData.url, TestSettings.testKlamlSearchFieldProperties);
@@ -75,9 +75,9 @@ define(["services/searchBuilderService",
             result = service.mapKlamlSearchFieldPropertiesToSearchProperties(TestSettings.testKlamlSearchFieldProperties, TestSettings.testFacetSearchProperties);
             
             //assert
-            QUnit.deepEqual(mapping.toJS(result.propertiesList), TestSettings.testSearchBuilderResultPropertiesList);
+            QUnit.equal(JSON.stringify(result.propertiesList), TestSettings.testSearchBuilderResultPropertiesList);
             QUnit.deepEqual(result.propertiesName, TestSettings.testSearchBuilderResultPropertiesName);
-            QUnit.deepEqual(mapping.toJS(result.searchProperties), TestSettings.testSearchBuilderResultSearchProperties);
+            QUnit.equal(JSON.stringify(result.searchProperties), TestSettings.testSearchBuilderResultSearchProperties);
         });
         
         QUnit.test("Test mapKlamlSearchFieldPropertiesToSearchProperties null null", function () {
@@ -92,7 +92,7 @@ define(["services/searchBuilderService",
             QUnit.deepEqual(mapping.toJS(result.propertiesList), []);
             QUnit.deepEqual(result.propertiesName, []);
             QUnit.deepEqual(mapping.toJS(result.searchProperties), []);
-        });    
+        });
         
         QUnit.test("Test convertToControlType Number", function () {
             //arrange

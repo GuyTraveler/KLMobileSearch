@@ -3,14 +3,18 @@ define(["knockout",
 		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
+        "domain/navigationDirection",
+        "domain/navigationPage",
+        "domain/navigationContext",
+        "domain/kendoKeywordBoxHandler",
 		"services/keywordValidationService", 
 		"services/searchBuilderService", 
-		"services/klamlBuilderService"], 
-function (ko, application, logger, viewModelBase, keywordConjunction, ValidationService, searchBuilderService, klamlBuilderService) {
+		"services/klamlBuilderService",
+        "ISiteDataCachingService"], 
+function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
+          KendoKeywordBoxHandler, ValidationService, searchBuilderService, klamlBuilderService, SiteDataCachingService) {
     var searchBuilderViewModel = function () {
-        var self = this,
-            resultsUrl = "#results",
-			klamlService = new klamlBuilderService();
+        var self = this;
                    
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
@@ -18,17 +22,12 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
 		self.wordConjunction = ko.observable(keywordConjunction.and);
 		self.keywordConjunction = keywordConjunction;
         self.search = ko.observable("");
-        self.klaml = null;
         
         self.propertiesList = null;
         self.propertiesName = ko.observableArray();
         self.searchBuilderDataSource = ko.observableArray();
         
-        self.keyword = ko.observable("");
-		
-        self.isKeywordValid = ko.computed(function () {
-            return ValidationService.validateKeyword(self.keyword());
-        });
+        self.autoCompleteBox = new KendoKeywordBoxHandler();        
       
         self.SetDataSource = function (searchProperties) {
             self.searchBuilderDataSource([]);
@@ -58,12 +57,11 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
         }        
         
         self.BuildSearchProperties = function () {
-            var builderService = new searchBuilderService(),
-				buildSearchPromise;
+            var builderService = new searchBuilderService();
 			
 			self.isBusy(true);
 			
-			buildSearchPromise = builderService.buildSearchDataSourceAsync(savedSearchViewModel.site(), self.search())
+			var buildSearchPromise = builderService.buildSearchDataSourceAsync(application.navigator.currentNavigationContext.properties.site, self.search())
             
             buildSearchPromise.done(function (result) {
 				self.isBusy(false);
@@ -77,47 +75,83 @@ function (ko, application, logger, viewModelBase, keywordConjunction, Validation
             });
         }
       
-        self.executeSearch = function (e) {
-            var klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.keyword(), self.searchBuilderDataSource(), self.wordConjunction());
-            
-            if(klaml)  
+        self.executeSearch = function (e) {            
+            if(self.autoCompleteBox.isElementValid() && 
+               (ValidationService.validateKeyword(self.autoCompleteBox.element.value()) || self.autoCompleteBox.element.value() === "") &&
+               application.navigator.currentNavigationContextHasProperties())
             {
-                self.klaml = klaml;
+                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
                 
-                window.App.navigate(resultsUrl);
+                SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
+                
+    			var klamlService = new klamlBuilderService(),
+                    klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.autoCompleteBox.element.value(), self.searchBuilderDataSource(), self.wordConjunction());
+                
+                if(klaml)  
+                {                
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
+                    {"site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml}));
+                }
+              
+                else {
+                    logger.logError("Failed to build klaml.");
+                } 
             }
-          
-            else {
-                // failed to build klaml
-            }   
+            
+            else
+                self.setMessage(application.strings.InvalidKeyword);
+        }
+        
+        self.popSuggestions = function (e, event) {
+            self.autoCompleteBox.popDropDown(e, event);
         }
         
         self.onSearchKeyUp = function (selection, event) {
 			if (event.keyCode === 13)
 				self.executeSearch();
         }
-	  
-		self.afterShow = function (e) {
-			logger.logVerbose("resultsViewModel afterShow");
-			
-			if(!self.klaml || savedSearchViewModel.selectedSearch.title !== self.search().title)
-            {                                    
-                self.keyword("");
+        
+        self.onBeforeShow = function (e) {
+			logger.logVerbose("resultsViewModel onBeforeShow");
+            
+            if(application.navigator.isStandardNavigation())
+            {
                 self.searchBuilderDataSource([]);
-                self.klaml = null;
-                        
-                self.search(savedSearchViewModel.selectedSearch);                
+                
+                if(self.autoCompleteBox.isElementValid())
+                    self.autoCompleteBox.element.value("");
+            }
+
+            if(self.autoCompleteBox.isElementValid())
+                self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:[]}));
+        }
+	  
+		self.onAfterShow = function (e) {
+			logger.logVerbose("resultsViewModel afterShow");
+            			
+			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+            {                        
+                self.search(application.navigator.currentNavigationContext.properties.search);                
                                     
                 self.BuildSearchProperties();                    
             }
+                    
+            if(self.autoCompleteBox.isElementValid())
+                self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));
         }
         
 		self.clearKeyword = function () {
 			logger.logVerbose("clearing keyword");
-			self.keyword("");
-			
-			$("#searchBuilderKeywordInput").focus();
-			application.showSoftKeyboard();
+            
+			if(self.autoCompleteBox.isElementValid())
+            {
+			    self.autoCompleteBox.element.value("");
+    			self.autoCompleteBox.element.focus();
+                
+                self.popSuggestions();
+                
+    			application.showSoftKeyboard();
+            }
 		}
         
         /*self.addProperty = function () {
