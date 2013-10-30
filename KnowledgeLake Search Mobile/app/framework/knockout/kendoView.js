@@ -2,8 +2,9 @@
 define(['knockout',
         'jquery',
 		'application',
-		'logger'],
-    function (ko, $, application, logger) {
+		'logger',
+		'HttpService'],
+    function (ko, $, application, logger, HttpService) {
 		var lastViewLoaded = function () {
 			if (!window.App) {
 		        window.App = new kendo.mobile.Application(document.body, {
@@ -63,9 +64,10 @@ define(['knockout',
                             $(element).attr("data-hide", shortModelName + ".hide");
                         }
                             
-                        $.get(viewUrl, function (data) {
-                            dfdView.resolve(data);
-                        });                        
+                        HttpService.get(viewUrl)
+							.done(function (data) {
+	                            dfdView.resolve(data);
+	                        });                        
     
                         promiseView.done(function (data) {
                             //if it's the first loaded page, there will be a km-scroll-container, otherwise, we put content right into element

@@ -7,9 +7,10 @@ define(["jquery",
 		"ISiteDataService",
 		"services/office365LogonBase",
 		"services/dateTimeConverter",
+		"HttpService",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter) {
+function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter, HttpService) {
 	var office365LogonService = function (siteUrl) {
 		var self = this,
 			binaryTokenPromise,
@@ -92,51 +93,57 @@ function ($, Constants, application, logger, guid, Uri, siteDataService, office3
 		self.getBinarySecurityTokenAsync = function (domain, userName, password) {
 			var dfd = $.Deferred(),
 				newGuid = guid.newGuid(),
-				office365STSRequestBody;
+				office365STSRequestBody,
+				templatePromise,
+				httpPromise;
 			
-			self.getSamlTemplateAsync()
-				.done(function (template) {
-					office365STSRequestBody = template.replace(/{toUrl}/g, Constants.office365STS)
-													  .replace(/{guid}/g, newGuid)
-													  .replace(/{utcNow}/g, (new Date()).toISOString())  //utc now
-													  .replace(/{userName}/g, userName + "@" + domain)
-													  .replace(/{password}/g, password)
-													  .replace(/{signinUri}/g, self.fullLoginUri);
+			templatePromise = self.getSamlTemplateAsync();
+			
+			templatePromise.done(function (template) {
+				office365STSRequestBody = template.replace(/{toUrl}/g, Constants.office365STS)
+												  .replace(/{guid}/g, newGuid)
+												  .replace(/{utcNow}/g, (new Date()).toISOString())  //utc now
+												  .replace(/{userName}/g, userName + "@" + domain)
+												  .replace(/{password}/g, password)
+												  .replace(/{signinUri}/g, self.fullLoginUri);
+				
+				httpPromise = HttpService.xhr({
+					url: Constants.office365STS,
+					async: true,
+					type: "POST",
+					processData: false,
+					contentType: "text/xml; charset='utf-8'",
+					cache: false,
+					data: office365STSRequestBody,
+					dataType: "xml",
+					timeOut: application.ajaxTimeout
+	            });	
+				
+				httpPromise.done(function (result, textStatus, xhr) {
+					var stringResult = (new XMLSerializer()).serializeToString(result);
 					
-					$.ajax({
-						url: Constants.office365STS,
-						async: true,
-						type: "POST",
-						processData: false,
-						contentType: "text/xml; charset='utf-8'",
-						cache: false,
-						data: office365STSRequestBody,
-						dataType: "xml",
-						timeOut: application.ajaxTimeout,
-						success: function (result, textStatus, xhr) {
-							var stringResult = (new XMLSerializer()).serializeToString(result);
-							
-							logger.logVerbose("Got result from office365STS: " + stringResult);
-							
-							if (self.hasErrorResult(result)) {
-								dfd.reject();
-                            }
-							else {
-								dfd.resolve(result, textStatus, xhr);
-							}
-		                },
-						error: function  (XMLHttpRequest, textStatus, errorThrown) {
-		                    logger.logWarning("Failed getBinarySecurityTokenAsync with status: " + textStatus);
-		                    
-		                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-		                }
-		            });	
-				})
-				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					logger.logError("Failed to acquire SAML template: " + textStatus);
+					logger.logVerbose("Got result from office365STS: " + stringResult);
 					
-					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-				});
+					if (self.hasErrorResult(result)) {
+						dfd.reject();
+                    }
+					else {
+						dfd.resolve(result, textStatus, xhr);
+					}
+                });
+				
+				httpPromise.fail(function  (XMLHttpRequest, textStatus, errorThrown) {
+                    logger.logWarning("Failed getBinarySecurityTokenAsync with status: " + textStatus);
+                    
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                });
+			});
+			
+			templatePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+				logger.logError("Failed to acquire SAML template: " + textStatus);
+				
+				dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+			});
 			
 			return dfd.promise();
         };

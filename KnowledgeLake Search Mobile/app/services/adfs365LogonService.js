@@ -5,9 +5,10 @@ define(["jquery",
 		"jsUri",
 		"IOffice365Service",
 		"services/office365LogonBase",
+		"HttpService",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, Uri, office365Service, office365LogonBase) {
+function ($, Constants, application, logger, Uri, office365Service, office365LogonBase, HttpService) {
 	
 	var adfs365LogonService = function (siteUrl, adfsUrl) {
 		var self = this;
@@ -95,7 +96,8 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 			var dfd = $.Deferred(),
 				userNameFull = userName + "@" + domain,
 				requestBody,
-				templatePromise;
+				templatePromise,
+				httpPromise;
 			
 			templatePromise = self.getSamlAdfsTemplateAsync();
 			
@@ -105,7 +107,7 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 									  .replace(/{password}/g, password)
 									  .replace(/{toUrl}/g, stsUsernameMixedUrl);
 				
-				$.ajax({
+				httpPromise = HttpService.xhr({
 					url: stsUsernameMixedUrl,
 					async: true,
 					type: "POST",
@@ -114,18 +116,20 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 					cache: false,
 					data: requestBody,
 					dataType: "xml",
-					timeOut: application.ajaxTimeout,
-					success: function (result, textStatus, xhr) {
-						logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
-						dfd.resolve(result);
-	                },
-					error: function  (XMLHttpRequest, textStatus, errorThrown) {
-						logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
-						logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
-						
-	                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-	                }
+					timeOut: application.ajaxTimeout
 	            });
+				
+				httpPromise.done(function (result, textStatus, xhr) {
+					logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
+					dfd.resolve(result);
+                });
+				
+				httpPromise.fail(function  (XMLHttpRequest, textStatus, errorThrown) {
+					logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
+					logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
+					
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                });
 			});
 			
 			templatePromise.fail(function () {

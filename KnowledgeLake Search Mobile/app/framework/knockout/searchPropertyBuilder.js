@@ -1,5 +1,9 @@
-define(['knockout', 'logger', 'jquery', 'application'],
-    function (ko, logger, $, application) {
+define(['knockout', 
+		'logger', 
+		'jquery', 
+		'application', 
+		'HttpService'],
+    function (ko, logger, $, application, HttpService) {
 		var loadTemplate = function (element, valueAccessor) {
 			var searchPropertyBuilderOptions = ko.unwrap(valueAccessor());
                 
@@ -7,7 +11,7 @@ define(['knockout', 'logger', 'jquery', 'application'],
             {
                 var templateUrl = "app/views/controlTemplates/" + searchPropertyBuilderOptions.data.controlType + ".html";
             
-                var getTemplatePromise = $.get(templateUrl);
+                var getTemplatePromise = HttpService.get(templateUrl);
                 
                 getTemplatePromise.done(function (template) {              
                     $(element).html(template);             
