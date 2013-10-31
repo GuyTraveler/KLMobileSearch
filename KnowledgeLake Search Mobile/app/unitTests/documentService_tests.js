@@ -325,38 +325,7 @@ define(["services/documentService",
 				QUnit.start();	
 			});
         });
-        
-        QUnit.asyncTest("Test documentService.getsiteUrl", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getSiteUrlAsync()
-					.done(function (result) {
-						QUnit.ok(true);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-        
-        
-        
+    
         
         
         

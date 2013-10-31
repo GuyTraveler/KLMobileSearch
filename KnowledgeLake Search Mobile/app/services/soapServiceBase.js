@@ -5,13 +5,13 @@ define(["jquery",
 		//uncaught depends
 		"extensions"], 
 	function ($, application, logger, HttpService) {
-    var soapServiceBase = function (siteUrl, serviceName) {
+    var soapServiceBase = function (site, serviceName) {
         var self = this,
             jsonTextPropertyName = "value";
         
-        self.serviceUrl = siteUrl;
+        self.serviceUrl = site.url;
         
-        if (!siteUrl.endsWith('/')) {
+        if (!site.url.endsWith('/')) {
             self.serviceUrl += "/";
         }
         
@@ -53,7 +53,7 @@ define(["jquery",
                     dataType: "xml",
                     xhrFields: { withCredentials: true },
 					timeout: application.ajaxTimeout
-                });
+                }, site);
 				
 				xhrPromise.done(function (result, textStatus, jqXHR) {
                     var resultJson;

@@ -4,9 +4,9 @@ define(["jquery",
 		"domain/Constants",
 		"domain/office365LogonType",
 		"domain/office365Metadata",
-		"jsUri",
-		"HttpService"], 
-function ($, application, logger, Constants, office365LogonType, office365Metadata, Uri, HttpService) {
+		"HttpService",
+		"jsUri"], 
+function ($, application, logger, Constants, office365LogonType, office365Metadata, HttpService, Uri) {
 	var office365Service = function () {
 		var self = this;
 				
@@ -18,7 +18,7 @@ function ($, application, logger, Constants, office365LogonType, office365Metada
 				requestBody = Constants.userRealmRequestFormat.replace("{userName}", userName),
 				httpPromise;
 			
-			httpPromise = HttpService.xhr({
+			httpPromise = HttpService.anonymousXhr({
 				url: Constants.office365UserRealm,
 				async: true,
 				type: "POST",

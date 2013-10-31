@@ -73,6 +73,10 @@ function ($, Constants, application, logger, guid, Uri, siteDataService, office3
 			return dfd.promise();
 		};	
 		
+		self.logonToSiteAsync = function (site, documentUrl) {
+			return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+		};
+		
 		self.logonExpirationToDate = function () {
 			var parsed;
 			
@@ -107,7 +111,7 @@ function ($, Constants, application, logger, guid, Uri, siteDataService, office3
 												  .replace(/{password}/g, password)
 												  .replace(/{signinUri}/g, self.fullLoginUri);
 				
-				httpPromise = HttpService.xhr({
+				httpPromise = HttpService.anonymousXhr({
 					url: Constants.office365STS,
 					async: true,
 					type: "POST",

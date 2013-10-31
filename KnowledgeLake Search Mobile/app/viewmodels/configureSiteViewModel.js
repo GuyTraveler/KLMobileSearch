@@ -7,7 +7,6 @@ define(["knockout",
         "ISiteDataCachingService", 
 		"IUserNameParser",
 		"IOffice365Service",
-		"factory/logonServiceFactory",
         "domain/site",
         "domain/credential", 
         "domain/credentialType",
@@ -20,7 +19,7 @@ define(["knockout",
 		"domain/office365Metadata",
 		"domain/office365LogonType"], 
 function (ko, application, logger, viewModelBase, authenticationService, websService, 
-		  SiteDataCachingService, userNameParser, office365Service, LogonServiceFactory,
+		  SiteDataCachingService, userNameParser, office365Service,
 	      site, credential, credentialType, authenticationMode, navigationDirection, navigationPage, 
 		  navigationContext, keyValuePair, httpProtocols, office365Metadata, office365LogonType) {
 			  
@@ -35,7 +34,6 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
     	viewModelBase.call(self);
 		
 		self.urlValidationDfd = null;
-		self.logonService = null;
 		self.officeService = new office365Service();
 		
 		self.protocols = [
@@ -109,9 +107,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			self.logonAsync().always(function () {
 				if (self.validateAll()) {
 				
-					theSite = new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(),
-	                                   new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()),
-									   self.isOffice365(), self.adfsUrl());
+					theSite = self.toSite();
 					writePromise = application.navigator.currentNavigationContextHasProperties() ? 
                                         SiteDataCachingService.UpdateSiteAsync(theSite) : SiteDataCachingService.AddSiteAsync(theSite);
 	                    
@@ -167,7 +163,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         }
         
         self.validateSiteUrl = function () {				
-            var dataService = new authenticationService(self.fullUrl());
+            var dataService = new authenticationService(self.toSite());
             
             logger.logVerbose("validateSiteUrl called");			
             
@@ -254,8 +250,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         
         
         self.logonAsync = function () {
-			var service = new websService(self.fullUrl()),
-				logonPromise,
+			var service = new websService(self.toSite()),
 				officePromise,
 				websPromise,
 				getWebDfd = $.Deferred();
@@ -272,42 +267,39 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				self.isOffice365(metadata.logonType !== office365LogonType.unknown);
 				self.adfsUrl(metadata.adfsUrl);
 				
-				self.logonService = LogonServiceFactory.createLogonService(self.fullUrl(), self.siteCredentialType(), self.isOffice365(), self.adfsUrl());
-				logonPromise = self.logonService.logonAsync(self.siteDomain(), self.siteUserName(), self.sitePassword());
-				
 				//probably already logging on
-				if (!logonPromise) {
+				if (self.isBusy()) {
 					logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
 					getWebDfd.reject(false);					
 	            }
-				else {
-					logonPromise.done(function () {						
-		                websPromise = service.GetWeb(self.fullUrl());
-		                    
-						websPromise.done(function (result, textStatus, xhr) {
-	                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
-							
-	                        self.isCredentialsValid(true);
-	                        self.credValidationImageSrc(validImageUrl);                            
-	                        self.setTitle(result.GetWebResult.Web.Title);                            
-	                        self.sharePointVersion(spVersion.substring(0, 2));
-							
-							getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
-	                    });
-	                    
-						websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-							self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
-							getWebDfd.reject();							
-	                    });
-		            });
+				else {					
+					self.isBusy(true);
 					
-					logonPromise.fail(function () {
+	                websPromise = service.GetWeb(self.fullUrl());
+	                    
+					websPromise.done(function (result, textStatus, xhr) {
+                        var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
+						
+                        self.isCredentialsValid(true);
+                        self.credValidationImageSrc(validImageUrl);                            
+                        self.setTitle(result.GetWebResult.Web.Title);                            
+                        self.sharePointVersion(spVersion.substring(0, 2));
+						
+						getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+                    });
+                    
+					websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						self.isCredentialsValid(false);
 		                self.credValidationImageSrc(invalidImageUrl);                                       
 		                self.sharePointVersion(0);
-
-						getWebDfd.reject();		
-		            });
+						self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
+						
+						getWebDfd.reject();							
+                    });
+					
+					websPromise.always(function () {
+						self.isBusy(false);
+                    });
 				}
 			});
 			
@@ -398,6 +390,12 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                     self.populateConfigureSiteViewModel(application.navigator.currentNavigationContext.properties.site);
                 }
             }
+        }
+		
+		self.toSite = function () {
+			return new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(), 
+							new credential(self.siteCredentialType(), self.siteUserName(), self.sitePassword(), self.siteDomain()),
+						    self.isOffice365(), self.adfsUrl());
         }
 		
         return self;

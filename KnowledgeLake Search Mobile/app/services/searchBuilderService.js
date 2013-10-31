@@ -2,7 +2,6 @@ define(["jquery",
         "knockout",
         "domain/application",
         "domain/Constants",
-        "factory/logonServiceFactory",
         "services/searchParsingService",
         "services/imaging/facetQuerySearchService",
         "services/dateTimeConverter",
@@ -11,7 +10,7 @@ define(["jquery",
         "ntlm",
 		"domain/keywordConjunction",
         "extensions"],
-        function ($, ko, application, Constants, LogonServiceFactory, searchParsingService, facetQuerySearchService, DateTimeConverter, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
+        function ($, ko, application, Constants, searchParsingService, facetQuerySearchService, DateTimeConverter, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
         
 		var searchBuilderService = function () {
 			var self = this;
@@ -38,32 +37,18 @@ define(["jquery",
                 return dfd.promise();
             }
             
+			//TODO: remove siteUrl parameter
             self.buildSearchPropertiesAsync = function (site, siteUrl, klamlSearchFieldProperties) {  
                 var dfd = $.Deferred(),
-                    logonService, 
-                    facetService = new facetQuerySearchService(siteUrl);                
+                    facetService = new facetQuerySearchService(site),
+					getPropertiesPromise = facetService.GetProperties();
                 
-                logonService = LogonServiceFactory.createLogonService(siteUrl, site.credential.credentialType, site.isOffice365, site.adfsUrl);
-
-                logonPromise = logonService.logonAsync(site.credential.domain, 
-                                                       site.credential.userName, 
-                                                       site.credential.password,
-                                                       facetService.serviceUrl);
-                
-                logonPromise.done(function (result) {   
-                    var getPropertiesPromise = facetService.GetProperties();
-                    
-                    getPropertiesPromise.done(function (result) {
-                        dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
-                    });
-                    
-                    getPropertiesPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                    });
+                getPropertiesPromise.done(function (result) {
+                    dfd.resolve(self.mapKlamlSearchFieldPropertiesToSearchProperties(klamlSearchFieldProperties, result));
                 });
                 
-                logonPromise.fail(function (error) {
-                    dfd.reject(error);
+                getPropertiesPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
                 });
                 
                 return dfd.promise();

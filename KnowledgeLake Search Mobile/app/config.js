@@ -123,6 +123,7 @@ define(["framework/logLevel"], function(logLevel) {
 			   'FileManagement': 'factory/fileManagementFactory',
 			   'emailComposer': 'factory/emailComposerFactory',
 			   'HttpService': 'factory/httpServiceFactory',
+			   'LogonServiceFactory': 'factory/logonServiceFactory',
                
                //framework
 			   'keyValuePair': 'framework/keyValuePair',

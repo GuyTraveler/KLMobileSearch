@@ -2,13 +2,10 @@ define(["logger",
 		"services/jqHttpService"],
 	function (logger, jqHttpService) {
 		
-		if (window.kendo.version) {
-			return jqHttpService;
+		if (window.WinJS) {
+			throw "WinJS http service not implemented"; //TODO
         }
-		/*else if (window.WinJS) {
-		
-        }*/
 		else {
-			throw "could not find a valid IHttpService";
+			return jqHttpService;
         }		
     });

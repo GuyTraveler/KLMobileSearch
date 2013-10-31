@@ -5,12 +5,12 @@ define(["jquery",
 		"services/soapServiceBase"], 
 	function ($, application, logger, keyValuePair, soapServiceBase) {
     
-    var authenticationService = function (siteUrl) {
+    var authenticationService = function (site) {
         var self = this,
             serviceName = "Authentication";
       
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName);
         
         self.Mode = function (webUrl) {
 			logger.logVerbose("authenticationService.Mode called");

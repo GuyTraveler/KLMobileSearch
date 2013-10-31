@@ -9,14 +9,13 @@ define(["knockout",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext", 
-        "factory/logonServiceFactory",
         "services/imaging/serverSavedSearchesService", 
         "IDocumentService",
 		"ISiteDataService",
         // uncaught dependency
         "extensions"], 
     function (ko, application, logger, Constants, $, viewModelBase, QueryServiceFactory, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
-			  LogonServiceFactory, ServerSavedSearchesService, documentService, SiteDataService) {
+			  ServerSavedSearchesService, documentService, SiteDataService) {
     var resultsViewModel = function () {
         var self = this;
                    
@@ -193,8 +192,7 @@ define(["knockout",
         
         self.keywordSearchAsync = function (searchSite, keyword, conjunction) {
             var dfd = $.Deferred(),
-                service,
-                logonService;
+                service;
             
             window.App.loading = "<h1>" + application.strings.searching + "</h1>";
             self.isBusy(true);
@@ -202,37 +200,25 @@ define(["knockout",
 			if (!conjunction)
 				conjunction = keywordConjunction.defaultConjunction;
             
-            service = new QueryServiceFactory.getQueryService(searchSite.url, searchSite.majorVersion);
-            logonService = LogonServiceFactory.createLogonService(searchSite.url, searchSite.credential.credentialType, searchSite.isOffice365, searchSite.adfsUrl);
+            service = new QueryServiceFactory.getQueryService(searchSite);
+                        
+            searchPromise = service.keywordSearchAsync(keyword.split(" "), conjunction, true);
             
-            logonPromise = logonService.logonAsync(searchSite.credential.domain, searchSite.credential.userName, searchSite.credential.password);
-            
-            logonPromise.done(function (result) {                
-                searchPromise = service.keywordSearchAsync(keyword.split(" "), conjunction, true);
+            searchPromise.done(function (result) {
+                self.SetDataSource(result);
                 
-                searchPromise.done(function (result) {
-                    self.SetDataSource(result);
-                    
-                    dfd.resolve(true);
-                    
-                    self.isBusy(false);
-                });
-                
-                searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
-                    dfd.reject(errorThrown);
-					self.setMessage(application.strings.searchError);
-                    
-                    self.isBusy(false);
-                });
-            });
-            
-            logonPromise.fail(function (error) {
-                dfd.reject(error);
-				self.setMessage(application.strings.logonFailed);
+                dfd.resolve(true);
                 
                 self.isBusy(false);
             });
             
+            searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
+                dfd.reject(errorThrown);
+				self.setMessage(application.strings.searchError);
+                
+                self.isBusy(false);
+            });
+      
             return dfd.promise();
         }
         

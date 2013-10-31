@@ -5,10 +5,11 @@ define(["jquery",
 		"ISiteDataService", 
 		"IListsService",
 		"Uri",
+		"domain/site",
 		//uncaught depends
 		"extensions"],
-	function ($, application, Constants, documentProperty, SiteDataService, ListsService, Uri) {
-		var documentService = function (docUrl) {
+	function ($, application, Constants, documentProperty, SiteDataService, ListsService, Uri, site) {
+		var documentService = function (searchSite, docUrl) {
 			var self = this,				
 				dispFormRelToLibrary = "/Forms/DispForm.aspx",
 				dispFormQuery = "?ID=",
@@ -62,7 +63,7 @@ define(["jquery",
 			    siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
-                    siteData = new SiteDataService(cacheSiteUrl);
+                    siteData = new SiteDataService(self.generateSiteObject());
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
@@ -100,7 +101,7 @@ define(["jquery",
                 siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
-                    lists = new ListsService(cacheSiteUrl);
+                    lists = new ListsService(self.generateSiteObject());
 			
     				self.getListIDAsync()
     					.done(function (listID) {						
@@ -139,7 +140,7 @@ define(["jquery",
                 siteUrlPromise = self.getSiteUrlAsync();
                 
                 siteUrlPromise.done(function (result) {
-                    siteData = new SiteDataService(cacheSiteUrl);
+                    siteData = new SiteDataService(self.generateSiteObject());
                     
                     siteData.GetURLSegmentsAsync(docUrl)
     					.done(function (result) {
@@ -212,7 +213,7 @@ define(["jquery",
             };
             
             self.getSiteUrlAsync = function () {
-				var siteData = new SiteDataService(docUrl),	
+				var siteData = new SiteDataService(self.generateSiteObject(docUrl)),	
 					promise,
 					dfd = $.Deferred();
 				
@@ -300,7 +301,7 @@ define(["jquery",
                 var getSiteUrlPromise = self.getSiteUrlAsync();
                 
                 getSiteUrlPromise.done(function (siteUrl) {                
-    				lists = new ListsService(cacheSiteUrl);
+    				lists = new ListsService(self.generateSiteObject());
                     
                     var getListItemsPromise = lists.GetListItemsAsync(listName, viewName, query, viewFields, rowLimit, queryOptions, webID);
                     
@@ -330,7 +331,7 @@ define(["jquery",
                     var getListIdPromise = self.getListIDAsync();
                     
                     getListIdPromise.done(function (listId) {                    
-        				lists = new ListsService(cacheSiteUrl);
+        				lists = new ListsService(self.generateSiteObject());
                                 
                         var getListContentTypePromise = lists.GetListContentTypeAsync(cacheListId, contentTypeId);
                         
@@ -481,6 +482,11 @@ define(["jquery",
                 }
                 
                 return viewProperties;
+            }
+			
+			self.generateSiteObject = function (url) {
+				var siteUrl = url ? url : cacheSiteUrl;
+				return new site(siteUrl, searchSite.title, searchSite.majorVersion, searchSite.credential, searchSite.isOffice365, searchSite.adfsUrl);
             }
 		
 			return self;

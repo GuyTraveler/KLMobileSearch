@@ -40,6 +40,10 @@ define(["jquery",
 				return dfd.promise();
             };
 			
+			self.logonToSiteAsync = function (site, documentUrl) {
+				return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+			};
+			
 			return self;
         };
 		

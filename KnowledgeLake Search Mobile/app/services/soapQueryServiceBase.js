@@ -8,14 +8,14 @@ define(["jquery",
         "services/soapParsingService"], 
     function ($, ko, application, logger, Constants, keywordConjunction, searchService, SoapParsingService) {
         
-        var soapQueryServiceBase = function (siteUrl, keywordTemplate, fnMassageKeyword) {
+        var soapQueryServiceBase = function (site, keywordTemplate, fnMassageKeyword) {
             var self = this,
                 buildKeywordClause;                
             
             self.keywordSearchAsync = function (keywordPhrases, conjunction, trimDuplicates) {
                 var clause = buildKeywordClause(keywordPhrases, conjunction),
                     searchDfd = $.Deferred(),
-                    service = new searchService(siteUrl), 
+                    service = new searchService(site), 
                     queryXml;
                 
                 conjunction = conjunction ? conjunction : keywordConjunction.and;  //default to AND

@@ -7,12 +7,12 @@ define(["jquery",
 		"extensions"], 
 	function ($, application, logger, keyValuePair, soapServiceBase) {
     
-    var searchService = function (siteUrl) {
+    var searchService = function (site) {
         var self = this,
             serviceName = "Search";
       
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName);
         
 		self.Status = function () {
 			logger.logVerbose("searchService.Status called");

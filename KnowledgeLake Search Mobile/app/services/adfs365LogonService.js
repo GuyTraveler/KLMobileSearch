@@ -86,7 +86,11 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 			
 			return dfd.promise();
 		}
-		
+				
+		self.logonToSiteAsync = function (site, documentUrl) {
+			return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+		};
+					
 		self.getUserNameMixedUrl = function () {
 			var adfsUri = new Uri(adfsUrl);			
 			return Constants.adfsTrust2005WindowsTransport.replace("{adfsHost}", adfsUri.host());
@@ -107,7 +111,7 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 									  .replace(/{password}/g, password)
 									  .replace(/{toUrl}/g, stsUsernameMixedUrl);
 				
-				httpPromise = HttpService.xhr({
+				httpPromise = HttpService.anonymousXhr({
 					url: stsUsernameMixedUrl,
 					async: true,
 					type: "POST",

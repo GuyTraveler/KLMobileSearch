@@ -5,12 +5,12 @@ define(["jquery",
 		"extensions"], 
 	function ($, keyValuePair, soapServiceBase) {
     
-    var websService = function (siteUrl) {
+    var websService = function (site) {
         var self = this,
             serviceName = "Webs";
     
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName);
         
         self.GetWeb = function (webUrl) {
             var parameters = [];

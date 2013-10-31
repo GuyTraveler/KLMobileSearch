@@ -1,11 +1,11 @@
 define(["jquery", "keyValuePair", "services/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
     
-    var siteDataService = function (siteUrl) {
+    var siteDataService = function (site) {
         var self = this,
             serviceName = "SiteData";
        
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName);
         
         self.GetSiteUrlAsync = function (url) {
             var parameters = [

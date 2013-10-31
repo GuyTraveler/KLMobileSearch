@@ -2,47 +2,29 @@ define(["jquery",
         "domain/result",
         "domain/search",
         "domain/searchType",
-        "factory/logonServiceFactory",
         "services/imaging/imagingDetectionService",
         "services/imaging/facetQuerySearchService",
-        "ntlm",
         "extensions"], 
-    function ($, result, search, searchType, LogonServiceFactory, ImagingDetectionService, facetQuerySearchService, ntlm) {
+    function ($, result, search, searchType, ImagingDetectionService, facetQuerySearchService) {
     
     var serverSavedSearchesService = function () {
         var self = this;
         
         self.facetSearchAsync = function (site, klaml) {  
             var dfd = $.Deferred(),            
-                service = new facetQuerySearchService(site.url);
+                service = new facetQuerySearchService(site),
+				facetSearchPromise = service.FacetSearch(klaml);
             
-            logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
-
-            logonPromise = logonService.logonAsync(site.credential.domain, 
-                                                   site.credential.userName, 
-                                                   site.credential.password,
-                                                   service.serviceUrl);
-            logonPromise.done(function (result) {            
-                var facetSearchPromise = service.FacetSearch(klaml);
-                
-                facetSearchPromise.done(function (result) {
-                    if(result && result.FacetSearchResult && result.FacetSearchResult.Data)
-                    {
-                        dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data));
-                    }
-                    
-                    else
-                        dfd.reject("Failed to retrieve search results.");
-                });
-              
-                facetSearchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                });
+            facetSearchPromise.done(function (result) {
+                if(result && result.FacetSearchResult && result.FacetSearchResult.Data)
+                    dfd.resolve(self.parseSearchResults(result.FacetSearchResult.Data));
+                else
+                    dfd.reject("Failed to retrieve search results.");
             });
-            
-            logonPromise.fail(function (error) {
-                dfd.reject(error);
-            });   
+          
+            facetSearchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+            });            
             
             return dfd.promise();
         }
@@ -54,64 +36,50 @@ define(["jquery",
             var detectPromise = ImagingDetectionService.detectAsync(site);
             
             detectPromise.done(function (result) {
-                var service = new facetQuerySearchService(site.url);          
-                                
-                logonService = LogonServiceFactory.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
-
-                logonPromise = logonService.logonAsync(site.credential.domain, 
-                                                       site.credential.userName, 
-                                                       site.credential.password,
-                                                       service.serviceUrl);
-                
-                logonPromise.done(function (result) {
-                    var getCurrentUserNamePromise = service.GetCurrentUserName();
-                
-                    getCurrentUserNamePromise.done(function (currentUserName) {
-                        if(currentUserName && currentUserName.GetCurrentUserNameResult && currentUserName.GetCurrentUserNameResult.value)
-                        {
-                            var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
-                            
-                            getQueryUserPromise.done(function (queryUser) {
-                                if(queryUser && queryUser.GetQueryUserResult && queryUser.GetQueryUserResult.Name && queryUser.GetQueryUserResult.Name.value)
-                                {
-                                    var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
-                                    
-                                    getQueriesForUserPromise.done(function (queryResults) {
-                                        if(queryResults && queryResults.GetQueriesForUserResult)
-                                        {
-                                            dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult));
-                                        }
-                                        
-                                        else
-                                            dfd.reject("Failed to retrieve queries.");
-                                    });
-                                  
-                                    getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                                    });
-                                }
-                                
-                                else
-                                    dfd.reject("Failed to retrieve query user.");
-                            });
-                                              
-                            getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                                dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                            });
-                        }
+                var service = new facetQuerySearchService(site),
+					getCurrentUserNamePromise = service.GetCurrentUserName();
+            
+                getCurrentUserNamePromise.done(function (currentUserName) {
+                    if(currentUserName && currentUserName.GetCurrentUserNameResult && currentUserName.GetCurrentUserNameResult.value)
+                    {
+                        var getQueryUserPromise = service.GetQueryUser(currentUserName.GetCurrentUserNameResult.value);
                         
-                        else
-                            dfd.reject("Failed to retrieve current user name.");
-                    });
-                  
-                    getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-                    });
+                        getQueryUserPromise.done(function (queryUser) {
+                            if(queryUser && queryUser.GetQueryUserResult && queryUser.GetQueryUserResult.Name && queryUser.GetQueryUserResult.Name.value)
+                            {
+                                var getQueriesForUserPromise = service.GetQueriesForUser(queryUser.GetQueryUserResult.Name.value, site.url);
+                                
+                                getQueriesForUserPromise.done(function (queryResults) {
+                                    if(queryResults && queryResults.GetQueriesForUserResult)
+                                    {
+                                        dfd.resolve(self.parseQueryResults(site.url, queryResults.GetQueriesForUserResult));
+                                    }
+                                    
+                                    else
+                                        dfd.reject("Failed to retrieve queries.");
+                                });
+                              
+                                getQueriesForUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                                });
+                            }
+                            
+                            else
+                                dfd.reject("Failed to retrieve query user.");
+                        });
+                                          
+                        getQueryUserPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                            dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                        });
+                    }
+                    
+                    else
+                        dfd.reject("Failed to retrieve current user name.");
                 });
-                
-                logonPromise.fail(function (error) {
-                    dfd.reject(error);
-                });        
+              
+                getCurrentUserNamePromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                });
             });
           
             detectPromise.fail(function (error) {

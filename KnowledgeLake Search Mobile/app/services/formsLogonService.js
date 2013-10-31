@@ -3,15 +3,17 @@ define(["jquery",
 		"application",
 		"logger",
 		"IAuthenticationService",
+		"domain/site",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, authenticationService) {
+function ($, Constants, application, logger, authenticationService, site) {
 	var formsLogonService = function (siteUrl) {
 		var self = this;
 		
 		self.logonAsync = function (domain, userName, password) {
 			var dfd = $.Deferred(),
-				authService = new authenticationService(siteUrl);
+				theSite = new site(siteUrl),
+				authService = new authenticationService(theSite);
 			
 			authService.Login(userName, password)
 				.done(function (result) {					
@@ -29,6 +31,11 @@ function ($, Constants, application, logger, authenticationService) {
 			
 			return dfd.promise();
 		};	
+		
+		self.logonToSiteAsync = function (site, documentUrl) {
+			return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+		};
+			
 		
 		return self;
     };
