@@ -18,7 +18,7 @@ function ($, application, logger, Constants, office365LogonType, office365Metada
 				requestBody = Constants.userRealmRequestFormat.replace("{userName}", userName),
 				httpPromise;
 			
-			httpPromise = HttpService.anonymousXhr({
+			httpPromise = HttpService.xhr({
 				url: Constants.office365UserRealm,
 				async: true,
 				type: "POST",

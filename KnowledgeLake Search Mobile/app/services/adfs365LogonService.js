@@ -111,7 +111,7 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 									  .replace(/{password}/g, password)
 									  .replace(/{toUrl}/g, stsUsernameMixedUrl);
 				
-				httpPromise = HttpService.anonymousXhr({
+				httpPromise = HttpService.xhr({
 					url: stsUsernameMixedUrl,
 					async: true,
 					type: "POST",

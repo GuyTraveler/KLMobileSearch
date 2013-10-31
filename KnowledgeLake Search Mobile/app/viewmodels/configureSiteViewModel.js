@@ -250,7 +250,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         
         
         self.logonAsync = function () {
-			var service = new websService(self.toSite()),
+			var service,
 				officePromise,
 				websPromise,
 				getWebDfd = $.Deferred();
@@ -266,6 +266,8 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 			officePromise.always(function (metadata) {
 				self.isOffice365(metadata.logonType !== office365LogonType.unknown);
 				self.adfsUrl(metadata.adfsUrl);
+				
+				service = new websService(self.toSite())
 				
 				//probably already logging on
 				if (self.isBusy()) {

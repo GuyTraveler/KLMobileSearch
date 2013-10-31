@@ -1,16 +1,17 @@
 define(["jquery", 
 		"keyValuePair", 
 		"services/soapServiceBase",
+		"ISecureHttpService",
 		//uncaught depends
 		"extensions"], 
-	function ($, keyValuePair, soapServiceBase) {
+	function ($, keyValuePair, soapServiceBase, SecureHttpService) {
     
     var websService = function (site) {
         var self = this,
             serviceName = "Webs";
     
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, site, serviceName);
+        soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
         self.GetWeb = function (webUrl) {
             var parameters = [];

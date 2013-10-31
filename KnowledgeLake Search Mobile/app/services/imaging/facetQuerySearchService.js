@@ -2,16 +2,17 @@ define(["jquery",
 		"application",
 		"logger",
 		"keyValuePair", 
-		"services/soapServiceBase", 
+		"services/soapServiceBase",
+		"ISecureHttpService",
 		"extensions"], 
-function ($, application, logger, keyValuePair, soapServiceBase) {
+function ($, application, logger, keyValuePair, soapServiceBase, SecureHttpService) {
     
     var facetQuerySearchService = function (site) {
         var self = this,
             serviceName = "klfacetsearch/facetquerysearch";
        
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, site, serviceName);
+        soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
         self.FacetSearch = function (klaml) {
             var parameters = [

@@ -142,6 +142,7 @@ define(["framework/logLevel"], function(logLevel) {
 			   'IListsService': 'services/sharepoint/listsService',
 			                  
                //ours
+			   'ISecureHttpService': 'services/secureHttpService',
 			   'ISiteDataCachingService': 'services/siteDataCachingService',             
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService',

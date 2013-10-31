@@ -1,12 +1,15 @@
-define(["jquery", "keyValuePair", "services/soapServiceBase"], 
-function ($, keyValuePair, soapServiceBase) {
+define(["jquery", 
+		"keyValuePair", 
+		"services/soapServiceBase",
+		"ISecureHttpService"], 
+function ($, keyValuePair, soapServiceBase, SecureHttpService) {
     
     var listsService = function (site) {
         var self = this,
             serviceName = "Lists";
        
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, site, serviceName);
+        soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
 		self.GetList = function (listName) {
 			var parameters = [

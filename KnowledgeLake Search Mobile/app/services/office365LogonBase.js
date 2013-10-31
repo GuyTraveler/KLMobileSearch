@@ -53,7 +53,7 @@ function ($, Constants, application, logger, Uri, HttpService) {
 		self.postSecurityTokenToLoginForm = function (token) {	
 			logger.logVerbose("POSTING: " + token + "\n\nTO: " + self.fullLoginUri);
 			
-			return HttpService.anonymousXhr({
+			return HttpService.xhr({
 				url: self.fullLoginUri,
 				async: true,
 				type: "POST",

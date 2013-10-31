@@ -1,11 +1,10 @@
 define(["jquery", 
 		"application",
 		"logger",
-		"HttpService",
 		//uncaught depends
 		"extensions"], 
-	function ($, application, logger, HttpService) {
-    var soapServiceBase = function (site, serviceName) {
+	function ($, application, logger) {
+    var soapServiceBase = function (site, serviceName, httpService) {
         var self = this,
             jsonTextPropertyName = "value";
         
@@ -19,7 +18,7 @@ define(["jquery",
    
         self.loadSoapTemplate = function (methodName) {
             var url = "app/services/soapTemplates/" + serviceName + "/" + methodName + ".xml";
-            return HttpService.get(url);
+            return httpService.get(url);
         }
            
         self.executeSoapMethodAsync = function (methodName, parameters) {
@@ -42,7 +41,7 @@ define(["jquery",
                 
 				logger.logVerbose("posting SOAP request to " + self.serviceUrl);
 
-                xhrPromise = HttpService.xhr({
+                xhrPromise = httpService.xhr({
                     url: self.serviceUrl,
                     async: !window.App.os.ios,  //TODO: how to make async on iphone?
                     type: "POST",

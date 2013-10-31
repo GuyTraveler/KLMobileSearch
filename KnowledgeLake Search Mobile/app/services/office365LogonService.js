@@ -111,7 +111,7 @@ function ($, Constants, application, logger, guid, Uri, siteDataService, office3
 												  .replace(/{password}/g, password)
 												  .replace(/{signinUri}/g, self.fullLoginUri);
 				
-				httpPromise = HttpService.anonymousXhr({
+				httpPromise = HttpService.xhr({
 					url: Constants.office365STS,
 					async: true,
 					type: "POST",
