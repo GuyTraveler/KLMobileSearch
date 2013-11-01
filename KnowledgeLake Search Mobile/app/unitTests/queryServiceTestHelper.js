@@ -1,8 +1,11 @@
 /*global QUnit*/
 define(["INtlmLogonService",
         "domain/keywordConjunction",
+		"domain/site",
+		"domain/credentialType",
+		"domain/credential",
 		"unitTests/unitTestSettings"],
-    function (ntlmLogonService, keywordConjunction, TestSettings) {
+    function (ntlmLogonService, keywordConjunction, site, credentialType, credential, TestSettings) {
 		
 		var executeQueryServiceTests = function (queryService) {
 	        var keywordSearchTest;
@@ -82,40 +85,28 @@ define(["INtlmLogonService",
 	        keywordSearchTest = function (keywords, conjunction, trimDuplicates, shouldFail) {
 	            //arrange
 	            var service,
-	                logonService,
-	                logonPromise,
-	                searchPromise;
+	                searchPromise,
+	            	testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 	            
-	            //act
+				//act
 	            shouldFail = shouldFail && shouldFail !== false;
 	            
-	            service = new queryService(TestSettings.ntlmTestUrl);
-	            logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-				logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-				
-	            //assert
-	            QUnit.ok(logonPromise);
+	            service = new queryService(testSite);
 	            
-	            logonPromise.done(function (result) {
-					searchPromise = service.keywordSearchAsync(keywords, conjunction, trimDuplicates);
-	                
-	                QUnit.ok(searchPromise);
-	                
-	                searchPromise.done(function (result) {
-						QUnit.ok(result)
-						QUnit.start();
-	                });
-	                
-	                searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(shouldFail, "query keyword search failed");
-						QUnit.start();
-	                });				
-	            });
-				
-				logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					QUnit.ok(false, "logon failed for keyword search");
-					QUnit.start();	
-	            });
+	            //assert
+				searchPromise = service.keywordSearchAsync(keywords, conjunction, trimDuplicates);
+                
+                QUnit.ok(searchPromise);
+                
+                searchPromise.done(function (result) {
+					QUnit.ok(result)
+					QUnit.start();
+                });
+                
+                searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(shouldFail, "query keyword search failed");
+					QUnit.start();
+                });
 	        };
 			
 			
@@ -471,34 +462,25 @@ define(["INtlmLogonService",
 	        invalidCharTest = function (searchString, shouldFail) {
 	            //arrange
 	            var service,
-					logonService,
-					logonPromise;
+					testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");;
 	            
 	            //act
-	            service = new queryService(TestSettings.ntlmTestUrl);
-				logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-				logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+	            service = new queryService(testSite);
 				
 	            //assert
-	            logonPromise.done(function (result) {
-					service.keywordSearchAsync(searchString)
-						.done(function (result) {
-							QUnit.ok(result);
-							QUnit.equal(Object.prototype.toString.call(result), '[object Array]');
-							
-							QUnit.start();
-	                    })
-						.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-							QUnit.ok(shouldFail);
-							QUnit.start();
-	                    });				
-	            });
-				
-				logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					QUnit.ok(false, "invalidCharTest failed to logon!");
-					QUnit.start();	
-	            }); 
+				service.keywordSearchAsync(searchString)
+					.done(function (result) {
+						QUnit.ok(result);
+						QUnit.equal(Object.prototype.toString.call(result), '[object Array]');
+						
+						QUnit.start();
+                    })
+					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+						QUnit.ok(shouldFail);
+						QUnit.start();
+                    });
 	        }
+			
 		};
 		
 		return executeQueryServiceTests;

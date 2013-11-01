@@ -212,8 +212,8 @@ define(["knockout",
                 self.isBusy(false);
             });
             
-            searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {				
-                dfd.reject(errorThrown);
+            searchPromise.fail(function (response) {				
+                dfd.reject(response);
 				self.setMessage(application.strings.searchError);
                 
                 self.isBusy(false);

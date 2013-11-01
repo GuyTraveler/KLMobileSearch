@@ -4,9 +4,10 @@ define(["jquery",
 		"logger",
 		"IAuthenticationService",
 		"domain/site",
+		"framework/promiseResponse/promiseRejectResponse",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, authenticationService, site) {
+function ($, Constants, application, logger, authenticationService, site, PromiseRejectResponse) {
 	var formsLogonService = function (siteUrl) {
 		var self = this;
 		
@@ -26,7 +27,7 @@ function ($, Constants, application, logger, authenticationService, site) {
                     }
                 })
 				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
 				});
 			
 			return dfd.promise();

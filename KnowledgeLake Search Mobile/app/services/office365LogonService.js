@@ -8,9 +8,10 @@ define(["jquery",
 		"services/office365LogonBase",
 		"services/dateTimeConverter",
 		"HttpService",
+		"framework/promiseResponse/promiseRejectResponse",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter, HttpService) {
+function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter, HttpService, PromiseRejectResponse) {
 	var office365LogonService = function (siteUrl) {
 		var self = this,
 			binaryTokenPromise,
@@ -61,12 +62,12 @@ function ($, Constants, application, logger, guid, Uri, siteDataService, office3
 					else {
 						logger.logVerbose("Security token not found in Office 365 response");
 						self.logonExpiration = null;
-						dfd.reject();
+						dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                     }
 				});
 				
 				binaryTokenPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
-					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
 				});
 			}
 			

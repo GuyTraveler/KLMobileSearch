@@ -3,14 +3,16 @@
 define(["jquery",
 		"services/sharepoint/authenticationService", 
 		"domain/authenticationMode",
+		"domain/site",
 		"unitTests/unitTestSettings"],
-    function ($, authenticationService, authenticationMode, TestSettings) {
+    function ($, authenticationService, authenticationMode, site, TestSettings) {
         QUnit.module("Testing authenticationService");
         
         
         QUnit.test("Test can instantiate authenticationService", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.fbaTestUrl);
             
             //act
             service = new authenticationService("");
@@ -22,10 +24,11 @@ define(["jquery",
         QUnit.asyncTest("Test authentication bad URL returns error", function () {
             //arrange
             var service,
-                url = "http://www.knowledgggglake.com";
+                url = "http://www.knowledgggglake.com",
+				testSite = new site(url);
             
             //act
-            service = new authenticationService(url);
+            service = new authenticationService(testSite);
             
             //assert
             QUnit.ok(service);
@@ -44,15 +47,15 @@ define(["jquery",
         QUnit.asyncTest("Test authentication Windows Auth returns Windows", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4";
+				testSite = new site(TestSettings.ntlmTestUrl);
             
             //act
-            service = new authenticationService(url);
+            service = new authenticationService(testSite);
             
             //assert
             QUnit.ok(service);
             
-            service.Mode(url)
+            service.Mode(testSite.url)
 				.done(function (result) {
 	                var mode = result.ModeResult.value;
 	                
@@ -68,15 +71,15 @@ define(["jquery",
         QUnit.asyncTest("Test authentication Office 365 returns Forms", function () {
             //arrange
             var service,
-                url = "https://knowledgelake.sharepoint.com";
+                testSite = new site(TestSettings.claimsTestUrl);
             
             //act
-            service = new authenticationService(url);
+            service = new authenticationService(testSite);
             
             //assert
             QUnit.ok(service);
             
-            service.Mode(url)
+            service.Mode(testSite.url)
 				.done(function (result) {
 	                var mode = result.ModeResult.value;
 	                
@@ -92,15 +95,15 @@ define(["jquery",
         QUnit.asyncTest("Test authentication Office 365 (ADFS) returns Forms", function () {
             //arrange
             var service,
-                url = "https://kl.sharepoint.com";
+                testSite = new site(TestSettings.adfsTestUrl);
             
             //act
-            service = new authenticationService(url);
+            service = new authenticationService(testSite);
             
             //assert
             QUnit.ok(service);
             
-            service.Mode(url)
+            service.Mode(testSite.url)
 				.done(function (result) {
 	                var mode = result.ModeResult.value;
 	                
@@ -115,10 +118,11 @@ define(["jquery",
 		
 		QUnit.asyncTest("Test authentication.Login can log into FBA site with good creds", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.fbaTestUrl);
             
             //act
-            service = new authenticationService(TestSettings.fbaTestUrl);
+            service = new authenticationService(testSite);
             
             //assert
             QUnit.ok(service);
@@ -142,10 +146,11 @@ define(["jquery",
 		//NOTE: do not make a test with a GOOD user name and BAD password.  It will cause the user to get locked out
 		QUnit.asyncTest("Test authentication.Login fails with bad creds", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.fbaTestUrl);
             
             //act
-			service = new authenticationService(TestSettings.fbaTestUrl);
+			service = new authenticationService(testSite);
 
 			//assert
             service.Login("fdasfsdf", TestSettings.fbaTestPassword)

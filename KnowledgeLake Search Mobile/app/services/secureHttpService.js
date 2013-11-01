@@ -12,7 +12,7 @@ function ($, HttpService, LogonServiceFactory) {
 		
 			//TODO: map WinJS options to JQuery as needed on all methods
 			
-			if (!site || !site.credential || !site.credential.userName) {
+			if (!site || !site.credential || typeof site.credential.userName === 'undefined') {
 				return HttpService.xhr(options);
             }
 			

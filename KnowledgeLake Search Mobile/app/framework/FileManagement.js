@@ -8,7 +8,7 @@ function (application, logger, $, PromiseResolveResponse, PromiseRejectResponse)
         var self = this;
         
         self.fileSystem = null;
-		self.knowledgelakeDirectory = "KnowledgeLake"
+		self.knowledgelakeDirectory = "KnowledgeLake";
         
         var onFileSystemSuccess = function (fileSystem) {
             self.deferred.resolve(fileSystem);

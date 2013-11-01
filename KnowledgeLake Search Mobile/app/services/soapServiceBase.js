@@ -8,9 +8,9 @@ define(["jquery",
         var self = this,
             jsonTextPropertyName = "value";
         
-        self.serviceUrl = site.url;
+        self.serviceUrl = site.url ? site.url : "";
         
-        if (!site.url.endsWith('/')) {
+        if (!self.serviceUrl.endsWith('/')) {
             self.serviceUrl += "/";
         }
         

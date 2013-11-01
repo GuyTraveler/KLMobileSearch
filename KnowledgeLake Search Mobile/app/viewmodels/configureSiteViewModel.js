@@ -170,11 +170,11 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             self.isUrlValid(false);
             self.isCredentialsValid(false);
             
+			self.urlValidationDfd = $.Deferred();
+			
             dataService.Mode(self.fullUrl())
 				.done(self.onSiteUrlValidated)
-				.fail(self.onSiteUrlFailed); 
-			
-			self.urlValidationDfd = $.Deferred();
+				.fail(self.onSiteUrlFailed); 					
 			
 			return self.urlValidationDfd.promise();
         }
@@ -292,9 +292,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                     
 					websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
 						self.isCredentialsValid(false);
-		                self.credValidationImageSrc(invalidImageUrl);                                       
-		                self.sharePointVersion(0);
-						self.onSiteUrlFailed(XMLHttpRequest, textStatus, errorThrown);
+		                self.credValidationImageSrc(invalidImageUrl);                                       						
 						
 						getWebDfd.reject();							
                     });

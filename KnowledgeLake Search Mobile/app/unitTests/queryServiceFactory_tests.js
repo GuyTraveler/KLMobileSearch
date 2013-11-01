@@ -2,8 +2,11 @@
 define(["factory/queryServiceFactory",
 		"services/sqlQueryService",
 		"services/kqlQueryService",
+		"domain/site",
+		"domain/credentialType",
+		"domain/credential",
 		"unitTests/unitTestSettings"],
-    function (QueryServiceFactory, sqlQueryService, kqlQueryService, TestSettings) {
+    function (QueryServiceFactory, sqlQueryService, kqlQueryService, site, credentialType, credential, TestSettings) {
 		QUnit.module("Testing factory/queryServiceFactory");
 
         QUnit.test("test queryServiceFactory initialized", function () {
@@ -17,10 +20,11 @@ define(["factory/queryServiceFactory",
       
         QUnit.test("test queryServiceFactory returns sqlQueryService for < 15", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, 14, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 			
             //act 
-			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 14);
+			service = QueryServiceFactory.getQueryService(testSite);
                         
             //assert
             QUnit.ok(service);
@@ -29,10 +33,11 @@ define(["factory/queryServiceFactory",
       
         QUnit.test("test queryServiceFactory returns kqlQueryService for == 15", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 			
             //act 
-			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 15);
+			service = QueryServiceFactory.getQueryService(testSite);
                         
             //assert
             QUnit.ok(service);
@@ -41,10 +46,11 @@ define(["factory/queryServiceFactory",
       
         QUnit.test("test queryServiceFactory returns kqlQueryService for > 15", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, 16, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 			
             //act 
-			service = QueryServiceFactory.getQueryService(TestSettings.ntlmTestUrl, 16);
+			service = QueryServiceFactory.getQueryService(testSite);
                         
             //assert
             QUnit.ok(service);
@@ -53,10 +59,11 @@ define(["factory/queryServiceFactory",
       
         QUnit.test("test queryServiceFactory returns service even for bad URL", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(null, TestSettings.siteTitle, 12, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 			
             //act 
-			service = QueryServiceFactory.getQueryService(null, 12);
+			service = QueryServiceFactory.getQueryService(testSite);
                         
             //assert
             QUnit.ok(service);
@@ -65,10 +72,11 @@ define(["factory/queryServiceFactory",
       
         QUnit.test("test queryServiceFactory returns sqlQueryService for bad version", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(null, TestSettings.siteTitle, "g", new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
 			
             //act 
-			service = QueryServiceFactory.getQueryService(null, "g");
+			service = QueryServiceFactory.getQueryService(testSite);
                         
             //assert
             QUnit.ok(service);

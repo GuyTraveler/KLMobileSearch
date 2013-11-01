@@ -125,6 +125,10 @@ define(["jquery",
     					});                        
                 });
 				
+				siteUrlPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                });
+				
 				return dfd.promise();
             };
 			
@@ -485,7 +489,7 @@ define(["jquery",
             }
 			
 			self.generateSiteObject = function (url) {
-				var siteUrl = url ? url : cacheSiteUrl;
+				var siteUrl = url ? url : searchSite.url;
 				return new site(siteUrl, searchSite.title, searchSite.majorVersion, searchSite.credential, searchSite.isOffice365, searchSite.adfsUrl);
             }
 		

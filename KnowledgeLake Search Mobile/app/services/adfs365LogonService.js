@@ -6,9 +6,10 @@ define(["jquery",
 		"IOffice365Service",
 		"services/office365LogonBase",
 		"HttpService",
+		"framework/promiseResponse/promiseRejectResponse",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, Uri, office365Service, office365LogonBase, HttpService) {
+function ($, Constants, application, logger, Uri, office365Service, office365LogonBase, HttpService, PromiseRejectResponse) {
 	
 	var adfs365LogonService = function (siteUrl, adfsUrl) {
 		var self = this;
@@ -68,12 +69,12 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 					else {
 						logger.logVerbose("Security token not found in Office 365 response");
 						self.logonExpiration = null;
-						dfd.reject();
+						dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                     }
                 });
 				
 				samlAssertionPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                 });
             });
 			
@@ -81,7 +82,7 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " failed!\n" + textStatus);
 				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " status!\n" + XMLHttpRequest.status);
 				
-				dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+				dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
             });
 			
 			return dfd.promise();

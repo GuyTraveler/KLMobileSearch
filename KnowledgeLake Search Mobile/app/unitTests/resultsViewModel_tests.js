@@ -415,7 +415,7 @@ define(['require',
             vm = new resultsViewModel();
             
             //act
-            var keywordSearchPromise = vm.keywordSearchAsync(siteData);
+            var keywordSearchPromise = vm.keywordSearchAsync(siteData, "test", keywordConjunction.and);
             
             //assert
             keywordSearchPromise.done(function (result) {
