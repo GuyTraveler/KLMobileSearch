@@ -32,7 +32,7 @@ define(["application"], function (application) {
 	    radiobuttonValues: [ application.strings.Yes, application.strings.No, application.strings.NotSet ],
 		
 		//email
-		supportEmailAddress: "steve.danner@knowledgelake.com",  //TODO: get from Karen
+		supportEmailAddress: "mobilesupport@knowledgelake.com",
 		emailSubject: "KnowledgeLake Mobile Logs",
 		emailFeedbackSubject: "KnowledgeLake Mobile Search: Feedback",
 		emailBodyStart: "\n\n\Application Logs Attached...\n\n",
