@@ -1,9 +1,7 @@
 define(["jquery", 
 		"keyValuePair", 
 		"services/soapServiceBase",
-		"ISecureHttpService",
-		//uncaught depends
-		"extensions"], 
+		"ISecureHttpService"], 
 	function ($, keyValuePair, soapServiceBase, SecureHttpService) {
     
     var websService = function (site) {

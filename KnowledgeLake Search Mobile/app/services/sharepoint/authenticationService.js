@@ -1,10 +1,8 @@
-define(["jquery", 
-		"application",
-		"logger",
+define(["logger",
 		"keyValuePair",
 		"services/soapServiceBase",
 		"HttpService"], 
-	function ($, application, logger, keyValuePair, soapServiceBase, HttpService) {
+	function (logger, keyValuePair, soapServiceBase, HttpService) {
     
     var authenticationService = function (site) {
         var self = this,

@@ -489,7 +489,15 @@ define(["jquery",
             }
 			
 			self.generateSiteObject = function (url) {
-				var siteUrl = url ? url : searchSite.url;
+				var siteUrl;
+				
+				if (url)
+					siteUrl = url;
+				else if (cacheSiteUrl)
+					siteUrl = cacheSiteUrl;
+				else
+					siteUrl = searchSite.url;
+				
 				return new site(siteUrl, searchSite.title, searchSite.majorVersion, searchSite.credential, searchSite.isOffice365, searchSite.adfsUrl);
             }
 		

@@ -4,14 +4,13 @@ define(["jquery",
 		"logger",
 		"guid",
 		"jsUri",
-		"ISiteDataService",
 		"services/office365LogonBase",
 		"services/dateTimeConverter",
 		"HttpService",
 		"framework/promiseResponse/promiseRejectResponse",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, guid, Uri, siteDataService, office365LogonBase, DateTimeConverter, HttpService, PromiseRejectResponse) {
+function ($, Constants, application, logger, guid, Uri, office365LogonBase, DateTimeConverter, HttpService, PromiseRejectResponse) {
 	var office365LogonService = function (siteUrl) {
 		var self = this,
 			binaryTokenPromise,

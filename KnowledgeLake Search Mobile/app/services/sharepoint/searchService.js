@@ -3,9 +3,7 @@ define(["jquery",
 		"logger",
 		"keyValuePair",
 		"services/soapServiceBase",
-		"ISecureHttpService",
-		//uncaught depends
-		"extensions"], 
+		"ISecureHttpService"], 
 	function ($, application, logger, keyValuePair, soapServiceBase, SecureHttpService) {
     
     var searchService = function (site) {

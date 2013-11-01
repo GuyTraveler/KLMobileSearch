@@ -18,7 +18,7 @@ define([], function () {
 		adfsTestUser: "365user",
 		adfsTestDomain: "knowledgelake.com",
 		adfsTestPassword: "klake750",
-		adfsTestFullUser: "steve.danner@knowledgelake.com",
+		adfsTestFullUser: "365user@knowledgelake.com",
 		adfsSTSTestUrlHost: "sts.knowledgelake.com",
 		adfsSTSTestUrl: "https://sts.knowledgelake.com",
 		

@@ -1,8 +1,7 @@
-define(["jquery", 
-		"keyValuePair", 
+define(["keyValuePair", 
 		"services/soapServiceBase",
 		"ISecureHttpService"], 
-function ($, keyValuePair, soapServiceBase, SecureHttpService) {
+function (keyValuePair, soapServiceBase, SecureHttpService) {
     
     var listsService = function (site) {
         var self = this,

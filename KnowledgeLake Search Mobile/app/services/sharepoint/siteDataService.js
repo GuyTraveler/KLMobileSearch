@@ -7,7 +7,7 @@ function ($, keyValuePair, soapServiceBase, SecureHttpService) {
     var siteDataService = function (site) {
         var self = this,
             serviceName = "SiteData";
-       
+     
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
@@ -21,10 +21,10 @@ function ($, keyValuePair, soapServiceBase, SecureHttpService) {
 		
 		self.GetURLSegmentsAsync = function (strURL) {
 			var parameters = [
-				new keyValuePair("strURL", encodeURI(strURL))
-			],
-			dfd = $.Deferred(),
-			promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
+					new keyValuePair("strURL", strURL)
+				],
+				dfd = $.Deferred(),
+				promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
 			
 			promise.done(function (result) {
 				if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false") {
