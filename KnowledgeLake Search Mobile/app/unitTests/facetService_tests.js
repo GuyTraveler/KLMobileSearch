@@ -1,8 +1,10 @@
 /*global QUnit*/
 define(["services/imaging/facetQuerySearchService", 
-		"ntlm",
+		"domain/site",
+		"domain/credentialType",
+		"domain/credential",
 		"unitTests/unitTestSettings"],
-    function (facetQuerySearchService, ntlm, TestSettings) {
+    function (facetQuerySearchService, site, credentialType, credential, TestSettings) {
         QUnit.module("Testing facetQuerySearchService");
         
         
@@ -11,7 +13,7 @@ define(["services/imaging/facetQuerySearchService",
             var service;
             
             //act
-            service = new facetQuerySearchService("");
+            service = new facetQuerySearchService({});
             
             //assert
             QUnit.ok(service);
@@ -19,12 +21,10 @@ define(["services/imaging/facetQuerySearchService",
 
         QUnit.asyncTest("Test GetCurrentUserName with good credentials", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
-            service = new facetQuerySearchService(TestSettings.ntlmTestUrl);
-            
-            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-            ntlm.authenticate(service.serviceUrl);
+            service = new facetQuerySearchService(testSite);
             
             //act
             var getCurrentUserNamePromise = service.GetCurrentUserName();
@@ -43,12 +43,10 @@ define(["services/imaging/facetQuerySearchService",
         
         QUnit.asyncTest("Test GetQueryUser with good credentials", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
-            service = new facetQuerySearchService(TestSettings.ntlmTestUrl);
-            
-            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-            ntlm.authenticate(service.serviceUrl);
+            service = new facetQuerySearchService(testSite);
             
             //act
             var getQueryUserPromise = service.GetQueryUser(TestSettings.currentUserName);
@@ -67,12 +65,10 @@ define(["services/imaging/facetQuerySearchService",
         
         QUnit.asyncTest("Test GetQueriesForUser with good credentials", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
-            service = new facetQuerySearchService(TestSettings.ntlmTestUrl);
-            
-            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-            ntlm.authenticate(service.serviceUrl);
+            service = new facetQuerySearchService(testSite);
             
             //act
             var getQueriesForUserPromise = service.GetQueriesForUser(TestSettings.currentUserName, TestSettings.ntlmTestUrl);
@@ -91,12 +87,10 @@ define(["services/imaging/facetQuerySearchService",
         
         QUnit.asyncTest("Test FacetSearch with good credentials", function () {
             //arrange
-            var service;
+            var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
-            service = new facetQuerySearchService(TestSettings.ntlmTestUrl);
-            
-            ntlm.setCredentials(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-            ntlm.authenticate(service.serviceUrl);
+            service = new facetQuerySearchService(testSite);
             
             //act
             var facetSearchPromise = service.FacetSearch(TestSettings.testKlaml);

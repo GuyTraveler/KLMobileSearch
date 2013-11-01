@@ -5,9 +5,11 @@ define(["jquery",
 		"jsUri",
 		"IOffice365Service",
 		"services/office365LogonBase",
+		"HttpService",
+		"framework/promiseResponse/promiseRejectResponse",
 		//uncaught
 		"extensions"],
-function ($, Constants, application, logger, Uri, office365Service, office365LogonBase) {
+function ($, Constants, application, logger, Uri, office365Service, office365LogonBase, HttpService, PromiseRejectResponse) {
 	
 	var adfs365LogonService = function (siteUrl, adfsUrl) {
 		var self = this;
@@ -67,12 +69,12 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 					else {
 						logger.logVerbose("Security token not found in Office 365 response");
 						self.logonExpiration = null;
-						dfd.reject();
+						dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                     }
                 });
 				
 				samlAssertionPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                 });
             });
 			
@@ -80,12 +82,16 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " failed!\n" + textStatus);
 				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " status!\n" + XMLHttpRequest.status);
 				
-				dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+				dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
             });
 			
 			return dfd.promise();
 		}
-		
+				
+		self.logonToSiteAsync = function (site, documentUrl) {
+			return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+		};
+					
 		self.getUserNameMixedUrl = function () {
 			var adfsUri = new Uri(adfsUrl);			
 			return Constants.adfsTrust2005WindowsTransport.replace("{adfsHost}", adfsUri.host());
@@ -95,7 +101,8 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 			var dfd = $.Deferred(),
 				userNameFull = userName + "@" + domain,
 				requestBody,
-				templatePromise;
+				templatePromise,
+				httpPromise;
 			
 			templatePromise = self.getSamlAdfsTemplateAsync();
 			
@@ -105,7 +112,7 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 									  .replace(/{password}/g, password)
 									  .replace(/{toUrl}/g, stsUsernameMixedUrl);
 				
-				$.ajax({
+				httpPromise = HttpService.xhr({
 					url: stsUsernameMixedUrl,
 					async: true,
 					type: "POST",
@@ -114,18 +121,20 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
 					cache: false,
 					data: requestBody,
 					dataType: "xml",
-					timeOut: application.ajaxTimeout,
-					success: function (result, textStatus, xhr) {
-						logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
-						dfd.resolve(result);
-	                },
-					error: function  (XMLHttpRequest, textStatus, errorThrown) {
-						logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
-						logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
-						
-	                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-	                }
+					timeOut: application.ajaxTimeout
 	            });
+				
+				httpPromise.done(function (result, textStatus, xhr) {
+					logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
+					dfd.resolve(result);
+                });
+				
+				httpPromise.fail(function  (XMLHttpRequest, textStatus, errorThrown) {
+					logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
+					logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
+					
+                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                });
 			});
 			
 			templatePromise.fail(function () {

@@ -1,11 +1,15 @@
 /*global QUnit*/
 //explicit request to service
 define(["services/documentService",
-		"INtlmLogonService",
+		"domain/site",
+		"domain/credentialType",
+		"domain/credential",
 		"unitTests/unitTestSettings",
 		"extensions"],
-    function (documentService, ntlmLogonService, TestSettings) {
+    function (documentService, site, credentialType, credential, TestSettings) {
 		QUnit.module("Testing documentService");
+		
+		var testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
         
         
         QUnit.test("Test can instantiate documentService", function () {
@@ -119,332 +123,201 @@ define(["services/documentService",
         
 		QUnit.asyncTest("Test documentService.getListID returns expected value with good args", function () {
             //arrange
-            var service,
-				logonPromise;
+            var service;
             
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getListIDAsync()
-					.done(function (result) {
-						QUnit.ok(result);
-						QUnit.equal(result, TestSettings.testListId);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getListID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
+            service = new documentService(testSite, TestSettings.docUrl);
 			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+            //assert
+			service.getListIDAsync()
+				.done(function (result) {
+					QUnit.ok(result);
+					QUnit.equal(result, TestSettings.testListId);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getListID failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
 		
 		QUnit.asyncTest("Test documentService.getListID fails gracefully with bad TestSettings.docUrl", function () {
             //arrange
-            var service,
-				logonPromise;
+            var service;
             
             //act
-            service = new documentService("asdfsafds");
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+            service = new documentService(testSite, "asdfsafds");
 						
             //assert
-            logonPromise.done(function () {
-				service.getListIDAsync()
-					.done(function (result) {
-						QUnit.ok(false, "getListID should have failed");
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getListID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getListIDAsync()
+				.done(function (result) {
+					QUnit.ok(false, "getListID should have failed");
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(true, "getListID failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
 		
 		QUnit.asyncTest("Test documentService.getRootFolderUrl returns expected value with good args", function () {
             //arrange
-            var service,
-				logonPromise;
+            var service;
             
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.getRootFolderUrlAsync()
-					.done(function (result) {
-						QUnit.ok(result);
-						QUnit.ok(TestSettings.docUrl.indexOf(result) > -1);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getListItemID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getRootFolderUrlAsync()
+				.done(function (result) {
+					QUnit.ok(result);
+					QUnit.ok(TestSettings.docUrl.indexOf(result) > -1);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getListItemID failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});            
         });
 		
 		QUnit.asyncTest("Test documentService.getListItemID returns expected value with good args", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+			
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.getListItemIDAsync()
-					.done(function (result) {
-						QUnit.ok(result);
-						QUnit.equal(result, TestSettings.testItemId);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getListItemID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getListItemIDAsync()
+				.done(function (result) {
+					QUnit.ok(result);
+					QUnit.equal(result, TestSettings.testItemId);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getListItemID failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
 		
 		QUnit.asyncTest("Test documentService.getListItemID with bad TestSettings.docUrl fails gracefully", function () {
             //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService("dfasdfsdfasfas");
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getListItemIDAsync()
-					.done(function (result) {
-						QUnit.ok(false, "getListItemID should have failed");
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getListItemID failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
+            var service;
 			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+            //act
+            service = new documentService(testSite, "dfasdfsdfasfas");
+						
+			//assert
+			service.getListItemIDAsync()
+				.done(function (result) {
+					QUnit.ok(false, "getListItemID should have failed");
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(true, "getListItemID failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
 		
 		
 		
 		QUnit.asyncTest("Test documentService.getDisplayFormUrl returns expected value with good args", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+			
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.getDisplayFormUrlAsync()
-					.done(function (result) {
-						QUnit.ok(result);
-						QUnit.equal(result, TestSettings.testDispFormUrl);
-						
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getDisplayFormUrlAsync()
+				.done(function (result) {
+					QUnit.ok(result);
+					QUnit.equal(result, TestSettings.testDispFormUrl);
+					
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
 		
 		QUnit.asyncTest("Test documentService.getDisplayFormUrl with bad TestSettings.docUrl fails gracefully", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+
             //act
-            service = new documentService("dfasdfsdfasfas");
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getDisplayFormUrlAsync()
-					.done(function (result) {
-						QUnit.ok(false, "getDisplayFormUrl should have failed");
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(true, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+            service = new documentService(testSite, "dfasdfsdfasfas");
+					
+            //assert            
+			service.getDisplayFormUrlAsync()
+				.done(function (result) {
+					QUnit.ok(false, "getDisplayFormUrl should have failed");
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(true, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
-        
-        QUnit.asyncTest("Test documentService.getsiteUrl", function () {
-            //arrange
-            var service,
-				logonPromise;
-            
-            //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
-						
-            //assert
-            logonPromise.done(function () {
-				service.getSiteUrlAsync()
-					.done(function (result) {
-						QUnit.ok(true);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getDisplayFormUrl failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
-        });
-        
-        
-        
+    
         
         
         
         QUnit.asyncTest("Test documentService.getDocumentPropertiesAsync", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+			
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.getDocumentPropertiesAsync()
-					.done(function (result) {
-						QUnit.ok(true);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getDocumentProperties failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getDocumentPropertiesAsync()
+				.done(function (result) {
+					QUnit.ok(true);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getDocumentProperties failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });
         
         QUnit.asyncTest("Test documentService.getListItemsAsync", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+			
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.getListItemsAsync(TestSettings.testDocumentListID, null, TestSettings.testDocumentQuery, TestSettings.testDocumentViewFields, 0)
-					.done(function (result) {
-						QUnit.ok(true);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.getListItemsAsync(TestSettings.testDocumentListID, null, TestSettings.testDocumentQuery, TestSettings.testDocumentViewFields, 0)
+				.done(function (result) {
+					QUnit.ok(true);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });   
         
         QUnit.asyncTest("Test documentService.GetListContentTypeAsync", function () {
             //arrange
-            var service,
-				logonPromise;
-            
+            var service;
+			
             //act
-            service = new documentService(TestSettings.docUrl);
-			logonService = new ntlmLogonService(TestSettings.ntlmTestUrl);
-			logonPromise = logonService.logonAsync(TestSettings.ntlmTestDomain, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
 						
             //assert
-            logonPromise.done(function () {
-				service.GetListContentTypeAsync(TestSettings.testDocumentContentTypeID)
-					.done(function (result) {
-						QUnit.ok(true);
-						QUnit.start();
-                    })
-					.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-						QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
-						QUnit.start();	
-					});
-            });
-			
-			logonPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				QUnit.ok(false, "logon failed for documentService");
-				QUnit.start();	
-			});
+			service.GetListContentTypeAsync(TestSettings.testDocumentContentTypeID)
+				.done(function (result) {
+					QUnit.ok(true);
+					QUnit.start();
+                })
+				.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+					QUnit.ok(false, "getListItems failed with status " + XMLHttpRequest.status);
+					QUnit.start();	
+				});
         });   
         
         QUnit.test("Test documentService.parseContentTypeIdFromListItem", function () {
@@ -452,7 +325,7 @@ define(["services/documentService",
             var service,
                 expected = TestSettings.testDocumentContentTypeID;
             
-            service = new documentService(TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
             
             //act
 			var result = service.parseContentTypeIdFromListItem(TestSettings.testDocumentContentTypeIDListItem);
@@ -466,7 +339,7 @@ define(["services/documentService",
             var service,
                 expected = TestSettings.testDocumentParsedRow;
             
-            service = new documentService(TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
             
             //act
 			var result = service.parseRowFromListItem(TestSettings.testDocumentContentTypeIDListItem);
@@ -478,9 +351,10 @@ define(["services/documentService",
         QUnit.test("Test documentService.parseViewPropertiesFromContentType", function () {
             //arrange
             var service,
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUserName, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
                 expected = TestSettings.testDocumentParsedViewProperties;
             
-            service = new documentService(TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
             
             //act
 			var result = service.parseViewPropertiesFromContentType(TestSettings.testDocumentContentType);
@@ -494,7 +368,7 @@ define(["services/documentService",
             var service,
                 expected = TestSettings.testDocumentBuildViewFields;
             
-            service = new documentService(TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
             
             //act
 			var result = service.buildViewFieldsFromViewProperties(TestSettings.testDocumentParsedViewProperties);
@@ -508,7 +382,7 @@ define(["services/documentService",
             var service,
                 expected = TestSettings.testDocumentParsedProperties;
             
-            service = new documentService(TestSettings.docUrl);
+            service = new documentService(testSite, TestSettings.docUrl);
             
             //act
 			var result = service.getDocumentPropertiesFromListItemValues(TestSettings.testDocumentParsedViewProperties, TestSettings.testDocumentListItemValues);

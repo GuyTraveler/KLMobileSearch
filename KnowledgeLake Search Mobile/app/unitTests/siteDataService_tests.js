@@ -1,9 +1,11 @@
 /*global QUnit*/
 //explicitly request siteDataService
 define(["services/sharepoint/siteDataService", 
-		"ntlm",
+		"domain/site",
+		"domain/credentialType",
+		"domain/credential",
 		"unitTests/unitTestSettings"],
-    function (siteDataService, ntlm, TestSettings) {
+    function (siteDataService, site, credentialType, credential, TestSettings) {
 		QUnit.module("Testing siteDataService");
        
         QUnit.test("Test can instantiate siteDataService", function () {
@@ -50,15 +52,15 @@ define(["services/sharepoint/siteDataService",
         QUnit.asyncTest("Test siteData bad URL returns error", function () {
             //arrange
             var service,
-                url = "http://www.knowledgggglake.com";
+				testSite = new site("http://www.knowledgggglake.com", TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
             //act
-            service = new siteDataService(url);
+            service = new siteDataService(testSite);
             
             //assert
             QUnit.ok(service);
             
-            service.GetSiteUrlAsync(url)
+            service.GetSiteUrlAsync(testSite.url)
 				.done(function (result) {
 	                QUnit.ok(false, "GetSiteUrlAsync was successful when it should have been 404");
 	                QUnit.start();
@@ -73,23 +75,21 @@ define(["services/sharepoint/siteDataService",
         QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns 401: unauthorized (NTLM)", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4";
+				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, "sdaf", "asdfsad", "asdfsadf"), false, "");
             
             //act
-            service = new siteDataService(url);
-            ntlm.setCredentials("ffff", "fff", "fff");
-            ntlm.authenticate(service.serviceUrl);
+            service = new siteDataService(testSite);
             
             //assert
             QUnit.ok(service);
             
-            service.GetSiteUrlAsync(url)
+            service.GetSiteUrlAsync(testSite.url)
 				.done(function (result) {
 	                QUnit.ok(false, "GetSiteUrlAsync was successful when it should have been 401");
 	                QUnit.start();
 	            })
-	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-	                QUnit.equal(XMLHttpRequest.status, 401);
+	            .fail(function (response) {
+	                QUnit.equal(response.error, 401);
 	                QUnit.start();
 	            });
         });
@@ -98,26 +98,22 @@ define(["services/sharepoint/siteDataService",
         QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS returns 200 (NTLM)", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4",
-                authResult = false;
+                testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
             
             //act
-            service = new siteDataService(url);
-            ntlm.setCredentials("dev", "spadmin", "password");
-            authResult = ntlm.authenticate(service.serviceUrl);
+            service = new siteDataService(testSite);
             
             //assert
             QUnit.ok(service);
-            QUnit.ok(authResult);
             
-            service.GetSiteUrlAsync(url)
+            service.GetSiteUrlAsync(testSite.url)
 				.done(function (result) {
 	                QUnit.ok(true, "GetSiteUrlAsync was successful");
-	                QUnit.equal(url, result.siteUrl.value, "Found URL in response");
+	                QUnit.equal(testSite.url, result.siteUrl.value, "Found URL in response");
 	                QUnit.start();
 	            })
-	            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-	                QUnit.ok(false,  "GetSiteUrlAsync failed with result: " + XMLHttpRequest.status);
+	            .fail(function (response) {
+	                QUnit.ok(false,  "GetSiteUrlAsync failed with result: " + response.error);
 	                QUnit.start();
 	            });
         });
@@ -125,18 +121,14 @@ define(["services/sharepoint/siteDataService",
 		QUnit.asyncTest("Test siteData.GetURLSegments returns valid result", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4/",
-				itemUrl = "http://prodsp2010.dev.local/sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif",
-                authResult = false;
+                testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
+				itemUrl = "http://prodsp2010.dev.local/sites/team4/TestLib/1bf7a0e8-fcd2-4363-be2e-cb5b09269e39.tif";
             
             //act
-            service = new siteDataService(url);
-            ntlm.setCredentials("dev", "spadmin", "password");
-            authResult = ntlm.authenticate(service.serviceUrl);
+            service = new siteDataService(testSite);
             
             //assert
             QUnit.ok(service);
-            QUnit.ok(authResult);
             
             service.GetURLSegmentsAsync(itemUrl)
 				.done(function (result) {
@@ -160,18 +152,14 @@ define(["services/sharepoint/siteDataService",
 		QUnit.asyncTest("Test siteData.GetURLSegments with invalid itemURL fails gracefully", function () {
             //arrange
             var service,
-                url = "http://prodsp2010.dev.local/sites/team4/",
-				itemUrl = "http://prodsp2dfasdf010.dev.locfdfal/sites/team4/TestLib/hhhhhhh/fdsfasdfsf.tif",
-                authResult = false;
+                testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
+				itemUrl = "http://prodsp2dfasdf010.dev.locfdfal/sites/team4/TestLib/hhhhhhh/fdsfasdfsf.tif";
             
             //act
-            service = new siteDataService(url);
-            ntlm.setCredentials("dev", "spadmin", "password");
-            authResult = ntlm.authenticate(service.serviceUrl);
+            service = new siteDataService(testSite);
             
             //assert
             QUnit.ok(service);
-            QUnit.ok(authResult);
             
             service.GetURLSegmentsAsync(itemUrl)
 				.done(function (result) {

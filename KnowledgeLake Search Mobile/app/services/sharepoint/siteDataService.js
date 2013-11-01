@@ -1,11 +1,15 @@
-define(["jquery", "keyValuePair", "services/soapServiceBase"], function ($, keyValuePair, soapServiceBase) {
+define(["jquery", 
+		"keyValuePair", 
+		"services/soapServiceBase",
+		"ISecureHttpService"], 
+function ($, keyValuePair, soapServiceBase, SecureHttpService) {
     
-    var siteDataService = function (siteUrl) {
+    var siteDataService = function (site) {
         var self = this,
             serviceName = "SiteData";
-       
+     
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
         self.GetSiteUrlAsync = function (url) {
             var parameters = [
@@ -17,10 +21,10 @@ define(["jquery", "keyValuePair", "services/soapServiceBase"], function ($, keyV
 		
 		self.GetURLSegmentsAsync = function (strURL) {
 			var parameters = [
-				new keyValuePair("strURL", encodeURI(strURL))
-			],
-			dfd = $.Deferred(),
-			promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
+					new keyValuePair("strURL", strURL)
+				],
+				dfd = $.Deferred(),
+				promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
 			
 			promise.done(function (result) {
 				if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false") {

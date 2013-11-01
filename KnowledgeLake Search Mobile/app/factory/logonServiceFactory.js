@@ -27,6 +27,10 @@ define(["services/ntlmLogonService",
                 
                 return logonService;
             }
+			
+			self.logonServiceFromSite = function (site) {
+				return self.createLogonService(site.url, site.credential.credentialType, site.isOffice365, site.adfsUrl);
+            }
             
             return self;
         }

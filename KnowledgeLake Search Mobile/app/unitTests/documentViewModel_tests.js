@@ -104,7 +104,7 @@ define(["application",
         QUnit.asyncTest("test documentViewModel getDocumentProperties", function () {
             //arrange
             var vm,
-                selectedSite = new site(TestSettings.ntlmTestUrl, "ProdSP2010", 15, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
+                selectedSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, ""),
                 selectedResult = new result(TestSettings.documentUrl, {"title": TestSettings.docTitle});
             
 			application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.documentPropertiesPage, navigationPage.resultsPage, 

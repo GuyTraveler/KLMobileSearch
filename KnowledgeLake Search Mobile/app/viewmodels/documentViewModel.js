@@ -1,13 +1,12 @@
 define(["knockout", 
         "services/documentService",
-        "factory/logonServiceFactory",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext",
         "application",
         "logger",
 		"viewmodels/viewModelBase"], 
-function (ko, documentService, LogonServiceFactory, navigationDirection, navigationPage, navigationContext, application, logger, viewModelBase) {
+function (ko, documentService, navigationDirection, navigationPage, navigationContext, application, logger, viewModelBase) {
     var documentViewModel = function () {
         var self = this;
                    
@@ -49,8 +48,7 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
         
         self.getDocumentProperties = function () {
             var dfd = $.Deferred(), 
-                service,
-                logonService;
+                service;
             
             if (application.navigator &&
 				application.navigator.currentNavigationContext && 
@@ -61,44 +59,24 @@ function (ko, documentService, LogonServiceFactory, navigationDirection, navigat
                 window.App.loading = "<h1>" + application.strings.loading + "</h1>";
                 self.isBusy(true);
                 
-                service = new documentService(application.navigator.currentNavigationContext.properties.result.url);        
-                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
-                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
-																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
-																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
-				logger.logWarning("domain: " + application.navigator.currentNavigationContext.properties.site.credential.domain + "|...pass: " + application.navigator.currentNavigationContext.properties.site.credential.password + "|...user: " + application.navigator.currentNavigationContext.properties.site.credential.userName);
+                service = new documentService(application.navigator.currentNavigationContext.properties.site,
+											  application.navigator.currentNavigationContext.properties.result.url);        
 				
-                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
-                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
-                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
-                                                       application.navigator.currentNavigationContext.properties.result.url);
-            
-                logonPromise.done(function (result) {
-                    var getDocumentPropertiesPromise = service.getDocumentPropertiesAsync();
+                var getDocumentPropertiesPromise = service.getDocumentPropertiesAsync();
+                
+                getDocumentPropertiesPromise.done(function (documentProperties) {
+                    self.isBusy(false);
                     
-                    getDocumentPropertiesPromise.done(function (documentProperties) {
-                        self.isBusy(false);
-                        
-                        self.SetDataSource(documentProperties);
+                    self.SetDataSource(documentProperties);
 
-						dfd.resolve();
-                    });
-                    
-                    getDocumentPropertiesPromise.fail(function (error) {
-                        self.isBusy(false);
-						
-						logger.logVerbose("document properties could not be obtained: " + error);
-						self.setMessage(application.strings.unauthorized);
-                        
-                        dfd.reject(error);
-                    });
+					dfd.resolve();
                 });
                 
-                logonPromise.fail(function (error) {
+                getDocumentPropertiesPromise.fail(function (error) {
                     self.isBusy(false);
 					
-					logger.logVerbose("could not navigate to result. logon failed.");
-					self.setMessage(application.strings.logonFailed);
+					logger.logVerbose("document properties could not be obtained: " + error);
+					self.setMessage(application.strings.unauthorized);
                     
                     dfd.reject(error);
                 });

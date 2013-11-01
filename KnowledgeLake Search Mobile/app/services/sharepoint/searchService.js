@@ -3,16 +3,15 @@ define(["jquery",
 		"logger",
 		"keyValuePair",
 		"services/soapServiceBase",
-		//uncaught depends
-		"extensions"], 
-	function ($, application, logger, keyValuePair, soapServiceBase) {
+		"ISecureHttpService"], 
+	function ($, application, logger, keyValuePair, soapServiceBase, SecureHttpService) {
     
-    var searchService = function (siteUrl) {
+    var searchService = function (site) {
         var self = this,
             serviceName = "Search";
       
         self.prototype = Object.create(soapServiceBase.prototype);
-        soapServiceBase.call(self, siteUrl, serviceName);
+        soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
 		self.Status = function () {
 			logger.logVerbose("searchService.Status called");

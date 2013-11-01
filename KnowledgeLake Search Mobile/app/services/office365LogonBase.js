@@ -2,8 +2,9 @@ define(["jquery",
 		"domain/Constants",
 		"application",
 		"logger",
-		"jsUri",], 
-function ($, Constants, application, logger, Uri) {
+		"jsUri",
+		"HttpService"], 
+function ($, Constants, application, logger, Uri, HttpService) {
 	var office365LogonBase = function (siteUrl) {
 		var self = this,
 			cachedSamlAdfsTemplate,
@@ -50,29 +51,17 @@ function ($, Constants, application, logger, Uri) {
         };
 		
 		self.postSecurityTokenToLoginForm = function (token) {	
-			var dfd = $.Deferred();
-			
 			logger.logVerbose("POSTING: " + token + "\n\nTO: " + self.fullLoginUri);
 			
-			$.ajax({
+			return HttpService.xhr({
 				url: self.fullLoginUri,
 				async: true,
 				type: "POST",
 				processData: false,
 				cache: false,
 				data: token,
-				timeOut: application.ajaxTimeout,
-				success: function (result, textStatus, xhr) {
-					dfd.resolve();
-		        },
-				error: function  (XMLHttpRequest, textStatus, errorThrown) {
-		            logger.logWarning("Failed postSecurityTokenToLoginForm with status: " + textStatus);
-		            
-		            dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-		        }
-		    });
-			
-			return dfd.promise();
+				timeOut: application.ajaxTimeout
+		    });			
 		};
 		
 			
@@ -86,7 +75,7 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML template at: " + Constants.samlTemplateUrl);
 				
-				getPromise = $.get(Constants.samlTemplateUrl);
+				getPromise = HttpService.get(Constants.samlTemplateUrl);
 				
 				getPromise.done(function (result) {
 					logger.logVerbose("template acquired: " + result);
@@ -115,7 +104,7 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML ADFS template at: " + Constants.samlAdfsTemplateUrl);
 				
-				getPromise = $.get(Constants.samlAdfsTemplateUrl);
+				getPromise = HttpService.get(Constants.samlAdfsTemplateUrl);
 				
 				getPromise.done(function (result) {
 					logger.logVerbose("template acquired: " + result);
@@ -144,7 +133,7 @@ function ($, Constants, application, logger, Uri) {
 			else {
 				logger.logVerbose("Requesting SAML Assertion template at: " + Constants.samlAssertionTemplateUrl);
 				
-				getPromise = $.get(Constants.samlAssertionTemplateUrl);
+				getPromise = HttpService.get(Constants.samlAssertionTemplateUrl);
 				
 				getPromise.done(function (result) {
 					logger.logVerbose("assertion template acquired: " + result);

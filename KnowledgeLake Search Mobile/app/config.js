@@ -122,6 +122,8 @@ define(["framework/logLevel"], function(logLevel) {
 			   'kendo': 'factory/kendoFactory',
 			   'FileManagement': 'factory/fileManagementFactory',
 			   'emailComposer': 'factory/emailComposerFactory',
+			   'HttpService': 'factory/httpServiceFactory',
+			   'LogonServiceFactory': 'factory/logonServiceFactory',
                
                //framework
 			   'keyValuePair': 'framework/keyValuePair',
@@ -138,8 +140,9 @@ define(["framework/logLevel"], function(logLevel) {
 			   'ISiteDataService': 'services/sharepoint/siteDataService',
                'ISearchService': 'services/sharepoint/searchService',
 			   'IListsService': 'services/sharepoint/listsService',
-               
+			                  
                //ours
+			   'ISecureHttpService': 'services/secureHttpService',
 			   'ISiteDataCachingService': 'services/siteDataCachingService',             
 			   'INtlmLogonService': 'services/ntlmLogonService',
 			   'IClaimsLogonService': 'services/claimsLogonService',

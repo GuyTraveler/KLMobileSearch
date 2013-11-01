@@ -64,14 +64,16 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
 			var buildSearchPromise = builderService.buildSearchDataSourceAsync(application.navigator.currentNavigationContext.properties.site, self.search())
             
             buildSearchPromise.done(function (result) {
-				self.isBusy(false);
                 self.SetProperties(result.propertiesList, result.propertiesName);
                 self.SetDataSource(result.searchProperties);
             });
             
             buildSearchPromise.fail(function (error) {   
-				self.isBusy(false);
                 logger.logError("Error building search properties: " + error);
+            });
+			
+			buildSearchPromise.always(function () {
+				self.isBusy(false);
             });
         }
       

@@ -7,12 +7,12 @@ define(["services/sqlQueryService",
 		var queryServiceFactory = function () {
 			var self = this;
 			
-			self.getQueryService = function (siteUrl, majorVersion) {
-				if (majorVersion >= Constants.sharePoint2013MajorVersion) {
-					return new kqlQueryService(siteUrl);
+			self.getQueryService = function (site) {
+				if (site.majorVersion >= Constants.sharePoint2013MajorVersion) {
+					return new kqlQueryService(site);
 	            }
 				else {				
-					return new sqlQueryService(siteUrl);	        
+					return new sqlQueryService(site);	        
 				}
 			};
 			

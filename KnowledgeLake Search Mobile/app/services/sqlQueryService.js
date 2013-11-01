@@ -1,7 +1,7 @@
 define(["services/soapQueryServiceBase"], 
     function (soapQueryServiceBase) {
         
-        var sqlQueryService = function (siteUrl) {
+        var sqlQueryService = function (site) {
             var self = this,
                 //v0.1:  only returns Title, LastModifiedTime and Path right now.  We don't need any else!
                 keywordTemplate = "<QueryPacket><Query><Context><QueryText type=\"MSSQLFT\"><![CDATA[SELECT \"Title\",\"LastModifiedTime\",\"Path\" FROM SCOPE() WHERE (CONTAINS('{clause}') AND IsDocument = TRUE) ]]></QueryText></Context><Range><Count>{maxResults}</Count></Range><TrimDuplicates>{trimDuplicates}</TrimDuplicates></Query></QueryPacket>",
@@ -10,7 +10,7 @@ define(["services/soapQueryServiceBase"],
                 };
 			
 			self.prototype = Object.create(soapQueryServiceBase.prototype);
-        	soapQueryServiceBase.call(self, siteUrl, keywordTemplate, massageKeyword);
+        	soapQueryServiceBase.call(self, site, keywordTemplate, massageKeyword);
             
             return self;
         };

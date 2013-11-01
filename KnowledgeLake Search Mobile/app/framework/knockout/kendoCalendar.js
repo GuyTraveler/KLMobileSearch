@@ -1,9 +1,9 @@
-define(['knockout', 'jquery'],
-    function (ko, $) {
+define(['knockout', 'jquery', 'HttpService'],
+    function (ko, $, HttpService) {
         var loadCurrentCalendar= function (element, value, currentCulture) {            
             var kendoCultureUrl = "app/lib/culture/kendo.culture." + currentCulture + ".min.js";
             
-            var getKendoCulturePromise = $.get(kendoCultureUrl);
+            var getKendoCulturePromise = HttpService.get(kendoCultureUrl);
             
             getKendoCulturePromise.done(function (cultureResource) {  
                 var requireKendoCulture = "culture_" + currentCulture.replace('-', '');

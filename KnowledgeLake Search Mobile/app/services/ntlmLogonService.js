@@ -2,7 +2,6 @@ define(["jquery",
 		"ntlm", 
 		"application",
 		"logger",
-		//uncaught depends
         "framework/promiseResponse/promiseResolveResponse", 
         "framework/promiseResponse/promiseRejectResponse",
         "extensions"], 
@@ -34,11 +33,15 @@ define(["jquery",
 				}
 				else {
 					logger.logVerbose("NTLM authenticate failed");
-					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, null));	
+					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));	
                 }	
 				
 				return dfd.promise();
             };
+			
+			self.logonToSiteAsync = function (site, documentUrl) {
+				return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+			};
 			
 			return self;
         };
