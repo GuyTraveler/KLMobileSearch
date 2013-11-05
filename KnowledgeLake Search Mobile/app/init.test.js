@@ -32,7 +32,6 @@ require(["config"], function (config) {
 						  testRootPath + "configureSiteViewModel_test",
 						  testRootPath + "siteDataCachingService_test",
 						  testRootPath + "ntlmLogonService_tests",
-						  testRootPath + "claimsLogonService_tests",
                           testRootPath + "FileManagement_tests",
                           testRootPath + "searchService_tests",
                           testRootPath + "sqlQueryService_tests",

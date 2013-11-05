@@ -31,13 +31,13 @@ function ($, application, logger, Constants, office365LogonType, office365Metada
             });
 			
 			httpPromise.done(function (result, textStatus, xhr) {
-				adfsFullUri = "";
+			    adfsFullUri = "";
+			    responseJson = typeof xhr === 'object' && typeof xhr.responseText === 'string' ? JSON.parse(xhr.responseText) : result;
 				nsType = office365LogonType.unknown;
 				
-				logger.logVerbose("Got result from office365UserRealm: " + xhr.responseText);
+				logger.logVerbose("Got result from office365UserRealm: " + JSON.stringify(responseJson));
 					
 				try {
-					responseJson = JSON.parse(xhr.responseText);
 					nsType = responseJson && responseJson.NameSpaceType ? responseJson.NameSpaceType : nameSpaceType.unknown;
                 }
 				catch (e) {

@@ -1,12 +1,14 @@
-define(["services/encryptionService", 
-		"jquery"], function (EncryptionService, $) {
+define(["services/encryptionService",
+        "application",
+		"jquery"],
+function (EncryptionService, application, $) {
         QUnit.module("services/encryptionService");
 
         QUnit.test("test encrypt", function () {
             var password = "password";
             
             //act
-            var result = EncryptionService.encrypt(password, window.device.uuid);
+            var result = EncryptionService.encrypt(password, application.deviceUUID);
                         
             //assert
             QUnit.notEqual(result, password);
@@ -14,10 +16,10 @@ define(["services/encryptionService",
             
         QUnit.test("test decrypt", function () {
             var password = "password", 
-                encryptedPassword = EncryptionService.encrypt(password, window.device.uuid).toString();
+                encryptedPassword = EncryptionService.encrypt(password, application.deviceUUID).toString();
             
             //act
-            var result = EncryptionService.decrypt(encryptedPassword, window.device.uuid);
+            var result = EncryptionService.decrypt(encryptedPassword, application.deviceUUID);
                         
             //assert
             QUnit.notEqual(result, encryptedPassword);

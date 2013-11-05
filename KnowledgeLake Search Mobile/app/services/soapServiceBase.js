@@ -43,7 +43,7 @@ define(["jquery",
 
                 xhrPromise = httpService.xhr({
                     url: self.serviceUrl,
-                    async: !window.App.os.ios,  //TODO: how to make async on iphone?
+                    async: !window.App || !window.App.os || !window.App.os.ios,  //TODO: how to make async on iphone?
                     type: "POST",
                     cache: false,
                     processData: false,
