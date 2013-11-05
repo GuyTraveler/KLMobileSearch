@@ -28,7 +28,7 @@ define(["factory/fileManagementFactory",
                 
                 //assert
                 existsPromise.done(function (result) {
-                    QUnit.equal(result.response, application.strings.FileFound);
+                    QUnit.ok(result.response == application.strings.FileFound || (result.response.message && result.response.message == application.strings.FileFound));
                     QUnit.start();
                 });
                 

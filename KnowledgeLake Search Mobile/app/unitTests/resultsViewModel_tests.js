@@ -424,7 +424,12 @@ define(['require',
             });
             
             keywordSearchPromise.fail(function (error) {
-                QUnit.equal(error.response, application.strings.logonFailed);
+				if (!window.WinJS) {
+                	QUnit.equal(error.response, application.strings.logonFailed);
+				}
+				else {
+					QUnit.equal(error.status, 401);
+                }
                 QUnit.start();
             });
         });

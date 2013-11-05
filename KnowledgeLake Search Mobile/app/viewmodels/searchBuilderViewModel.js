@@ -109,7 +109,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         }
         
         self.onSearchKeyUp = function (selection, event) {
-			if (event.keyCode === 13)
+			if (event && event.keyCode === 13)
 				self.executeSearch();
         }
         

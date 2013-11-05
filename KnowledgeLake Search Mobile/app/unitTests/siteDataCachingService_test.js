@@ -115,7 +115,7 @@ define(["services/siteDataCachingService",
         //arrange   
         var sites = [],
             password = "password",
-            newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", EncryptionService.encrypt(password, window.device.uuid), "dev"));
+            newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", EncryptionService.encrypt(password, application.deviceUUID), "dev"));
         
         sites.push(newSite);
         
@@ -123,7 +123,7 @@ define(["services/siteDataCachingService",
         var result = SiteDataCachingService.decodePasswords(sites);
                     
         //assert
-        QUnit.notEqual(result[0].credential.password, EncryptionService.encrypt(password, window.device.uuid));
+        QUnit.notEqual(result[0].credential.password, EncryptionService.encrypt(password, application.deviceUUID));
         QUnit.equal(result[0].credential.password, password);
     });
     
