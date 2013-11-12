@@ -92,7 +92,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
                 if(klaml)  
                 {                
                     application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
-                    {"site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml}));
+                    	{"site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml}));
                 }
               
                 else {
@@ -133,10 +133,10 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             			
 			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
             {                        
-                self.search(application.navigator.currentNavigationContext.properties.search);                
-                                    
-                self.BuildSearchProperties();                    
+                self.search(application.navigator.currentNavigationContext.properties.search);                                                                   
             }
+			
+			self.BuildSearchProperties();                    
                     
             if(self.autoCompleteBox.isElementValid())
                 self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));

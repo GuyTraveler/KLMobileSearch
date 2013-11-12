@@ -62,6 +62,7 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                                             searchProperties[i].operator = application.strings.Range;
                                         
                                         searchProperties[i].condition2 = searchProperties[j].condition1;
+										searchProperties[i].conjunction = searchProperties[j].conjunction;
                                                                                 
                                         searchProperties.splice(j, 1);                                        
                                         searchPropertiesLength = searchProperties.length;
