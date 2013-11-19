@@ -84,6 +84,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         
         self.isUrlValid = ko.observable(false);
         self.isCredentialsValid = ko.observable(false);
+        self.isLoggingOn = false;
         self.urlValidationImageSrc = ko.observable(questionImageUrl);
         self.credValidationImageSrc = ko.observable(questionImageUrl);
         self.credentialTypes = ko.observableArray([new keyValuePair(credentialType.ntlm, application.strings.windows), 
@@ -103,7 +104,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				return dfd.promise();
             }
 							
-            window.App.showLoading();
+			self.isBusy(true);
 			self.logonAsync().always(function () {
 				if (self.validateAll()) {
 				
@@ -140,11 +141,11 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 	                });
 					
 					writePromise.always(function () {
-						window.App.hideLoading();
+					    self.isBusy(false);
                     });
 				}
 				else {					
-					window.App.hideLoading();
+				    self.isBusy(false);
 					dfd.reject(self.message());
 				}
 			});
@@ -184,7 +185,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
             
             logger.logVerbose("site url validation success");
             
-            detectedCredentialType = self.parseCredentialType(result.ModeResult.value);
+            detectedCredentialType = (result && result.ModeResult) ? self.parseCredentialType(result.ModeResult.value) : null;
             self.setValidUrl(detectedCredentialType);   
             
 			self.urlValidationDfd.resolve(detectedCredentialType);
@@ -270,24 +271,29 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
 				service = new websService(self.toSite())
 				
 				//probably already logging on
-				if (self.isBusy()) {
+				if (self.isLoggingOn) {
 					logger.logVerbose("cannot logon to " + self.fullUrl() + ": logon already in progress");
 					getWebDfd.reject(false);					
 	            }
-				else {					
-					self.isBusy(true);
+				else {
+				    self.isLoggingOn = true;
 					
 	                websPromise = service.GetWeb(self.fullUrl());
 	                    
 					websPromise.done(function (result, textStatus, xhr) {
                         var spVersion = xhr.getResponseHeader(sharepointVersionHeader);
 						
-                        self.isCredentialsValid(true);
-                        self.credValidationImageSrc(validImageUrl);                            
-                        self.setTitle(result.GetWebResult.Web.Title);                            
-                        self.sharePointVersion(spVersion.substring(0, 2));
-						
-						getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+                        if (result && result.GetWebResult && result.GetWebResult.Web) {
+                            self.isCredentialsValid(true);
+                            self.credValidationImageSrc(validImageUrl);
+                            self.setTitle(result.GetWebResult.Web.Title);
+                            self.sharePointVersion(spVersion.substring(0, 2));
+
+                            getWebDfd.resolve(result.GetWebResult.Web.Title, spVersion);
+                        }
+                        else {
+                            getWebDfd.reject();
+                        }
                     });
                     
 					websPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -298,7 +304,7 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                     });
 					
 					websPromise.always(function () {
-						self.isBusy(false);
+					    self.isLoggingOn = false;
                     });
 				}
 			});
@@ -352,17 +358,15 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
         }
 		
         self.populateConfigureSiteViewModel = function (selectedSite) {
-			var siteObj = new site(selectedSite.url, selectedSite.title, selectedSite.majorVersion, selectedSite.credential, selectedSite.isOffice365, selectedSite.adfsUrl);
-			
             self.isEditMode(true);
             
-            self.url(siteObj.urlWithoutScheme());
-			self.protocol(httpProtocols.parseProtocol(siteObj.url));
-            self.siteTitle(siteObj.title);
-            self.sharePointVersion(siteObj.majorVersion);
-            self.siteCredentialType(siteObj.credential.credentialType);
-            self.siteFullUserName(userNameParser.mergeUserNameParts(siteObj.credential.userName, siteObj.credential.domain));
-            self.sitePassword(siteObj.credential.password);
+            self.url(selectedSite.urlWithoutScheme());
+            self.protocol(httpProtocols.parseProtocol(selectedSite.url));
+			self.siteTitle(selectedSite.title);
+			self.sharePointVersion(selectedSite.majorVersion);
+			self.siteCredentialType(selectedSite.credential.credentialType);
+			self.siteFullUserName(userNameParser.mergeUserNameParts(selectedSite.credential.userName, selectedSite.credential.domain));
+			self.sitePassword(selectedSite.credential.password);
 			self.resetUrlValidation();
 
             self.setValidUrl(self.siteCredentialType());
@@ -390,7 +394,33 @@ function (ko, application, logger, viewModelBase, authenticationService, websSer
                     self.populateConfigureSiteViewModel(application.navigator.currentNavigationContext.properties.site);
                 }
             }
-        }
+
+            self.showConfigureSiteFlyout(true);
+		}
+
+		self.onHide = function (e) {
+		   logger.logVerbose("configureSiteViewModel.hide");
+
+		   self.showConfigureSiteFlyout(false);
+		}
+
+		self.showConfigureSiteFlyout = function (shouldShow) {
+		    var elem = document.getElementById("configureSiteFlyout"),
+                winControl;
+
+		    if (window.WinJS && elem) {
+		        winControl = elem.winControl;
+
+		        if (winControl) {
+		            if (shouldShow) {
+		                winControl.show(anchor, "right");
+		            }
+		            else {  //hide
+		                winControl.hide(anchor, "right");
+		            }
+		        }
+		    }		    
+		}
 		
 		self.toSite = function () {
 			return new site(self.fullUrl(), self.siteTitle(), self.sharePointVersion(), 

@@ -1,0 +1,20 @@
+﻿<p>
+    <a class="traditional-link" data-bind="text: strings().EmailLogsToSupport, click: emailLogsToSupport"></a>
+</p>
+
+<h3 data-bind="text: strings().Logs"></h3>
+
+<div data-bind="foreach: logs">
+    <div class="control-wrapper app-border">
+        <table>
+            <tr>
+                <td>
+                    <img width="16" data-bind="logLevelToIcon: key" />
+                </td>
+                <td>
+                    <span data-bind="text: value, logLevelToCss: key"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

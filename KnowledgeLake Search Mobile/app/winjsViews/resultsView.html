@@ -1,0 +1,33 @@
+﻿<div id="resultsWrapper">
+    <div class="results-heading-container">
+        <h2 data-bind="visible: !isBusy(), text: resultCountString"></h2>
+        <h4 data-bind="visible: (resultDataSource().length === 0 && isBusy), text: strings().searching"></h4>
+    </div>
+
+    <div id="resultsListViewTemplate" data-win-control="WinJS.Binding.Template">
+
+        <div class="app-border site-list-view-item">
+
+            <!-- Displays the "picture" field. -->
+            <img data-win-bind="alt: title; src: url Converters.urlToFileTypeIcon"
+                 src="#"
+                 class="result-icon" />
+            <div class="result-tile-data">
+
+                <!-- Displays the "title" field. -->
+                <h4 class="primary-heading-text" data-win-bind="innerText: metadata.Title"></h4>
+
+                <!-- Displays the "text" field. -->
+                <h6 data-win-bind="innerText: LastModifiedTime Converters.dateTimeToLocaleString"></h6>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="resultsContainer">
+        <div id="resultsListView" data-win-control="WinJS.UI.ListView"
+             data-bind="winrtListView: {'iteminvoked': navigateToProperties}, winrtListViewBinding: { 'data' : resultDataSource, 'binding': winrtResultDataSource }"
+             data-win-options="{ itemTemplate: select('#resultsListViewTemplate'), layout : {type: WinJS.UI.CellSpanningLayout}, selectionMode: 'none' }">
+        </div>
+    </div>
+</div>

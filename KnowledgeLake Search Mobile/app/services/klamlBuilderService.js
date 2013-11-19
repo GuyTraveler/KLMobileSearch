@@ -70,7 +70,7 @@ define(["jquery",
                 {                    
                     for(var i = searchProperties.length - 1; i >= 0; i--)
                     {
-                        if(searchProperties[i].controlType === catalogPropertyControlType.Calendar)
+                        if(ko.unwrap(searchProperties[i].controlType) === catalogPropertyControlType.Calendar)
                         {
                             if(searchProperties[i].selectedOperator() === application.strings.Range)
                             {
@@ -109,7 +109,7 @@ define(["jquery",
                             }
                         }
                         
-                        else if (searchProperties[i].controlType === catalogPropertyControlType.Number &&
+                        else if (ko.unwrap(searchProperties[i].controlType) === catalogPropertyControlType.Number &&
                                  searchProperties[i].selectedOperator() === application.strings.Range)
                         {
                             searchProperties = self.duplicateKlamlProperty(searchProperties, i);

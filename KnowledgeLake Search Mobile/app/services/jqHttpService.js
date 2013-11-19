@@ -6,8 +6,6 @@ function ($) {
 		self.xhr = function (options, site) {
 			var dfd = $.Deferred();
 			
-			//TODO: map WinJS options to JQuery as needed on all methods
-			
 			options.success = function (result, textStatus, jqXHR) {
 				dfd.resolve(result, textStatus, jqXHR);
             };
@@ -24,7 +22,7 @@ function ($) {
 		self.get = function (url, site) {
 			return self.xhr({
 				url: url,
-				type: "GET",
+				type: "GET"
             });
         }	
 		

@@ -1,0 +1,18 @@
+﻿<div>
+    <div>
+        <select data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+    </div>
+    <div>
+        <div class="full-width" data-bind="winrtDatePicker: data.value"></div>
+    </div>
+</div>
+<div>
+    <div data-bind="if: data.isRange">
+        <div>
+            <span data-bind="text: strings().To"></span>
+        </div>
+        <div>
+            <div class="full-width" data-bind="winrtDatePicker: data.secondaryValue"></div>
+        </div>
+    </div>
+</div>

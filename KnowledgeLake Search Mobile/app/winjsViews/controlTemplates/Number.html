@@ -1,0 +1,18 @@
+﻿<div>
+    <div>
+        <select data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+    </div>
+    <div>
+        <input type="number" class="full-width" data-bind="value: data.value, valueUpdate: 'afterkeydown', numberValidation: data.value" />
+    </div>
+</div>
+<div>
+    <div data-bind="if: data.isRange">
+        <div>
+            <span data-bind="text: strings().To"></span>
+        </div>
+        <div>
+            <input type="number" class="full-width" data-bind=" value: data.secondaryValue, valueUpdate: 'afterkeydown', numberValidation: data.secondaryValue" />
+        </div>
+    </div>
+</div>

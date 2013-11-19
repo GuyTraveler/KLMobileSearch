@@ -100,32 +100,6 @@ define(["services/siteDataCachingService",
         //assert
         QUnit.notEqual(result[0].credential.password, password);
     });
-        
-    QUnit.test("test decodePasswords if null", function () {
-        //arrange   
-        
-        //act
-        var result = SiteDataCachingService.decodePasswords();
-                    
-        //assert
-        QUnit.deepEqual(result, []);
-    });
-        
-    QUnit.test("test decodePasswords if not null", function () {
-        //arrange   
-        var sites = [],
-            password = "password",
-            newSite = new site("http://", "invalid", 15, new credential(credentialType.ntlm, "ryan.braun", EncryptionService.encrypt(password, application.deviceUUID), "dev"));
-        
-        sites.push(newSite);
-        
-        //act
-        var result = SiteDataCachingService.decodePasswords(sites);
-                    
-        //assert
-        QUnit.notEqual(result[0].credential.password, EncryptionService.encrypt(password, application.deviceUUID));
-        QUnit.equal(result[0].credential.password, password);
-    });
     
     QUnit.asyncTest("test AddSite if sites is null", function () {
         //arrange

@@ -22,6 +22,11 @@ define(["jquery",
 				var dfd = $.Deferred(),
 					ntlmAuthUrl = documentUrl ? documentUrl : getAuthUrl();
 				
+				if (window.WinJS) {
+				    dfd.resolve(new PromiseResolveResponse(application.strings.LogonSucceeded));
+				    return dfd.promise();
+				}
+
 				ntlmAuthUrl = encodeURI(ntlmAuthUrl);
 				
 				ntlm.setCredentials(domain, userName, password);

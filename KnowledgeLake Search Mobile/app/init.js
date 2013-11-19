@@ -25,6 +25,7 @@ require(["config"], function (config) {
 			 "framework/knockout/logLevelToIcon",
 			 "framework/knockout/logLevelToCss",
              "framework/knockout/urlToFileTypeIcon",
+             "framework/knockout/dateTimeToLocaleString",
              "framework/knockout/majorVersionToSiteIcon", 
              "framework/knockout/dateTimeToLocaleString", 
              "framework/knockout/searchPropertyBuilder",
@@ -33,34 +34,41 @@ require(["config"], function (config) {
              "framework/knockout/kendoKeywordBox",
 			 "framework/knockout/kendoCalendar",
 			 "framework/knockout/numberValidation",
-			 "framework/knockout/calendarValidation"], 
+			 "framework/knockout/calendarValidation",
+			 "framework/knockout/winrtListView",
+			 "framework/knockout/winrtListViewBinding",
+			 "framework/knockout/winrtSearchBox",
+             "framework/knockout/winrtDatePicker",
+             "framework/knockout/winrtAppBarLabel"],
     function($, ko, kendo, application, logger, extensions, logLevel, rootViewModel) {
-        var testHref = "test.html?coverage=true";                
+        var testHref = window.WinJS ? "test-winjs.html?coverage=true" : "test.html?coverage=true";
         
         if (config.isQunit && window.location.href.indexOf(testHref) < 0) {
             window.location.href = testHref;
+            return;
         }
            
         logger.setLogLevel(config.logLevel);
         window.AppLoaded = ko.observable(false);
           
         ko.applyBindings(new rootViewModel(), document.body);
+
+        if (window.WinJS)
+            WinJS.UI.processAll();
                 
         $(document).ready(function () {
             logger.logVerbose("DOM is ready - waiting for device"); 
        
             document.addEventListener("deviceready", function () {
                 logger.logVerbose("device ready!");
-								
-				//TODO:  remove this in favor of a native Kendo solution once we update to a new kendo mobile version:
-				//ref: http://www.icenium.com/blog/icenium-team-blog/2013/11/07/everything-hybrid-web-apps-need-to-know-about-the-status-bar-in-ios7
-				var match = navigator.userAgent.match(/OS (\d)/),
-					updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) &&
-			        				  parseInt(match[1], 10) >= 7;
-
-			    if (updateStatusBar) {
-			        document.body.style.webkitTransform = 'translate3d(0, 20px, 0)';
-			    }
+ 
+                //TODO: remove this in favor of a native Kendo solution once we update to a new kendo mobile version:
+                //ref: http://www.icenium.com/blog/icenium-team-blog/2013/11/07/everything-hybrid-web-apps-need-to-know-about-the-status-bar-in-ios7
+                var match = window.navigator && navigator.userAgent.match(/OS (\d)/),
+                    updateStatusBar = navigator.userAgent.match(/iphone|ipad|ipod/i) && parseInt(match[1], 10) >= 7;
+                if (updateStatusBar) {
+                    document.body.style.webkitTransform = 'translate3d(0, 20px, 0)';
+                }
 				
             }, false);  
         });

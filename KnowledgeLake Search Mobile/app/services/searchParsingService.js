@@ -62,7 +62,7 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                                             searchProperties[i].operator = application.strings.Range;
                                         
                                         searchProperties[i].condition2 = searchProperties[j].condition1;
-										searchProperties[i].conjunction = searchProperties[j].conjunction;
+                                        searchProperties[i].conjunction = searchProperties[j].conjunction;
                                                                                 
                                         searchProperties.splice(j, 1);                                        
                                         searchPropertiesLength = searchProperties.length;
@@ -94,6 +94,27 @@ define(["jquery", "application", "domain/searchFieldProperty", "domain/Constants
                 }
                 
                 return operator;
+            }
+
+            self.getKeywordFromKlaml = function (klaml) {
+                var keyword = "",
+                    keywordIdentifier = "CDATA[",
+                    keywordSeperator = "]";
+
+                if(klaml)
+                {
+                    var startIndex = klaml.indexOf(keywordIdentifier);
+
+                    if (startIndex !== -1)
+                    {
+                        var endIndex = klaml.indexOf(keywordSeperator, startIndex);
+
+                        if (endIndex !== -1) 
+                            keyword = klaml.substring(startIndex + keywordIdentifier.length, endIndex);
+                    }
+                }
+
+                return keyword; 
             }
 
             self.GetSearchPropertyOperator = function(operatorToken)

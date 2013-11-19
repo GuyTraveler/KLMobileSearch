@@ -43,7 +43,7 @@ define(["services/sharepoint/websService",
         });
         
           
-        QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns 401: unauthorized (NTLM)", function () {
+        QUnit.asyncTest("Test websService GOOD URL, BAD CREDS returns 401: unauthorized (NTLM)", function () {
             //arrange
             var service,
 				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, "d", "d", TestSettings.ntlmTestDomain), false, "");
@@ -66,7 +66,7 @@ define(["services/sharepoint/websService",
         });
         
               
-        QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS returns 200 (NTLM)", function () {
+        QUnit.asyncTest("Test websService GOOD URL, GOOD CREDS returns 200 (NTLM)", function () {
             //arrange
             var service,
 				testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
@@ -89,7 +89,7 @@ define(["services/sharepoint/websService",
 	            });           
         });
                  
-        QUnit.asyncTest("Test siteData GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
+        QUnit.asyncTest("Test websService GOOD URL, GOOD CREDS with trailing '/' returns 200 (NTLM)", function () {
             //arrange
             var service,
                 testSite = new site(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.ntlm, TestSettings.ntlmTestUser, TestSettings.ntlmTestPassword, TestSettings.ntlmTestDomain), false, "");
@@ -113,7 +113,7 @@ define(["services/sharepoint/websService",
         });
         
          
-        QUnit.asyncTest("Test siteData GOOD URL, BAD CREDS returns error (O365)", function () {
+        QUnit.asyncTest("Test websService GOOD URL, BAD CREDS returns error (O365)", function () {
             //arrange
             var service,
 				testSite = new site(TestSettings.adfsTestUrl, TestSettings.siteTitle, TestSettings.siteMajorVersion, new credential(credentialType.claimsOrForms, "asdfasdf", TestSettings.adfsTestPassword, TestSettings.adfsTestDomain), true, TestSettings.adfsSTSTestUrl);

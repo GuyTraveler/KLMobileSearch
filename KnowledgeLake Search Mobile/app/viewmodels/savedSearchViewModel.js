@@ -1,6 +1,7 @@
 define(["knockout", 
         "jquery",
-		"application", 
+		"application",
+        "config",
 		"logger",
 		"viewmodels/viewModelBase",
 		"domain/keywordConjunction",
@@ -11,7 +12,7 @@ define(["knockout",
 		"services/keywordValidationService", 
 		"services/imaging/serverSavedSearchesService",
         "ISiteDataCachingService"], 
-function (ko, $, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
+function (ko, $, application, config, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
           KendoKeywordBoxHandler, ValidationService, serverSavedSearchesService, SiteDataCachingService) {
     var savedSearchViewModel = function () {
         var self = this;            
@@ -21,7 +22,12 @@ function (ko, $, application, logger, viewModelBase, keywordConjunction, navigat
 	
 		self.wordConjunction = ko.observable(keywordConjunction.and);
 		self.keywordConjunction = keywordConjunction;
-        self.searchDataSource = ko.observableArray(null);
+
+		if (window.WinJS) {
+		    self.winrtSearchDataSource = new WinJS.Binding.List();
+		}
+
+        self.searchDataSource = ko.observableArray([]);
         
         self.selectedSearch = ko.observable(null);
         self.site = ko.observable("");
@@ -77,11 +83,27 @@ function (ko, $, application, logger, viewModelBase, keywordConjunction, navigat
             if(application.navigator.isStandardNavigation())
             {                
                 self.selectedSearch(null);
-    			self.searchDataSource([]);
-                
-                 
-                if(self.autoCompleteBox.isElementValid())
+    			self.searchDataSource([]);      
+            }
+
+            self.updateKeywordBox();
+        }
+
+        self.updateKeywordBox = function () {
+            var searchBox = window.WinJS ? document.getElementById("savedSearchSearchBox").winControl : null;
+
+            if(application.navigator.isStandardNavigation())
+            {
+                if (searchBox)
+                    searchBox.queryText = "";
+
+                else if (self.autoCompleteBox.isElementValid())
                     self.autoCompleteBox.element.value("");
+            }
+
+            else if (searchBox)
+            {
+                searchBox.queryText = application.navigator.currentNavigationContext.properties.keyword ? application.navigator.currentNavigationContext.properties.keyword  : "";
             }
             
             if(self.autoCompleteBox.isElementValid())
@@ -124,33 +146,60 @@ function (ko, $, application, logger, viewModelBase, keywordConjunction, navigat
 			return false;
         }
         
-        self.searchClick = function (selection) {
-			self.setSelectedSearch(selection, null);
-			
-            if(self.selectedSearch() !== selection)
-                self.selectedSearch(selection);
-            
-            application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage, 
-                {"site": application.navigator.currentNavigationContext.properties.site, "search": self.selectedSearch()}));             
+        self.searchClick = function (e) {
+            var selection = window.WinJS && !config.isQunit ? self.searchDataSource()[e.detail.itemIndex] : e;
+
+            if (selection)
+            {
+                self.setSelectedSearch(selection, null);
+
+                if (self.selectedSearch() !== selection)
+                    self.selectedSearch(selection);
+
+                //attempt to drop the keyboard
+                self.dismissVirtualKeyboard();
+
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.searchBuilderPage, navigationPage.savedSearchPage,
+                    { "site": application.navigator.currentNavigationContext.properties.site, "search": self.selectedSearch() }));
+            }  
+        }
+
+        self.dismissVirtualKeyboard = function () {
+            if (window.WinJS) {
+                var elem = document.getElementById("savedSearchSearchBox"),
+                    winControl = elem.winControl;
+
+                winControl.disabled = true;
+                winControl.disabled = false;
+            }
         }
         
-        self.search = function (e) {            
-            if(self.autoCompleteBox.isElementValid() && 
-               ValidationService.validateKeyword(self.autoCompleteBox.element.value()) &&
-               application.navigator.currentNavigationContextHasProperties())
+        self.search = function (e) {
+            var queryText = window.WinJS && !config.isQunit ? 
+                            $("#savedSearchSearchBox input[type=search]").val() :
+                            "";
+
+            if (application.navigator.currentNavigationContextHasProperties() && ValidationService.validateKeyword(self.autoCompleteBox.determineQueryText(queryText)))
             {
-                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
-                
-                SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
-                
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage, 
-                    {"site": application.navigator.currentNavigationContext.properties.site, "keyword": self.autoCompleteBox.element.value(), "wordConjunction": self.wordConjunction()}));                
+                //attempt to drop the keyboard
+                self.dismissVirtualKeyboard();
+
+                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.savedSearchPage,
+                    { "site": application.navigator.currentNavigationContext.properties.site, "keyword": self.autoCompleteBox.determineQueryText(queryText), "wordConjunction": self.wordConjunction() },
+                    self.autoCompleteBox.useAutoCompleteText(queryText) ? null : navigationDirection.composite));
+
+                if (self.autoCompleteBox.useAutoCompleteText(queryText))
+                {
+                    ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
+
+                    SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
+                }
             }
             
             else
                 self.setMessage(application.strings.InvalidKeyword);
         }
-        
+
         self.popSuggestions = function (e, event) {
             self.autoCompleteBox.popDropDown(e, event);
         }

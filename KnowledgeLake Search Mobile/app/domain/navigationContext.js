@@ -1,5 +1,5 @@
 define([], function () {
-    var navigationContext = function(navigationDirection, desiredPage, currentPage, properties) {
+    var navigationContext = function(navigationDirection, desiredPage, currentPage, properties, state) {
         var self = this;
 		
         self.navigationDirection = navigationDirection;
@@ -7,6 +7,8 @@ define([], function () {
 		self.desiredPage = desiredPage;
         self.currentPage = currentPage;
         self.properties = properties;
+
+        self.state = state;
        
         return self;
     };

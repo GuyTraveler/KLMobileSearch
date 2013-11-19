@@ -1,0 +1,57 @@
+﻿<div id="homeWrapper">
+    <div id="sitesListViewTemplate" data-win-control="WinJS.Binding.Template">
+        <div class="app-border site-list-view-item">
+
+            <!-- Displays the "picture" field. -->
+            <img data-win-bind="alt: title; src: majorVersion Converters.majorVersionToSiteIcon"
+                 src="#"
+                 class="site-icon" />
+            <div class="site-tile-data">
+
+                <!-- Displays the "title" field. -->
+                <h4 class="primary-heading-text" data-win-bind="innerText: title"></h4>
+
+                <!-- Displays the "text" field. -->
+                <h6 data-win-bind="innerText: url"></h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="pageHeading">
+        <div data-bind="if: siteDataSource().length > 0">
+            <h2 data-bind="text: strings().AvailableSites"></h2>
+        </div>
+
+        <div data-bind="if: siteDataSource().length < 1">
+            <button data-bind="click: addSite" class="inline-add">
+                <table>
+                    <tr>
+                        <td>
+                            <h2 class="body-text-color" data-bind="text: strings().AvailableSites"></h2>
+                        </td>
+                        <td>
+                            <img src="/app/images/main_plus.png" />
+                        </td>
+                    </tr>
+                </table>
+            </button>
+        </div>
+    </div>
+
+    <div id="noSitesContainer" data-bind="if: siteDataSource().length < 1">
+        <h3 data-bind="text: strings().NoAvailableSitesMessage"></h3>
+    </div>
+
+    <div id="sitesListView" data-win-control="WinJS.UI.ListView"
+         data-bind="winrtListView: {'iteminvoked': siteClick, 'selectionchanged': longPress}, winrtListViewBinding: { 'data' : siteDataSource, 'binding': winrtSiteDataSource }"
+         data-win-options="{ itemTemplate: select('#sitesListViewTemplate'), layout : {type: WinJS.UI.CellSpanningLayout}, selectionMode: 'single' }">
+    </div>
+
+    <div id="AppBarContainer">
+        <div id="AppBar" data-win-control="WinJS.UI.AppBar">
+            <button data-bind="click: addSite, winrtAppBarLabel: strings().addSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdAdd', label: '', icon: 'add', section: 'selection', tooltip: 'aaaaaa'}"></button>
+            <button data-bind="click: editSite, winrtAppBarLabel: strings().EditSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdEdit', label: '', icon: 'edit', section: 'selection', tooltip: '', hidden:'true', extraClass:'siteSelection'}"></button>
+            <button data-bind="click: deleteSite, winrtAppBarLabel: strings().DeleteSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdDelete', label: '', icon: 'delete', section: 'selection', tooltip: '', hidden:'true', extraClass:'siteSelection'}"></button>
+        </div>
+    </div>
+</div>

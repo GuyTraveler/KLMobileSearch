@@ -61,6 +61,14 @@ function (ko, application, navigationPage) {
                 self.element.search("");
             }
         }
+
+        self.determineQueryText = function (queryText) {
+            return self.useAutoCompleteText(queryText) ? self.element.value() : queryText;
+        }
+
+        self.useAutoCompleteText = function (queryText) {
+            return !queryText && self.isElementValid();
+        }
         
         return self;
     };

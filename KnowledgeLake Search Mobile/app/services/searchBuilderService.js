@@ -7,10 +7,9 @@ define(["jquery",
         "services/dateTimeConverter",
         "domain/searchProperty",
         "domain/catalogPropertyControlType",
-        "ntlm",
 		"domain/keywordConjunction",
         "extensions"],
-        function ($, ko, application, Constants, searchParsingService, facetQuerySearchService, DateTimeConverter, searchProperty, catalogPropertyControlType, ntlm, keywordConjunction) {
+        function ($, ko, application, Constants, searchParsingService, facetQuerySearchService, DateTimeConverter, searchProperty, catalogPropertyControlType, keywordConjunction) {
         
 		var searchBuilderService = function () {
 			var self = this;
@@ -71,7 +70,7 @@ define(["jquery",
 					klamlSearchFieldPropertiesLength;
                 
                 for (ArrayOfCatalogPropertyBase in properties) 
-                {                  
+                {                   
 					if (typeof properties[ArrayOfCatalogPropertyBase] !== 'object') 
 						continue;
 					

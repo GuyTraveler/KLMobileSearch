@@ -98,7 +98,7 @@ define(["jquery",
                 {					
 					if (typeof queryResults[prop] === 'object' && prop.startsWith("Query"))
                     {
-                        var serverSearch = new search(url, queryResults[prop].Title.value, searchType.server, queryResults[prop].Klaml.value);
+					    var serverSearch = new search(url, queryResults[prop].Title.value, queryResults[prop].Description.value, searchType.server, queryResults[prop].Klaml.value);
                     
                         results.push(serverSearch);
                     }                    

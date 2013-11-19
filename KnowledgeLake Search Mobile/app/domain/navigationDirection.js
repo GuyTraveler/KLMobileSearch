@@ -1,7 +1,8 @@
 define([], function() {
-   return {
-       standard: "standard",
-       forward: "forward",
-       back: "back"
-   };
+    return {
+        composite: "composite",
+        standard: "standard",
+        forward: "forward",
+        back: "back"
+    };
 });

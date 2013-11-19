@@ -48,21 +48,26 @@ define(["i18n!domain/nls/strings", "framework/klNavigator"],
 	            return false;
 	        },
 			showToast: function (message) {
-				var $msgbox = $("#messageBox");
+			    var $msgbox = $("#messageBox");
 
-				message = message || "";
-				
-				$msgbox.text(message);
-				$msgbox.removeClass("fade-out");
-				$msgbox.addClass("opaque");
-				isToastUp = true;
-				
-				setTimeout(function () {
-					$msgbox.addClass("fade-out");
-					$msgbox.removeClass("opaque");
-					isToastUp = false;
-	            }, messageDisplayTime);
-	        },
+			    message = message || "";
+
+			    $msgbox.text(message);
+			    $msgbox.removeClass("fade-out");
+			    $msgbox.addClass("opaque");
+			    isToastUp = true;
+
+			    setTimeout(function () {
+			        $msgbox.addClass("fade-out");
+			        $msgbox.removeClass("opaque");
+			        isToastUp = false;
+			    }, messageDisplayTime);	    
+			},
+			setBusyHtml: function (html) {
+			    if (window.App) {
+			        window.App.loading = html;
+			    }
+			},
 			showSoftKeyboard: function () {
 				//android
 				if (window.plugins && window.plugins.SoftKeyBoard) {

@@ -1,9 +1,9 @@
 define(["logger",
 		"services/jqHttpService",
-		"services/jqHttpService"],
-	function (logger, jqHttpService, jqHttpService) {
+		"services/winjsHttpService"],
+	function (logger, jqHttpService, winjsHttpService) {
 		if (window.WinJS) {
-			throw "WinJS http service not implemented"; //TODO
+		    return winjsHttpService;
         }
 		else {
 			return jqHttpService;

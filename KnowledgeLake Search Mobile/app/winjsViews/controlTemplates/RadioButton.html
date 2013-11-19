@@ -1,0 +1,12 @@
+﻿<div>
+    <select data-bind="options: data.operators(), value: data.selectedOperator, enable: search.type === 0"></select>
+</div>
+
+<div>
+    <select data-bind="value: data.value" class="full-width">
+        <option value="1" data-bind="text: strings().Yes"></option>
+        <option value="0" data-bind="text: strings().No"></option>
+        <option value="" data-bind="text: strings().NotSet"></option>
+    </select>
+</div>
+

@@ -56,7 +56,7 @@ function (ko, documentService, navigationDirection, navigationPage, navigationCo
 				application.navigator.currentNavigationContext.properties.site && 
 				application.navigator.currentNavigationContext.properties.result)
             {
-                window.App.loading = "<h1>" + application.strings.loading + "</h1>";
+                application.setBusyHtml("<h1>" + application.strings.loading + "</h1>");
                 self.isBusy(true);
                 
                 service = new documentService(application.navigator.currentNavigationContext.properties.site,

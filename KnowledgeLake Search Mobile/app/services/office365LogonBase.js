@@ -19,37 +19,44 @@ function ($, Constants, application, logger, Uri, HttpService) {
 			self.fullLoginUri = siteUri.protocol() + "://" + siteUri.host() + ":" + siteUri.port() + "/" + Constants.office365LoginUriPart;		
         }		
 		
-		self.parseBinaryTokenFromXml = function (xDoc) { 
+		self.parseBinaryTokenFromXml = function (xDoc) {
+		    var bstNodeName = window.WinJS ? "wsse\\:BinarySecurityToken" : "BinarySecurityToken";
+
 			try {
-				return $(xDoc).find("BinarySecurityToken").text();
+				return $(xDoc).find(bstNodeName).text();
 			}
 			catch (e) {
 				logger.logDebug("Failed to parse XML document from office 365: " + e.message);
 				return "";
             }			
         };
-			
+
 		self.parseExpirationFromXml = function (xDoc) {
-			try {
-				return $(xDoc).find("Body").find("Expires").text();
-			}
-			catch (e) {
-				logger.logDebug("Failed to parse XML document from office 365: " + e.message);
-				return "";
-            }					
-        };
-	
+		    var bodyNodeName = window.WinJS ? "S\\:Body" : "Body",
+                expiresNodeName = window.WinJS ? "wsu\\:Expires" : "Expires";
+
+		    try {
+		        return $(xDoc).find(bodyNodeName).find(expiresNodeName).text();
+		    }
+		    catch (e) {
+		        logger.logDebug("Failed to parse XML document from office 365: " + e.message);
+		        return "";
+		    }
+		};
+
 		self.hasErrorResult = function (xDoc) {
-			try {
-				return !xDoc || 
-					   ($(xDoc).find("Fault") !== null && $(xDoc).find("Fault").length > 0);
-            }
-			catch (e) {
-				logger.logError("BAD XML!!" + e.message);
-				return true; //bad XML means it's bad
-            }
-        };
-		
+		    var faultNodeName = window.WinJS ? "S\\:Fault" : "Fault";
+
+		    try {
+		        return !xDoc ||
+					   ($(xDoc).find(faultNodeName) !== null && $(xDoc).find(faultNodeName).length > 0);
+		    }
+		    catch (e) {
+		        logger.logError("BAD XML!!" + e.message);
+		        return true; //bad XML means it's bad
+		    }
+		};
+
 		self.postSecurityTokenToLoginForm = function (token) {	
 			logger.logVerbose("POSTING: " + token + "\n\nTO: " + self.fullLoginUri);
 			

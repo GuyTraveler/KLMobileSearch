@@ -6,25 +6,37 @@ define(["knockout",
         "domain/navigationDirection",
         "domain/navigationPage",
         "domain/navigationContext",
+        "domain/searchProperty",
         "domain/kendoKeywordBoxHandler",
 		"services/keywordValidationService", 
-		"services/searchBuilderService", 
+		"services/searchBuilderService",
+        "services/searchParsingService",
 		"services/klamlBuilderService",
-        "ISiteDataCachingService"], 
-function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, 
-          KendoKeywordBoxHandler, ValidationService, searchBuilderService, klamlBuilderService, SiteDataCachingService) {
+        "ISiteDataCachingService",
+        "framework/knockout/searchPropertyBuilder",
+        "knockoutMapping"],
+function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, searchProperty,
+          KendoKeywordBoxHandler, ValidationService, searchBuilderService, searchParsingService, klamlBuilderService, SiteDataCachingService, searchPropertyBuilder, mapping) {
     var searchBuilderViewModel = function () {
         var self = this;
                    
-		self.prototype = Object.create(viewModelBase.prototype);
-    	viewModelBase.call(self);
+        self.prototype = Object.create(viewModelBase.prototype);
+        viewModelBase.call(self);
 				
-		self.wordConjunction = ko.observable(keywordConjunction.and);
-		self.keywordConjunction = keywordConjunction;
+        self.wordConjunction = ko.observable(keywordConjunction.and);
+        self.keywordConjunction = keywordConjunction;
+        self.searchTitle = ko.observable("");
         self.search = ko.observable("");
+
+        self.search.subscribe(function () {
+            if (self.search()) {
+                self.searchTitle(self.search().title);
+            }
+        });
         
         self.propertiesList = null;
         self.propertiesName = ko.observableArray();
+
         self.searchBuilderDataSource = ko.observableArray();
         
         self.autoCompleteBox = new KendoKeywordBoxHandler();        
@@ -76,23 +88,55 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
 				self.isBusy(false);
             });
         }
-      
-        self.executeSearch = function (e) {            
-            if(self.autoCompleteBox.isElementValid() && 
-               (ValidationService.validateKeyword(self.autoCompleteBox.element.value()) || self.autoCompleteBox.element.value() === "") &&
-               application.navigator.currentNavigationContextHasProperties())
+
+        self.dismissVirtualKeyboard = function () {
+            if (window.WinJS) {
+                var elem = document.getElementById("searchBuilderSearchBox"),
+                    winControl = elem.winControl;
+
+                winControl.disabled = true;
+                winControl.disabled = false;
+            }
+        }
+
+        self.executeSearch = function (e) {
+            var isKeywordValid = false,
+                keywordValue,
+                checkVal;
+
+            if (!window.WinJS) {
+                isKeywordValid = self.autoCompleteBox.isElementValid() &&
+                                 (ValidationService.validateKeyword(self.autoCompleteBox.element.value()) || self.autoCompleteBox.element.value() === "") &&
+                                 application.navigator.currentNavigationContextHasProperties();
+
+                if (isKeywordValid)
+                    keywordValue = self.autoCompleteBox.element.value();
+            }
+            else {
+                checkVal = $("#searchBuilderSearchBox input[type=search]").val();
+
+                isKeywordValid = (ValidationService.validateKeyword(checkVal) || checkVal === "");
+
+                if (isKeywordValid)
+                    keywordValue = checkVal;
+            }
+
+            if(isKeywordValid)
             {
-                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, self.autoCompleteBox.element.value());
+                ValidationService.appendKeywordSearch(application.navigator.currentNavigationContext.properties.site, keywordValue);
                 
                 SiteDataCachingService.UpdateSiteAsync(application.navigator.currentNavigationContext.properties.site);
                 
     			var klamlService = new klamlBuilderService(),
-                    klaml = klamlService.buildKlamlQueryFromServerSavedQuery(self.autoCompleteBox.element.value(), self.searchBuilderDataSource(), self.wordConjunction());
+                    klaml = klamlService.buildKlamlQueryFromServerSavedQuery(keywordValue, self.cloneSearchProperties(self.searchBuilderDataSource()), self.wordConjunction());
                 
                 if(klaml)  
-                {                
-                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage, 
-                    	{"site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml}));
+                {
+                    //attempt to drop the keyboard
+                    self.dismissVirtualKeyboard();
+
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.resultsPage, navigationPage.searchBuilderPage,
+                        { "site": application.navigator.currentNavigationContext.properties.site, "klaml": klaml }, !window.WinJS ? null : navigationDirection.composite));
                 }
               
                 else {
@@ -102,6 +146,26 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             
             else
                 self.setMessage(application.strings.InvalidKeyword);
+        }
+
+        self.cloneSearchProperties = function (searchProperties) {
+            var clone = [];
+
+            if (searchProperties)
+            {
+                var searchPropertiesLength = searchProperties.length;
+
+                for(var i = 0; i < searchPropertiesLength; i++)
+                {
+                    var clonedProperty = new searchProperty();
+                            
+                    mapping.fromJS(searchProperties[i], {}, clonedProperty);
+
+                    clone.push(clonedProperty);
+                }
+            }
+
+            return clone;
         }
         
         self.popSuggestions = function (e, event) {
@@ -116,14 +180,31 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         self.onBeforeShow = function (e) {
 			logger.logVerbose("resultsViewModel onBeforeShow");
             
+			if (application.navigator.isStandardNavigation()) 
+			    self.searchBuilderDataSource([]);
+                
+            self.updateKeywordBox();
+        }
+
+        self.updateKeywordBox = function () {
+            var searchBox = window.WinJS ? document.getElementById("searchBuilderSearchBox").winControl : null;
+
             if(application.navigator.isStandardNavigation())
             {
-                self.searchBuilderDataSource([]);
-                
-                if(self.autoCompleteBox.isElementValid())
+                if (searchBox)
+                    searchBox.queryText = "";
+
+                else if (self.autoCompleteBox.isElementValid())
                     self.autoCompleteBox.element.value("");
             }
 
+            else if (searchBox && application.navigator.currentNavigationContextHasProperties())
+            {
+                var parsingService = new searchParsingService();
+
+                searchBox.queryText = application.navigator.currentNavigationContext.properties.klaml ? parsingService.getKeywordFromKlaml(application.navigator.currentNavigationContext.properties.klaml) : "";
+            }
+            
             if(self.autoCompleteBox.isElementValid())
                 self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:[]}));
         }
@@ -133,10 +214,9 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
             			
 			if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
             {                        
-                self.search(application.navigator.currentNavigationContext.properties.search);                                                                   
-            }
-			
-			self.BuildSearchProperties();                    
+			    self.search(application.navigator.currentNavigationContext.properties.search);
+			    self.BuildSearchProperties();
+			}			
                     
             if(self.autoCompleteBox.isElementValid())
                 self.autoCompleteBox.element.setDataSource(new kendo.data.DataSource({data:application.navigator.currentNavigationContext.properties.site.keywordSearches}));

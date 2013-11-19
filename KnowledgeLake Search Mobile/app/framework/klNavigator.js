@@ -1,5 +1,8 @@
-define(["knockout", "domain/navigationDirection", "domain/navigationContext"], 
-function (ko, NavigationDirection, navigationContext) {
+define(["knockout",
+        "config",
+        "domain/navigationDirection",
+        "domain/navigationContext"],
+function (ko, config, NavigationDirection, navigationContext) {
     var klNavigator = function () {
         var self = this;
         
@@ -59,25 +62,13 @@ function (ko, NavigationDirection, navigationContext) {
                         self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection;
                         
                         if(navigationContext.navigationDirection === NavigationDirection.forward)
-                        {
                             self.navigateDesiredPage();
-                            
-                            if(self.currentIndex() < self.globalNavigationContext.length - 1)
-                            {
-                                self.updateCurrentIndex(self.currentIndex() + 1);
-                                self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
-                            }
-                        }
+
                         else if(navigationContext.navigationDirection === NavigationDirection.back)
-                        {
                             self.navigateCurrentPage();
-                            
-                            if(self.currentIndex() > 0)
-                            {
-                                self.updateCurrentIndex(self.currentIndex() - 1);
-                                self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection; 
-                            }           
-                        }
+
+                        if (!window.WinJS)
+                            self.updateNavigationIndex(navigationContext.navigationDirection);
                     }
                 }
             }
@@ -90,13 +81,27 @@ function (ko, NavigationDirection, navigationContext) {
                 self.currentIndex(index);
             }
         }
+
+        self.updateNavigationIndex = function (navigationDirection) {
+            if (navigationDirection === NavigationDirection.back && self.currentIndex() > 0)
+                self.updateCurrentIndex(self.currentIndex() - 1);
+
+            else if (navigationDirection === NavigationDirection.forward && self.currentIndex() < self.globalNavigationContext.length - 1)
+                self.updateCurrentIndex(self.currentIndex() + 1);
+
+            self.currentNavigationContext.navigationDirection = navigationContext.navigationDirection;
+        }
         
         self.navigateCurrentPage = function () {
             if(self.currentNavigationContext &&
                self.currentNavigationContext.currentPage &&
                self.shouldNavigate(self.currentNavigationContext.currentPage))
             {
-                window.App.navigate(self.currentNavigationContext.currentPage);
+                if (window.WinJS && !config.isQunit)
+                    (ko.dataFor(document.body)).onNavigate(self.currentNavigationContext.currentPage, self.currentNavigationContext.desiredPage, self.currentNavigationContext.state, self.currentNavigationContext.navigationDirection);
+
+                else
+                    window.App.navigate(self.currentNavigationContext.currentPage);
             }
         }
         
@@ -105,7 +110,10 @@ function (ko, NavigationDirection, navigationContext) {
                self.currentNavigationContext.desiredPage &&
                self.shouldNavigate(self.currentNavigationContext.desiredPage))
             {
-                window.App.navigate(self.currentNavigationContext.desiredPage);
+                if (window.WinJS && !config.isQunit)
+                    (ko.dataFor(document.body)).onNavigate(self.currentNavigationContext.desiredPage, self.currentNavigationContext.currentPage, self.currentNavigationContext.state, self.currentNavigationContext.navigationDirection);
+                else
+                    window.App.navigate(self.currentNavigationContext.desiredPage);
             }
         }
         
@@ -124,6 +132,16 @@ function (ko, NavigationDirection, navigationContext) {
                 return true;
             }
             
+            return false;
+        }
+
+        self.isCompositeNavigation = function () {
+            if(self.currentNavigationContext &&
+               self.currentNavigationContext.state)
+            {
+                return true;
+            }
+
             return false;
         }
         

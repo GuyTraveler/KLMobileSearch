@@ -21,7 +21,23 @@ define(["knockout",
                    
 		self.prototype = Object.create(viewModelBase.prototype);
     	viewModelBase.call(self);
-	
+
+    	if (window.WinJS) {
+    	    self.winrtResultDataSource = new WinJS.Binding.List();
+
+    	    WinJS.Namespace.define("Converters", {
+    	        urlToFileTypeIcon: WinJS.Binding.converter(function (url) {
+    	            return ko.bindingHandlers.urlToFileTypeIcon.convert(url);
+    	        })
+    	    });
+
+    	    WinJS.Namespace.define("Converters", {
+    	        dateTimeToLocaleString: WinJS.Binding.converter(function (dateTimeString) {
+    	            return ko.bindingHandlers.dateTimeToLocaleString.convert(dateTimeString);
+    	        })
+    	    });
+    	}
+
         self.resultDataSource = ko.observableArray([]);
         self.resultCountString = ko.observable("");
                                         
@@ -69,7 +85,7 @@ define(["knockout",
         self.onBeforeShow = function (e) {
             logger.logVerbose("resultsViewModel onBeforeShow");
             
-            if(application.navigator.isStandardNavigation())
+            if (application.navigator.isStandardNavigation() || application.navigator.isCompositeNavigation())
             {
                 self.selectedResult = null;
                 self.resultDataSource([]);
@@ -79,17 +95,15 @@ define(["knockout",
 		self.onAfterShow = function (e) {
 			logger.logVerbose("resultsViewModel afterShow");
 			
-            if(application.navigator.isStandardNavigation() && application.navigator.currentNavigationContextHasProperties())
+			if((application.navigator.isStandardNavigation() || application.navigator.isCompositeNavigation()) && application.navigator.currentNavigationContextHasProperties())
             {    
                 if(application.navigator.currentNavigationContext.properties.site)
                 {
-        			if(application.navigator.currentNavigationContext.properties.keyword)
-                    {
-                        return self.keywordSearchAsync(application.navigator.currentNavigationContext.properties.site, 
-                                                       application.navigator.currentNavigationContext.properties.keyword, 
+                    if (application.navigator.currentNavigationContext.properties.keyword) {
+                        return self.keywordSearchAsync(application.navigator.currentNavigationContext.properties.site,
+                                                       application.navigator.currentNavigationContext.properties.keyword,
                                                        application.navigator.currentNavigationContext.properties.wordConjunction);
-                    }	
-                    
+                    }
                     else if(application.navigator.currentNavigationContext.properties.klaml)
                     {
                         return self.propertySearchAsync(application.navigator.currentNavigationContext.properties.site, 
@@ -124,77 +138,21 @@ define(["knockout",
             }         
         }
         
-        self.navigateToProperties = function (selection) {            
-			self.setSelectedResult(selection);
+        self.navigateToProperties = function (selection) {
+            var selectedItem = window.WinJS && self.resultDataSource() && selection && selection.detail && typeof selection.detail.itemIndex === 'number' ?
+                               self.resultDataSource()[selection.detail.itemIndex] :
+                               selection;
+
+			self.setSelectedResult(selectedItem);
             
             self.viewProperties();
         }
-        
-        /*self.navigateToResult = function (selection) {
-            var dfd = $.Deferred(), 
-                service,
-                logonService;
-            
-			self.setSelectedResult(selection);
-			
-            if(selection && application.navigator.currentNavigationContext.properties.site)
-            {
-                window.App.loading = "<h1>" + application.strings.loading + "</h1>";
-                self.isBusy(true);
-                
-                service = new documentService(selection.url);        
-                logonService = LogonServiceFactory.createLogonService(application.navigator.currentNavigationContext.properties.site.url, 
-                                                                      application.navigator.currentNavigationContext.properties.site.credential.credentialType,
-																	  application.navigator.currentNavigationContext.properties.site.credential.isOffice365,
-																	  application.navigator.currentNavigationContext.properties.site.credential.adfsUrl);
-
-                logonPromise = logonService.logonAsync(application.navigator.currentNavigationContext.properties.site.credential.domain, 
-                                                       application.navigator.currentNavigationContext.properties.site.credential.userName, 
-                                                       application.navigator.currentNavigationContext.properties.site.credential.password,
-                                                       selection.url);
-            
-                logonPromise.done(function (result) {
-                    getDisplayFormUrlPromise = service.getDisplayFormUrlAsync();
-                
-                    getDisplayFormUrlPromise.done(function (result) {  
-						self.isBusy(false);
-						
-						result = encodeURI(result);
-						
-						logger.logVerbose("display form obtained at: " + result);
-                        
-                        self.windowRef = window.open(result, "_system");
-						dfd.resolve();
-                    });
-                    
-                    getDisplayFormUrlPromise.fail(function (error) {
-                        self.isBusy(false);
-						
-						logger.logVerbose("display form could not be obtained: " + error);
-						self.setMessage(application.strings.unauthorized);
-                        
-                        dfd.reject(error);
-                    });
-                });
-                
-                logonPromise.fail(function (error) {
-                    self.isBusy(false);
-					
-					logger.logVerbose("could not navigate to result. logon failed.");
-					self.setMessage(application.strings.logonFailed);
-                    
-                    dfd.reject(error);
-                });
-            }
-            
-            return dfd.promise();
-        }*/
         
         self.keywordSearchAsync = function (searchSite, keyword, conjunction) {
             var dfd = $.Deferred(),
                 service;
             
-            window.App.loading = "<h1>" + application.strings.searching + "</h1>";
+            application.setBusyHtml("<h1>" + application.strings.searching + "</h1>");
             self.isBusy(true);
 			
 			if (!conjunction)
@@ -204,18 +162,18 @@ define(["knockout",
                         
             searchPromise = service.keywordSearchAsync(keyword.split(" "), conjunction, true);
             
-            searchPromise.done(function (result) {
+            searchPromise.done(function (result) {                
                 self.SetDataSource(result);
-                
+
                 dfd.resolve(true);
                 
                 self.isBusy(false);
             });
             
-            searchPromise.fail(function (response) {				
-                dfd.reject(response);
-				self.setMessage(application.strings.searchError);
-                
+            searchPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                dfd.reject(XMLHttpRequest);
+                self.setMessage(application.strings.searchError);
+
                 self.isBusy(false);
             });
       
@@ -226,7 +184,7 @@ define(["knockout",
             var dfd = $.Deferred(),
                 service;
             
-            window.App.loading = "<h1>" + application.strings.searching + "</h1>";
+            application.setBusyHtml("<h1>" + application.strings.searching + "</h1>");
             self.isBusy(true);
             
             service = new ServerSavedSearchesService();

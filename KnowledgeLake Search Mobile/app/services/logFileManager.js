@@ -36,7 +36,7 @@ define(["jquery",
 				getFolderPromise.done(function (result) {
 					fullPath = result.response.fullPath + "/" + self.logFileName;
 					
-					if (window.App.os.ios === true) {
+					if (window.App && window.App.os && window.App.os.ios === true) {
 						fullPath = fullPath.substring(1);	
                     }							
 					else {

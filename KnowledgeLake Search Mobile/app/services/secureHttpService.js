@@ -1,7 +1,8 @@
 define(["jquery",
+        "domain/credentialType",
 		"HttpService",
 		"LogonServiceFactory"],
-function ($, HttpService, LogonServiceFactory) {
+function ($, credentialType, HttpService, LogonServiceFactory) {
 	var secureHttpService = function () {
 		var self = this;
 		
@@ -10,10 +11,8 @@ function ($, HttpService, LogonServiceFactory) {
 				xhrPromise,
 				dfd = $.Deferred();
 		
-			//TODO: map WinJS options to JQuery as needed on all methods
-			
-			if (!site || !site.credential || typeof site.credential.userName === 'undefined') {
-				return HttpService.xhr(options);
+			if (!site || !site.credential || typeof site.credential.userName === 'undefined' || (window.WinJS && site.credential.credentialType === credentialType.ntlm)) {
+				return HttpService.xhr(options, site);
             }
 			
 			logonPromise = self.logonAsync(site);

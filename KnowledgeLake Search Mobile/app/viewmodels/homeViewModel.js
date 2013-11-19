@@ -1,5 +1,6 @@
 define(["knockout", 
-        "application", 
+        "application",
+        "config",
 		"logger",
         "jquery", 
 		"domain/Constants",
@@ -10,13 +11,23 @@ define(["knockout",
         "FileManagement",
         "ISiteDataCachingService",
 		"emailComposer"], 
-    function (ko, application, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService, emailComposer) {
+    function (ko, application, config, logger, $, Constants, navigationDirection, navigationPage, navigationContext, viewModelBase, File, SiteDataCachingService, emailComposer) {
         var homeViewModel = function () {
             var self = this,
 				selectionTimeout = 1000;
                        
 			self.prototype = Object.create(viewModelBase.prototype);
-        	viewModelBase.call(self);
+			viewModelBase.call(self);
+
+			if (window.WinJS) {
+			    self.winrtSiteDataSource = new WinJS.Binding.List();
+
+			    WinJS.Namespace.define("Converters", {
+			        majorVersionToSiteIcon: WinJS.Binding.converter(function (majorVersion) {
+			            return ko.bindingHandlers.majorVersionToSiteIcon.convert(majorVersion);
+			        })
+			    });
+			}
 			
             self.siteDataSource = ko.observableArray([]);
 			
@@ -47,7 +58,7 @@ define(["knockout",
             }
             
             self.LoadSiteData = function () {
-                if(window.AppLoaded && window.AppLoaded() === true)
+                if(window.WinJS || (window.AppLoaded && window.AppLoaded() === true))
                 {
                     if (SiteDataCachingService.sites) {
                         self.SetDataSource(SiteDataCachingService.sites);
@@ -80,12 +91,18 @@ define(["knockout",
             }
             
             self.onInit = function (e) {
-				logger.logVerbose("homeViewModel.onInit");
+                logger.logVerbose("homeViewModel.onInit");
+
+                if (window.WinJS) {
+                    self.LoadSiteData();
+                }
 				
-                window.AppLoaded.subscribe(function (updatedValue) {
-                    if(updatedValue)
-                        self.LoadSiteData();
-                });
+                else {
+                    window.AppLoaded.subscribe(function (updatedValue) {
+                        if (updatedValue)
+                            self.LoadSiteData();
+                    });
+                }
             }
             
             self.onBeforeShow = function (e) {
@@ -98,21 +115,42 @@ define(["knockout",
 			self.onAfterShow = function (e) {
 				logger.logVerbose("homeViewModel.afterShow");
 				
-				if(window.App && application.navigator.isStandardNavigation())
+				if((window.WinJS || window.App) && application.navigator.isStandardNavigation())
                     self.LoadSiteData();          	
-            }
+			}
+
+			self.appBarManipulation = function () {
+			    var AppBarContainer = document.getElementById("AppBarContainer"),
+                    appBar = document.getElementById("AppBar").winControl;
+
+			    var listView = document.getElementById("sitesListView").winControl;
+
+			    if (listView.selection.count() > 0) {
+			        appBar.showCommands(AppBarContainer.querySelectorAll('.siteSelection'));
+			        appBar.sticky = true;
+			        appBar.show();
+			    } else {
+			        appBar.hide();
+			        appBar.hideCommands(AppBarContainer.querySelectorAll('.siteSelection'));
+			        appBar.sticky = false;
+			    }
+			}
             
             self.longPress = function (e) {
-				var selection;
+                var selection = window.WinJS && !config.isQunit ? self.siteDataSource()[e.srcElement.winControl.selection.getIndices()] : self.getSelectionFrom(e);
 				
-                if(e)
-                    e.preventDefault();
-                
-				selection = self.getSelectionFrom(e);
+                if (e)
+                {
+                    if (e.preventDefault && !window.WinJS && !config.isQunit)
+                        e.preventDefault();
+
+                    else if (window.WinJS && !config.isQunit)
+                        self.appBarManipulation();
+                }
 				
                 self.isHold = true;
                 
-                if(selection)
+                if (selection !== self.selectedSite())
                     self.setSelectedSite(selection);
             }
             
@@ -134,7 +172,7 @@ define(["knockout",
             }
             
             self.siteClick = function (e) {             
-				var selection = self.getSelectionFrom(e);
+                var selection = window.WinJS && !config.isQunit ? self.siteDataSource()[e.detail.itemIndex] : self.getSelectionFrom(e);
 				
 				if(selection)
                 {
@@ -153,16 +191,19 @@ define(["knockout",
 				return (!self.isHold && e && e.event && e.event.currentTarget) ? 
 						ko.dataFor(e.event.currentTarget) : 
 						null;
-            }
+			}
             
-            self.addSite = function () {
-                application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage));
+			self.addSite = function () {
+			    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, window.WinJS ? null : navigationPage.homePage));
+
+			    if (window.WinJS && self.selectedSite() === null)
+			        (ko.dataFor(document.body)).hideBars();
             }
             
             self.editSite = function () {
                 if(self.selectedSite())
                 {
-                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, navigationPage.homePage, {"site": self.selectedSite()}));         
+                    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, window.WinJS ? null : navigationPage.homePage, {"site": self.selectedSite()}));         
                 }
             }
             

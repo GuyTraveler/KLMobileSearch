@@ -1,10 +1,11 @@
 define(["jquery", 
         "FileManagement",  
 		"application",
+        "domain/site",
         "framework/promiseResponse/promiseResolveResponse", 
         "framework/promiseResponse/promiseRejectResponse",
         "services/encryptionService"], 
-        function ($, File, application, PromiseResolveResponse, PromiseRejectResponse, EncryptionService) {
+        function ($, File, application, site, PromiseResolveResponse, PromiseRejectResponse, EncryptionService) {
     var service = function () {
         var self = this, 
             siteDataFileName = "sites.dat";
@@ -17,12 +18,19 @@ define(["jquery",
             var existsPromise = File.ExistsAsync(siteDataFileName);
                 
             existsPromise.done(function (result) {
-                if(result.response === application.strings.FileFound)
+                if (result && result.response && (result.response.fileHandle || result.response === application.strings.FileFound))
                 {
                     var readPromise = File.ReadAsync(siteDataFileName);
                     
                     readPromise.done(function (result) {
-                        self.sites = self.decodePasswords(JSON.parse(result.response));
+                        var parsedSites = JSON.parse(result.response),
+                            sitesLength = parsedSites.length;
+
+                        self.sites = [];
+
+                        for (var i = 0; i < sitesLength; i++)
+                            self.sites.push(self.decodePassword(site.prototype.fromJSON(parsedSites[i])))
+
                         dfd.resolve(new PromiseResolveResponse(self.sites)); 
                     });
                     
@@ -176,24 +184,29 @@ define(["jquery",
             return encodedSites;
         }
         
-        self.decodePasswords = function (sites) {
-            var decodedSites = [];
-            
-            if(sites && Object.prototype.toString.call(sites) === '[object Array]')
+        self.decodePassword = function (site) {            
+            if(site)
             {
-                var sitesLength = sites.length;
-                
-                for(var i = 0; i < sitesLength; i++)
-                {
-                    if(window.atob)                    
-                        sites[i].credential.password = EncryptionService.decrypt(sites[i].credential.password, application.deviceUUID);
-                }
-                
-                decodedSites = sites; 
+                if(window.atob)                    
+                    site.credential.password = EncryptionService.decrypt(site.credential.password, application.deviceUUID);                
             }
             
-            return decodedSites;
+            return site;
         }
+
+        //self.decodePasswords = function (sites) {
+        //    var decodedSites = [];
+
+        //    if (sites && Object.prototype.toString.call(sites) === '[object Array]') {
+        //        var sitesLength = sites.length;
+
+        //        for (var i = 0; i < sitesLength; i++) {
+        //            decodedSites.push(self.decodePassword(sites[i]));
+        //        }
+        //    }
+
+        //    return decodedSites;
+        //}
   
 		self.WriteSiteData = function (dfd) {
 			
@@ -216,7 +229,8 @@ define(["jquery",
             {
             	if (self.sites[i].url === url) 
                 {
-                    self.sites.splice(i, 1);
+            	    self.sites.splice(i, 1);
+            	    sitesLength -= 1; 
                 }
             }
         }

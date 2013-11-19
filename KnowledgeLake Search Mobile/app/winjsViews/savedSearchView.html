@@ -1,0 +1,49 @@
+﻿<div class="pull-left">
+    <div class="keywordWrapper">
+        <h3 class="primary-heading-text keyword-heading" data-bind="text: strings().keywordsSearchHeading"></h3>
+
+        <div id="savedSearchSearchBox"
+             data-win-control="WinJS.UI.SearchBox"
+             data-bind="winrtSearchBox: {'placeholderText': strings().keywordsWatermark, handlers: {'querysubmitted': search, 'resultsuggestionschosen': search }}"
+             data-win-options="{
+	            chooseSuggestionOnEnter: false,
+	            focusOnKeyboardInput : true,
+	            searchHistoryContext: 'search',
+	            searchHistoryDisabled: false }">
+        </div>
+        <div>
+            <div class="text-right radio-conjunction">
+                <input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.and, checked: wordConjunction" />
+                <span class="and-conjunction" data-bind="text: strings().And"></span>
+
+                <input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.or, checked: wordConjunction" />
+                <span data-bind="text: strings().Or"></span>
+            </div>
+        </div>
+        <div>
+            <button class="custom-search-button" data-bind="click: search">
+                <img src="/app/images/search_icon_white.png" />
+            </button>
+        </div>
+    </div>
+
+    <div class="small-margin" data-bind="visible: (searchDataSource().length > 0)">
+        <div id="savedSearchListViewTemplate" data-win-control="WinJS.Binding.Template">
+            <div class="app-border site-list-view-item saved-search-list-view-item">
+                <img src="/app/images/saved_search.png" class="search-icon" />
+                <div class="search-tile-data">
+                    <h4 class="primary-heading-text" data-win-bind="innerText: title"></h4>
+
+                    <h6 data-win-bind="innerText: description"></h6>
+                </div>
+            </div>
+        </div>
+
+        <h2 data-bind="text: strings().serverSavedSearches"></h2>
+
+        <div id="savedSearchListView" data-win-control="WinJS.UI.ListView" style="width: 100%"
+             data-bind="winrtListView: {'iteminvoked': searchClick}, winrtListViewBinding: { 'data' : searchDataSource, 'binding': winrtSearchDataSource }"
+             data-win-options="{ itemTemplate: select('#savedSearchListViewTemplate'), layout : {type: WinJS.UI.ListLayout}, selectionMode: 'none' }">
+        </div>
+    </div>
+</div>

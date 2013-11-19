@@ -1,0 +1,47 @@
+﻿<div class="keywordWrapper pull-left">
+    <h3 class="primary-heading-text keyword-heading" data-bind="text: strings().keywordsSearchHeading"></h3>
+
+    <div id="searchBuilderSearchBox"
+         data-win-control="WinJS.UI.SearchBox"
+         data-bind="winrtSearchBox: {'placeholderText': strings().keywordsWatermark, handlers: {'querysubmitted': executeSearch, 'resultsuggestionschosen': executeSearch }}"
+         data-win-options="{
+	            chooseSuggestionOnEnter: false,
+	            focusOnKeyboardInput : false,
+	            placeholderText: 'keywords',
+	            searchHistoryContext: 'search',
+	            searchHistoryDisabled: false }">
+    </div>
+    <div>
+        <div class="text-right radio-conjunction">
+            <input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.and, checked: wordConjunction" />
+            <span class="and-conjunction" data-bind="text: strings().And"></span>
+
+            <input type="radio" name="savedSearchConjunction" data-bind="value: keywordConjunction.or, checked: wordConjunction" />
+            <span data-bind="text: strings().Or"></span>
+        </div>
+    </div>
+    <div>
+        <button class="custom-search-button" data-bind="click: executeSearch">
+            <img src="/app/images/search_icon_white.png" />
+        </button>
+    </div>
+
+    <h2 class="primary-heading-text" data-bind="text: searchTitle"></h2>
+
+    <div data-bind="foreach: searchBuilderDataSource">
+        <div class="search-builder-item-container">
+            <h3 data-bind="text: $data.selectedProperty"></h3>
+
+            <span data-bind="searchPropertyBuilder: { data: $data, search: $root.search, properties: $root.propertiesName, strings: $root.strings }">
+            </span>
+
+            <div class="text-right radio-conjunction"  data-bind="visible: conjunctionVisible">
+                <input type="radio" data-bind="value: $root.keywordConjunction.and, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
+                <span class="and-conjunction" data-bind="text: $root.strings().And"></span>
+
+                <input type="radio" data-bind="value: $root.keywordConjunction.or, checked: conjunction, attr: { name: key }, enable: $root.search.type === 0" />
+                <span data-bind="text: $root.strings().Or"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+﻿<div>
+    <h3 data-bind="text: documentTitle"></h3>
+
+    <div data-bind="foreach: documentDataSource">
+        <!-- ko ifnot: hidden -->
+        <div class="control-wrapper app-border">
+            <span class="bold" data-bind="text: displayName"></span>
+            <span class="bold">:</span>
+            &nbsp;&nbsp;
+            <span data-bind="text: value"></span>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>

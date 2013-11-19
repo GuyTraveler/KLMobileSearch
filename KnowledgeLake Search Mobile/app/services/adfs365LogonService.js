@@ -195,8 +195,10 @@ function ($, Constants, application, logger, Uri, office365Service, office365Log
         }
 		
 		self.parseAssertionFromXml = function (xDoc) {
+		    var assertionNodeName = window.WinJS ? "saml\\:Assertion" : "Assertion";
+
 			try {
-				var assertionNode = $(xDoc).find("Assertion")[0];
+				var assertionNode = $(xDoc).find(assertionNodeName)[0];
 				return (new XMLSerializer()).serializeToString(assertionNode);
 			} catch (e) {
 				logger.logDebug("Failed to parse asssertion from XML document: " + e.message);

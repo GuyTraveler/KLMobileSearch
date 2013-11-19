@@ -78,4 +78,10 @@ define(function () {
 		};
 	}
    
+    //shim for WinJS
+    if (!window.toStaticHTML) {
+        window.toStaticHTML = function (html) {
+            return html;
+        }
+    }
 });

@@ -214,10 +214,26 @@ define(['domain/application',
 		QUnit.test("RESET DEVICE UUID TO DEFAULT", function () {
 			//arrange
 			
-			//act
-			application.deviceUUID = window.device.uuid;
+		    //act
+		    if (window.device && window.device.uuid) {
+		        application.deviceUUID = window.device.uuid;
+		    }
+		    else if (window.WinJS) {
+		        application.deviceUUID = "WinJS";
+		    }
 			
 			//assert
 			QUnit.ok(application.deviceUUID);
-        });
+		});
+
+		QUnit.test("test  application.setBusyHtml sets busy html properly", function () {
+		    //arrange
+		    var busyText = "xxx";
+
+		    //act
+		    application.setBusyHtml(busyText);
+
+		    //assert
+		    QUnit.ok(!window.App || window.App.loading === busyText);
+		});
     });

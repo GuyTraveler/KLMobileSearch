@@ -442,7 +442,7 @@ define(["application",
 				QUnit.start();
             });
 			
-			credValidationPromise.fail(function () {
+			credValidationPromise.fail(function (err) {
 				QUnit.ok(false, "Office 365 credential validation failed when it should have been good");
 				QUnit.start();
             });

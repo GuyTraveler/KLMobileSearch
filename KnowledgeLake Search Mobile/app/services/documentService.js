@@ -427,7 +427,7 @@ define(["jquery",
                     
                     if(fields)
                     {
-                        for(field in fields)
+                        for(var field in fields)
                         {
                             if (typeof fields[field] === 'object')
                             {
