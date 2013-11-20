@@ -130,7 +130,23 @@ define(["jquery",
                             newSearchProperty.value(DateTimeConverter.toDateString(klamlSearchFieldProperty.condition1));
                             newSearchProperty.secondaryValue(DateTimeConverter.toDateString(klamlSearchFieldProperty.condition2));
                         }
-                        
+                        else if (newSearchProperty.controlType == catalogPropertyControlType.RadioButton)
+                        {
+                            var boolValue;
+
+                            if (klamlSearchFieldProperty.condition1 == "0") {
+                                boolValue = Constants.radiobuttonValues[1];  //No
+                            }
+                            else if (klamlSearchFieldProperty.condition1 == "1") {
+                                boolValue = Constants.radiobuttonValues[0];  //Yes
+                            }
+                            else {
+                                boolValue = Constants.radiobuttonValues[2];  //Not Set
+                            }
+
+                            newSearchProperty.value(boolValue);
+                            newSearchProperty.secondaryValue(klamlSearchFieldProperty.condition2);
+                        }                    
                         else
                         {                                    
 	                        newSearchProperty.value(klamlSearchFieldProperty.condition1);
@@ -157,7 +173,7 @@ define(["jquery",
                 {        
 					choices = [];
 					
-                    for (Choices in properties[ArrayOfCatalogPropertyBase][choicesText])
+                    for (var Choices in properties[ArrayOfCatalogPropertyBase][choicesText])
                     {
                         if (typeof properties[ArrayOfCatalogPropertyBase][choicesText][Choices] === 'object') 
                         {

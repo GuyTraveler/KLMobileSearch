@@ -108,7 +108,22 @@ define(["jquery",
                                 searchProperties[i].value(DateTimeConverter.convertToKlamlDateTime(searchProperties[i].value()));
                             }
                         }
-                        
+                        else if (ko.unwrap(searchProperties[i].controlType) === catalogPropertyControlType.RadioButton)
+                        {
+                            var numericValue;
+
+                            if (searchProperties[i].value() == Constants.radiobuttonValues[0]) { //Yes
+                                numericValue = "1";
+                            }
+                            else if (searchProperties[i].value() == Constants.radiobuttonValues[1]) {  //No
+                                numericValue = "0";
+                            }
+                            else {   //Not Set
+                                numericValue = "";
+                            }
+
+                            searchProperties[i].value(numericValue);
+                        }
                         else if (ko.unwrap(searchProperties[i].controlType) === catalogPropertyControlType.Number &&
                                  searchProperties[i].selectedOperator() === application.strings.Range)
                         {
@@ -138,7 +153,8 @@ define(["jquery",
             }
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
-                if(searchProperty)
+
+                if (searchProperty || (ko.unwrap(searchProperty.controlType) === catalogPropertyControlType.RadioButton && searchProperty.value()))
                 {
                     var field = masterMetaDataWhereTemplate;
                                     

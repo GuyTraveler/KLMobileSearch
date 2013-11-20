@@ -1,4 +1,4 @@
-﻿<div id="homeWrapper">
+<div id="homeWrapper">
     <div id="sitesListViewTemplate" data-win-control="WinJS.Binding.Template">
         <div class="app-border site-list-view-item">
 
@@ -49,7 +49,7 @@
 
     <div id="AppBarContainer">
         <div id="AppBar" data-win-control="WinJS.UI.AppBar">
-            <button data-bind="click: addSite, winrtAppBarLabel: strings().addSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdAdd', label: '', icon: 'add', section: 'selection', tooltip: 'aaaaaa'}"></button>
+            <button data-bind="click: addSite, winrtAppBarLabel: strings().addSiteButtonText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdAdd', label: '', icon: 'add', section: 'selection', tooltip: 'aaaaaa'}"></button>
             <button data-bind="click: editSite, winrtAppBarLabel: strings().EditSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdEdit', label: '', icon: 'edit', section: 'selection', tooltip: '', hidden:'true', extraClass:'siteSelection'}"></button>
             <button data-bind="click: deleteSite, winrtAppBarLabel: strings().DeleteSiteLinkText" data-win-control="WinJS.UI.AppBarCommand" data-win-options="{ id: 'cmdDelete', label: '', icon: 'delete', section: 'selection', tooltip: '', hidden:'true', extraClass:'siteSelection'}"></button>
         </div>

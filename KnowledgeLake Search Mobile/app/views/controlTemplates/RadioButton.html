@@ -3,9 +3,5 @@
 </div>
 
 <div class="pull-left">
-    <select class="relative-container" data-bind="value: data.value">
-        <option value="1" data-bind="text: strings().Yes"></option>
-        <option value="0" data-bind="text: strings().No"></option>
-        <option value="" data-bind="text: strings().NotSet"></option>
-    </select>
+    <select class="full-width" data-bind="options: data.choices(), value: data.value"></select>
 </div>
