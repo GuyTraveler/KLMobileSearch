@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{262852C6-CD72-467D-83FE-5EEB1973A190}") = "KnowledgeLake.ConnectRT", "KnowledgeLake.ConnectRT.jsproj", "{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://devtfs:8080/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = KnowledgeLake.ConnectRT.jsproj
+		SccLocalPath1 = .
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM = Debug|ARM
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM = Release|ARM
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|ARM.Build.0 = Debug|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|ARM.Deploy.0 = Debug|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x64.ActiveCfg = Debug|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x64.Build.0 = Debug|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x64.Deploy.0 = Debug|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x86.ActiveCfg = Debug|x86
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x86.Build.0 = Debug|x86
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Debug|x86.Deploy.0 = Debug|x86
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|ARM.ActiveCfg = Release|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|ARM.Build.0 = Release|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|ARM.Deploy.0 = Release|ARM
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x64.ActiveCfg = Release|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x64.Build.0 = Release|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x64.Deploy.0 = Release|x64
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x86.ActiveCfg = Release|x86
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x86.Build.0 = Release|x86
+		{DBDDB091-7A17-4494-8DA1-CC0A0F11073D}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -154,7 +154,8 @@ define(["jquery",
             
             self.buildFieldFromSearchProperty = function (searchProperty) {
 
-                if (searchProperty || (ko.unwrap(searchProperty.controlType) === catalogPropertyControlType.RadioButton && searchProperty.value()))
+                if (searchProperty && (ko.unwrap(searchProperty.controlType) !== catalogPropertyControlType.RadioButton ||
+                                       (ko.unwrap(searchProperty.controlType) === catalogPropertyControlType.RadioButton && searchProperty.value())))
                 {
                     var field = masterMetaDataWhereTemplate;
                                     

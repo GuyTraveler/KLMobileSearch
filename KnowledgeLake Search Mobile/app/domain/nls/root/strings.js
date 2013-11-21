@@ -14,7 +14,7 @@ define({
     cancel: "Cancel",
     save: "Save",
     addSite: "Add",
-	addSiteButtonText: "Add Site",
+    addSiteButtonText: "Add Site",
     addSiteLinkText: "Please Configure a Site to Search",
     editSite: "Edit",
     editProperties: "Edit",

@@ -1,0 +1,28 @@
+﻿<div id="content">
+    RESULTS are <span data-bind="text:resultsfor"></span>
+    <div id="item-view">
+        Loading items …
+    </div>
+
+    <button id="btnSearch" data-bind="click : keywordSearchAsync" >Search</button>
+
+    <div id="resultsContainer">	
+	    <ul id="listView" data-role="listview" data-bind="foreach: resultDataSource" >
+	    	<li data-bind="css: { 'highlight': $parent.isSelectedResult($data), 'resultItem': true }, click: $parent.navigateToResult">
+	            <div class="resultOuterContainer">
+	                <div class="imageContainer resultIconContainer">
+	    				<img class="resultIcon" data-bind="urlToFileTypeIcon: url"/>
+	                </div>
+	                <div class="resultContentContainer">
+	                    <div class="resultTitleContainer">
+	                        <h1 class="resultTitle" data-bind="text: metadata.Title"></h1>
+	                    </div>
+	                    <div class="resultLastModifiedContainer">
+	                        <span data-bind="dateTimeToLocaleString: LastModifiedTime"></span>
+	                    </div>
+	                </div>
+	            </div>
+	    	</li>
+	    </ul>
+    </div>
+</div>

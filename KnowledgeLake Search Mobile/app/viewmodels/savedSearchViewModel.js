@@ -90,7 +90,7 @@ function (ko, $, application, config, logger, viewModelBase, keywordConjunction,
         }
 
         self.updateKeywordBox = function () {
-            var searchBox = window.WinJS ? document.getElementById("savedSearchSearchBox").winControl : null;
+            var searchBox = window.WinJS && !config.isQunit ? document.getElementById("savedSearchSearchBox").winControl : null;
 
             if(application.navigator.isStandardNavigation())
             {
@@ -165,7 +165,7 @@ function (ko, $, application, config, logger, viewModelBase, keywordConjunction,
         }
 
         self.dismissVirtualKeyboard = function () {
-            if (window.WinJS) {
+            if (window.WinJS && !config.isQunit) {
                 var elem = document.getElementById("savedSearchSearchBox"),
                     winControl = elem.winControl;
 

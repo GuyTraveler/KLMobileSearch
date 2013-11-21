@@ -1,4 +1,4 @@
-/*global QUnit*/
+﻿/*global QUnit*/
 define([], function () {
     QUnit.module("Simple Unit Test");
 

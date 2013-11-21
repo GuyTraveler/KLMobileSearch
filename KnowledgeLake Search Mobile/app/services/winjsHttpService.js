@@ -1,4 +1,4 @@
-define(["jquery",
+﻿define(["jquery",
         "domain/credentialType"],
 function ($, credentialType) {
     var winjsHttpService = function () {
@@ -56,10 +56,9 @@ function ($, credentialType) {
             //map preprocessor function
             if (typeof options.beforeSend === 'function') {
                 options.customRequestInitializer = options.beforeSend;
-            }
-    
+            }    
             //end JQuery to WinJS mappings
-                                   
+                 
             WinJS.xhr(winJsOptions).done(
                 function completed(request) {
                     //resolve in the same manner as jquery.ajax
@@ -68,11 +67,11 @@ function ($, credentialType) {
                 function error(request) {
                     //map expected jquery response properties
                     var XMLHttpRequest = request,
-	                    textStatus = request.statusText,
-	                    errorThrown = {
-	                        message: request.statusText,
-	                        response: request.statusText
-	                    };
+                        textStatus = request.statusText,
+                        errorThrown = {
+                            message: request.statusText,
+                            response: request.statusText
+                        };
 
                     XMLHttpRequest.error = request.status;
 

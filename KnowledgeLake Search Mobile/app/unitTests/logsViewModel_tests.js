@@ -1,6 +1,7 @@
 /*global QUnit*/
-define(["viewmodels/logsViewModel"],
-	function (logsViewModel) {
+define(["viewmodels/logsViewModel",
+        "logger",],
+	function (logsViewModel, logger) {
 		QUnit.module("Testing viewmodels/logsViewModel");
 		
 		QUnit.test("Test logsViewModel instantiates OK", function () {
@@ -21,21 +22,8 @@ define(["viewmodels/logsViewModel"],
 			//arrange
 			var vm;
 			
-			//act
-			vm = new logsViewModel();
-			vm.onAfterShow();
-			
-			//assert
-			QUnit.ok(vm.logs());
-			QUnit.notEqual(vm.logs().length, 0);
-			QUnit.equal(vm.isBusy(), false);
-		});
-		
-		QUnit.test("Test logsViewModel.onAfterShow loads logs", function () {
-			//arrange
-			var vm;
-			
-			//act
+		    //act
+			logger.logFatal("test");
 			vm = new logsViewModel();
 			vm.onAfterShow();
 			
@@ -46,23 +34,44 @@ define(["viewmodels/logsViewModel"],
 		});
 		
 		QUnit.asyncTest("Test logsViewModel.emailLogsToSupport succeeds", function () {
-			//arrange
-			var vm,
+		    //arrange
+		    var vm,
 				promise;
-			
-			//act
-			vm = new logsViewModel();
-			promise = vm.emailLogsToSupport();
-			
-			//assert
-			promise.done(function () {
-				QUnit.ok(true);
-				QUnit.start();
-            });
-			
-			promise.fail(function () {
-				QUnit.ok(false);
-				QUnit.start();
-            });
+
+		    //act
+		    vm = new logsViewModel();
+		    promise = vm.emailLogsToSupport();
+
+		    //assert
+		    promise.done(function () {
+		        QUnit.ok(true);
+		        QUnit.start();
+		    });
+
+		    promise.fail(function () {
+		        QUnit.ok(false);
+		        QUnit.start();
+		    });
+		});
+
+		QUnit.asyncTest("Test logsViewModel.createLogFile succeeds", function () {
+		    //arrange
+		    var vm,
+				promise;
+
+		    //act
+		    vm = new logsViewModel();
+		    promise = vm.createLogFile();
+
+		    //assert
+		    promise.done(function (result) {
+		        QUnit.ok(result);
+		        QUnit.start();
+		    });
+
+		    promise.fail(function () {
+		        QUnit.ok(false);
+		        QUnit.start();
+		    });
 		});
     });

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyLibrary", "DummyLibrary\DummyLibrary.csproj", "{6FB074F8-5505-4AE0-AB77-6E34F28EC6CC}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://devtfs:8080/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DummyLibrary\\DummyLibrary.csproj
+		SccProjectName1 = DummyLibrary
+		SccLocalPath1 = DummyLibrary
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FB074F8-5505-4AE0-AB77-6E34F28EC6CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FB074F8-5505-4AE0-AB77-6E34F28EC6CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FB074F8-5505-4AE0-AB77-6E34F28EC6CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FB074F8-5505-4AE0-AB77-6E34F28EC6CC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

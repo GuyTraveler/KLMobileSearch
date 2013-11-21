@@ -79,6 +79,15 @@ define(["knockout",
             if(results)
             {
                 self.resultDataSource(results);
+                // add code to scroll to results
+
+                if ($("body").width() <= 700) {
+                    var contentHost = $("#contentHost");
+
+                    contentHost.animate({
+                        scrollTop: contentHost.height()
+                    }, 1500);
+                }
             }
         }
         

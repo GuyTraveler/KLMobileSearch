@@ -61,7 +61,7 @@ require(["config"], function (config) {
        
             document.addEventListener("deviceready", function () {
                 logger.logVerbose("device ready!");
- 
+
                 //TODO: remove this in favor of a native Kendo solution once we update to a new kendo mobile version:
                 //ref: http://www.icenium.com/blog/icenium-team-blog/2013/11/07/everything-hybrid-web-apps-need-to-know-about-the-status-bar-in-ios7
                 var match = window.navigator && navigator.userAgent.match(/OS (\d)/),
@@ -69,7 +69,6 @@ require(["config"], function (config) {
                 if (updateStatusBar) {
                     document.body.style.webkitTransform = 'translate3d(0, 20px, 0)';
                 }
-				
             }, false);  
         });
     });

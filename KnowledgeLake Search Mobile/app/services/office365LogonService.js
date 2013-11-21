@@ -34,7 +34,6 @@ function ($, Constants, application, logger, guid, Uri, office365LogonBase, Date
                 binaryTokenPromise = self.getBinarySecurityTokenAsync(domain, userName, password);
 
                 binaryTokenPromise.done(function (result) {
-					var x = (new XMLSerializer()).serializeToString(result);
                     //result contains an XMLDocument which we can parse and grab BinarySecurityToken
                     token = self.parseBinaryTokenFromXml(result);
                     self.logonExpiration = self.parseExpirationFromXml(result);

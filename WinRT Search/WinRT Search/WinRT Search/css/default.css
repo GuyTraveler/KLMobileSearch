@@ -1,0 +1,65 @@
+﻿body {
+}
+
+@media screen and (-ms-view-state: fullscreen-landscape) {
+}
+
+@media screen and (-ms-view-state: filled) {
+}
+
+@media screen and (-ms-view-state: snapped) {
+}
+
+@media screen and (-ms-view-state: fullscreen-portrait) {
+}
+
+body {
+    background-color: #0039a6;
+    color: #e37c00;
+}
+
+#backbutton {
+    color: white;
+    border-color: white;
+}
+#backbutton:active {
+    color: #b3b3b3;
+    border-color: #b3b3b3;
+    background-color: #0039a6;
+}
+
+#registerFlyout {
+    width: 300px;
+    height: inherit;
+    background-color: #0072cf;
+    color: white;
+    border: none;
+}
+
+#btnRegister {
+    background-color: #e37c00;
+    color: white;
+}
+#klSearchDescriptionHeader {
+    font-weight:bold;
+}
+
+#addSiteFlyout {
+    width: 300px;
+    height: inherit;
+    background-color: #0072cf;
+    color: white;
+    border: none;
+}
+#btnAdd {
+    background-color: #e37c00;
+    color: white;
+}
+
+#selectSiteFlyout {
+    width: 300px;
+    height: inherit;
+    background-color: #0072cf;
+    color: white;
+    border: none;
+}

@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KnowledgeLake.ConnectRT</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- KnowledgeLake.ConnectRT references -->
+    <link href="app/styles/connectWinJS.css" rel="stylesheet" />
+
+    <script src="/js/default.js"></script>
+
+    <script data-main="/app/init.js" src="/app/lib/require.js"></script>   
+</head>
+<body>
+    <div id="anchor"></div>
+
+    <!--<button data-bind="click: navigateToLogs">Test View Logs</button>-->
+
+    <div id="primaryBusyIndicator" data-bind="visible: isBusy()" class="busy-container">
+         <progress class="win-ring win-large"></progress>
+    </div>
+
+    <button data-bind="click: navigateBack, visible: !homeVisibility() && !isBusy()" style="display: none" class="back-button">
+        <img src="/app/images/winrt_back.png" />
+    </button>
+
+    <header class="pull-left">
+        <img class="pull-left" style="display: none" id="headerImage" src="/app/images/kl_head_large.png" data-bind="visible: !isBusy()" />
+        <h1 class="pull-left primary-heading-text" data-bind="text: strings().winAppTitle"></h1>
+    </header>
+
+    <div id="NavBar" data-win-control="WinJS.UI.NavBar">
+        <div id="NavBarContainer" data-win-control="WinJS.UI.NavBarContainer">
+            <button data-win-control="WinJS.UI.NavBarCommand" data-bind="click: navigateToHome" data-win-options="{ id: 'home', label: 'Home', icon: 'home', section: 'global', tooltip: 'Home'}"></button>
+            <button data-win-control="WinJS.UI.NavBarCommand" data-bind="click: navigateToLogs" data-win-options="{ id: 'logs', label: 'Log Viewer', icon: 'admin', section: 'global', tooltip: 'Log Viewer'}"></button>
+        </div>
+    </div>
+
+    <div id="contentHost">
+        <div data-bind="visible: !isBusy()" id="viewContainer">
+            <div id="home" data-bind="kendoView: { id: 'home' }, visible: homeVisibility"></div>
+            <div id="logs" data-bind="kendoView: { id: 'logs' }, visible: logsVisibility"></div>
+            <div id="configureSite" data-bind="kendoView: { id: 'configureSite' }, visible: configureSiteVisibility"></div>
+            <div id="savedSearch" data-bind="kendoView: { id: 'savedSearch' }, visible: savedSearchVisibility"></div>
+            <div id="searchBuilder" data-bind="kendoView: { id: 'searchBuilder' }, visible: searchBuilderVisibility"></div>
+            <div id="results" data-bind="kendoView: { id: 'results' }, visible: resultsVisibility"></div>
+            <div id="document" data-bind="kendoView: { id: 'document', loadKendoApp: true }, visible: documentVisibility"></div>
+        </div>
+    </div>
+
+    <div id="messageBox" class="fade-out"></div>
+</body>
+</html>

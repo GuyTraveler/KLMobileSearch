@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>KnowledgeLake Search Mobile</title>
+    <meta charset="utf-8" />
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="app/styles/QUnitMetro-light.css" />
+    <link rel="stylesheet" type="text/css" href="app/styles/blanket.css" />
+
+    <script src="app/lib/QUnitMetro.js" type="text/javascript"></script>
+    <script data-main="app/config" src="app/lib/require.js"></script>
+    <!-- NOTE: data-cover-only requires items to not have spaces between the ' and , characters -->
+    <script src="app/lib/blanket.js" type="text/javascript"
+            data-cover-only="['app/domain/','app/framework/','app/factory/','app/services/','app/viewmodels/']"
+            data-cover-flags="existingRequireJS"
+            data-cover-never="['app/framework/FileManagement','app/services/ntlmLogonService','app/services/jqHttpService']"></script>
+    <script>
+        QUnit.config.autostart = false;
+        QUnit.config.testTimeout = 45000;
+        require(["init.test"]);
+    </script>
+
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body style="height: 900px; overflow-y: scroll">
+    <div id="unitTestContainer"></div>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>

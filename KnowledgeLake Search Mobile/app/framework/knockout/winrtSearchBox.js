@@ -1,4 +1,4 @@
-///This is a knockout plugin to give key bindings to the view model
+﻿///This is a knockout plugin to give key bindings to the view model
 define(['knockout',
         'jquery'],
     function (ko, $) {

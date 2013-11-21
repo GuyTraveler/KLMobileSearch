@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="dbddb091-7a17-4494-8da1-cc0a0f11073d" Version="1.0.0.0" Publisher="CN=steve.danner" />
+  <Properties>
+    <DisplayName>KnowledgeLake Search</DisplayName>
+    <PublisherDisplayName>KnowledgeLake, Inc.</PublisherDisplayName>
+    <Logo>images\storelogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" StartPage="default.html">
+      <m2:VisualElements DisplayName="KnowledgeLake Search" Description="KnowledgeLake Search for Windows 8" ForegroundText="light" BackgroundColor="#464646" Square150x150Logo="images\Square150x150Logo.png" Square30x30Logo="images\SmallLogo.png">
+        <m2:DefaultTile ShortName="KnowledgeLake Search" Wide310x150Logo="images\Wide310x150Logo.png" Square70x70Logo="images\Square70x70Logo.png" Square310x310Logo="images\Square310x310Logo.png" DefaultSize="wide310x150Logo">
+        </m2:DefaultTile>
+        <m2:SplashScreen Image="images\splashscreen.png" BackgroundColor="#FFFFFF" />
+      </m2:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+  </Capabilities>
+</Package>

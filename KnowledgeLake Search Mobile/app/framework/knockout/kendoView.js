@@ -3,10 +3,14 @@ define(['knockout',
         'jquery',
 		'application',
 		'logger',
-		'HttpService'],
+		'HttpService',
+        'extensions'],
     function (ko, $, application, logger, HttpService) {
-		var lastViewLoaded = function () {
-			if (!window.App) {
+        var lastViewLoaded = function () {
+            if (window.WinJS)
+                (ko.dataFor(document.body)).lastViewModelLoaded();
+            
+			else if (!window.App) {
 		        window.App = new kendo.mobile.Application(document.body, {
 		            transition: 'slide',
 					skin: 'flat',
@@ -39,29 +43,32 @@ define(['knockout',
                         
                     shortModelName = parameters.id + "ViewModel";
                     modelName = "viewmodels/" + shortModelName;
-                    viewUrl = "app/views/" + parameters.id + "View.html";
+                    viewUrl = window.WinJS ? "app/winjsViews/" + parameters.id + "View.html" : "app/views/" + parameters.id + "View.html";
                         
                     require([modelName], function (viewModel) {
                         model = new viewModel();
-                                                
-                        //attach the model to the global namespace for kendo
-                        window[shortModelName] = model;
-                                       
-                        //try to attach kendo event handlers
-                        if (typeof model.init === 'function') {
-                            $(element).attr("data-init", shortModelName + ".init");
-                        }                            
-                        if (typeof model.beforeShow === 'function') {
-                            $(element).attr("data-before-show", shortModelName + ".beforeShow");
-                        }
-                        if (typeof model.show === 'function') {
-                            $(element).attr("data-show", shortModelName + ".show");
-                        }
-                        if (typeof model.afterShow === 'function') {
-                            $(element).attr("data-after-show", shortModelName + ".afterShow");
-                        }
-                        if (typeof model.hide === 'function') {
-                            $(element).attr("data-hide", shortModelName + ".hide");
+                          
+                        if (!window.WinJS)
+                        {
+                            //attach the model to the global namespace for kendo
+                            window[shortModelName] = model;
+
+                            //try to attach kendo event handlers
+                            if (typeof model.init === 'function') {
+                                $(element).attr("data-init", shortModelName + ".init");
+                            }
+                            if (typeof model.beforeShow === 'function') {
+                                $(element).attr("data-before-show", shortModelName + ".beforeShow");
+                            }
+                            if (typeof model.show === 'function') {
+                                $(element).attr("data-show", shortModelName + ".show");
+                            }
+                            if (typeof model.afterShow === 'function') {
+                                $(element).attr("data-after-show", shortModelName + ".afterShow");
+                            }
+                            if (typeof model.hide === 'function') {
+                                $(element).attr("data-hide", shortModelName + ".hide");
+                            }
                         }
                             
                         HttpService.get(viewUrl)
@@ -75,8 +82,21 @@ define(['knockout',
                                             $(element).find(".km-scroll-container") : 
                                             element;
                             
-                            $(container).html(data);             
-                            ko.applyBindingsToDescendants(model, element);  														
+                            $(container).html(window.toStaticHTML(data));
+
+                            if (window.WinJS)
+                            {
+                                WinJS.UI.processAll();
+
+                                ko.applyBindingsToDescendants(model, element);
+
+                                (ko.dataFor(document.body)).appendViewModelToRoot(parameters.id, model, parameters.id + "Visibility");
+                            }
+
+                            else
+                            {
+                                ko.applyBindingsToDescendants(model, element);
+                            }
                         });
                         
                         promiseView.always(function (data) {

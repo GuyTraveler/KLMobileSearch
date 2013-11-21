@@ -32,13 +32,13 @@ define(["jquery", "application", "logger", "domain/result"],
 					return results;
 
 				//iterate each result
-				for (relevantResult in resultsRoot) {
+				for (var relevantResult in resultsRoot) {
 					
 					if (typeof resultsRoot[relevantResult] === 'object') {											
 						resultItem = new result();
 						
 						//iterate each property of each result
-						for (relevantResultProperty in resultsRoot[relevantResult]) {
+						for (var relevantResultProperty in resultsRoot[relevantResult]) {
 							setResultProperty(relevantResultProperty, resultsRoot[relevantResult], resultItem);
 	                    }
 						

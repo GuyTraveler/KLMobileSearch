@@ -53,7 +53,7 @@ define(['jquery',
 			QUnit.equal(TestSettings.logCount, logs.length);
 			QUnit.ok(prettyString.indexOf(logLevel.toLevelString(logLevel.Verbose)) > -1);
 			
-			for (i = 0; i < TestSettings.logCount; i++) {
+			for (var i = 0; i < TestSettings.logCount; i++) {
 				QUnit.ok(prettyString.indexOf(TestSettings.logMessage + i) > -1);
             }
         });

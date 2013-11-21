@@ -69,7 +69,7 @@ define(["jquery",
 					choices,
 					klamlSearchFieldPropertiesLength;
                 
-                for (ArrayOfCatalogPropertyBase in properties) 
+                for (var ArrayOfCatalogPropertyBase in properties) 
                 {                   
 					if (typeof properties[ArrayOfCatalogPropertyBase] !== 'object') 
 						continue;
@@ -146,7 +146,7 @@ define(["jquery",
 
                             newSearchProperty.value(boolValue);
                             newSearchProperty.secondaryValue(klamlSearchFieldProperty.condition2);
-                        }                    
+                        }
                         else
                         {                                    
 	                        newSearchProperty.value(klamlSearchFieldProperty.condition1);

@@ -116,4 +116,52 @@ define(["application",
             //assert
             QUnit.ok(autoCompleteBox);
         });
+
+        QUnit.test("Test kendoKeywordBoxHandler determineQueryText with text", function () {
+            //arrange
+            var autoCompleteBox = new kendoKeywordBoxHandler();
+
+            //act
+            var result = autoCompleteBox.determineQueryText(TestSettings.testSearchKeyword);
+
+            //assert
+            QUnit.equal(result, TestSettings.testSearchKeyword);
+        });
+
+        QUnit.test("Test kendoKeywordBoxHandler determineQueryText without text", function () {
+            //arrange
+            var autoCompleteBox = new kendoKeywordBoxHandler();
+
+            autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+
+            //act
+            var result = autoCompleteBox.determineQueryText();
+
+            //assert
+            QUnit.equal(result, TestSettings.testSearchKeyword);
+        });
+
+        QUnit.test("Test kendoKeywordBoxHandler useAutoCompleteText with text", function () {
+            //arrange
+            var autoCompleteBox = new kendoKeywordBoxHandler();
+
+            //act
+            var result = autoCompleteBox.useAutoCompleteText(TestSettings.testSearchKeyword);
+
+            //assert
+            QUnit.equal(result, false);
+        });
+
+        QUnit.test("Test kendoKeywordBoxHandler useAutoCompleteText without text", function () {
+            //arrange
+            var autoCompleteBox = new kendoKeywordBoxHandler();
+
+            autoCompleteBox.element = TestSettings.autoCompleteBoxElement;
+
+            //act
+            var result = autoCompleteBox.useAutoCompleteText();
+
+            //assert
+            QUnit.equal(result, true);
+        });
 	});

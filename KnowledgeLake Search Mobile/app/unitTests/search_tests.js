@@ -60,32 +60,48 @@ define(['domain/search',
 		
 		QUnit.test("test search instantiates properly with 3 parameters", function () {
 			//arrange
-			var s,
-				type = 1;
+			var s;
 			
 			//act
-			s = new search(TestSettings.ntlmTestUrl, TestSettings.siteTitle, type);
+			s = new search(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.searchDescription);
 
 			//assert
 			QUnit.ok(s);
 			QUnit.equal(s.siteUrl, TestSettings.ntlmTestUrl);
 			QUnit.equal(s.title, TestSettings.siteTitle);
-			QUnit.equal(s.type, type);
+			QUnit.equal(s.description, TestSettings.searchDescription);
 			QUnit.equal(s.query, "");
-        });
-		
+		});
+
 		QUnit.test("test search instantiates properly with 4 parameters", function () {
+		    //arrange
+		    var s,
+				type = 1;
+
+		    //act
+		    s = new search(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.searchDescription, type);
+
+		    //assert
+		    QUnit.ok(s);
+		    QUnit.equal(s.siteUrl, TestSettings.ntlmTestUrl);
+		    QUnit.equal(s.title, TestSettings.siteTitle);
+		    QUnit.equal(s.description, TestSettings.searchDescription);
+		    QUnit.equal(s.type, type);
+		});
+		
+		QUnit.test("test search instantiates properly with 5 parameters", function () {
 			//arrange
 			var s,
 				type = 1;
 			
 			//act
-			s = new search(TestSettings.ntlmTestUrl, TestSettings.siteTitle, type, TestSettings.testQueryXml);
+			s = new search(TestSettings.ntlmTestUrl, TestSettings.siteTitle, TestSettings.searchDescription, type, TestSettings.testQueryXml);
 
 			//assert
 			QUnit.ok(s);
 			QUnit.equal(s.siteUrl, TestSettings.ntlmTestUrl);
 			QUnit.equal(s.title, TestSettings.siteTitle);
+			QUnit.equal(s.description, TestSettings.searchDescription);
 			QUnit.equal(s.type, type);
 			QUnit.equal(s.query, TestSettings.testQueryXml);
         });

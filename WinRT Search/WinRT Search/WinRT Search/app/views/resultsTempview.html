@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>AMDTesting</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.1.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.1.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.1.0/js/ui.js"></script>
+
+    <!-- AMDTesting references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/resultsTempviewmodel.js"></script>
+    <script src="/app/lib/knockout.js"></script>
+    <script src="/app/lib/jquery.js"></script>
+    <script src="/app/lib/require.js" data-main="app/app"></script>
+</head>
+<body>
+    <header aria-label="Header content" role="banner">
+            <!--<img class="item-image" src="#" data-win-bind="src: smallTile; alt: title" />-->
+            <h1 class="titlearea win-type-ellipsis">
+                <span class="pagetitle">KnowledgeLake Search</span>
+            </h1>
+    </header>
+    <div>
+        <div id="supercontent" data-bind="html:currentView">
+        </div>
+        <a data-bind="click:function(){loadView('results');}">Load View Results</a>
+    </div>
+
+</body>
+</html>

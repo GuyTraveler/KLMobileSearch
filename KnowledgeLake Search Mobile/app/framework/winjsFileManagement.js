@@ -1,4 +1,4 @@
-define(["application",
+﻿define(["application",
         "logger",
         "jquery",
         "framework/promiseResponse/promiseResolveResponse",

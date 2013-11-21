@@ -13,8 +13,9 @@ require(["config"], function (config) {
 			 "logger",
 			 "extensions",
              "framework/logLevel",
-			 "framework/klNavigator"],
-    function($, ko, kendo, application, logger, extensions, logLevel, navigator) {
+			 "framework/klNavigator",
+             "FileManagement"],
+    function($, ko, kendo, application, logger, extensions, logLevel, navigator, File) {
 		var appHref = window.WinJS ? "default.html" : "index.html",
 			testRootPath = 'unitTests/',
 			testsToRun = [
@@ -79,7 +80,7 @@ require(["config"], function (config) {
                           testRootPath + "adfs365LogonService_tests",
                           testRootPath + "klNavigator_tests",						  
 						  testRootPath + "keywordBoxHandler_tests",
-                          testRootPath + "localization_tests",
+                          testRootPath + "localization_tests"
                           //testRootPath + "FileTransfer_tests", //not currently used						  
                           //ADDITIONAL TESTS GO HERE
                          ];
@@ -97,7 +98,7 @@ require(["config"], function (config) {
         }*/
         
         QUnit.moduleStart(function (details) {
-            logger.setLogLevel(logLevel.Verbose);			
+            logger.setLogLevel(logLevel.Verbose);
         });
 		
 		QUnit.testStart(function () {

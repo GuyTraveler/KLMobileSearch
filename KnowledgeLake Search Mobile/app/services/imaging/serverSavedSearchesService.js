@@ -94,7 +94,7 @@ define(["jquery",
             
             if(queryResults)
             {
-                for (prop in queryResults) 
+                for (var prop in queryResults) 
                 {					
 					if (typeof queryResults[prop] === 'object' && prop.startsWith("Query"))
                     {
@@ -115,7 +115,7 @@ define(["jquery",
                         
             if(searchResults)
             {
-                for (FacetResultItem in searchResults) 
+                for (var FacetResultItem in searchResults) 
                 {
                     if (typeof searchResults[FacetResultItem] === 'object')
                     {
@@ -142,7 +142,7 @@ define(["jquery",
             
             if(FacetResultItemValues)
             {
-                for(keyValuePair in FacetResultItemValues)
+                for(var keyValuePair in FacetResultItemValues)
                 {
                     if (typeof FacetResultItemValues[keyValuePair] === 'object')
                     {

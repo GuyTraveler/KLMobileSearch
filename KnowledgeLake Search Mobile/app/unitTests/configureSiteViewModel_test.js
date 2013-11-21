@@ -340,7 +340,10 @@ define(["application",
 			
 			//act
 			vm = new configureSiteViewModel();
+			vm.protocol(httpProtocols.http);
 			vm.url(TestSettings.ntlmTestUrl);
+			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + "gg");
+			vm.sitePassword("h");
 			credValidationPromise = vm.logonAsync();
 			
 			//assert
@@ -561,35 +564,49 @@ define(["application",
         
 		QUnit.asyncTest("test configureSiteViewModel.saveSiteSettings won't save site with invalid credentials", function () {
 			//arrange
-			var vm,
+		    var vm,
+                dfd = $.Deferred(),
+                removeSitePromise,
 				saveSettingsPromise;
             
 			vm = new configureSiteViewModel();            
             window.homeViewModel = {"selectedSite": null};
 			
 			//act
-			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl))
-				SiteDataCachingService.RemoveSiteData(TestSettings.ntlmTestUrl);
+            if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl)) {
+                removeSitePromise = SiteDataCachingService.RemoveSiteAsync(TestSettings.ntlmTestUrl);
+            }
+            else {
+                removeSitePromise = dfd.promise();
+                dfd.resolve();
+            }
 			
-			vm.url(TestSettings.ntlmTestUrl);
-			vm.siteTitle("dfdsfds");
-			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
-			vm.sitePassword("asfsdfsdafsd");
-			vm.setValidUrl(credentialType.ntlm);
-			
-			saveSettingsPromise = vm.saveSiteSettingsAsync();
-						
-			//assert
-			QUnit.ok(saveSettingsPromise);
-						
-			saveSettingsPromise.done(function () {
-				QUnit.ok(false, "saveSiteSettings should have failed with invalid credentials");
-				QUnit.start();
+            removeSitePromise.done(function () {
+                vm.url(TestSettings.ntlmTestUrl);
+                vm.siteTitle("dfdsfds");
+                vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + TestSettings.ntlmTestDomain);
+                vm.sitePassword("asfsdfsdafsd");
+                vm.setValidUrl(credentialType.ntlm);
+
+                saveSettingsPromise = vm.saveSiteSettingsAsync();
+
+                //assert
+                QUnit.ok(saveSettingsPromise);
+
+                saveSettingsPromise.done(function () {
+                    QUnit.ok(false, "saveSiteSettings should have failed with invalid credentials");
+                    QUnit.start();
+                });
+
+                saveSettingsPromise.fail(function () {
+                    QUnit.equal(vm.message(), application.strings.credentialsInvalidMessage);
+                    QUnit.start();
+                });
             });
-			
-			saveSettingsPromise.fail(function () {
-				QUnit.equal(vm.message(), application.strings.credentialsInvalidMessage);
-				QUnit.start();
+
+            removeSitePromise.fail(function () {
+                QUnit.ok(false, "Failed to remove existing site data");
+                QUnit.start();
             });
 		});
         
@@ -600,8 +617,7 @@ define(["application",
 				removeSitePromise,			
 				saveSettingsPromise;
             
-			vm = new configureSiteViewModel();            
-            window.homeViewModel = {"selectedSite": null};
+			vm = new configureSiteViewModel();
 			
 			//act
 			if (SiteDataCachingService.SiteExists(TestSettings.ntlmTestUrl)) {

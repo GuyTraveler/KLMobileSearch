@@ -196,8 +196,10 @@ define(["knockout",
 			self.addSite = function () {
 			    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, window.WinJS ? null : navigationPage.homePage));
 
-			    if (window.WinJS && self.selectedSite() === null)
+			    if (window.WinJS && !config.isQunit && self.selectedSite() === null)
 			        (ko.dataFor(document.body)).hideBars();
+
+			    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.configureSitePage, window.WinJS ? null : navigationPage.homePage));
             }
             
             self.editSite = function () {

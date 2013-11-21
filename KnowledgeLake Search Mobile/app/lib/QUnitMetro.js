@@ -1,4 +1,4 @@
-/**
+﻿/**
  * QUnit-Metro v0.4.0 - A Unit Testing Framework based on QUnit for WinJS Metro applications
  *
  * http://qunitmetro.github.com

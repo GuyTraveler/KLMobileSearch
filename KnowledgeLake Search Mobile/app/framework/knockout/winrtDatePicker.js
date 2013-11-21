@@ -1,4 +1,4 @@
-define(['knockout',
+﻿define(['knockout',
         'jquery'],
     function (ko, $) {
         ko.bindingHandlers.winrtDatePicker = {

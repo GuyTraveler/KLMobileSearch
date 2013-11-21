@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="7eb81393-a1be-412e-a352-5a6d09b68ad3" Version="1.0.0.0" Publisher="CN=joel.clark" />
+  <Properties>
+    <DisplayName>KnowledgeLake.Search.WinRT</DisplayName>
+    <PublisherDisplayName>joel.clark</PublisherDisplayName>
+    <Logo>images\storelogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2.1</OSMinVersion>
+    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" StartPage="default.html">
+      <VisualElements DisplayName="KnowledgeLake.Search.WinRT" Logo="images\LargeTile.png" SmallLogo="images\smallTile.png" Description="KnowledgeLake.Search.WinRT" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" WideLogo="images\wideTile.png" ShortName="KnowledgeLake.Search.WinRT" />
+        <SplashScreen Image="images\KLlogo_tagline_FINAL_standard.png" BackgroundColor="white" />
+      </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

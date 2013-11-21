@@ -1,4 +1,5 @@
-define(["knockout", 
+define(["knockout",
+        "config",
 		"domain/Constants",
         "application", 
 		"logger",
@@ -8,7 +9,7 @@ define(["knockout",
 		"FileManagement",
         "services/logFileManager",
 		"emailComposer"], 
-    function (ko, Constants, application, logger, $, logLevel, viewModelBase, File, logFileManager, emailComposer) {
+    function (ko, config, Constants, application, logger, $, logLevel, viewModelBase, File, logFileManager, emailComposer) {
         var logsViewModel = function () {
             var self = this,
                 logManager = new logFileManager();
@@ -30,7 +31,9 @@ define(["knockout",
                     createFilePromise;
 				
                 if (window.WinJS) {
-                    Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
+                    if (!config.isQunit)
+                        Windows.ApplicationModel.DataTransfer.DataTransferManager.showShareUI();
+                    
                     dfd.resolve();
 
                     return dfd.promise();
@@ -73,7 +76,7 @@ define(["knockout",
                     getLogPathPromise = logManager.getEmailFriendlyLogFilePath();
 
                     getLogPathPromise.done(function (logFile) {
-                        logger.logVerbose("log file obtained, attaching to email...");
+                        logger.logVerbose("log file obtained");
 
                         if (window.WinJS) {
                             fileHandlePromise = File.getFileHandleAsync(logManager.logFileName);

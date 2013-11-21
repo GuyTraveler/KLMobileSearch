@@ -1,4 +1,5 @@
-define(["knockout", 
+define(["knockout",
+        "config",
 		"application", 
 		"logger",
 		"viewmodels/viewModelBase",
@@ -13,10 +14,9 @@ define(["knockout",
         "services/searchParsingService",
 		"services/klamlBuilderService",
         "ISiteDataCachingService",
-        "framework/knockout/searchPropertyBuilder",
         "knockoutMapping"],
-function (ko, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, searchProperty,
-          KendoKeywordBoxHandler, ValidationService, searchBuilderService, searchParsingService, klamlBuilderService, SiteDataCachingService, searchPropertyBuilder, mapping) {
+function (ko,  config, application, logger, viewModelBase, keywordConjunction, navigationDirection, navigationPage, navigationContext, searchProperty,
+          KendoKeywordBoxHandler, ValidationService, searchBuilderService, searchParsingService, klamlBuilderService, SiteDataCachingService, mapping) {
     var searchBuilderViewModel = function () {
         var self = this;
                    
@@ -187,7 +187,7 @@ function (ko, application, logger, viewModelBase, keywordConjunction, navigation
         }
 
         self.updateKeywordBox = function () {
-            var searchBox = window.WinJS ? document.getElementById("searchBuilderSearchBox").winControl : null;
+            var searchBox = window.WinJS && !config.isQunit ? document.getElementById("searchBuilderSearchBox").winControl : null;
 
             if(application.navigator.isStandardNavigation())
             {
