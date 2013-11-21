@@ -140,60 +140,60 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
                 args.request.applicationCommands.append(feedbackCommand);
                 args.request.applicationCommands.append(supportCommand);
             });
-        }
 
-        self.launchPrivacyPolicy = function () {
-            var uri = new Windows.Foundation.Uri(Constants.PrivacyPolicyUrl);
-            Windows.System.Launcher.launchUriAsync(uri);
-        }
+            self.launchPrivacyPolicy = function () {
+                var uri = new Windows.Foundation.Uri(Constants.PrivacyPolicyUrl);
+                Windows.System.Launcher.launchUriAsync(uri);
+            }
 
-        self.addSite = function () {
-            self.viewModels[navigationPage.homePage].model.addSite();
-        }
+            self.addSite = function () {
+                self.viewModels[navigationPage.homePage].model.addSite();
+            }
 
-        self.launchAbout = function () {
-            var uri = new Windows.Foundation.Uri(Constants.AboutLinkUrl);
-            Windows.System.Launcher.launchUriAsync(uri);
-        }
+            self.launchAbout = function () {
+                var uri = new Windows.Foundation.Uri(Constants.AboutLinkUrl);
+                Windows.System.Launcher.launchUriAsync(uri);
+            }
 
-        self.launchFeedback = function () {
-            var uri = new Windows.Foundation.Uri(Constants.getFeedbackLinkUrl());
-            Windows.System.Launcher.launchUriAsync(uri);
-        }
+            self.launchFeedback = function () {
+                var uri = new Windows.Foundation.Uri(Constants.getFeedbackLinkUrl());
+                Windows.System.Launcher.launchUriAsync(uri);
+            }
 
-        self.launchSupport = function () {
-            var uri = new Windows.Foundation.Uri(Constants.SupportLinkUrl);
-            Windows.System.Launcher.launchUriAsync(uri);
-        }
+            self.launchSupport = function () {
+                var uri = new Windows.Foundation.Uri(Constants.SupportLinkUrl);
+                Windows.System.Launcher.launchUriAsync(uri);
+            }
 
 
-        dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView().addEventListener("datarequested", function (e) {
-            var request = e.request,
-                fileHandle,
-                createFilePromise,
-                logsVM = self.viewModels[navigationPage.logsPage].model;
+            dataTransferManager = Windows.ApplicationModel.DataTransfer.DataTransferManager.getForCurrentView().addEventListener("datarequested", function (e) {
+                var request = e.request,
+                    fileHandle,
+                    createFilePromise,
+                    logsVM = self.viewModels[navigationPage.logsPage].model;
 
-            request.data.properties.title = self.strings().EmailLogs;
-            request.data.properties.description = self.strings().EmailLogs;
-            request.data.properties.fileTypes.replaceAll([".txt"]);
+                request.data.properties.title = self.strings().EmailLogs;
+                request.data.properties.description = self.strings().EmailLogs;
+                request.data.properties.fileTypes.replaceAll([".txt"]);
 
-            createFilePromise = logsVM.createLogFile();
+                createFilePromise = logsVM.createLogFile();
 
-            createFilePromise.done(function (handle) {
-                fileHandle = handle;
+                createFilePromise.done(function (handle) {
+                    fileHandle = handle;
+                });
+
+                createFilePromise.fail(function (error) {
+                    fileHandle = null;
+                    self.setMessage(error);
+                });
+
+                request.data.setDataProvider(Windows.ApplicationModel.DataTransfer.StandardDataFormats.storageItems, function (req) {
+                    if (fileHandle) {
+                        req.setData([fileHandle]);
+                    }
+                });
             });
-
-            createFilePromise.fail(function (error) {
-                fileHandle = null;
-                self.setMessage(error);
-            });
-
-            request.data.setDataProvider(Windows.ApplicationModel.DataTransfer.StandardDataFormats.storageItems, function (req) {
-                if (fileHandle) {
-                    req.setData([fileHandle]);
-                }
-            });
-        });
+        }
 
         return self;
     };
