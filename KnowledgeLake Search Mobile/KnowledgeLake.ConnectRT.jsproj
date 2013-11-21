@@ -260,7 +260,6 @@
     <Content Include="app\lib\jquery.js" />
     <Content Include="app\lib\jsUri.js" />
     <Content Include="app\lib\kendo.all.min.js" />
-    <Content Include="app\lib\kendo.mobile.min.js" />
     <Content Include="app\lib\knockout.js" />
     <Content Include="app\lib\knockout.mapping.js" />
     <Content Include="app\lib\ntlm.js" />
@@ -418,7 +417,6 @@
     <Content Include="app\unitTests\soapParsingService_tests.js" />
     <Content Include="app\unitTests\soapQueryService_tests.js" />
     <Content Include="app\unitTests\sqlQueryService_tests.js" />
-    <Content Include="app\unitTests\system_tests.js" />
     <Content Include="app\unitTests\unitTestSettings.js" />
     <Content Include="app\unitTests\userNameParser_tests.js" />
     <Content Include="app\unitTests\validationService_tests.js" />

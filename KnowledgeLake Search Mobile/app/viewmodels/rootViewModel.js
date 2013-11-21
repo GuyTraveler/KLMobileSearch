@@ -126,19 +126,21 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
         }
 
         //settings charm items
-        Windows.UI.ApplicationSettings.SettingsPane.getForCurrentView().addEventListener("commandsrequested", function (args) {
-            var addSiteCommand = new Windows.UI.ApplicationSettings.SettingsCommand("addSiteSettingsCommand", self.strings().addSiteLinkText, self.addSite),
-                privacyCommand = new Windows.UI.ApplicationSettings.SettingsCommand("privacyPolicySettingsCommand", self.strings().PrivacyPolicyLinkTitle, self.launchPrivacyPolicy),
-                aboutCommand = new Windows.UI.ApplicationSettings.SettingsCommand("aboutSettingsCommand", self.strings().AboutLinkTitle, self.launchAbout),
-                feedbackCommand = new Windows.UI.ApplicationSettings.SettingsCommand("feedbackSettingsCommand", self.strings().FeedbackLinkTitle, self.launchFeedback),
-                supportCommand = new Windows.UI.ApplicationSettings.SettingsCommand("supportSettingsCommand", self.strings().SupportLinkTitle, self.launchSupport);
+        if (window.WinJS) {
+            Windows.UI.ApplicationSettings.SettingsPane.getForCurrentView().addEventListener("commandsrequested", function (args) {
+                var addSiteCommand = new Windows.UI.ApplicationSettings.SettingsCommand("addSiteSettingsCommand", self.strings().addSiteLinkText, self.addSite),
+                    privacyCommand = new Windows.UI.ApplicationSettings.SettingsCommand("privacyPolicySettingsCommand", self.strings().PrivacyPolicyLinkTitle, self.launchPrivacyPolicy),
+                    aboutCommand = new Windows.UI.ApplicationSettings.SettingsCommand("aboutSettingsCommand", self.strings().AboutLinkTitle, self.launchAbout),
+                    feedbackCommand = new Windows.UI.ApplicationSettings.SettingsCommand("feedbackSettingsCommand", self.strings().FeedbackLinkTitle, self.launchFeedback),
+                    supportCommand = new Windows.UI.ApplicationSettings.SettingsCommand("supportSettingsCommand", self.strings().SupportLinkTitle, self.launchSupport);
 
-            args.request.applicationCommands.append(addSiteCommand);
-            args.request.applicationCommands.append(aboutCommand);
-            args.request.applicationCommands.append(privacyCommand);
-            args.request.applicationCommands.append(feedbackCommand);
-            args.request.applicationCommands.append(supportCommand);
-        });
+                args.request.applicationCommands.append(addSiteCommand);
+                args.request.applicationCommands.append(aboutCommand);
+                args.request.applicationCommands.append(privacyCommand);
+                args.request.applicationCommands.append(feedbackCommand);
+                args.request.applicationCommands.append(supportCommand);
+            });
+        }
 
         self.launchPrivacyPolicy = function () {
             var uri = new Windows.Foundation.Uri(Constants.PrivacyPolicyUrl);
