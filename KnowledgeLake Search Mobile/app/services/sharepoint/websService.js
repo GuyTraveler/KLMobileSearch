@@ -12,18 +12,14 @@ define(["jquery",
         soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
         self.GetWeb = function (webUrl) {
-            var parameters = [];
+            if (arguments[0] && arguments[0].endsWith("/"))
+                arguments[0] = arguments[0].substring(0, arguments[0].length - 1);
 			
-			if (webUrl.endsWith("/"))
-				webUrl = webUrl.substring(0, webUrl.length - 1);
-			
-			parameters.push(new keyValuePair("webUrl", webUrl));
-            
-            return self.executeSoapMethodAsync("GetWeb", parameters);
+            return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetActivatedFeatures = function () {            
-            return self.executeSoapMethodAsync("GetActivatedFeatures");
+            return self.executeSoapMethodAsync(arguments);
         }
         
         return self;

@@ -11,26 +11,23 @@ function ($, keyValuePair, soapServiceBase, SecureHttpService) {
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
-        self.GetSiteUrlAsync = function (url) {
-            var parameters = [
-                new keyValuePair("Url", encodeURI(url))
-            ];
-            
-            return self.executeSoapMethodAsync("GetSiteUrl", parameters);
+        self.GetSiteUrlAsync = function (Url) {
+            arguments[0] = encodeURI(arguments[0]);
+
+            return self.executeSoapMethodAsync(arguments);
         }
 		
 		self.GetURLSegmentsAsync = function (strURL) {
-			var parameters = [
-					new keyValuePair("strURL", strURL)
-				],
-				dfd = $.Deferred(),
-				promise = self.executeSoapMethodAsync("GetURLSegments", parameters);
+			var dfd = $.Deferred(),
+				promise = self.executeSoapMethodAsync(arguments);
 			
 			promise.done(function (result) {
-				if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false") {
+			    if (!result || !result.GetURLSegmentsResult || !result.GetURLSegmentsResult.value || result.GetURLSegmentsResult.value == "false")
+			    {
 					dfd.reject(null, "Unknown error", null);					
                 }
-				else {
+			    else
+			    {
 					dfd.resolve(result);
                 }
             });

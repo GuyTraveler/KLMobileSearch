@@ -90,7 +90,10 @@ function (ko, $, application, config, logger, viewModelBase, keywordConjunction,
         }
 
         self.updateKeywordBox = function () {
-            var searchBox = window.WinJS && !config.isQunit ? document.getElementById("savedSearchSearchBox").winControl : null;
+            var searchBoxElement = window.WinJS && !config.isQunit ? document.getElementById("savedSearchSearchBox") : null;
+
+            if (searchBoxElement)
+                var searchBox = searchBoxElement.winControl;
 
             if(application.navigator.isStandardNavigation())
             {

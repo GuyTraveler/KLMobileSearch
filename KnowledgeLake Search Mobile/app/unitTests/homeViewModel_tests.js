@@ -421,7 +421,18 @@ define(['require',
 			QUnit.equal(vm.hasHighlightedSite(), true);
 			QUnit.equal(vm.navBarVisible(), true);
 			QUnit.deepEqual(vm.selectedSite(), siteData);
-        });
+		});
+
+		QUnit.test("Test appBarManipulation", function () {
+		    //arrange
+		    var vm = new homeViewModel();
+
+		    //act
+		    vm.appBarManipulation();
+
+		    //assert
+		    QUnit.ok(vm);
+		});
 			
 		QUnit.asyncTest("Test emailSupport succeeds and closes popover properly", function () {
 			//arrange

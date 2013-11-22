@@ -31,7 +31,7 @@ define(["services/sharepoint/siteDataService",
             QUnit.ok(service);
                          
             service.BadMethod = function () {
-                return this.executeSoapMethodAsync("BadMethod", null);
+                return this.executeSoapMethodAsync(arguments, null);
 			};
 			
 			servicePromise = service.BadMethod();

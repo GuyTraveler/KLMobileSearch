@@ -142,7 +142,34 @@ define(["application",
                         
             //assert
             QUnit.ok(vm);
-        });  
+        });
+
+        QUnit.test("test searchBuilderViewModel cloneSearchProperties null", function () {
+            //arrange
+            var vm = new searchBuilderViewModel();
+
+            //act
+            var result = vm.cloneSearchProperties();
+
+            //assert
+            QUnit.deepEqual(result, []);
+        });
+
+        QUnit.test("test searchBuilderViewModel cloneSearchProperties", function () {
+            //arrange
+            var vm = new searchBuilderViewModel(),
+                searchProperties = [];
+
+            searchProperties.push(new searchProperty(TestSettings.testChoices, catalogPropertyControlType.DropDown, TestSettings.testSearchPropertyHiddenFalse, 
+                                    TestSettings.testSearchPropertyDescription, TestSettings.testSearchPropertyDataType, TestSettings.testSearchPropertyName, 
+                                    TestSettings.testSearchPropertyId, TestSettings.testOperators));
+
+            //act
+            var result = vm.cloneSearchProperties(searchProperties);
+
+            //assert
+            QUnit.equal(result.length, searchProperties.length);
+        });
        
         QUnit.test("test searchBuilderViewModel onBeforeShow", function () {
             //arrange

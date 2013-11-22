@@ -121,19 +121,37 @@ define(["knockout",
 
 			self.appBarManipulation = function () {
 			    var AppBarContainer = document.getElementById("AppBarContainer"),
-                    appBar = document.getElementById("AppBar").winControl;
+                    appBarElement = document.getElementById("AppBar"),
+			        listViewElement = document.getElementById("sitesListView");
 
-			    var listView = document.getElementById("sitesListView").winControl;
+                if(appBarElement)
+                    var appBar = appBarElement.winControl;
 
-			    if (listView.selection.count() > 0) {
-			        appBar.showCommands(AppBarContainer.querySelectorAll('.siteSelection'));
-			        appBar.sticky = true;
-			        appBar.show();
-			    } else {
-			        appBar.hide();
-			        appBar.hideCommands(AppBarContainer.querySelectorAll('.siteSelection'));
-			        appBar.sticky = false;
-			    }
+                if(listViewElement)
+                    var listView = listViewElement.winControl;
+
+                if (appBar && listView && listView.selection)
+                {
+                    if (listView.selection.count() > 0)
+                    {
+                        if (appBar.showCommands && appBar.show)
+                        {
+                            appBar.showCommands(AppBarContainer.querySelectorAll('.siteSelection'));
+                            appBar.sticky = true;
+                            appBar.show();
+                        }
+                    }
+
+                    else
+                    {
+                        if (appBar.hideCommands && appBar.hide)
+                        {
+                            appBar.hide();
+                            appBar.hideCommands(AppBarContainer.querySelectorAll('.siteSelection'));
+                            appBar.sticky = false;
+                        }
+                    }
+                }
 			}
             
             self.longPress = function (e) {

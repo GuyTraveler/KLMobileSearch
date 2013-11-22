@@ -10,204 +10,212 @@ define(["jquery",
 		//uncaught
 		"extensions"],
 function ($, Constants, application, logger, Uri, office365Service, office365LogonBase, HttpService, PromiseRejectResponse) {
-	
-	var adfs365LogonService = function (siteUrl, adfsUrl) {
-		var self = this;
-				 
+
+    var adfs365LogonService = function (siteUrl, adfsUrl) {
+        var self = this;
+
         self.prototype = Object.create(office365LogonBase.prototype);
         office365LogonBase.call(self, siteUrl);
-        		
-		self.logonAsync = function (domain, userName, password) {
-			var dfd = $.Deferred(),
+
+        self.logonAsync = function (domain, userName, password) {
+            var dfd = $.Deferred(),
 				stsUsernameMixedUrl,
-				samlPromise,				
+				samlPromise,
 				samlAssertionPromise,
 				assertion,
 				token;
-			
-			if (self.logonExpiration && self.logonExpirationToDate() > now) {
-				dfd.resolve();
-				return dfd.promise();
+
+            if (self.logonExpiration && self.logonExpirationToDate() > now)
+            {
+                dfd.resolve();
+                return dfd.promise();
             }
-			
-			stsUsernameMixedUrl = self.getUserNameMixedUrl();
-			self.logonExpiration = null;
-			
-			samlPromise = self.postSAMLToAdfs(stsUsernameMixedUrl, domain, userName, password);
-			
-			samlPromise.done(function (samlXDoc) {
-				assertion = self.parseAssertionFromXml(samlXDoc);
-				
-				logger.logVerbose("Found SAML assertion: " + assertion);
-				
-				samlAssertionPromise = self.postAssertionToOffice365STS(assertion);
-				
-				samlAssertionPromise.done(function (samlAssertionXDoc, textStatus, xhr) {
-					//result contains an XMLDocument which we can parse and grab BinarySecurityToken
-					token = self.parseBinaryTokenFromXml(samlAssertionXDoc);
-					self.logonExpiration = self.parseExpirationFromXml(samlAssertionXDoc);
-					
-					logger.logVerbose("Acquired Office 365 Claims token: " + token);
-					logger.logVerbose("Office 365 Claims token expires on: " + self.logonExpiration.toString());
-					
-					//NO token means logon failed (bad creds)
-					if (token != "") {
-						self.postSecurityTokenToLoginForm(token)
+
+            stsUsernameMixedUrl = self.getUserNameMixedUrl();
+            self.logonExpiration = null;
+
+            samlPromise = self.postSAMLToAdfs(stsUsernameMixedUrl, domain, userName, password);
+
+            samlPromise.done(function (samlXDoc) {
+                assertion = self.parseAssertionFromXml(samlXDoc);
+
+                logger.logVerbose("Found SAML assertion: " + assertion);
+
+                samlAssertionPromise = self.postAssertionToOffice365STS(assertion);
+
+                samlAssertionPromise.done(function (samlAssertionXDoc, textStatus, xhr) {
+                    //result contains an XMLDocument which we can parse and grab BinarySecurityToken
+                    token = self.parseBinaryTokenFromXml(samlAssertionXDoc);
+                    self.logonExpiration = self.parseExpirationFromXml(samlAssertionXDoc);
+
+                    logger.logVerbose("Acquired Office 365 Claims token: " + token);
+                    logger.logVerbose("Office 365 Claims token expires on: " + self.logonExpiration.toString());
+
+                    //NO token means logon failed (bad creds)
+                    if (token)
+                    {
+                        self.postSecurityTokenToLoginForm(token)
 							.done(function (result) {
-								logger.logVerbose("Office 365 ADFS logon successful");
-								
-								dfd.resolve(token);
-			                })
-							.fail(function (XMLHttpRequest, textStatus, errorThrown) { 
-								logger.logVerbose("failed to post Office 365 ADFS security token"); 
-								
-								self.logonExpiration = null;
-								
-								dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+							    logger.logVerbose("Office 365 ADFS logon successful");
+
+							    dfd.resolve(token);
+							})
+							.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+							    logger.logVerbose("failed to post Office 365 ADFS security token");
+
+							    self.logonExpiration = null;
+
+							    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
 							});
-					}
-					else {
-						logger.logVerbose("Security token not found in Office 365 response");
-						self.logonExpiration = null;
-						dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
+                    }
+                    else
+                    {
+                        logger.logVerbose("Security token not found in Office 365 response");
+                        self.logonExpiration = null;
+                        dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                     }
                 });
-				
-				samlAssertionPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-					dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
+
+                samlAssertionPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
                 });
             });
-			
-			samlPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
-				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " failed!\n" + textStatus);
-				logger.logWarning("SAML post to " + stsUsernameMixedUrl + " status!\n" + XMLHttpRequest.status);
-				
-				dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
+
+            samlPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                logger.logWarning("SAML post to " + stsUsernameMixedUrl + " failed!\n" + textStatus);
+                logger.logWarning("SAML post to " + stsUsernameMixedUrl + " status!\n" + XMLHttpRequest.status);
+
+                dfd.reject(new PromiseRejectResponse(application.strings.logonFailed, 401));
             });
-			
-			return dfd.promise();
-		}
-				
-		self.logonToSiteAsync = function (site, documentUrl) {
-			return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
-		};
-					
-		self.getUserNameMixedUrl = function () {
-			var adfsUri = new Uri(adfsUrl);			
-			return Constants.adfsTrust2005WindowsTransport.replace("{adfsHost}", adfsUri.host());
+
+            return dfd.promise();
         }
-		
-		self.postSAMLToAdfs = function (stsUsernameMixedUrl, domain, userName, password) {
-			var dfd = $.Deferred(),
+
+        self.logonToSiteAsync = function (site, documentUrl) {
+            return self.logonAsync(site.credential.domain, site.credential.userName, site.credential.password, documentUrl);
+        };
+
+        self.getUserNameMixedUrl = function () {
+            var adfsUri = new Uri(adfsUrl);
+            return Constants.adfsTrust2005WindowsTransport.replace("{adfsHost}", adfsUri.host());
+        }
+
+        self.postSAMLToAdfs = function (stsUsernameMixedUrl, domain, userName, password) {
+            var dfd = $.Deferred(),
 				userNameFull = userName + "@" + domain,
 				requestBody,
 				templatePromise,
 				httpPromise;
-			
-			templatePromise = self.getSamlAdfsTemplateAsync();
-			
-			templatePromise.done(function (template) {
-				requestBody = template.replace(/{signinUri}/g, Constants.entityId) 
+
+            templatePromise = self.getSamlAdfsTemplateAsync();
+
+            templatePromise.done(function (template) {
+                requestBody = template.replace(/{signinUri}/g, Constants.entityId)
 									  .replace(/{userName}/g, userNameFull)
 									  .replace(/{password}/g, password)
 									  .replace(/{toUrl}/g, stsUsernameMixedUrl);
-				
-				httpPromise = HttpService.xhr({
-					url: stsUsernameMixedUrl,
-					async: true,
-					type: "POST",
-					processData: false,
-					contentType: "application/soap+xml; charset=utf-8",
-					cache: false,
-					data: requestBody,
-					dataType: "xml",
-					timeOut: application.ajaxTimeout
-	            });
-				
-				httpPromise.done(function (result, textStatus, xhr) {
-					logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
-					dfd.resolve(result);
+
+                httpPromise = HttpService.xhr({
+                    url: stsUsernameMixedUrl,
+                    async: true,
+                    type: "POST",
+                    processData: false,
+                    contentType: "application/soap+xml; charset=utf-8",
+                    cache: false,
+                    data: requestBody,
+                    dataType: "xml",
+                    timeOut: application.ajaxTimeout
                 });
-				
-				httpPromise.fail(function  (XMLHttpRequest, textStatus, errorThrown) {
-					logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
-					logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
-					
+
+                httpPromise.done(function (result, textStatus, xhr) {
+                    logger.logVerbose("Obtained SAML token from mixedUserNameUrl");
+                    dfd.resolve(result);
+                });
+
+                httpPromise.fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    logger.logError("Failed to post SAML to mixedUserNameUrl: status: " + textStatus);
+                    logger.logError("Failed to post SAML to mixedUserNameUrl: http status: " + XMLHttpRequest.status);
+
                     dfd.reject(XMLHttpRequest, textStatus, errorThrown);
                 });
-			});
-			
-			templatePromise.fail(function () {
-				dfd.reject();
             });
-			
-			return dfd.promise();
+
+            templatePromise.fail(function () {
+                dfd.reject();
+            });
+
+            return dfd.promise();
         }
-		
-		self.postAssertionToOffice365STS = function (samlAssertion) {
-			var dfd = $.Deferred(),
+
+        self.postAssertionToOffice365STS = function (samlAssertion) {
+            var dfd = $.Deferred(),
 				requestBody,
 				templatePromise;
-			
-			templatePromise = self.getSamlAssertionTemplateAsync();
-			
-			templatePromise.done(function (template) {
-				requestBody = template.replace(/{toUrl}/g, Constants.office365STS)
+
+            templatePromise = self.getSamlAssertionTemplateAsync();
+
+            templatePromise.done(function (template) {
+                requestBody = template.replace(/{toUrl}/g, Constants.office365STS)
 									  .replace(/{assertion}/g, samlAssertion)
 									  .replace(/{url}/g, siteUrl);
-				
-				$.ajax({
-					url: Constants.office365STS,
-					async: true,
-					type: "POST",
-					processData: false,
-					contentType: "application/soap+xml; charset=utf-8",
-					cache: false,
-					data: requestBody,
-					dataType: "xml",
-					timeOut: application.ajaxTimeout,
-					success: function (result, textStatus, xhr) {
-						var stringResult = (new XMLSerializer()).serializeToString(result);
-							
-						logger.logVerbose("Got result from office365STS: " + stringResult);
-						
-						if (self.hasErrorResult(result)) {
-							dfd.reject();
-	                    }
-						else {
-							dfd.resolve(result, textStatus, xhr);
-						}
-	                },
-					error: function  (XMLHttpRequest, textStatus, errorThrown) {
-						logger.logError("Failed to post SAML to office365STS: status: " + textStatus);
-						logger.logError("Failed to post SAML to office365STS: http status: " + XMLHttpRequest.status);
-						
-	                    dfd.reject(XMLHttpRequest, textStatus, errorThrown);
-	                }
-	            });
-			});
-			
-			templatePromise.fail(function () {
-				dfd.reject();
-            });
-			
-			return dfd.promise();
-        }
-		
-		self.parseAssertionFromXml = function (xDoc) {
-		    var assertionNodeName = window.WinJS ? "saml\\:Assertion" : "Assertion";
 
-			try {
-				var assertionNode = $(xDoc).find(assertionNodeName)[0];
-				return (new XMLSerializer()).serializeToString(assertionNode);
-			} catch (e) {
-				logger.logDebug("Failed to parse asssertion from XML document: " + e.message);
-				return "";
+                $.ajax({
+                    url: Constants.office365STS,
+                    async: true,
+                    type: "POST",
+                    processData: false,
+                    contentType: "application/soap+xml; charset=utf-8",
+                    cache: false,
+                    data: requestBody,
+                    dataType: "xml",
+                    timeOut: application.ajaxTimeout,
+                    success: function (result, textStatus, xhr) {
+                        var stringResult = (new XMLSerializer()).serializeToString(result);
+
+                        logger.logVerbose("Got result from office365STS: " + stringResult);
+
+                        if (self.hasErrorResult(result))
+                        {
+                            dfd.reject();
+                        }
+                        else
+                        {
+                            dfd.resolve(result, textStatus, xhr);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        logger.logError("Failed to post SAML to office365STS: status: " + textStatus);
+                        logger.logError("Failed to post SAML to office365STS: http status: " + XMLHttpRequest.status);
+
+                        dfd.reject(XMLHttpRequest, textStatus, errorThrown);
+                    }
+                });
+            });
+
+            templatePromise.fail(function () {
+                dfd.reject();
+            });
+
+            return dfd.promise();
+        }
+
+        self.parseAssertionFromXml = function (xDoc) {
+            var assertionNodeName = window.WinJS ? "saml\\:Assertion" : "Assertion";
+
+            try
+            {
+                var assertionNode = $(xDoc).find(assertionNodeName)[0];
+                return (new XMLSerializer()).serializeToString(assertionNode);
+            }
+            catch (e)
+            {
+                logger.logDebug("Failed to parse asssertion from XML document: " + e.message);
+                return "";
             }
         }
-		
-		return self;
+
+        return self;
     };
-	
-	return adfs365LogonService;
+
+    return adfs365LogonService;
 });

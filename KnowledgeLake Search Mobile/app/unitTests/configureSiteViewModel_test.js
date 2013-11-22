@@ -338,26 +338,27 @@ define(["application",
 			var vm,
 				credValidationPromise;
 			
-			//act
+		    //act
 			vm = new configureSiteViewModel();
 			vm.protocol(httpProtocols.http);
 			vm.url(TestSettings.ntlmTestUrl);
-			vm.siteFullUserName(TestSettings.ntlmTestUser + "@" + "gg");
+			vm.siteFullUserName("xx@gg");
 			vm.sitePassword("h");
+
 			credValidationPromise = vm.logonAsync();
-			
+
 			//assert
 			QUnit.ok(credValidationPromise);
-			
+
 			credValidationPromise.done(function (title, version) {
-				QUnit.ok(false, "credential validation should have failed");	
-				QUnit.start();
-            });
-			
+			    QUnit.ok(false, "credential validation should have failed");
+			    QUnit.start();
+			});
+
 			credValidationPromise.fail(function () {
-				QUnit.ok(true);
-				QUnit.start();
-            });
+			    QUnit.ok(true);
+			    QUnit.start();
+			});
         });
 		
 		QUnit.asyncTest("configureSiteViewModel.logon (NTLM) succeeds with good creds", function () {

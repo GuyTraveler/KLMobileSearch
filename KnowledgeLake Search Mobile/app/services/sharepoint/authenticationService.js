@@ -12,18 +12,13 @@ define(["logger",
         soapServiceBase.call(self, site, serviceName, HttpService);
         
         self.Mode = function (webUrl) {
-			logger.logVerbose("authenticationService.Mode called");
-            return self.executeSoapMethodAsync("Mode", null);
+            logger.logVerbose("authenticationService.Mode called");
+            return self.executeSoapMethodAsync(arguments);
         }
 		
 		self.Login = function (userName, password) {
-			var parms = [
-				new keyValuePair("userName", userName),
-				new keyValuePair("password", password)
-			];
-			
 			logger.logVerbose("authenticationService.Login called");
-			return self.executeSoapMethodAsync("Login", parms);
+			return self.executeSoapMethodAsync(arguments);
         }
         
         return self;

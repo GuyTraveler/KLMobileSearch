@@ -179,7 +179,7 @@ define(["jquery",
                     
                     for(var i = 0; i < searchPropertiesLength; i++)
                     {
-                        if(searchProperties[i].name === Constants.IsDocument)
+                        if(ko.unwrap(searchProperties[i].name) === Constants.IsDocument)
                             return false;
                     }
                 }

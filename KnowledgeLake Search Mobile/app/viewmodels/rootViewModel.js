@@ -26,9 +26,8 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
                 if (self.viewModels[viewModel].model.init) {
                     self.viewModels[viewModel].model.init();
 
-                    if (viewModel === navigationPage.homePage) {
+                    if (viewModel === navigationPage.homePage)
                         self.navigateTo(viewModel);
-                    }
                 }
             }
         }
@@ -60,7 +59,9 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
                     }
                 }
                 else
+                {
                     self.navigateTo(to);
+                }
             }
         }
 
@@ -84,7 +85,8 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
         }
 
         self.navigateTo = function (to) {
-            if (to && self.viewModels[to]) {
+            if (to && self.viewModels[to])
+            {
                 self.viewModels[to].visibilityProperty(true);
 
                 self.viewModels[to].model.beforeShow();
@@ -94,7 +96,8 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
         }
 
         self.navigateFrom = function (from) {
-            if (from && self.viewModels[from]) {
+            if (from && self.viewModels[from])
+            {
                 self.viewModels[from].model.hide();
                 self.viewModels[from].visibilityProperty(false);
             }
@@ -113,10 +116,19 @@ function (ko, $, application, viewModelBase, navigationContext, navigationPage, 
         }
 
         self.hideBars = function () {
-            var bars = [document.getElementById("NavBar").winControl];
+            var navBar = document.getElementById("NavBar"),
+                bars = [];
+
+            if(navBar)
+                bars.push(navBar.winControl);
 
             if (self.viewModels[navigationPage.homePage].visibilityProperty())
-                bars.push(document.getElementById("AppBar").winControl);
+            {
+                var appBar = document.getElementById("AppBar");
+
+                if(appBar)
+                    bars.push(appBar.winControl);
+            }
 
             for (var bar in bars)
             {

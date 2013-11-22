@@ -46,7 +46,7 @@ define(["knockout",
                     return dfd.promise();
                 }
                 else {
-                    createFilePromise = self.createAndSendLogFile();
+                    createFilePromise = self.createLogFile();
 
                     createFilePromise.done(function (logFile) {
                         emailFullBody = Constants.emailBodyStart + logManager.logsToPrettyString();

@@ -15,22 +15,21 @@ define(["jquery",
         
 		self.Status = function () {
 			logger.logVerbose("searchService.Status called");
-			return self.executeSoapMethodAsync("Status", null);
+			return self.executeSoapMethodAsync(arguments);
         }
 		
 		self.GetSearchMetadata = function () {
 			logger.logVerbose("searchService.GetSearchMetadata called");
-			return self.executeSoapMethodAsync("GetSearchMetadata", null);
+			return self.executeSoapMethodAsync(arguments);
         }
 		
 		self.QueryEx = function (queryXml) {
-			var parameters = [
-					new keyValuePair("queryXml", queryXml.encodeAngleBrackets())
-				];
+            if (arguments[0])
+		        arguments[0] = arguments[0].encodeAngleBrackets();
 			
 			logger.logVerbose("searchService.QueryEx called");
 			
-			return self.executeSoapMethodAsync("QueryEx", parameters);
+			return self.executeSoapMethodAsync(arguments);
         }
         
         return self;

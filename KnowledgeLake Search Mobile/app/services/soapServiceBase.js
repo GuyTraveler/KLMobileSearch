@@ -1,9 +1,10 @@
 define(["jquery", 
 		"application",
 		"logger",
+        "keyValuePair",
 		//uncaught depends
 		"extensions"], 
-	function ($, application, logger) {
+function ($, application, logger, keyValuePair) {
     var soapServiceBase = function (site, serviceName, httpService) {
         var self = this,
             jsonTextPropertyName = "value";
@@ -16,15 +17,42 @@ define(["jquery",
         
         self.serviceUrl += "_vti_bin/" + serviceName + ".asmx";
    
+        self.extractParameters = function (args) {
+            var pairs = [],
+                paramsNames,
+                paramsLength;
+
+            if (!args)
+                return pairs;
+
+            paramsNames = Function.prototype.getParamNames(args.callee);
+            paramsLength = args.length;
+
+            if (args.length != paramsNames.length)
+                throw "Could not extract SOAP parameters: args and parameters are not the same length";
+
+            for (var i = 0; i < paramsLength; i++)
+                pairs.push(new keyValuePair(paramsNames[i], args[i]));
+
+            return pairs;
+        }
+
         self.loadSoapTemplate = function (methodName) {
             var url = "app/services/soapTemplates/" + serviceName + "/" + methodName + ".xml";
             return httpService.get(url);
         }
            
-        self.executeSoapMethodAsync = function (methodName, parameters) {
-            var soapDfd = $.Deferred(),
-				templatePromise = self.loadSoapTemplate(methodName);
+        self.executeSoapMethodAsync = function (args) {
+            var methodName = Function.getFunctionVariableName(self, args.callee),
+                parameters = self.extractParameters(args),
+                soapDfd = $.Deferred(),
+				templatePromise;
             
+            if (methodName.endsWith("Async"))
+                methodName = methodName.substring(0, methodName.indexOf("Async"));
+
+            templatePromise = self.loadSoapTemplate(methodName)
+
 			templatePromise.done(function (template) {
                 var xhrPromise,
 					$soap = typeof template === 'string' ? template : (new XMLSerializer()).serializeToString(template),

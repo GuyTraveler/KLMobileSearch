@@ -295,6 +295,23 @@ define(['require',
             QUnit.equal(vm.selectedResult, testData);
         });
 
+        QUnit.test("test resultsViewModel setSelectedResult if selectedResult is not equal with event", function () {
+            //arrange
+            var vm, 
+                event = {stopImmediatePropagation: function () {}},
+                resultData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/5Page.pdf", { "title": "pdf" }),
+                testData = new result("http://prodsp2010.dev.local/sites/team2/RyanLib/10Page.pdf", { "title": "pdf" });
+
+            vm = new resultsViewModel();
+            vm.selectedResult = resultData;
+
+            //act
+            vm.setSelectedResult(testData, event);
+
+            //assert
+            QUnit.equal(vm.selectedResult, testData);
+        });
+
         QUnit.test("test resultsViewModel isSelectedResult if navBarVisible false", function () {
             //arrange
             var vm,

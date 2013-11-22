@@ -19,9 +19,9 @@ require(["config"], function (config) {
 		var appHref = window.WinJS ? "default.html" : "index.html",
 			testRootPath = 'unitTests/',
 			testsToRun = [
-                          testRootPath + "siteDataCachingService_test",	
-                          testRootPath + "resultsViewModel_tests",  
                           testRootPath + "configureSiteViewModel_test",
+                          testRootPath + "siteDataCachingService_test",	
+                          testRootPath + "resultsViewModel_tests",                            
                           testRootPath + "savedSearchViewModel_tests",
                           testRootPath + "viewModelBase_tests",
                           testRootPath + "homeViewModel_tests",

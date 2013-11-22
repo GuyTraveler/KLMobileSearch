@@ -10,44 +10,20 @@ function (keyValuePair, soapServiceBase, SecureHttpService) {
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
-		self.GetList = function (listName) {
-			var parameters = [
-				new keyValuePair("listName", listName)
-			];
-			
-			return self.executeSoapMethodAsync("GetList", parameters);
+        self.GetList = function (listName) {
+            return self.executeSoapMethodAsync(arguments);
         }
 		
         self.GetListItemsAsync = function (listName, viewName, query, viewFields, rowLimit, queryOptions, webID) {
-            var parameters = [
-                new keyValuePair("listName", listName),
-				new keyValuePair("viewName", viewName),
-				new keyValuePair("query", query),
-				new keyValuePair("viewFields", viewFields),
-				new keyValuePair("rowLimit", rowLimit),
-				new keyValuePair("queryOptions", queryOptions),
-				new keyValuePair("webID", webID)
-            ];
-            
-            return self.executeSoapMethodAsync("GetListItems", parameters);
+            return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetListContentTypeAsync = function (listName, contentTypeId) {
-            var parameters = [
-                new keyValuePair("listName", listName),
-				new keyValuePair("contentTypeId", contentTypeId)
-            ];
-            
-            return self.executeSoapMethodAsync("GetListContentType", parameters);
+            return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetListAndView = function (listName, viewName) {
-            var parameters = [
-                new keyValuePair("listName", listName),
-				new keyValuePair("viewName", viewName)
-            ];
-            
-            return self.executeSoapMethodAsync("GetListAndView", parameters);
+            return self.executeSoapMethodAsync(arguments);
         }
         
         return self;

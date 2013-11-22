@@ -7,11 +7,12 @@ define(['require',
         'viewmodels/homeViewModel',
         'viewmodels/savedSearchViewModel',
         'viewmodels/resultsViewModel',
+        'viewmodels/logsViewModel',
         "domain/navigationContext",
         "domain/navigationPage",
         "domain/navigationDirection",
         "unitTests/unitTestSettings"],
-    function (require, $, ko, application, rootViewModel, homeViewModel, savedSearchViewModel, resultsViewModel, navigationContext, navigationPage, navigationDirection, TestSettings) {
+    function (require, $, ko, application, rootViewModel, homeViewModel, savedSearchViewModel, resultsViewModel, logsViewModel, navigationContext, navigationPage, navigationDirection, TestSettings) {
         QUnit.module("Testing rootViewModel");
         
         QUnit.test("test rootViewModel ok", function () {
@@ -214,46 +215,62 @@ define(['require',
             QUnit.equal(vm.viewModels[navigationPage.homePage].visibilityProperty(), false);
         });
 
-        //QUnit.test("test rootViewModel navigateToHome", function () {
-        //    //arrange
-        //    var vm = new rootViewModel();
-        //    vm.viewModels[navigationPage.homePage] = { 'model': new homeViewModel(), 'visibilityProperty': vm[TestSettings.testHomeVisibilityProperty] };
-        //    vm.viewModels[navigationPage.savedSearchPage] = { 'model': new savedSearchViewModel(), 'visibilityProperty': vm[TestSettings.testSavedSearchVisibilityProperty] };
-        //    vm.viewModels[navigationPage.resultsPage] = { 'model': new resultsViewModel(), 'visibilityProperty': vm[TestSettings.testResultsVisibilityProperty] };
+        QUnit.test("test rootViewModel navigateToHome", function () {
+            //arrange
+            var vm = new rootViewModel();
+            vm.viewModels[navigationPage.homePage] = { 'model': new homeViewModel(), 'visibilityProperty': vm[TestSettings.testHomeVisibilityProperty] };
+            vm.viewModels[navigationPage.savedSearchPage] = { 'model': new savedSearchViewModel(), 'visibilityProperty': vm[TestSettings.testSavedSearchVisibilityProperty] };
+            vm.viewModels[navigationPage.resultsPage] = { 'model': new resultsViewModel(), 'visibilityProperty': vm[TestSettings.testResultsVisibilityProperty] };
 
-        //    vm.viewModels[navigationPage.homePage].visibilityProperty(false);
-        //    vm.viewModels[navigationPage.savedSearchPage].visibilityProperty(true);
-        //    vm.viewModels[navigationPage.resultsPage].visibilityProperty(false);
+            vm.viewModels[navigationPage.homePage].visibilityProperty(false);
+            vm.viewModels[navigationPage.savedSearchPage].visibilityProperty(true);
+            vm.viewModels[navigationPage.resultsPage].visibilityProperty(false);
 
-        //    //act
-        //    vm.navigateToHome();
+            //act
+            vm.navigateToHome();
 
-        //    //assert
-        //    QUnit.ok(vm.viewModels[navigationPage.homePage].visibilityProperty());
-        //});
+            //assert
+            QUnit.ok(vm);
+        });
 
+        QUnit.test("test rootViewModel navigateToLogs", function () {
+            //arrange
+            var vm = new rootViewModel();
+            vm.viewModels[navigationPage.homePage] = { 'model': new homeViewModel(), 'visibilityProperty': vm[TestSettings.testHomeVisibilityProperty] };
+            vm.viewModels[navigationPage.savedSearchPage] = { 'model': new savedSearchViewModel(), 'visibilityProperty': vm[TestSettings.testSavedSearchVisibilityProperty] };
+            vm.viewModels[navigationPage.logsPage] = { 'model': new logsViewModel(), 'visibilityProperty': vm[TestSettings.testResultsVisibilityProperty] };
 
-        //self.navigateToHome = function () {
-        //    self.hideBars();
+            vm.viewModels[navigationPage.homePage].visibilityProperty(false);
+            vm.viewModels[navigationPage.savedSearchPage].visibilityProperty(true);
+            vm.viewModels[navigationPage.logsPage].visibilityProperty(false);
 
-        //    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.homePage, self.determineView()));
-        //}
+            //act
+            vm.navigateToLogs();
 
-        //self.navigateToLogs = function () {
-        //    self.hideBars();
+            //assert
+            QUnit.ok(vm);
+        });
 
-        //    application.navigator.navigate(new navigationContext(navigationDirection.standard, navigationPage.logsPage, self.determineView()));
-        //}
+        QUnit.test("test rootViewModel hideBars", function () {
+            //arrange
+            var vm = new rootViewModel();
+            vm.viewModels[navigationPage.homePage] = { 'model': new homeViewModel(), 'visibilityProperty': vm[TestSettings.testHomeVisibilityProperty] };
+            vm.viewModels[navigationPage.savedSearchPage] = { 'model': new savedSearchViewModel(), 'visibilityProperty': vm[TestSettings.testSavedSearchVisibilityProperty] };
+            vm.viewModels[navigationPage.resultsPage] = { 'model': new resultsViewModel(), 'visibilityProperty': vm[TestSettings.testResultsVisibilityProperty] };
 
-        //self.hideBars = function () {
-        //    var bars = [document.getElementById("NavBar").winControl];
+            vm.viewModels[navigationPage.homePage].visibilityProperty(true);
+            vm.viewModels[navigationPage.savedSearchPage].visibilityProperty(false);
+            vm.viewModels[navigationPage.resultsPage].visibilityProperty(false);
 
-        //    if (self.viewModels[navigationPage.homePage].visibilityProperty())
-        //        bars.push(document.getElementById("AppBar").winControl);
+            //act
+            vm.hideBars();
 
-        //    for (var bar in bars) {
-        //        bars[bar].hide();
-        //        bars[bar].sticky = false;
-        //    }
-        //}
+            //assert
+            QUnit.ok(vm);
+        });
+
+        if(window.WinJS)
+        {
+
+        }
 	});

@@ -1,6 +1,7 @@
 ﻿define(["jquery",
-        "domain/credentialType"],
-function ($, credentialType) {
+        "domain/credentialType",
+        "guid"],
+function ($, credentialType, guid) {
     var winjsHttpService = function () {
         var self = this;
 
@@ -15,7 +16,8 @@ function ($, credentialType) {
                 user: null,
                 password: null,
                 headers: options.headers,
-                data: options.data
+                data: options.data,
+                withCredentials: true
             };
 
             winJsOptions.headers = winJsOptions.headers || {};
@@ -58,10 +60,19 @@ function ($, credentialType) {
                 options.customRequestInitializer = options.beforeSend;
             }    
             //end JQuery to WinJS mappings
+
+            ////try to force WinJS to not return cached data
+            //winJsOptions.headers["If-Modified-Since"] = "Mon, 27 Mar 1972 00:00:00 GMT";
+
+            //if (winJsOptions.url.indexOf("?") > -1)
+            //    winJsOptions.url += "&cachingGuid=" + guid.newGuid();
+            //else
+            //    winJsOptions.url += "?cachingGuid=" + guid.newGuid();
                  
             WinJS.xhr(winJsOptions).done(
                 function completed(request) {
                     //resolve in the same manner as jquery.ajax
+                    var optCopy = winJsOptions;
                     dfd.resolve(request.response, request.statusText, request);
                 },
                 function error(request) {

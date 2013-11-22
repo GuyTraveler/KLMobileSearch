@@ -151,6 +151,7 @@ define([], function () {
 		testHomeVisibilityProperty: "homeVisibility",
 		testSavedSearchVisibilityProperty: "savedSearchVisibility",
 		testResultsVisibilityProperty: "resultsVisibility",
+		testLogsVisibilityProperty: "logsVisibility",
 	    
 	    autoCompleteBoxElement: {value: function () {return "test";}, focus: function () {}, search: function () {}, setDataSource: function (){}}
 	};

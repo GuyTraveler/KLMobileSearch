@@ -14,44 +14,35 @@ function ($, application, logger, keyValuePair, soapServiceBase, SecureHttpServi
         self.prototype = Object.create(soapServiceBase.prototype);
         soapServiceBase.call(self, site, serviceName, SecureHttpService);
         
-        self.FacetSearch = function (klaml) {
-            var parameters = [
-				new keyValuePair("klquery", klaml.encodeXMLWithoutQuotes()),
-                new keyValuePair("languageName", navigator.language)
-			];
+        self.FacetSearch = function (klquery, languageName) {
+            if (arguments[0])
+                arguments[0] = klquery.encodeXMLWithoutQuotes();
+
+            Array.prototype.push.call(arguments, navigator.language);
 			
-			logger.logVerbose("Querying FacetQueryService with klaml: " + klaml);
+            logger.logVerbose("Querying FacetQueryService with klaml: " + klquery);
 			
-			return self.executeSoapMethodAsync("FacetSearch", parameters);
+			return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetProperties = function () {
-            return self.executeSoapMethodAsync("GetProperties");
+            return self.executeSoapMethodAsync(arguments);
         }
         
 		self.GetQueriesForUser = function (user, url) {
-			var parameters = [
-				new keyValuePair("user", user),
-                new keyValuePair("requestUrl", url)
-			];
-			
-			return self.executeSoapMethodAsync("GetQueriesForUser", parameters);
+			return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetQueryUser = function (userSid) {
-			var parameters = [
-				new keyValuePair("userSid", userSid)
-			];
-			
-			return self.executeSoapMethodAsync("GetQueryUser", parameters);
+			return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetCurrentUserName = function () {			
-			return self.executeSoapMethodAsync("GetCurrentUserName");
+			return self.executeSoapMethodAsync(arguments);
         }
         
         self.GetImagingVersion = function () {			
-			return self.executeSoapMethodAsync("GetImagingVersion");
+			return self.executeSoapMethodAsync(arguments);
         }
         
         return self;
